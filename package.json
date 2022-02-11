@@ -1,0 +1,33 @@
+{
+  "name": "mic-earn-business",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "keywords": [
+    "MIC",
+    "Earn",
+    "Business",
+    "Signal"
+  ],
+  "author": "Hassan A. Adeola",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.3",
+    "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
+    "sequelize": "^6.16.1",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
