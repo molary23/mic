@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../config/dbcon");
 
-class User extends Model {}
+class Settings extends Model {}
 
-User.init(
+Settings.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,27 +12,13 @@ User.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    email: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      unique: true,
-    },
-    username: {
-      type: DataTypes.STRING(30),
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
+    type: {
+      type: DataTypes.STRING(1),
       allowNull: false,
     },
-    level: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
-    },
-    active: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
+    option: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
     },
   },
   {
@@ -40,13 +26,14 @@ User.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: "timeCreated",
+    createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: "timeUpdated",
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "User", // We need to choose the model name
+    modelName: "Settings", // We need to choose the model name
   }
 );
-module.exports = User;
+
+module.exports = Settings;

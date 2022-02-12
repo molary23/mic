@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../config/dbcon");
 
-class Subscription extends Model {}
+class Bonus extends Model {}
 
-Subscription.init(
+Bonus.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,16 +12,9 @@ Subscription.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    period: {
-      type: DataTypes.TINYINT, // Sub for how many months
+    bonus: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
-    },
-    active: {
-      type: DataTypes.TINYINT, // Sub active or not
-      defaultValue: 0,
-    },
-    end: {
-      type: DataTypes.DATE, // Sub will end on
     },
   },
   {
@@ -29,11 +22,14 @@ Subscription.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: "subDate",
-    updatedAt: false,
+    createdAt: true,
+
+    // I dont want updatedAt
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Subscription", // We need to choose the model name
+    modelName: "Bonus", // We need to choose the model name
   }
 );
-module.exports = Subscription;
+
+module.exports = Bonus;

@@ -15,6 +15,10 @@ Pass.init(
     reset: {
       type: DataTypes.STRING(8),
     },
+    confirm: {
+      type: DataTypes.TINYINT,
+      defaultValue: 0,
+    },
   },
   {
     // don't forget to enable timestamps!

@@ -7,7 +7,7 @@ Profile.init(
   {
     // Model attributes are defined here
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,

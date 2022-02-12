@@ -8,51 +8,12 @@ const express = require("express"),
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+//Sync Sequelize
+require("./model/util/Relationship");
+
 app.use(passport.initialize());
 // Passport Config
 require("./config/passport")(passport);
-
-// Bring in Models
-const User = require("./model/User"),
-  Profile = require("./model/Profile"),
-  Subscription = require("./model/Subscription"),
-  Pass = require("./model/Pass");
-
-User.hasOne(Profile, {
-  onDelete: "RESTRICT",
-  hooks: true,
-  foreignKey: {
-    allowNull: false,
-  },
-});
-Profile.belongsTo(User);
-
-User.hasOne(Pass, {
-  onDelete: "RESTRICT",
-  hooks: true,
-  foreignKey: {
-    allowNull: false,
-  },
-});
-Pass.belongsTo(User);
-
-User.hasMany(Subscription, {
-  onDelete: "RESTRICT",
-  hooks: true,
-  foreignKey: {
-    allowNull: false,
-  },
-});
-Subscription.belongsTo(User);
-/*
-sequelize
-  .sync()
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((error) => {
-    console.log(error);
-  });*/
 
 app.use("/api/users", users);
 

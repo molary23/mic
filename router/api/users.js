@@ -3,32 +3,25 @@ const express = require("express"),
   bcrypt = require("bcryptjs"),
   Sequelize = require("sequelize"),
   passport = require("passport"),
-  { Op, where } = require("sequelize"),
+  { Op } = require("sequelize"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
   User = require("../../model/User"),
   Pass = require("../../model/Pass"),
+  Referral = require("../../model/Referral"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
-  validateLoginInput = require("../../validation/login");
-validateResetInput = require("../../validation/reset");
+  validateLoginInput = require("../../validation/login"),
+  validateResetInput = require("../../validation/reset");
 
 /*
-@route GET api/user/test
-@desc Test our route
-@access public
-*/
-
-router.get("/test", (req, res) => res.json({ msg: "user page works" }));
-
-/*
-@route POST api/user/add
+@route POST api/user/register
 @desc Add new user
 @access public
 */
 
-router.post("/add", (req, res) => {
+router.post("/register", (req, res) => {
   const { errors, isValid } = validateAddUserInput(req.body);
 
   if (!isValid) {
@@ -58,6 +51,17 @@ router.post("/add", (req, res) => {
                   userField.password = hash;
                   User.create(userField)
                     .then((user) => {
+                      if (req.body.referral) {
+                        User.findOne({
+                          where: { username: req.body.referral },
+                          attributes: ["id"],
+                        }).then((ref) => {
+                          Referral.create({
+                            referral: ref.id,
+                            UserId: user.id,
+                          });
+                        });
+                      }
                       res.json(user);
                     })
                     .catch((err) => res.json(err));
@@ -69,6 +73,30 @@ router.post("/add", (req, res) => {
       }
     })
     .catch((err) => res.status(400).json(err));
+});
+
+/*
+@route POST api/user/:referral
+@desc  Get Referral Username
+@access public
+*/
+
+router.post("/:referral", (req, res) => {
+  let message = {};
+  User.findOne({
+    where: { username: req.params.referral },
+    attributes: ["username"],
+  })
+    .then((user) => {
+      if (!user) {
+        message.error = "There is no User with the Referral ID";
+        res.json(message);
+      } else {
+        message.success = user.username;
+        res.json(message);
+      }
+    })
+    .catch((err) => res.status(404).json(err));
 });
 
 /*
@@ -201,7 +229,10 @@ router.post("/forgot", (req, res) => {
         return res.status(404).json(message);
       }
       const passField = {};
-      passField.reset = Math.random().toString(36).substr(2, 8).toUpperCase();
+      passField.reset = Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase();
       passField.UserId = user.id;
 
       Pass.findOrCreate({
@@ -264,7 +295,7 @@ router.post("/reset", (req, res) => {
       errors.error = "User doesn't exist!";
       return res.status(400).json(errors);
     }
-    const now = Math.floor(Date.now() / 1000) - 36000;
+    const now = Date.now() - 3600 * 1000;
     Pass.findOne({
       where: {
         UserId: user.id,
@@ -278,12 +309,26 @@ router.post("/reset", (req, res) => {
         } else if (code !== pass.reset) {
           errors.error = "You have entered the wrong Password Reset Code";
           return res.status(400).json(errors);
-        } else if (pass.timeUpdated < now) {
+        } else if (pass.timeUpdated.getTime() < now) {
           errors.error =
             "Your Password Reset Code has expired. Kindly request for a new one";
           return res.status(400).json(errors);
         } else {
           // GET back here molary
+          Pass.update(
+            {
+              confirm: 1,
+            },
+            {
+              where: {
+                UserId: user.id,
+              },
+            }
+          )
+            .then(() => {
+              res.json({ message: "Password Reset Code confirmed!" });
+            })
+            .catch((err) => res.json(err));
         }
       })
       .catch((err) => res.json(err));
