@@ -15,7 +15,8 @@ require("./config/passport")(passport);
 // Bring in Models
 const User = require("./model/User"),
   Profile = require("./model/Profile"),
-  Subscription = require("./model/Subscription");
+  Subscription = require("./model/Subscription"),
+  Pass = require("./model/Pass");
 
 User.hasOne(Profile, {
   onDelete: "RESTRICT",
@@ -25,6 +26,15 @@ User.hasOne(Profile, {
   },
 });
 Profile.belongsTo(User);
+
+User.hasOne(Pass, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Pass.belongsTo(User);
 
 User.hasMany(Subscription, {
   onDelete: "RESTRICT",
