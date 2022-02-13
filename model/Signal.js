@@ -16,15 +16,21 @@ Signal.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    signaltime: {
+    signaltill: {
       type: DataTypes.DATE,
       allowNull: false,
     },
     boughtat: {
       type: DataTypes.FLOAT,
+      allowNull: false,
     },
     soldat: {
       type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    pip: {
+      type: DataTypes.DOUBLE(3, 2),
+      allowNull: false,
     },
     status: {
       type: DataTypes.TINYINT,

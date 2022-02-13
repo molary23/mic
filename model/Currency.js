@@ -13,7 +13,8 @@ Currency.init(
       primaryKey: true,
     },
     currency: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(7),
+      allowNull: false,
     },
     active: {
       type: DataTypes.TINYINT,

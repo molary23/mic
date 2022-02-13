@@ -4,28 +4,26 @@ const validator = require("validator"),
 module.exports = function validateSignalInput(data) {
   let errors = {};
 
-  data.email = !isEmpty(data.email) ? data.email : "";
-  data.password = !isEmpty(data.password) ? data.password : "";
-  data.password2 = !isEmpty(data.password2) ? data.password2 : "";
-  data.username = !isEmpty(data.username) ? data.username : "";
+  data.signalfrom = !isEmpty(data.signalfrom) ? data.signalfrom : "";
+  data.signaltime = !isEmpty(data.signaltime) ? data.signaltime : "";
+  data.boughtat = !isEmpty(data.boughtat) ? data.boughtat : "";
+  data.soldat = !isEmpty(data.soldat) ? data.soldat : "";
 
-  if (validator.isEmpty(data.email)) {
-    errors.email = "Email Field can't be Empty";
+  if (validator.isEmpty(data.signalfrom)) {
+    errors.signalfrom = "Signal From Field can't be Empty";
   }
-  if (!validator.isEmail(data.email)) {
-    errors.email = "Email is invalid";
-  }
+
   if (validator.isEmpty(data.username)) {
     errors.username = "Username Field can't be Empty";
   }
-  if (validator.isEmpty(data.password)) {
-    errors.password = "Password Field can't be Empty";
+  if (validator.isEmpty(data.signaltime)) {
+    errors.signaltime = "Signal Time Field can't be Empty";
   }
-  if (validator.isEmpty(data.password2)) {
-    errors.password2 = "Confirm Password Field can't be Empty";
+  if (validator.isEmpty(data.boughtat)) {
+    errors.boughtat = "Bought At Field can't be Empty";
   }
-  if (!validator.equals(data.password, data.password2)) {
-    errors.passwords = "Password mismatched.";
+  if (validator.isEmpty(data.soldat)) {
+    errors.soldat = "Sold At Field can't be Empty";
   }
   return {
     errors,
