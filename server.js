@@ -3,7 +3,9 @@ const express = require("express"),
   bodyParser = require("body-parser"),
   passport = require("passport"),
   // Bring in APIs
-  users = require("./router/api/users");
+  users = require("./router/api/users"),
+  admin = require("./router/api/admin"),
+  signals = require("./router/api/signals");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -16,6 +18,8 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 app.use("/api/users", users);
+app.use("/api/admin", admin);
+app.use("/api/signals", signals);
 
 const port = process.env.PORT || 10000;
 

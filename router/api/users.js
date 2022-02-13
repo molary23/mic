@@ -2,6 +2,7 @@ const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
   Sequelize = require("sequelize"),
+  gravatar = require("gravatar"),
   passport = require("passport"),
   { Op } = require("sequelize"),
   // Use Json Web Token
@@ -10,10 +11,12 @@ const express = require("express"),
   User = require("../../model/User"),
   Pass = require("../../model/Pass"),
   Referral = require("../../model/Referral"),
+  Profile = require("../../model/Profile"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   validateLoginInput = require("../../validation/login"),
-  validateResetInput = require("../../validation/reset");
+  validateResetInput = require("../../validation/reset"),
+  validatePassInput = require("../../validation/password");
 
 /*
 @route POST api/user/register
@@ -56,10 +59,12 @@ router.post("/register", (req, res) => {
                           where: { username: req.body.referral },
                           attributes: ["id"],
                         }).then((ref) => {
-                          Referral.create({
-                            referral: ref.id,
-                            UserId: user.id,
-                          });
+                          if (ref) {
+                            Referral.create({
+                              referral: ref.id,
+                              UserId: user.id,
+                            });
+                          }
                         });
                       }
                       res.json(user);
@@ -81,8 +86,8 @@ router.post("/register", (req, res) => {
 @access public
 */
 
-router.post("/:referral", (req, res) => {
-  let message = {};
+router.post("/referral/:username", (req, res) => {
+  const message = {};
   User.findOne({
     where: { username: req.params.referral },
     attributes: ["username"],
@@ -152,7 +157,7 @@ router.get("/username", (req, res) => {
 });
 
 /*
-@route POST api/user/login/
+@route POST api/users/login/
 @desc User Login
 @access public
 */
@@ -243,8 +248,12 @@ router.post("/forgot", (req, res) => {
           passField,
         },
       })
-        .then((found, created) => {
-          if (found) {
+        .then(([found, created]) => {
+          if (created) {
+            // Send  Mail to User
+            message.add = "A Password Reset Code has been sent to your Mail";
+            res.json(message);
+          } else {
             Pass.update(
               {
                 reset: passField.reset,
@@ -255,15 +264,10 @@ router.post("/forgot", (req, res) => {
                 },
               }
             ).then(() => {
-              message.success =
+              message.update =
                 "A Password Reset Code has been sent to your Mail";
               res.json(message);
             });
-          } else if (created) {
-            // Send  Mail to User
-            message.success =
-              "A Password Reset Code has been sent to your Mail";
-            res.json(message);
           }
         })
         .catch((err) => res.json(err));
@@ -334,5 +338,95 @@ router.post("/reset", (req, res) => {
       .catch((err) => res.json(err));
   });
 });
+
+/*
+@route /api/user/profile/
+@desc User update profile
+@access PRIVATE
+*/
+
+router.post(
+  "/profile",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const message = {},
+      profileFields = {},
+      userId = req.user.id;
+
+    let userEmail;
+
+    if (req.body.firstname) profileFields.firstname = req.body.firstname;
+    if (req.body.lastname) profileFields.lastname = req.body.lastname;
+
+    User.findByPk(userId, { attributes: ["email"] }).then((user) => {
+      userEmail = user.email;
+    });
+
+    profileFields.avatar = gravatar.url(userEmail, {
+      s: "200",
+      r: "pg",
+      d: "mm",
+    });
+
+    Profile.findOrCreate({
+      where: { UserId: userId },
+      defaults: {
+        firstname: profileFields.firstname,
+        lastname: profileFields.lastname,
+        avatar: profileFields.avatar,
+      },
+    })
+      .then(([profile, created]) => {
+        if (created) {
+          message.add = "Profile added!";
+          res.json(message);
+        } else {
+          Profile.update(
+            {
+              firstname: profileFields.firstname,
+              lastname: profileFields.lastname,
+              avatar: profileFields.avatar,
+            },
+            {
+              where: {
+                UserId: userId,
+              },
+            }
+          )
+            .then(() => {
+              message.update = "Profile updated!";
+              res.json(message);
+            })
+            .catch((err) => res.json(err));
+        }
+      })
+      .catch((err) => res.json(err));
+  }
+);
+
+/*
+@route POST api/user/password
+@desc User change Password
+@access private
+*/
+
+router.post(
+  "/password",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validatePassInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const userId = req.user.id,
+      password = req.body.password;
+
+    User.update({ password }, { where: { id: userId } })
+      .then((user) => {
+        res.json({ message: "Password changed Successfully!" });
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 
 module.exports = router;

@@ -5,6 +5,8 @@ const User = require("../User"),
   Pass = require("../Pass"),
   Referral = require("../Referral"),
   Bonus = require("../Bonus"),
+  Signal = require("../Signal"),
+  Currency = require("../Currency"),
   Settings = require("../Settings");
 
 User.hasOne(Profile, {
@@ -60,12 +62,40 @@ User.hasMany(Settings, {
   },
 });
 Settings.belongsTo(User);
+
+Currency.hasMany(Signal, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Signal.belongsTo(Currency);
+
+User.hasMany(Signal, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Signal.belongsTo(User);
+
+User.hasMany(Currency, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Currency.belongsTo(User);
 /*
 sequelize
-  .sync()
+  .sync({ force: false })
   .then((result) => {
     console.log(result);
   })
   .catch((error) => {
     console.log(error);
-  });*/
+  });
+*/

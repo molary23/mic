@@ -18,16 +18,8 @@ Profile.init(
     lastname: {
       type: DataTypes.STRING(50),
     },
-    photo: {
-      type: DataTypes.STRING(20),
-    },
-    level: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
-    },
-    active: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
+    avatar: {
+      type: DataTypes.STRING,
     },
   },
   {
