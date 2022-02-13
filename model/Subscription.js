@@ -20,6 +20,10 @@ Subscription.init(
       type: DataTypes.INTEGER, // Duration in days
       allowNull: false,
     },
+    payID: {
+      type: DataTypes.INTEGER.UNSIGNED, // Duration in days
+      allowNull: false,
+    },
   },
   {
     // don't forget to enable timestamps!

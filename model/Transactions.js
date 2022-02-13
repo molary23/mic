@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../config/dbcon");
 
-class Bonus extends Model {}
+class Transaction extends Model {}
 
-Bonus.init(
+Transaction.init(
   {
     // Model attributes are defined here
     id: {
@@ -15,6 +15,9 @@ Bonus.init(
     amount: {
       type: DataTypes.DOUBLE,
       allowNull: false,
+    },
+    type: {
+      type: DataTypes.ENUM("d", "c"), // Debit or Credit
     },
   },
   {
@@ -28,8 +31,8 @@ Bonus.init(
     updatedAt: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Bonus", // We need to choose the model name
+    modelName: "Transaction", // We need to choose the model name
   }
 );
 
-module.exports = Bonus;
+module.exports = Transaction;

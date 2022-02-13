@@ -9,9 +9,6 @@ const express = require("express"),
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
   User = require("../../model/User"),
-  Pass = require("../../model/Pass"),
-  Referral = require("../../model/Referral"),
-  Profile = require("../../model/Profile"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
@@ -95,10 +92,13 @@ router.delete(
       if (!user) {
         error.user = "User doesn't exist!";
         res.status(400).json(error);
+      } else if (user.level < 2) {
+        error.user = "You can't deactivate a User";
+        res.status(400).json(error);
       } else {
         User.update({ active: 0 }, { where: { id: userId } })
           .then(() => {
-            res.json({ message: "User deactivated" });
+            res.json({ message: "Admin/SP deactivated" });
           })
           .catch((err) => res.status(404).json(err));
       }

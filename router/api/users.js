@@ -330,13 +330,37 @@ router.post("/reset", (req, res) => {
             }
           )
             .then(() => {
-              res.json({ message: "Password Reset Code confirmed!" });
+              res.json({
+                message: "Password Reset Code confirmed!",
+                id: user.id,
+              });
             })
             .catch((err) => res.json(err));
         }
       })
       .catch((err) => res.json(err));
   });
+});
+
+/*
+@route /api/user/reset/password
+@desc User reset Password
+@access PRIVATE
+*/
+
+router.post("/reset/password", (req, res) => {
+  const { errors, isValid } = validatePassInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  const userId = req.body.id,
+    password = req.body.password;
+
+  User.update({ password }, { where: { id: userId } })
+    .then(() => {
+      res.json({ message: "Password changed Successfully!" });
+    })
+    .catch((err) => res.status(404).json(err));
 });
 
 /*

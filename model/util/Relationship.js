@@ -1,7 +1,7 @@
 // Bring in Models
-const Payment = require("../Payment");
-const Premium = require("../Premium");
-const User = require("../User"),
+const Payment = require("../Payment"),
+  Premium = require("../Premium"),
+  User = require("../User"),
   Profile = require("../Profile"),
   Subscription = require("../Subscription"),
   Pass = require("../Pass"),
@@ -9,8 +9,10 @@ const User = require("../User"),
   Bonus = require("../Bonus"),
   Signal = require("../Signal"),
   Currency = require("../Currency"),
-  Settings = require("../Settings");
+  Settings = require("../Settings"),
+  Transaction = require("../Transactions");
 
+// Define Relationsship between tables
 User.hasOne(Profile, {
   onDelete: "RESTRICT",
   hooks: true,
@@ -101,14 +103,14 @@ User.hasMany(Subscription, {
 });
 Subscription.belongsTo(User);
 
-Payment.hasMany(Subscription, {
+User.hasMany(Transaction, {
   onDelete: "RESTRICT",
   hooks: true,
   foreignKey: {
     allowNull: false,
   },
 });
-Subscription.belongsTo(Payment);
+Transaction.belongsTo(User);
 
 Subscription.hasOne(Premium, {
   onDelete: "RESTRICT",
@@ -118,6 +120,15 @@ Subscription.hasOne(Premium, {
   },
 });
 Premium.belongsTo(Subscription);
+
+Subscription.hasOne(Bonus, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Bonus.belongsTo(Subscription);
 
 User.hasOne(Premium, {
   onDelete: "RESTRICT",
