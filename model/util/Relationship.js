@@ -1,4 +1,6 @@
 // Bring in Models
+const Payment = require("../Payment");
+const Premium = require("../Premium");
 const User = require("../User"),
   Profile = require("../Profile"),
   Subscription = require("../Subscription"),
@@ -89,6 +91,42 @@ User.hasMany(Currency, {
   },
 });
 Currency.belongsTo(User);
+
+User.hasMany(Subscription, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Subscription.belongsTo(User);
+
+Payment.hasMany(Subscription, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Subscription.belongsTo(Payment);
+
+Subscription.hasOne(Premium, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Premium.belongsTo(Subscription);
+
+User.hasOne(Premium, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Premium.belongsTo(User);
 /*
 sequelize
   .sync({ force: false })

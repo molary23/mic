@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../config/dbcon");
 
-class Subscription extends Model {}
+class Payment extends Model {}
 
-Subscription.init(
+Payment.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,12 +12,21 @@ Subscription.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: DataTypes.ENUM("b", "p"), // Bonus or Payment
+
+    amount: {
+      type: DataTypes.DOUBLE, // Sub active or not
       allowNull: false,
     },
-    duration: {
-      type: DataTypes.INTEGER, // Duration in days
+    package: {
+      type: DataTypes.TINYINT, // Package Paid for
+      allowNull: false,
+    },
+    period: {
+      type: DataTypes.INTEGER.UNSIGNED, // Sub active or not
+      allowNull: false,
+    },
+    referencer: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
@@ -28,10 +37,10 @@ Subscription.init(
     // I want createdAt
     createdAt: true,
     // I want updatedAt
-    updatedAt: false,
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Subscription", // We need to choose the model name
+    modelName: "Payment", // We need to choose the model name
   }
 );
-module.exports = Subscription;
+module.exports = Payment;
