@@ -18,15 +18,23 @@ Payment.init(
       allowNull: false,
     },
     package: {
-      type: DataTypes.TINYINT, // Package Paid for
+      type: DataTypes.ENUM("m", "y"), // Package Paid for
       allowNull: false,
     },
-    period: {
-      type: DataTypes.INTEGER.UNSIGNED, // Sub active or not
+    plan: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
-    referencer: {
+    reference: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+    payday: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },

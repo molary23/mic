@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../config/dbcon");
 
-class Signal extends Model {}
+class Parameter extends Model {}
 
-Signal.init(
+Parameter.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,25 +12,13 @@ Signal.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    signaloption: {
-      type: DataTypes.ENUM("b", "s"),
+    parameter: {
+      type: DataTypes.ENUM("l", "p"), // Stop Loss or Take Profit
       allowNull: false,
     },
-    startrange: {
+    figure: {
       type: DataTypes.DOUBLE,
       allowNull: false,
-    },
-    endrange: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
-    pip: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
     },
   },
   {
@@ -38,14 +26,14 @@ Signal.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: "timeCreated",
+    createdAt: false,
 
     // I dont want updatedAt
-    updatedAt: "timeUpdated",
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Signal", // We need to choose the model name
+    modelName: "Parameter", // We need to choose the model name
   }
 );
 
-module.exports = Signal;
+module.exports = Parameter;

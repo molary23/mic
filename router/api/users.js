@@ -409,7 +409,6 @@ router.post(
             {
               firstname: profileFields.firstname,
               lastname: profileFields.lastname,
-              avatar: profileFields.avatar,
             },
             {
               where: {

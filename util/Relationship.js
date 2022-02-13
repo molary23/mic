@@ -1,16 +1,17 @@
 // Bring in Models
-const Payment = require("../Payment"),
-  Premium = require("../Premium"),
-  User = require("../User"),
-  Profile = require("../Profile"),
-  Subscription = require("../Subscription"),
-  Pass = require("../Pass"),
-  Referral = require("../Referral"),
-  Bonus = require("../Bonus"),
-  Signal = require("../Signal"),
-  Currency = require("../Currency"),
-  Settings = require("../Settings"),
-  Transaction = require("../Transactions");
+const Payment = require("../model/Payment"),
+  Premium = require("../model/Premium"),
+  User = require("../model/User"),
+  Profile = require("../model/Profile"),
+  Subscription = require("../model/Subscription"),
+  Pass = require("../model/Pass"),
+  Referral = require("../model/Referral"),
+  Bonus = require("../model/Bonus"),
+  Signal = require("../model/Signal"),
+  Currency = require("../model/Currency"),
+  Settings = require("../model/Settings"),
+  Transaction = require("../model/Transaction"),
+  Parameter = require("../model/Parameter");
 
 // Define Relationsship between tables
 User.hasOne(Profile, {
@@ -39,6 +40,15 @@ User.hasMany(Subscription, {
   },
 });
 Subscription.belongsTo(User);
+
+User.hasMany(Payment, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Payment.belongsTo(User);
 
 User.hasOne(Referral, {
   onDelete: "RESTRICT",
@@ -76,6 +86,15 @@ Currency.hasMany(Signal, {
 });
 Signal.belongsTo(Currency);
 
+Signal.hasMany(Parameter, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Parameter.belongsTo(Signal);
+
 User.hasMany(Signal, {
   onDelete: "RESTRICT",
   hooks: true,
@@ -103,6 +122,15 @@ User.hasMany(Subscription, {
 });
 Subscription.belongsTo(User);
 
+Subscription.hasOne(Bonus, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Bonus.belongsTo(Subscription);
+
 User.hasMany(Transaction, {
   onDelete: "RESTRICT",
   hooks: true,
@@ -120,15 +148,6 @@ Subscription.hasOne(Premium, {
   },
 });
 Premium.belongsTo(Subscription);
-
-Subscription.hasOne(Bonus, {
-  onDelete: "RESTRICT",
-  hooks: true,
-  foreignKey: {
-    allowNull: false,
-  },
-});
-Bonus.belongsTo(Subscription);
 
 User.hasOne(Premium, {
   onDelete: "RESTRICT",

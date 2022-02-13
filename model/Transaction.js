@@ -18,6 +18,11 @@ Transaction.init(
     },
     type: {
       type: DataTypes.ENUM("d", "c"), // Debit or Credit
+      allowNull: false,
+    },
+    method: {
+      type: DataTypes.ENUM("b", "s", "w"),
+      allowNull: false,
     },
   },
   {
