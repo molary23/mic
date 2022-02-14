@@ -12,8 +12,11 @@ const express = require("express"),
   Bonus = require("../../model/Bonus"),
   Premium = require("../../model/Premium"),
   //Bring in the Validation
-  // Bring in Duration
-  duration = require("../../util/duration");
+
+  //Bring in Super Admin Checker
+  checkSuperAdmin = require("../../validation/superCheck");
+// Bring in Duration
+duration = require("../../util/duration");
 
 /*
 @route POST api/payments/make

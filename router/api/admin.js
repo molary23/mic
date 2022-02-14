@@ -1,3 +1,5 @@
+const Premium = require("../../model/Premium");
+
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -9,6 +11,10 @@ const express = require("express"),
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
   User = require("../../model/User"),
+  Payment = require("../../model/Payment"),
+  Subscription = require("../../model/Subscription"),
+  Bonus = require("../../model/Bonus"),
+  Transaction = require("../../model/Transaction"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
@@ -103,6 +109,169 @@ router.delete(
           .catch((err) => res.status(404).json(err));
       }
     });
+  }
+);
+
+/*
+@route GET api/admin/payments
+@desc Admin View Payments
+@access private
+*/
+
+router.get(
+  "/payments",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    Payment.findAll()
+      .then((pay) => {
+        res.json(pay);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/admin/subscription
+@desc Admin View subscriptions
+@access private
+*/
+
+router.get(
+  "/subscriptions",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let clause = {},
+      where = {};
+    if (req.body.type) {
+      where.type = req.body.type;
+    }
+    clause = { where };
+
+    Subscription.findAll(
+      {
+        include: Payment,
+      },
+      clause
+    )
+      .then((sub) => {
+        res.json(sub);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/admin/bonus
+desc Admin View bonus
+@access private
+*/
+
+router.get(
+  "/bonus",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let clause = {},
+      where = {};
+    if (req.body.status) {
+      where.status = req.body.status;
+    }
+    clause = { where };
+
+    Bonus.findAll(
+      {
+        include: [User, Payment],
+      },
+      clause
+    )
+      .then((bonus) => {
+        res.json(bonus);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/admin/transactions
+desc Admin View transactions
+@access private
+*/
+
+router.get(
+  "/transactions",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let clause = {},
+      where = {};
+    if (req.body.type && !req.body.method) {
+      where.type = req.body.type;
+    } else if (!req.body.type && req.body.method) {
+      where.method = req.body.method;
+    } else if (req.body.type && req.body.method) {
+      where.method = req.body.method;
+      where.type = req.body.type;
+    }
+    clause = { where };
+    Transaction.findAll(
+      {
+        include: User,
+      },
+      clause
+    )
+      .then((transactions) => {
+        res.json(transactions);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/admin/premium
+@desc Admin View Premium Members
+@access private
+*/
+
+router.get(
+  "/premium",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let clause = {},
+      where = {};
+    if (req.body.active) {
+      where.active = req.body.active;
+    }
+    clause = { where };
+
+    Premium.findAll(
+      {
+        include: [User, Subscription],
+      },
+      clause
+    )
+      .then((users) => {
+        res.json(users);
+      })
+      .catch((err) => res.status(404).json(err));
   }
 );
 

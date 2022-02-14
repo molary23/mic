@@ -1,3 +1,5 @@
+const Premium = require("../../model/Premium");
+
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -447,6 +449,135 @@ router.post(
     User.update({ password }, { where: { id: userId } })
       .then((user) => {
         res.json({ message: "Password changed Successfully!" });
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/details
+@desc User view Details
+@access private
+*/
+
+router.get(
+  "/details",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const userId = req.user.id;
+
+    User.findByPk(userId, { include: [Profile, Premium] })
+      .then((user) => {
+        res.json(user);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/payments
+@desc User View Payments
+@access private
+*/
+
+router.get(
+  "/payments",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserId = req.user.id;
+    Payment.findAll({
+      where: {
+        UserId,
+      },
+    })
+      .then((pay) => {
+        res.json(pay);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/subscriptions
+@desc User View subscriptions
+@access private
+*/
+
+router.get(
+  "/subscriptions",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserId = req.user.id;
+
+    Subscription.findAll(
+      {
+        where: {
+          UserId,
+        },
+      },
+      {
+        include: Payment,
+      }
+    )
+      .then((sub) => {
+        res.json(sub);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/bonus
+desc User View bonus
+@access private
+*/
+
+router.get(
+  "/bonus",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserId = req.user.id;
+
+    Bonus.findAll(
+      { where: { UserId } },
+      {
+        include: Payment,
+      }
+    )
+      .then((bonus) => {
+        res.json(bonus);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/transactions
+desc User View transactions
+@access private
+*/
+
+router.get(
+  "/transactions",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserId = req.user.id;
+
+    let clause = {},
+      where = {};
+    where.UserId = UserId;
+    if (req.body.type && !req.body.method) {
+      where.type = req.body.type;
+    } else if (!req.body.type && req.body.method) {
+      where.method = req.body.method;
+    } else if (req.body.type && req.body.method) {
+      where.method = req.body.method;
+      where.type = req.body.type;
+    }
+    clause = { where };
+    Transaction.findAll(clause)
+      .then((transactions) => {
+        res.json(transactions);
       })
       .catch((err) => res.status(404).json(err));
   }

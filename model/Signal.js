@@ -18,27 +18,22 @@ Signal.init(
     },
     takeprofit: {
       type: DataTypes.JSON,
-      allowNull: false,
     },
     stoploss: {
       type: DataTypes.JSON,
-      allowNull: false,
     },
     startrange: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
     },
     endrange: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
     },
     pip: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
     },
     status: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
+      type: DataTypes.ENUM("f", "c"),
+      defaultValue: "f",
     },
   },
   {

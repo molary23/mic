@@ -35,14 +35,16 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
+
     const signalFields = {};
     signalFields.UserId = req.user.id;
-    signalFields.signalfrom = req.body.signalfrom;
-    signalFields.signaltill = req.body.signaltill;
-    signalFields.boughtat = req.body.boughtat;
-    signalFields.soldat = req.body.soldat;
+    signalFields.signaloption = req.body.signaloption;
     signalFields.CurrencyId = req.body.currency;
-    signalFields.pip = (signalFields.boughtat - signalFields.soldat).toFixed(2);
+    if (req.body.takeprofit) signalFields.takeprofit = req.body.takeprofit;
+    if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
+    if (req.body.startrange) signalFields.startrange = req.body.startrange;
+    if (req.body.endrange) signalFields.endrange = req.body.endrange;
+    if (req.body.pip) signalFields.pip = req.body.pip;
 
     Signal.create(signalFields)
       .then((signal) => {
@@ -73,9 +75,23 @@ router.post(
     const currencyFields = {};
     currencyFields.currency = req.body.currency;
     currencyFields.UserId = req.user.id;
-    Currency.create(currencyFields)
+
+    Currency.findOne({
+      where: {
+        currency: currencyFields.currency,
+      },
+    })
       .then((currency) => {
-        res.json(currency);
+        if (currency) {
+          error.currency = "Currency Combination exist!";
+          res.json(error);
+        } else {
+          Currency.create(currencyFields)
+            .then((currency) => {
+              res.json(currency);
+            })
+            .catch((err) => res.status(404).json(err));
+        }
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -95,34 +111,26 @@ router.post(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-
     const signalID = req.params.id,
       userID = req.user.id;
     Signal.findOne({
       where: { id: signalID },
-      attributes: ["UserId", "boughtat", "soldat"],
+      attributes: ["UserId"],
     })
-      .then((user) => {
-        if (user.UserId === userID) {
+      .then((signal) => {
+        if (signal.UserId === userID) {
           const signalFields = {};
-          signalFields.UserId = userID;
-          if (req.body.signalfrom)
-            signalFields.signalfrom = req.body.signalfrom;
-          if (req.body.signaltill)
-            signalFields.signaltill = req.body.signaltill;
-          if (req.body.boughtat) {
-            signalFields.boughtat = req.body.boughtat;
-          } else {
-            signalFields.boughtat = user.boughtat;
-          }
-          if (req.body.soldat) {
-            signalFields.soldat = req.body.soldat;
-          } else {
-            signalFields.soldat = user.soldat;
-          }
-          signalFields.pip = (
-            signalFields.boughtat - signalFields.soldat
-          ).toFixed(2);
+          if (req.body.signaloption)
+            signalFields.signaloption = req.body.signaloption;
+          if (req.body.currency) signalFields.CurrencyId = req.body.currency;
+          if (req.body.takeprofit)
+            signalFields.takeprofit = req.body.takeprofit;
+          if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
+          if (req.body.startrange)
+            signalFields.startrange = req.body.startrange;
+          if (req.body.endrange) signalFields.endrange = req.body.endrange;
+          if (req.body.status) signalFields.status = req.body.status;
+          if (req.body.pip) signalFields.pip = req.body.pip;
 
           Signal.update(signalFields, { where: { id: signalID } })
             .then(() => {
