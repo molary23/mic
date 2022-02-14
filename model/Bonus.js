@@ -16,6 +16,10 @@ Bonus.init(
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
+    status: {
+      type: DataTypes.TINYINT,
+      defaultValue: 0,
+    },
   },
   {
     // don't forget to enable timestamps!

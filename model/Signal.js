@@ -16,6 +16,14 @@ Signal.init(
       type: DataTypes.ENUM("b", "s"),
       allowNull: false,
     },
+    takeprofit: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
+    stoploss: {
+      type: DataTypes.JSON,
+      allowNull: false,
+    },
     startrange: {
       type: DataTypes.DOUBLE,
       allowNull: false,

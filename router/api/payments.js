@@ -10,7 +10,7 @@ const express = require("express"),
   Subscription = require("../../model/Subscription"),
   Payment = require("../../model/Payment"),
   Bonus = require("../../model/Bonus"),
-  Transaction = require("../../model/Transaction"),
+  Premium = require("../../model/Premium"),
   //Bring in the Validation
   // Bring in Duration
   duration = require("../../util/duration");
@@ -26,11 +26,26 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const bonusFields = {},
-      payFields = {};
+      payFields = {},
+      premFields = {},
+      date = new Date();
+    let daysleft, percent;
     if (req.body.referrerID) bonusFields.UserId = req.body.referrerID;
     if (req.body.amount) payFields.amount = req.body.amount;
     if (req.body.payFor) payFields.package = req.body.payFor;
     if (req.body.payPlan) payFields.plan = req.body.payPlan;
+    if (req.body.starter) premFields.starter = req.body.starter;
+
+    let isTrue = premFields.starter === "true";
+
+    if (isTrue) {
+      daysleft = 0;
+      percent = 10;
+    } else {
+      daysleft = req.body.daysleft;
+      percent = 5;
+    }
+
     payFields.UserId = req.user.id;
     const returned = {
       amount: 2.99,
@@ -42,15 +57,13 @@ router.post(
       reference: "jgw7sti9237467tvjerghrs97t36y",
     };
 
-    bonusFields.amount = returned.amount * (5 / 100);
     payFields.payday = returned.date.toISOString();
     payFields.status = returned.status;
     payFields.reference = returned.reference.toUpperCase();
 
     Payment.create(payFields)
       .then((pay) => {
-        const date = new Date(),
-          year = date.getFullYear(),
+        const year = date.getFullYear(),
           month = date.getMonth() + 1;
         let days = 365,
           payId = pay.id,
@@ -76,22 +89,61 @@ router.post(
         })
           .then((sub) => {
             bonusFields.SubscriptionId = sub.id;
-            // Premium
-            Bonus.create(bonusFields)
-              .then(() => {
-                const transField = {};
-                transField.amount = bonusFields.amount;
-                transField.type = "c";
-                transField.method = "b";
-                transField.UserId = bonusFields.UserId;
-                console.log(transField);
-                Transaction.create(transField)
-                  .then(() => {
+            premFields.SubscriptionId = sub.id;
+            premFields.UserId = payFields.UserId;
+            let left = parseInt(daysleft) + period;
+            premFields.startdate = date;
+            premFields.enddate = date.setDate(date.getDate() + left);
+            premFields.active = 1;
+            if (isTrue) {
+              Premium.create(premFields)
+                .then(() => {
+                  if (
+                    bonusFields.UserId !== "" ||
+                    bonusFields.UserId !== undefined
+                  ) {
+                    bonusFields.amount = returned.amount * (percent / 100);
+                    Bonus.create(bonusFields)
+                      .then(() => {
+                        res.json({ message: "Payment Successful!" });
+                      })
+                      .catch((err) => res.status(404).json(err));
+                  } else {
                     res.json({ message: "Payment Successful!" });
-                  })
-                  .catch((err) => res.status(404).json(err));
-              })
-              .catch((err) => res.status(404).json(err));
+                  }
+                })
+                .catch((err) => res.status(404).json(err));
+            } else {
+              Premium.update(
+                {
+                  SubscriptionId: premFields.SubscriptionId,
+                  startdate: premFields.startdate,
+                  enddate: premFields.enddate,
+                  active: premFields.active,
+                },
+                { where: { UserId: premFields.UserId } }
+              )
+                .then(() => {
+                  if (
+                    bonusFields.UserId !== "" ||
+                    bonusFields.UserId !== undefined
+                  ) {
+                    bonusFields.amount = returned.amount * (percent / 100);
+                    Bonus.create(bonusFields)
+                      .then(() => {
+                        res.json({
+                          message: "Payment Successful!",
+                        });
+                      })
+                      .catch((err) => res.status(404).json(err));
+                  } else {
+                    res.json({
+                      message: "Payment Successful!",
+                    });
+                  }
+                })
+                .catch((err) => res.status(404).json(err));
+            }
           })
           .catch((err) => res.status(404).json(err));
       })

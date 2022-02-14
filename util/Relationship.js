@@ -10,8 +10,7 @@ const Payment = require("../model/Payment"),
   Signal = require("../model/Signal"),
   Currency = require("../model/Currency"),
   Settings = require("../model/Settings"),
-  Transaction = require("../model/Transaction"),
-  Parameter = require("../model/Parameter");
+  Transaction = require("../model/Transaction");
 
 // Define Relationsship between tables
 User.hasOne(Profile, {
@@ -85,15 +84,6 @@ Currency.hasMany(Signal, {
   },
 });
 Signal.belongsTo(Currency);
-
-Signal.hasMany(Parameter, {
-  onDelete: "RESTRICT",
-  hooks: true,
-  foreignKey: {
-    allowNull: false,
-  },
-});
-Parameter.belongsTo(Signal);
 
 User.hasMany(Signal, {
   onDelete: "RESTRICT",
