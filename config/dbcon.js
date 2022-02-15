@@ -9,8 +9,8 @@ if (process.env.NODE_ENV === "production") {
   db = db_dev;
 }
 
-const sequelize = new Sequelize(db.dbname, db.dbhost, db.dbpass, {
-  host: "localhost",
+const sequelize = new Sequelize(db.dbname, db.dbuser, db.dbpass, {
+  host: db.dbhost,
   dialect: "mysql",
 });
 

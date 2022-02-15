@@ -7,9 +7,9 @@ const express = require("express"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
-  User = require("../../model/User"),
-  Signal = require("../../model/Signal"),
-  Currency = require("../../model/Currency"),
+  User = require("../../db/models/User"),
+  Signal = require("../../db/models/Signal"),
+  Currency = require("../../db/models/Currency"),
   //Bring in the Validation
   validateSignalInput = require("../../validation/signal"),
   //Bring in Admin Checker

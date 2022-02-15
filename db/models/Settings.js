@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
-sequelize = require("../config/dbcon");
+sequelize = require("../../config/dbcon");
 
-class Referral extends Model {}
+class Settings extends Model {}
 
-Referral.init(
+Settings.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,8 +12,13 @@ Referral.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    referral: {
-      type: DataTypes.INTEGER,
+    type: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
+    },
+    option: {
+      type: DataTypes.STRING(1),
+      allowNull: false,
     },
   },
   {
@@ -21,14 +26,14 @@ Referral.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: "timeCreated",
+    createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: false,
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Referral", // We need to choose the model name
+    modelName: "Settings", // We need to choose the model name
   }
 );
 
-module.exports = Referral;
+module.exports = Settings;

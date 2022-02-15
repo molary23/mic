@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
-sequelize = require("../config/dbcon");
+sequelize = require("../../config/dbcon");
 
-class Transaction extends Model {}
+class Subscription extends Model {}
 
-Transaction.init(
+Subscription.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,17 +12,21 @@ Transaction.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    amount: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
     type: {
-      type: DataTypes.ENUM("d", "c"), // Debit or Credit
+      type: DataTypes.ENUM("b", "p"), // Bonus or Payment
       allowNull: false,
     },
-    method: {
-      type: DataTypes.ENUM("b", "s", "w"),
+    duration: {
+      type: DataTypes.INTEGER, // Duration in days
       allowNull: false,
+    },
+    payID: {
+      type: DataTypes.INTEGER.UNSIGNED, // Duration in days
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.TINYINT, // Duration in days
+      defaultValue: 1,
     },
   },
   {
@@ -31,13 +35,11 @@ Transaction.init(
 
     // I want createdAt
     createdAt: true,
-
-    // I dont want updatedAt
+    // I want updatedAt
     updatedAt: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Transaction", // We need to choose the model name
+    modelName: "Subscription", // We need to choose the model name
   }
 );
-
-module.exports = Transaction;
+module.exports = Subscription;

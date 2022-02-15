@@ -1,23 +1,25 @@
 const { DataTypes, Model } = require("sequelize");
-sequelize = require("../config/dbcon");
+sequelize = require("../../config/dbcon");
 
-class Pass extends Model {}
+class Profile extends Model {}
 
-Pass.init(
+Profile.init(
   {
     // Model attributes are defined here
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
-    reset: {
-      type: DataTypes.STRING(8),
+    firstname: {
+      type: DataTypes.STRING(50),
     },
-    confirm: {
-      type: DataTypes.TINYINT,
-      defaultValue: 0,
+    lastname: {
+      type: DataTypes.STRING(50),
+    },
+    avatar: {
+      type: DataTypes.STRING,
     },
   },
   {
@@ -25,14 +27,14 @@ Pass.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: false,
+    createdAt: "timeCreated",
 
     // I dont want updatedAt
     updatedAt: "timeUpdated",
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Pass", // We need to choose the model name
+    modelName: "Profile", // We need to choose the model name
   }
 );
 
-module.exports = Pass;
+module.exports = Profile;

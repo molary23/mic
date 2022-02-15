@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
-sequelize = require("../config/dbcon");
+sequelize = require("../../config/dbcon");
 
-class Bonus extends Model {}
+class Currency extends Model {}
 
-Bonus.init(
+Currency.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,13 +12,13 @@ Bonus.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    amount: {
-      type: DataTypes.DOUBLE,
+    currency: {
+      type: DataTypes.STRING(7),
       allowNull: false,
     },
-    status: {
+    active: {
       type: DataTypes.TINYINT,
-      defaultValue: 0,
+      defaultValue: 1,
     },
   },
   {
@@ -26,14 +26,14 @@ Bonus.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: true,
+    createdAt: "timeCreated",
 
     // I dont want updatedAt
-    updatedAt: false,
+    updatedAt: "timeUpdated",
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Bonus", // We need to choose the model name
+    modelName: "Currency", // We need to choose the model name
   }
 );
 
-module.exports = Bonus;
+module.exports = Currency;

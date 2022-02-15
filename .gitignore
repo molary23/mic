@@ -4,3 +4,4 @@
 #ignore dev files
 /config/db_dev.js
 /config/keys_dev.js
+/config/config.json

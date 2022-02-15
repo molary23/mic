@@ -1,16 +1,16 @@
 // Bring in Models
-const Payment = require("../model/Payment"),
-  Premium = require("../model/Premium"),
-  User = require("../model/User"),
-  Profile = require("../model/Profile"),
-  Subscription = require("../model/Subscription"),
-  Pass = require("../model/Pass"),
-  Referral = require("../model/Referral"),
-  Bonus = require("../model/Bonus"),
-  Signal = require("../model/Signal"),
-  Currency = require("../model/Currency"),
-  Settings = require("../model/Settings"),
-  Transaction = require("../model/Transaction");
+const Payment = require("../db/models/Payment"),
+  Premium = require("../db/models/Premium"),
+  User = require("../db/models/User"),
+  Profile = require("../db/models/Profile"),
+  Subscription = require("../db/models/Subscription"),
+  Pass = require("../db/models/Pass"),
+  Referral = require("../db/models/Referral"),
+  Bonus = require("../db/models/Bonus"),
+  Signal = require("../db/models/Signal"),
+  Currency = require("../db/models/Currency"),
+  Settings = require("../db/models/Settings"),
+  Transaction = require("../db/models/Transaction");
 
 // Define Relationsship between tables
 User.hasOne(Profile, {
@@ -130,15 +130,6 @@ User.hasMany(Transaction, {
 });
 Transaction.belongsTo(User);
 
-Subscription.hasOne(Premium, {
-  onDelete: "RESTRICT",
-  hooks: true,
-  foreignKey: {
-    allowNull: false,
-  },
-});
-Premium.belongsTo(Subscription);
-
 User.hasOne(Premium, {
   onDelete: "RESTRICT",
   hooks: true,
@@ -149,7 +140,7 @@ User.hasOne(Premium, {
 Premium.belongsTo(User);
 /*
 sequelize
-  .sync({ force: false })
+  .sync({ alter: true })
   .then((result) => {
     console.log(result);
   })

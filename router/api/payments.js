@@ -6,11 +6,11 @@ const express = require("express"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
-  User = require("../../model/User"),
-  Subscription = require("../../model/Subscription"),
-  Payment = require("../../model/Payment"),
-  Bonus = require("../../model/Bonus"),
-  Premium = require("../../model/Premium"),
+  User = require("../../db/models/User"),
+  Subscription = require("../../db/models/Subscription"),
+  Payment = require("../../db/models/Payment"),
+  Bonus = require("../../db/models/Bonus"),
+  Premium = require("../../db/models/Premium"),
   //Bring in the Validation
 
   //Bring in Super Admin Checker

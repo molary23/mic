@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require("sequelize");
-sequelize = require("../config/dbcon");
+sequelize = require("../../config/dbcon");
 
 class Signal extends Model {}
 

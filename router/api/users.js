@@ -1,5 +1,3 @@
-const Premium = require("../../model/Premium");
-
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -10,10 +8,12 @@ const express = require("express"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
-  User = require("../../model/User"),
-  Pass = require("../../model/Pass"),
-  Referral = require("../../model/Referral"),
-  Profile = require("../../model/Profile"),
+  User = require("../../db/models/User"),
+  Pass = require("../../db/models/Pass"),
+  Referral = require("../../db/models/Referral"),
+  Profile = require("../../db/models/Profile"),
+  Premium = require("../../db/models/Premium"),
+  SignalView = require("../../db/models/SignalView"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   validateLoginInput = require("../../validation/login"),
@@ -38,48 +38,72 @@ router.post("/register", (req, res) => {
   if (req.body.username) userField.username = req.body.username;
   if (req.body.password) userField.password = req.body.password;
 
-  User.findOne({ where: { email: userField.email } })
-    .then((user) => {
-      if (user) {
-        errors.email = "Email Address has been taken!";
-        res.status(400).json(errors);
-      } else {
-        User.findOne({ where: { username: userField.username } }).then(
-          (username) => {
-            if (username) {
-              errors.username = "Username has been taken!";
-              res.status(400).json(errors);
-            } else {
-              bcrypt.genSalt(10, (_err, salt) => {
-                bcrypt.hash(userField.password, salt, (err, hash) => {
-                  if (err) throw err;
-                  userField.password = hash;
-                  User.create(userField)
-                    .then((user) => {
-                      if (req.body.referral) {
-                        User.findOne({
-                          where: { username: req.body.referral },
-                          attributes: ["id"],
-                        }).then((ref) => {
-                          if (ref) {
-                            Referral.create({
-                              referral: ref.id,
-                              UserId: user.id,
-                            });
-                          }
-                        });
-                      }
-                      res.json(user);
-                    })
-                    .catch((err) => res.json(err));
+  return Promise.all([
+    User.findOne({ where: { email: userField.email } })
+      .then((user) => {
+        if (user) {
+          errors.email = "Email Address has been taken!";
+          res.status(400).json(errors);
+        } else {
+          User.findOne({ where: { username: userField.username } }).then(
+            (username) => {
+              if (username) {
+                errors.username = "Username has been taken!";
+                res.status(400).json(errors);
+              } else {
+                bcrypt.genSalt(10, (_err, salt) => {
+                  bcrypt.hash(userField.password, salt, (err, hash) => {
+                    if (err) throw err;
+                    userField.password = hash;
+                    User.create(userField)
+                      .then((user) => {
+                        const UserId = user.id,
+                          avatar = gravatar.url(userField.email, {
+                            s: "200",
+                            r: "pg",
+                            d: "mm",
+                          }),
+                          date = new Date();
+                        let startdate = date.toISOString(),
+                          enddate = startdate;
+                        Profile.create({
+                          UserId,
+                          avatar,
+                        })
+                          .then(() => {
+                            Premium.create({ UserId, startdate, enddate })
+                              .then(() => {
+                                if (req.body.referral) {
+                                  User.findOne({
+                                    where: { username: req.body.referral },
+                                    attributes: ["id"],
+                                  })
+                                    .then((ref) => {
+                                      if (ref) {
+                                        Referral.create({
+                                          referral: ref.id,
+                                          UserId: user.id,
+                                        }).catch((err) => res.json(err));
+                                      }
+                                    })
+                                    .catch((err) => res.json(err));
+                                }
+                                return res.json(user);
+                              })
+                              .catch((err) => res.json(err));
+                          })
+                          .catch((err) => res.json(err));
+                      })
+                      .catch((err) => res.json(err));
+                  });
                 });
-              });
+              }
             }
-          }
-        );
-      }
-    })
-    .catch((err) => res.status(400).json(err));
+          );
+        }
+      })
+      .catch((err) => res.status(400).json(err)),
+  ]);
 });
 
 /*

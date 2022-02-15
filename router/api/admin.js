@@ -1,5 +1,3 @@
-const Premium = require("../../model/Premium");
-
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -10,11 +8,12 @@ const express = require("express"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
-  User = require("../../model/User"),
-  Payment = require("../../model/Payment"),
-  Subscription = require("../../model/Subscription"),
-  Bonus = require("../../model/Bonus"),
-  Transaction = require("../../model/Transaction"),
+  User = require("../../db/models/User"),
+  Payment = require("../../db/models/Payment"),
+  Subscription = require("../../db/models/Subscription"),
+  Bonus = require("../../db/models/Bonus"),
+  Transaction = require("../../db/models/Transaction"),
+  Premium = require("../../db/models/Premium"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
