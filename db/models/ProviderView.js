@@ -23,9 +23,6 @@ ProviderView.init(
     userstatus: {
       type: DataTypes.TINYINT,
     },
-    premiumstatus: {
-      type: DataTypes.TINYINT,
-    },
   },
   {
     sequelize,
