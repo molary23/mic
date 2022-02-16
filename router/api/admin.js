@@ -157,7 +157,7 @@ router.get(
     }
     clause = { where };
 
-    Subscription.findAll(
+    SubscriptionView.findAll(
       {
         include: Payment,
       },
@@ -184,19 +184,74 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    let clause = {},
-      where = {};
-    if (req.body.status) {
-      where.status = req.body.status;
-    }
-    clause = { where };
 
-    Bonus.findAll(
-      {
-        include: [User, Payment],
-      },
-      clause
-    )
+    let where = {};
+    if (req.body.search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split(" ");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = { user: { [Op.substring]: searchArray[i] } };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (req.body.status) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { status: req.body.status },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: newSearchArray,
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (req.body.status) {
+          where = {
+            [Op.and]: [
+              { user: { [Op.substring]: search } },
+              { status: req.body.status },
+            ],
+          };
+        } else {
+          where = {
+            user: { [Op.substring]: search },
+          };
+        }
+      }
+    } else {
+      if (req.body.status) {
+        where.status = req.body.status;
+      }
+    }
+
+    const query = {
+      order: [["bonusid", "DESC"]],
+      attributes: [
+        "bonusid",
+        "amount",
+        [
+          Sequelize.literal(
+            `CASE WHEN status = 1 THEN 'Pending' WHEN type = 0 THEN 'Unapproved' WHEN type = 2 THEN 'Approved' END `
+          ),
+          "Status",
+        ],
+        "user",
+        "bonusdate",
+      ],
+      where,
+      raw: true,
+    };
+
+    BonusView.findAll()
       .then((bonus) => {
         res.json(bonus);
       })
@@ -219,16 +274,95 @@ router.get(
       return res.status(400).json(error);
     }
     let where = {};
-    if (req.body.type && !req.body.method) {
-      where.type = req.body.type;
-    } else if (!req.body.type && req.body.method) {
-      where.method = req.body.method;
-    } else if (req.body.type && req.body.method) {
-      where.method = req.body.method;
-      where.type = req.body.type;
+    if (req.body.search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split(" ");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = { user: { [Op.substring]: searchArray[i] } };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (req.body.type && req.body.method === "") {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { type: req.body.type },
+            ],
+          };
+        } else if (req.body.type === "" && req.body.method) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { method: req.body.method },
+            ],
+          };
+        } else if (req.body.type && req.body.method) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              {
+                [Op.or]: [{ type: req.body.type }, { method: req.body.method }],
+              },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: newSearchArray,
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (req.body.type && req.body.method === "") {
+          where = {
+            [Op.and]: [
+              { user: { [Op.substring]: search } },
+              { type: req.body.type },
+            ],
+          };
+        } else if (req.body.type === "" && req.body.method) {
+          where = {
+            [Op.and]: [
+              { user: { [Op.substring]: search } },
+              { method: req.body.method },
+            ],
+          };
+        } else if (req.body.type && req.body.method) {
+          where = {
+            [Op.and]: [
+              { user: { [Op.substring]: search } },
+              {
+                [Op.or]: [{ type: req.body.type }, { method: req.body.method }],
+              },
+            ],
+          };
+        } else {
+          where = {
+            user: { [Op.substring]: search },
+          };
+        }
+      }
+    } else {
+      if (req.body.type && req.body.method === "") {
+        where.type = req.body.type;
+      } else if (req.body.type === "" && req.body.method) {
+        where.method = req.body.method;
+      } else if (req.body.type && req.body.method) {
+        where = {
+          [Op.or]: [{ type: req.body.type }, { method: req.body.method }],
+        };
+      }
     }
 
-    console.log(where);
     const query = {
       order: [["transactionid", "DESC"]],
       attributes: [
@@ -247,6 +381,7 @@ router.get(
           "method",
         ],
         "user",
+        "transactiondate",
       ],
       where,
       raw: true,
@@ -311,7 +446,7 @@ router.post(
 
     const id = req.body.bonusid;
     Promise.all([
-      Bonus.update({ status: 1 }, { where: { id: id } })
+      Bonus.update({ status: 2 }, { where: { id: id } })
         .then(() => {
           Bonus.findByPk(id, { attributes: ["amount", "UserId"] })
             .then((bonus) => {
@@ -368,7 +503,7 @@ router.post(
       bulkCreate.push(bulk);
     }
 
-    Bonus.update({ status: 1 }, { where: { id: ids } })
+    Bonus.update({ status: 2 }, { where: { id: ids } })
       .then(() => {
         Transaction.bulkCreate(bulkCreate)
           .then(() => {

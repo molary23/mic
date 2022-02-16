@@ -24,6 +24,9 @@ TransactionView.init(
     user: {
       type: DataTypes.STRING(50),
     },
+    transactiondate: {
+      type: DataTypes.DATE,
+    },
   },
   {
     // don't forget to enable timestamps!

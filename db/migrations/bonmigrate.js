@@ -1,25 +1,25 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "TransactionViews";
-const view_name = "TransactionViews";
+const auto_created_model_table_name = "BonusViews";
+const view_name = "BonusViews";
 
 const original_query = [
   "SELECT ",
-  " Transactions.id AS transactionid, Transactions.amount, Transactions.type, Transactions.method,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user ",
-  " FROM Transactions ",
+  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Bonuses.createdAt AS bonusdate ",
+  " FROM Bonuses ",
   " LEFT JOIN Profiles ",
-  " ON Transactions.UserId = Profiles.UserId ",
+  " ON Bonuses.UserId = Profiles.UserId ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Transactions.id AS transactionid, Transactions.amount, Transactions.type, Transactions.method,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user ",
-  " FROM Transactions ",
+  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Bonuses.createdAt AS bonusdate  ",
+  " FROM Bonuses ",
   " LEFT JOIN Profiles ",
-  " ON Transactions.UserId = Profiles.UserId ",
+  " ON Bonuses.UserId = Profiles.UserId ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {
