@@ -37,12 +37,8 @@ SubscriptionView.init(
   },
   {
     // don't forget to enable timestamps!
-    timestamps: true,
+    timestamps: false,
 
-    // I want createdAt
-    createdAt: true,
-    // I want updatedAt
-    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
     modelName: "SubscriptionView", // We need to choose the model name

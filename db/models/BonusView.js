@@ -24,6 +24,9 @@ BonusView.init(
     bonusdate: {
       type: DataTypes.DATE,
     },
+    SubscriptionId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
   },
   {
     // don't forget to enable timestamps!

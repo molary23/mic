@@ -1,27 +1,25 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "UserViews";
-const view_name = "UserViews";
+const auto_created_model_table_name = "BonusViews";
+const view_name = "BonusViews";
 
 const original_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus, Premia.active as premiumstatus",
-  " FROM Users ",
+  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Bonuses.createdAt AS bonusdate, Bonuses.SubscriptionId ",
+  " FROM Bonuses ",
   " LEFT JOIN Profiles ",
-  " ON Users.id = Profiles.UserId ",
-  " LEFT JOIN Premia ",
-  " ON Users.id = Premia.UserId ",
+  " ON Bonuses.UserId = Profiles.UserId ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus, Premia.active as premiumstatus",
-  " FROM Users ",
+  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Bonuses.createdAt AS bonusdate, Bonuses.SubscriptionId  ",
+  " FROM Bonuses ",
   " LEFT JOIN Profiles ",
-  " ON Users.id = Profiles.UserId ",
-  " LEFT JOIN Premia ",
-  " ON Users.id = Premia.UserId ",
+  " ON Bonuses.UserId = Profiles.UserId ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

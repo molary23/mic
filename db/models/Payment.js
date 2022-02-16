@@ -22,8 +22,8 @@ Payment.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.STRING(10),
-      allowNull: false,
+      type: DataTypes.TINYINT,
+      defaultValue: 1,
     },
     payday: {
       type: DataTypes.DATE,

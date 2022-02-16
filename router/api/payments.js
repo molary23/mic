@@ -98,6 +98,7 @@ router.post(
           plan: subFields.plan,
           package: subFields.package,
           UserId: payFields.UserId,
+          amount: payFields.amount,
         })
           .then((sub) => {
             bonusFields.SubscriptionId = sub.id;
@@ -205,6 +206,7 @@ router.post(
                   duration: period,
                   plan: subFields.plan,
                   package: subFields.package,
+                  amount: subFields.amount,
                   UserId,
                 })
                   .then((sub) => {

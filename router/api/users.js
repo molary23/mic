@@ -200,7 +200,7 @@ router.get(
         },
       },
       {
-        include: Payment,
+        include: [Payment],
       }
     )
       .then((sub) => {
@@ -225,7 +225,7 @@ router.get(
     Bonus.findAll(
       { where: { UserId } },
       {
-        include: Payment,
+        include: [Payment],
       }
     )
       .then((bonus) => {
