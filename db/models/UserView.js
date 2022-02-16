@@ -21,10 +21,10 @@ UserView.init(
       type: DataTypes.STRING(50),
     },
     userstatus: {
-      type: DataTypes.STRING(8),
+      type: DataTypes.TINYINT,
     },
     premiumstatus: {
-      type: DataTypes.STRING(6),
+      type: DataTypes.TINYINT,
     },
   },
   {
@@ -33,5 +33,5 @@ UserView.init(
     timestamps: false,
   }
 );
-
+UserView.sync = () => Promise.resolve();
 module.exports = UserView;

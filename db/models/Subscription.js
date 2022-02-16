@@ -21,7 +21,14 @@ Subscription.init(
       allowNull: false,
     },
     payID: {
-      type: DataTypes.INTEGER.UNSIGNED, // Duration in days
+      type: DataTypes.INTEGER.UNSIGNED, // Payment ID
+    },
+    package: {
+      type: DataTypes.ENUM("m", "y"), // Package Paid for
+      allowNull: false,
+    },
+    plan: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     status: {
@@ -36,7 +43,7 @@ Subscription.init(
     // I want createdAt
     createdAt: true,
     // I want updatedAt
-    updatedAt: false,
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
     modelName: "Subscription", // We need to choose the model name

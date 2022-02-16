@@ -6,6 +6,7 @@ const express = require("express"),
   users = require("./router/api/users"),
   admin = require("./router/api/admin"),
   signals = require("./router/api/signals"),
+  public = require("./router/api/public"),
   payments = require("./router/api/payments");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,6 +22,7 @@ require("./config/passport")(passport);
 app.use("/api/users", users);
 app.use("/api/admin", admin);
 app.use("/api/signals", signals);
+app.use("/api/public", public);
 app.use("/api/payments", payments);
 
 const port = process.env.PORT || 10000;

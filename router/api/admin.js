@@ -14,6 +14,9 @@ const express = require("express"),
   Bonus = require("../../db/models/Bonus"),
   Transaction = require("../../db/models/Transaction"),
   Premium = require("../../db/models/Premium"),
+  TransactionView = require("../../db/models/TransactionView"),
+  BonusView = require("../../db/models/BonusView"),
+  UserView = require("../../db/models/UserView"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
@@ -215,8 +218,7 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    let clause = {},
-      where = {};
+    let where = {};
     if (req.body.type && !req.body.method) {
       where.type = req.body.type;
     } else if (!req.body.type && req.body.method) {
@@ -225,13 +227,31 @@ router.get(
       where.method = req.body.method;
       where.type = req.body.type;
     }
-    clause = { where };
-    Transaction.findAll(
-      {
-        include: User,
-      },
-      clause
-    )
+
+    console.log(where);
+    const query = {
+      order: [["transactionid", "DESC"]],
+      attributes: [
+        "transactionid",
+        "amount",
+        [
+          Sequelize.literal(
+            `CASE WHEN type = 'c' THEN 'Credit' WHEN type = 'd' THEN 'Debit' END `
+          ),
+          "Type",
+        ],
+        [
+          Sequelize.literal(
+            `CASE WHEN method = 'b' THEN 'Bonus' WHEN type = 's' THEN 'Subscribed' WHEN type = 'w' THEN 'Withdrawal' END `
+          ),
+          "method",
+        ],
+        "user",
+      ],
+      where,
+      raw: true,
+    };
+    TransactionView.findAll(query)
       .then((transactions) => {
         res.json(transactions);
       })
@@ -263,12 +283,98 @@ router.get(
 
     Premium.findAll(
       {
-        include: [User, Subscription],
+        include: [User],
       },
       clause
     )
       .then((users) => {
         res.json(users);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/approve/:bonusid
+@desc Admin approve Bonus
+@access private
+*/
+
+router.post(
+  "/approve/bonus/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    const id = req.body.bonusid;
+    Promise.all([
+      Bonus.update({ status: 1 }, { where: { id: id } })
+        .then(() => {
+          Bonus.findByPk(id, { attributes: ["amount", "UserId"] })
+            .then((bonus) => {
+              let amount = bonus.amount,
+                UserId = bonus.UserId;
+
+              Transaction.create({
+                amount,
+                UserId,
+                type: "c",
+                method: "b",
+              })
+                .then(() => {
+                  return res.json({ message: "Bonus updated!" });
+                })
+                .catch((err) => res.status(404).json(err));
+            })
+            .catch((err) => res.status(404).json(err));
+        })
+        .catch((err) => res.status(404).json(err)),
+    ]);
+  }
+);
+
+/*
+@route POST api/admin/approve/bonuses
+@desc Admin approve Bonus
+@access private
+*/
+
+router.post(
+  "/approve/bonuses",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    const ids = JSON.parse(req.body.bonusids),
+      userIds = JSON.parse(req.body.ids),
+      amounts = JSON.parse(req.body.amounts);
+
+    let bulk = {},
+      bulkCreate = [];
+
+    for (let index = 0; index < ids.length; index++) {
+      bulk = {
+        amount: amounts[index],
+        UserId: userIds[index],
+        type: "c",
+        method: "b",
+      };
+      bulkCreate.push(bulk);
+    }
+
+    Bonus.update({ status: 1 }, { where: { id: ids } })
+      .then(() => {
+        Transaction.bulkCreate(bulkCreate)
+          .then(() => {
+            return res.json({ message: "Bonus(es) updated!" });
+          })
+          .catch((err) => res.status(404).json(err));
       })
       .catch((err) => res.status(404).json(err));
   }

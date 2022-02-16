@@ -17,14 +17,6 @@ Payment.init(
       type: DataTypes.DOUBLE, // Sub active or not
       allowNull: false,
     },
-    package: {
-      type: DataTypes.ENUM("m", "y"), // Package Paid for
-      allowNull: false,
-    },
-    plan: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
     reference: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -1,12 +1,12 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Bonus extends Model {}
+class TransactionView extends Model {}
 
-Bonus.init(
+TransactionView.init(
   {
     // Model attributes are defined here
-    id: {
+    transactionid: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,
@@ -14,26 +14,24 @@ Bonus.init(
     },
     amount: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
     },
-    status: {
-      type: DataTypes.TINYINT,
-      defaultValue: 0,
+    type: {
+      type: DataTypes.STRING(1), // Debit or Credit
+    },
+    method: {
+      type: DataTypes.STRING(1),
+    },
+    user: {
+      type: DataTypes.STRING(50),
     },
   },
   {
     // don't forget to enable timestamps!
-    timestamps: true,
-
-    // I want createdAt
-    createdAt: true,
-
-    // I dont want updatedAt
-    updatedAt: true,
+    timestamps: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Bonus", // We need to choose the model name
+    modelName: "TransactionView", // We need to choose the model name
   }
 );
-
-module.exports = Bonus;
+TransactionView.sync = () => Promise.resolve();
+module.exports = TransactionView;

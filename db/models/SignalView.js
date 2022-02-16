@@ -54,5 +54,5 @@ SignalView.init(
     timestamps: false,
   }
 );
-
+SignalView.sync = () => Promise.resolve();
 module.exports = SignalView;

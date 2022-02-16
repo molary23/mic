@@ -13,11 +13,11 @@ Settings.init(
       primaryKey: true,
     },
     type: {
-      type: DataTypes.STRING(1),
+      type: DataTypes.STRING(1), // L for Light/Dark Mode
       allowNull: false,
     },
     option: {
-      type: DataTypes.STRING(1),
+      type: DataTypes.STRING(1), // D for day, N for night, A for auto, I for inherit from system
       allowNull: false,
     },
   },

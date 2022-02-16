@@ -6,15 +6,7 @@ const view_name = "UserViews";
 
 const original_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, ",
-  " CASE ",
-  " WHEN Users.active = 0 THEN 'DISABLED' ",
-  " WHEN Users.active = 1 THEN 'ENABLED' ",
-  " END AS userstatus, ",
-  " CASE ",
-  " WHEN Premia.active = 0 THEN 'Unactive' ",
-  " WHEN Premia.active = 1 THEN 'Active' ",
-  " END AS premiumstatus ",
+  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus, Premia.active as premiumstatus",
   " FROM Users ",
   " LEFT JOIN Profiles ",
   " ON Users.id = Profiles.UserId ",
@@ -24,15 +16,7 @@ const original_query = [
 
 const new_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, ",
-  " CASE ",
-  " WHEN Users.active = 0 THEN 'DISABLED' ",
-  " WHEN Users.active = 1 THEN 'ENABLED' ",
-  " END AS userstatus, ",
-  " CASE ",
-  " WHEN Premia.active = 0 THEN 'Unactive' ",
-  " WHEN Premia.active = 1 THEN 'Active' ",
-  " END AS premiumstatus ",
+  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus, Premia.active as premiumstatus",
   " FROM Users ",
   " LEFT JOIN Profiles ",
   " ON Users.id = Profiles.UserId ",
