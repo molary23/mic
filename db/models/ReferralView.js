@@ -1,34 +1,31 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Referral extends Model {}
+class ReferralView extends Model {}
 
-Referral.init(
+ReferralView.init(
   {
     // Model attributes are defined here
-    id: {
+    referralid: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
     referral: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(50),
+    },
+    referred: {
+      type: DataTypes.STRING(50),
     },
   },
   {
     // don't forget to enable timestamps!
-    timestamps: true,
-
-    // I want createdAt
-    createdAt: true,
-
-    // I dont want updatedAt
-    updatedAt: false,
+    timestamps: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Referral", // We need to choose the model name
+    modelName: "ReferralView", // We need to choose the model name
   }
 );
-
-module.exports = Referral;
+ReferralView.sync = () => Promise.resolve();
+module.exports = ReferralView;

@@ -8,14 +8,13 @@ const express = require("express"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
-  User = require("../../db/models/User"),
   Payment = require("../../db/models/Payment"),
   Subscription = require("../../db/models/Subscription"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
   Bonus = require("../../db/models/Bonus"),
   Referral = require("../../db/models/Referral"),
+  ReferralView = require("../../db/models/ReferralView"),
   Transaction = require("../../db/models/Transaction"),
-  Premium = require("../../db/models/Premium"),
   TransactionView = require("../../db/models/TransactionView"),
   ProviderView = require("../../db/models/ProviderView"),
   Signal = require("../../db/models/Signal"),
@@ -23,8 +22,6 @@ const express = require("express"),
   BonusView = require("../../db/models/BonusView"),
   UserView = require("../../db/models/UserView"),
   SuperView = require("../../db/models/SuperView"),
-  //Bring in the Validation
-  validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck");
 
@@ -1216,6 +1213,58 @@ router.get(
         return res.json(signal);
       })
 
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/admin/referrals
+desc Admin View referrals
+@access private
+*/
+
+router.get(
+  "/referrals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let where = {};
+    if (req.body.search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split(" ");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              { referral: { [Op.substring]: searchArray[i] } },
+              { referred: { [Op.substring]: searchArray[i] } },
+            ],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+        where = {
+          [Op.and]: newSearchArray,
+        };
+      } else {
+        let search = searchArray[0];
+        where = {
+          [Op.or]: [
+            { referral: { [Op.substring]: search } },
+            { referred: { [Op.substring]: search } },
+          ],
+        };
+      }
+    }
+    ReferralView.findAll({ where })
+      .then((referrals) => {
+        res.json(referrals);
+      })
       .catch((err) => res.status(404).json(err));
   }
 );

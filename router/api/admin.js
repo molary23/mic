@@ -2,9 +2,7 @@ const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
   passport = require("passport"),
-  { Op } = require("sequelize"),
   // Use Json Web Token
-
   User = require("../../db/models/User"),
   Payment = require("../../db/models/Payment"),
   Subscription = require("../../db/models/Subscription"),
