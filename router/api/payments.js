@@ -14,7 +14,7 @@ const express = require("express"),
   Premium = require("../../db/models/Premium"),
   //Bring in the Validation
 
-  //Bring in Super Admin Checker
+  //Bring in User Checker
   checkSuperAdmin = require("../../validation/superCheck"),
   checkUser = require("../../validation/checkUser"),
   // Bring in Duration

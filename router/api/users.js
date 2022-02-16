@@ -9,18 +9,11 @@ const express = require("express"),
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
   User = require("../../db/models/User"),
-  Pass = require("../../db/models/Pass"),
-  Referral = require("../../db/models/Referral"),
   Profile = require("../../db/models/Profile"),
-  Premium = require("../../db/models/Premium"),
-  Settings = require("../../db/models/Settings"),
   // Bring in View
-  SignalView = require("../../db/models/SignalView"),
   UserView = require("../../db/models/UserView"),
   //Bring in the Validation
-  validateAddUserInput = require("../../validation/addUser"),
-  validateLoginInput = require("../../validation/login"),
-  validateResetInput = require("../../validation/reset"),
+
   validateEmailInput = require("../../validation/email"),
   validatePassInput = require("../../validation/password");
 
@@ -111,7 +104,7 @@ router.post(
 */
 
 router.post(
-  "/password",
+  "/email",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateEmailInput(req.body);
@@ -159,141 +152,32 @@ router.get(
 );
 
 /*
-@route GET api/user/payments
-@desc User View Payments
+@route GET api/user/checkpass
+@desc User view Details
 @access private
 */
 
-router.get(
-  "/payments",
+router.post(
+  "/checkpass",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const UserId = req.user.id;
-    Payment.findAll({
-      where: {
-        UserId,
-      },
-    })
-      .then((pay) => {
-        res.json(pay);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/user/subscriptions
-@desc User View subscriptions
-@access private
-*/
-
-router.get(
-  "/subscriptions",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const UserId = req.user.id;
-
-    Subscription.findAll(
-      {
-        where: {
-          UserId,
-        },
-      },
-      {
-        include: [Payment],
-      }
-    )
-      .then((sub) => {
-        res.json(sub);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/user/bonus
-desc User View bonus
-@access private
-*/
-
-router.get(
-  "/bonus",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const UserId = req.user.id;
-
-    Bonus.findAll(
-      { where: { UserId } },
-      {
-        include: [Payment],
-      }
-    )
-      .then((bonus) => {
-        res.json(bonus);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/user/transactions
-desc User View transactions
-@access private
-*/
-
-router.get(
-  "/transactions",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const UserId = req.user.id;
-
-    let clause = {},
-      where = {};
-    where.UserId = UserId;
-    if (req.body.type && !req.body.method) {
-      where.type = req.body.type;
-    } else if (!req.body.type && req.body.method) {
-      where.method = req.body.method;
-    } else if (req.body.type && req.body.method) {
-      where.method = req.body.method;
-      where.type = req.body.type;
+    const { errors, isValid } = validatePassInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
     }
-    clause = { where };
-    Transaction.findAll(clause)
-      .then((transactions) => {
-        res.json(transactions);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
+    const id = req.user.id,
+      password = req.body.password;
 
-/*
-@route GET api/user/user
-desc User View transactions
-@access private
-*/
-
-router.get(
-  "/user",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const UserId = req.user.id;
-
-    let clause = {},
-      where = {};
-    where.UserId = UserId;
-    if (req.body.type && !req.body.method) {
-      where.type = req.body.type;
-    } else if (!req.body.type && req.body.method) {
-      where.method = req.body.method;
-    } else if (req.body.type && req.body.method) {
-      where.method = req.body.method;
-      where.type = req.body.type;
-    }
-    clause = { where };
-    Transaction.findAll(clause)
-      .then((transactions) => {
-        res.json(transactions);
+    User.findByPk(id, { attributes: ["password"] })
+      .then((user) => {
+        bcrypt.compare(password, user.password).then((isMatch) => {
+          if (isMatch) {
+            return res.json({ message: "Password is Correct" });
+          } else {
+            errors.password = "Incorrect Password";
+            return res.status(400).json(errors);
+          }
+        });
       })
       .catch((err) => res.status(404).json(err));
   }
