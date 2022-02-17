@@ -1,11 +1,9 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Routes, Route, useRoutes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Dashboard from "./dashboard/Dashboard";
 import Main from "./main/Main";
-import Register from "./main/component/Register";
-import Login from "./dashboard/component/Login";
 
 function App() {
   const [subdomain, setSubdomain] = useState(null);

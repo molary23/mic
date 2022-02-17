@@ -1,16 +1,12 @@
 import React from "react";
+import MainNav from "../../layout/MainNav";
+import Footer from "../../layout/Footer";
 
 function Home() {
   return (
-    <div>
-      Home
-      <div className="row">
-        <div className="col-md-4"></div>
-        <div className="col-md-4">
-          <i className="fas fa-user" />
-        </div>
-        <div className="col-md-4"></div>
-      </div>
+    <div className="main-home">
+      <MainNav />
+      <Footer />
     </div>
   );
 }
