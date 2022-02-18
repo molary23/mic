@@ -3,14 +3,21 @@
 /* Register */
 .main-register {
   margin-top: 50px;
+
   .register-box {
     width: 600px;
     margin: auto;
+  }
+  .form-box {
+    border: 1px solid rgba($color: #2c2c2c, $alpha: 0.6);
+    box-shadow: 1px 2px 3px rgba($color: #2c2c2c, $alpha: 0.6);
+    padding: 50px;
   }
 }
 
 /* Main Home */
 .main-home {
+  padding-bottom: 100px;
   .main-home-top,
   .main-home-middle {
     height: 600px;
@@ -25,8 +32,18 @@
   .main-home-about {
     height: 600px;
     text-align: center;
-    background: rgba($color: #ebf4fc, $alpha: 0.6);
+    background: #fff;
     padding-top: 200px;
+    .intro-icon {
+      i {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        padding-top: 15px;
+        background: rgba($color: #176dcf, $alpha: 0.2);
+        color: rgba($color: #176dcf, $alpha: 0.6);
+      }
+    }
   }
   .main-home-middle {
     height: 600px;
@@ -37,10 +54,16 @@
     background-repeat: no-repeat;
   }
   .main-home-contact {
-    height: 800px;
-    background: url("../asset/images/contact.jpg");
+    height: 600px;
+    background: url("../asset/images/contactus.jpg");
+    background-attachment: fixed;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+  }
+  .main-home-contact-box {
+    height: 600px;
+    padding-top: 50px;
+    background: #fefcf5;
   }
 }

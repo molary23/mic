@@ -628,13 +628,13 @@ router.get(
 );
 
 /*
-@route GET api/adminview/providers
-desc Admin View Signal Providers
+@route GET api/adminview/admins/:table
+desc Admin View Admins
 @access private
 */
 
 router.get(
-  "/providers",
+  "/admins/:table",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { error, isLevel } = checkSuperAdmin(req.user.level);
@@ -709,99 +709,16 @@ router.get(
       where,
       raw: true,
     };
-
-    ProviderView.findAll(query)
-      .then((user) => {
-        res.json(user);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/adminview/super
-desc Admin View Super Admin
-@access private
-*/
-
-router.get(
-  "/super",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
+    const table = req.params.table;
+    let view;
+    if (table === "providers") {
+      view = ProviderView;
+    } else if (table === "superadmin") {
+      view = SuperView;
     }
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
-
-      if (searchArray.length > 1) {
-        let newSearchArray = [],
-          newSearchObj = {};
-        for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            user: { [Op.substring]: searchArray[i] },
-          };
-          newSearchArray.push(newSearchObj);
-        }
-
-        if (req.body.userstatus) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { userstatus: req.body.userstatus },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
-      } else {
-        let search = searchArray[0];
-        if (req.body.userstatus) {
-          where = {
-            [Op.and]: [
-              { user: { [Op.substring]: search } },
-              { userstatus: req.body.userstatus },
-            ],
-          };
-        } else {
-          where = {
-            user: { [Op.substring]: search },
-          };
-        }
-      }
-    } else {
-      if (req.body.userstatus) {
-        where.userstatus = req.body.userstatus;
-      }
-    }
-
-    const query = {
-      order: [["userid", "DESC"]],
-      attributes: [
-        "userid",
-        "username",
-        "email",
-        "fullname",
-        [
-          Sequelize.literal(
-            `CASE WHEN userstatus = 1 THEN 'Deactivated' WHEN userstatus = 2 THEN 'Active' END `
-          ),
-          "User Status",
-        ],
-      ],
-      where,
-      raw: true,
-    };
-
-    SuperView.findAll(query)
+    view
+      .findAll(query)
       .then((user) => {
         res.json(user);
       })

@@ -1,1 +1,43 @@
 @import "both.scss";
+
+.login-page {
+  min-height: 700px;
+  background: rgb(2, 48, 100);
+  background: radial-gradient(
+      circle,
+      rgba(2, 48, 100, 1) 0%,
+      rgba(3, 31, 63, 1) 35%,
+      rgba(2, 40, 84, 1) 100%
+    )
+    no-repeat;
+  padding-top: 50px;
+
+  .login-box {
+    width: 500px;
+    height: 500px;
+    margin: auto;
+
+    img {
+      width: 30px;
+      margin: auto;
+    }
+
+    .form-box {
+      background: #fff;
+      box-shadow: 1px 2px 3px rgb(48, 48, 48);
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .login-helper {
+      text-align: center;
+      font-weight: 600;
+      color: #fff;
+
+      a {
+        text-decoration: none;
+        color: #fff;
+      }
+    }
+  }
+}

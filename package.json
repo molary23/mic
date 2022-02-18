@@ -9,7 +9,7 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
-    "both": "concurrently \"npm run server \" \" npm run client \""
+    "both": "concurrently -k \"npm run server\" \"npm run client\""
   },
   "keywords": [
     "MIC",
@@ -28,6 +28,7 @@
     "express": "^4.17.2",
     "formidable": "^2.0.1",
     "gravatar": "^1.8.2",
+    "http-proxy-middleware": "^2.0.3",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "mysql2": "^2.3.3",

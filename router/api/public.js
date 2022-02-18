@@ -23,28 +23,46 @@ const express = require("express"),
   validatePassInput = require("../../validation/password");
 
 /*
-@route POST api/public/register
+@route POST api/public/test
 @desc Add new user
 @access public
 */
 
+router.get("/finder", (_req, res) => {
+  User.findAll().then((users) => {
+    res.json(users);
+  });
+});
+
+router.post("/tester", (req, res) => {
+  const { referral, username, email, password } = req.body.newUser;
+  res.json(username);
+});
+
+/*
+@route POST api/public/register
+@desc Add new user
+@access public
+*/
 router.post("/register", (req, res) => {
-  const { errors, isValid } = validateAddUserInput(req.body);
+  const { errors, isValid } = validateAddUserInput(req.body.newUser);
 
   if (!isValid) {
-    return res.status(400).json(errors);
+    return res.status(404).json(errors);
   }
+
+  const { referral, username, email, password } = req.body.newUser;
   const userField = {};
 
-  if (req.body.email) userField.email = req.body.email;
-  if (req.body.username) userField.username = req.body.username;
-  if (req.body.password) userField.password = req.body.password;
+  if (email) userField.email = email;
+  if (username) userField.username = username;
+  if (password) userField.password = password;
 
   return Promise.all([
     User.findOne({ where: { email: userField.email } })
       .then((user) => {
         if (user) {
-          errors.email = "Email Address has been taken!";
+          errors.email = "Email Addresss has been taken!";
           res.status(400).json(errors);
         } else {
           User.findOne({ where: { username: userField.username } }).then(
@@ -81,7 +99,7 @@ router.post("/register", (req, res) => {
                                   option: "d",
                                 })
                                   .then(() => {
-                                    if (req.body.referral) {
+                                    if (referral) {
                                       User.findOne({
                                         where: { username: req.body.referral },
                                         attributes: ["id"],
@@ -146,7 +164,7 @@ router.post("/referral/:username", (req, res) => {
 @access public
 */
 
-router.get("/email", (req, res) => {
+router.post("/email", (req, res) => {
   let check,
     message = {};
   if (req.body.email) {

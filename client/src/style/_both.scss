@@ -29,6 +29,7 @@ body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 /*
   6. Improve media defaults
@@ -82,6 +83,10 @@ section {
   min-height: 700px;
 }
 
+textarea {
+  height: 120px;
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -94,4 +99,8 @@ section {
 span.input-group-text {
   background: none;
   cursor: pointer;
+}
+
+.page-title {
+  text-align: center;
 }

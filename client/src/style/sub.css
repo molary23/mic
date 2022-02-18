@@ -29,6 +29,7 @@ body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /*
@@ -86,6 +87,10 @@ section {
   min-height: 700px;
 }
 
+textarea {
+  height: 120px;
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -98,5 +103,46 @@ section {
 span.input-group-text {
   background: none;
   cursor: pointer;
+}
+
+.page-title {
+  text-align: center;
+}
+
+.login-page {
+  min-height: 700px;
+  background: #023064;
+  background: radial-gradient(circle, #023064 0%, #031f3f 35%, #022854 100%) no-repeat;
+  padding-top: 50px;
+}
+
+.login-page .login-box {
+  width: 500px;
+  height: 500px;
+  margin: auto;
+}
+
+.login-page .login-box img {
+  width: 30px;
+  margin: auto;
+}
+
+.login-page .login-box .form-box {
+  background: #fff;
+  -webkit-box-shadow: 1px 2px 3px #303030;
+          box-shadow: 1px 2px 3px #303030;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.login-page .login-box .login-helper {
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+}
+
+.login-page .login-box .login-helper a {
+  text-decoration: none;
+  color: #fff;
 }
 /*# sourceMappingURL=sub.css.map */

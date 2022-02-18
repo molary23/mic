@@ -164,6 +164,10 @@ class Register extends Component {
     return (
       <div className="main-register">
         <div className="register-box">
+          <div className="page-title mb-3">
+            <h1>Join MIC Earn Business</h1>
+          </div>
+
           <div className="form-box">
             <form className="register-form" onSubmit={this.submitHandler}>
               <TextInputField
@@ -227,9 +231,7 @@ class Register extends Component {
                 >
                   Register
                   {loading && (
-                    <span className="loader ms-2">
-                      <i className="fas fa-spinner fa-spin" />
-                    </span>
+                    <span className="spinner-border spinner-border-sm ms-2"></span>
                   )}
                 </button>
               </div>

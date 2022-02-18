@@ -5,6 +5,7 @@ import axios from "axios";
 
 import Dashboard from "./dashboard/Dashboard";
 import Main from "./main/Main";
+import Register from "./main/component/Register";
 
 function App() {
   const [subdomain, setSubdomain] = useState(null);
@@ -35,7 +36,7 @@ function App() {
   return (
     <Routes>
       <Route
-        path="/*"
+        path="/"
         element={subdomain === "dashboard" ? <Dashboard /> : <Main />}
         render={(props) => {
           if (subdomain === "dashboard") {
@@ -45,11 +46,11 @@ function App() {
           }
         }}
       >
-        {/*subdomain === "dashboard" ? (
+        {subdomain === "dashboard" ? (
           ""
         ) : (
           <Route path="/register" element={<Register />} />
-        )*/}
+        )}
       </Route>
     </Routes>
   );

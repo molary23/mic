@@ -31,6 +31,6 @@ app.use("/api/adminview", adminview);
 app.use("/api/userview", userview);
 app.use("/api/count", count);
 
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 5001;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

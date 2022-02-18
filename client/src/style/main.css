@@ -29,6 +29,7 @@ body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /*
@@ -86,6 +87,10 @@ section {
   min-height: 700px;
 }
 
+textarea {
+  height: 120px;
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -100,6 +105,10 @@ span.input-group-text {
   cursor: pointer;
 }
 
+.page-title {
+  text-align: center;
+}
+
 /* Register */
 .main-register {
   margin-top: 50px;
@@ -110,7 +119,18 @@ span.input-group-text {
   margin: auto;
 }
 
+.main-register .form-box {
+  border: 1px solid rgba(44, 44, 44, 0.6);
+  -webkit-box-shadow: 1px 2px 3px rgba(44, 44, 44, 0.6);
+          box-shadow: 1px 2px 3px rgba(44, 44, 44, 0.6);
+  padding: 50px;
+}
+
 /* Main Home */
+.main-home {
+  padding-bottom: 100px;
+}
+
 .main-home .main-home-top,
 .main-home .main-home-middle {
   height: 600px;
@@ -125,8 +145,18 @@ span.input-group-text {
 .main-home .main-home-about {
   height: 600px;
   text-align: center;
-  background: rgba(235, 244, 252, 0.6);
+  background: #fff;
   padding-top: 200px;
+}
+
+.main-home .main-home-intro .intro-icon i,
+.main-home .main-home-about .intro-icon i {
+  width: 60px;
+  height: 60px;
+  border-radius: 15px;
+  padding-top: 15px;
+  background: rgba(23, 109, 207, 0.2);
+  color: rgba(23, 109, 207, 0.6);
 }
 
 .main-home .main-home-middle {
@@ -139,10 +169,17 @@ span.input-group-text {
 }
 
 .main-home .main-home-contact {
-  height: 800px;
-  background: url("../asset/images/contact.jpg");
+  height: 600px;
+  background: url("../asset/images/contactus.jpg");
+  background-attachment: fixed;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.main-home .main-home-contact-box {
+  height: 600px;
+  padding-top: 50px;
+  background: #fefcf5;
 }
 /*# sourceMappingURL=main.css.map */

@@ -15,164 +15,43 @@ const express = require("express"),
   checkSuperAdmin = require("../../validation/superCheck");
 
 /*
-@route GET api/count/users
-@desc Admin Count users
+@route GET api/count/:table
+@desc Admin Count rows in specified tables
 @access private
 */
 
 router.get(
-  "/users",
+  "/:table",
   passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    UserView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
+  async (req, res) => {
+    const table = req.params.table;
+    let view;
+    if (table === "users") {
+      view = UserView;
+    } else if (table === "signals") {
+      view = SignalView;
+    } else if (table === "payments") {
+      view = Payment;
+    } else if (table === "transactions") {
+      view = TransactionView;
+    } else if (table === "subscriptions") {
+      view = SubscriptionView;
+    } else if (table === "bonus") {
+      view = BonusView;
+    } else if (table === "providers") {
+      view = ProviderView;
+    } else if (table === "superadmin") {
+      view = SuperView;
+    } else if (table === "referrals") {
+      view = ReferralView;
+    }
 
-/*
-@route GET api/count/signals
-@desc Admin Count signals
-@access private
-*/
-
-router.get(
-  "/signals",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    SignalView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/count/payments
-@desc Admin Count payments
-@access private
-*/
-
-router.get(
-  "/payments",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    Payment.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/count/transactions
-@desc Admin Count transactions
-@access private
-*/
-
-router.get(
-  "/transactions",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    TransactionView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/count/subscriptions
-@desc Admin Count subscriptions
-@access private
-*/
-
-router.get(
-  "/subscriptions",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    SubscriptionView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/count/bonus
-@desc Admin Count bonus
-@access private
-*/
-
-router.get(
-  "/bonus",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    BonusView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/count/providers
-@desc Admin Count providers
-@access private
-*/
-
-router.get(
-  "/providers",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    ProviderView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/count/superadmin
-@desc Admin Count superadmin
-@access private
-*/
-
-router.get(
-  "/superadmin",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    SuperView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/count/referral
-@desc Admin Count referral
-@access private
-*/
-
-router.get(
-  "/referral",
-  passport.authenticate("jwt", { session: false }),
-  (_req, res) => {
-    ReferralView.count()
-      .then((count) => {
-        res.json(count);
-      })
-      .catch((err) => res.status(404).json(err));
+    try {
+      count = await view.count();
+      res.json(count);
+    } catch (error) {
+      res.status(404).json(error);
+    }
   }
 );
 module.exports = router;

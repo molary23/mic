@@ -1,11 +1,18 @@
-import "../App.css";
+import "../style/sub.css";
+import { Routes, Route } from "react-router-dom";
+
+import Footer from "./../layout/Footer";
 import Login from "./component/Login";
 
 function Dashboard() {
   return (
     <div className="Dashboard">
-      Hello from Dashboard
-      <Login />
+      <section>
+        <Routes>
+          <Route path="/" element={<Login />}></Route>
+        </Routes>
+      </section>
+      <Footer />
     </div>
   );
 }

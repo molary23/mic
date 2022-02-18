@@ -1,20 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function TextInputField(props) {
-  const { label, error, name, value, onChange, type, id, disabled } = props;
+function TextAreaField(props) {
+  const { label, error, name, value, onChange, type, id, row } = props;
   return (
     <div className="mb-3 mt-3">
       <div className="form-floating">
-        <input
+        <textarea
           type={type}
-          className="form-control form-control-lg"
+          className="form-control"
           id={id}
           placeholder={label}
           name={name}
           value={value}
           onChange={onChange}
-          disabled={disabled}
+          rows="4"
         />
         <label htmlFor={id}>{label}</label>
       </div>
@@ -23,12 +23,12 @@ function TextInputField(props) {
   );
 }
 
-TextInputField.defaultProps = {
+TextAreaField.defaultProps = {
   type: "text",
-  disabled: "",
+  row: 4,
 };
 
-TextInputField.propTypes = {
+TextAreaField.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
@@ -36,7 +36,7 @@ TextInputField.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   error: PropTypes.string,
-  disabled: PropTypes.string,
+  row: PropTypes.number,
 };
 
-export default TextInputField;
+export default TextAreaField;
