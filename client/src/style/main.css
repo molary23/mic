@@ -91,6 +91,10 @@ textarea {
   height: 120px;
 }
 
+button {
+  background: rgba(2, 40, 84, 0.6);
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -109,6 +113,10 @@ span.input-group-text {
   text-align: center;
 }
 
+.nav-logo {
+  width: 30px;
+}
+
 /* Register */
 .main-register {
   margin-top: 50px;
@@ -120,10 +128,11 @@ span.input-group-text {
 }
 
 .main-register .form-box {
-  border: 1px solid rgba(44, 44, 44, 0.6);
+  border: 1px solid #fcfcfc;
   -webkit-box-shadow: 1px 2px 3px rgba(44, 44, 44, 0.6);
           box-shadow: 1px 2px 3px rgba(44, 44, 44, 0.6);
   padding: 50px;
+  border-radius: 5px;
 }
 
 /* Main Home */

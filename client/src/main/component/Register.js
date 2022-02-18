@@ -11,7 +11,7 @@ class Register extends Component {
     email: "",
     password: "",
     password2: "",
-    referral: this.props.referral,
+    referral: "",
     error: {},
     pass1: true,
     pass2: true,
@@ -22,8 +22,11 @@ class Register extends Component {
   };
 
   componentDidMount() {
-    console.log(this.props.referred);
-    console.log(this.props.referral);
+    if (this.props.referred)
+      this.setState({
+        referral: this.props.referral,
+      });
+
     /*  if (this.props.match.params.referral) {
       this.setState({
         referral: this.props.match.params.referral,
@@ -225,10 +228,7 @@ class Register extends Component {
                 error={error.password2}
               />
               <div className="d-grid">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-lg btn-block"
-                >
+                <button type="submit" className="btn btn-lg btn-block">
                   Register
                   {loading && (
                     <span className="spinner-border spinner-border-sm ms-2"></span>

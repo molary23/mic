@@ -7,7 +7,7 @@
       circle,
       rgba(2, 48, 100, 1) 0%,
       rgba(3, 31, 63, 1) 35%,
-      rgba(2, 40, 84, 1) 100%
+      $bg-dark 100%
     )
     no-repeat;
   padding-top: 50px;
@@ -27,6 +27,12 @@
       box-shadow: 1px 2px 3px rgb(48, 48, 48);
       padding: 20px;
       border-radius: 5px;
+
+      h1 {
+        font-size: clamp(1.5vw, 15px, 1.5vh);
+        text-transform: uppercase;
+        font-weight: 400;
+      }
     }
 
     .login-helper {
@@ -37,7 +43,32 @@
       a {
         text-decoration: none;
         color: #fff;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
+    }
+  }
+}
+
+/* Handle DropDown */
+.seen {
+  display: block;
+}
+
+.unseen {
+  display: none;
+}
+
+ul.dropdown-menu {
+  margin-left: -130px;
+
+  li {
+    text-transform: capitalize;
+
+    a {
+      text-decoration: none;
     }
   }
 }

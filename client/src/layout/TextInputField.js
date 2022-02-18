@@ -26,6 +26,7 @@ function TextInputField(props) {
 TextInputField.defaultProps = {
   type: "text",
   disabled: "",
+  value: "",
 };
 
 TextInputField.propTypes = {

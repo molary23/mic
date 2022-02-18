@@ -10,8 +10,7 @@ function MainNav() {
           <img
             src={logo}
             alt="MIC Earn Business Logo"
-            style={{ width: "30px" }}
-            className="rounded-pill"
+            className="rounded-pill nav-logo"
           />
         </Link>
         <span className="navbar-text">MIC Earn Business</span>
@@ -41,7 +40,16 @@ function MainNav() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/register">
+              <Link className="nav-link" to="//dashboard.localhost:3000">
+                Login
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                type="button"
+                className="btn nav-link btn-primary"
+                to="/register"
+              >
                 Register
               </Link>
             </li>

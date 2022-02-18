@@ -5,7 +5,11 @@ import axios from "axios";
 
 import Dashboard from "./dashboard/Dashboard";
 import Main from "./main/Main";
+import PageNotFound from "./util/404Page";
 import Register from "./main/component/Register";
+import Referral from "./main/component/Referral";
+import Forgot from "./dashboard/component/Forgot";
+import HomePage from "./dashboard/component/HomePage";
 
 function App() {
   const [subdomain, setSubdomain] = useState(null);
@@ -47,11 +51,22 @@ function App() {
         }}
       >
         {subdomain === "dashboard" ? (
-          ""
+          <Route path="/" element={<Dashboard />}>
+            <Route path="/forgot" element={<Forgot />}></Route>
+            <Route
+              path="/dashboard"
+              element={<HomePage />}
+              render={(props) => {}}
+            ></Route>
+          </Route>
         ) : (
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Main />}>
+            <Route path="/register" element={<Register />} />
+            <Route path="/referral/:username" element={<Referral />} />
+          </Route>
         )}
       </Route>
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 }

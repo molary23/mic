@@ -22,7 +22,7 @@ class Login extends Component {
         <div className="login-box">
           <img alt="MIC Earn Business Logo" src={logo} className="mb-4" />
           <div className="form-box mb-3">
-            <div className="page-title mb-3">
+            <div className="page-title mb-4 mt-2">
               <h1>Login</h1>
             </div>
             <form>

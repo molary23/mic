@@ -91,6 +91,10 @@ textarea {
   height: 120px;
 }
 
+button {
+  background: rgba(2, 40, 84, 0.6);
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -107,6 +111,10 @@ span.input-group-text {
 
 .page-title {
   text-align: center;
+}
+
+.nav-logo {
+  width: 30px;
 }
 
 .login-page {
@@ -135,6 +143,12 @@ span.input-group-text {
   border-radius: 5px;
 }
 
+.login-page .login-box .form-box h1 {
+  font-size: clamp(1.5vw, 15px, 1.5vh);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
 .login-page .login-box .login-helper {
   text-align: center;
   font-weight: 600;
@@ -144,5 +158,30 @@ span.input-group-text {
 .login-page .login-box .login-helper a {
   text-decoration: none;
   color: #fff;
+}
+
+.login-page .login-box .login-helper a:hover {
+  text-decoration: underline;
+}
+
+/* Handle DropDown */
+.seen {
+  display: block;
+}
+
+.unseen {
+  display: none;
+}
+
+ul.dropdown-menu {
+  margin-left: -130px;
+}
+
+ul.dropdown-menu li {
+  text-transform: capitalize;
+}
+
+ul.dropdown-menu li a {
+  text-decoration: none;
 }
 /*# sourceMappingURL=sub.css.map */

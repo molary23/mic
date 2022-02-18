@@ -9,9 +9,10 @@
     margin: auto;
   }
   .form-box {
-    border: 1px solid rgba($color: #2c2c2c, $alpha: 0.6);
+    border: 1px solid $border-light;
     box-shadow: 1px 2px 3px rgba($color: #2c2c2c, $alpha: 0.6);
     padding: 50px;
+    border-radius: 5px;
   }
 }
 

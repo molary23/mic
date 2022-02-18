@@ -4,9 +4,8 @@ import { useLocation } from "react-router-dom";
 
 function Referral() {
   let location = useLocation();
-  let referral = location.pathname.split(":")[1];
-
-  //redirect to register if nothing is there
+  let params = location.pathname.split("referral")[1];
+  let referral = params.split(":")[1];
 
   return (
     <div>

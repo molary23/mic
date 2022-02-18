@@ -1,3 +1,5 @@
+@import "color.scss";
+
 /*
   1. Use a more-intuitive box-sizing model.
 */
@@ -87,6 +89,10 @@ textarea {
   height: 120px;
 }
 
+button {
+  background: rgba($color: $bg-dark, $alpha: 0.6);
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -103,4 +109,8 @@ span.input-group-text {
 
 .page-title {
   text-align: center;
+}
+
+.nav-logo {
+  width: 30px;
 }
