@@ -1,18 +1,19 @@
 /*
   1. Use a more-intuitive box-sizing model.
 */
-*, *::before, *::after {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+* {
+  &,
+  &::before,
+  &::after {
+    box-sizing: border-box;
+  }
 }
-
 /*
   2. Remove default margin
 */
 * {
   margin: 0;
 }
-
 /*
   3. Allow percentage-based heights in the application
 */
@@ -20,7 +21,6 @@ html,
 body {
   height: 100%;
 }
-
 /*
   Typographic tweaks!
   4. Add accessible line-height
@@ -30,7 +30,6 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-
 /*
   6. Improve media defaults
 */
@@ -42,7 +41,6 @@ svg {
   display: block;
   max-width: 100%;
 }
-
 /*
   7. Remove built-in form typography styles
 */
@@ -52,7 +50,6 @@ textarea,
 select {
   font: inherit;
 }
-
 /*
   8. Avoid text overflows
 */
@@ -65,7 +62,6 @@ h5,
 h6 {
   overflow-wrap: break-word;
 }
-
 /*
   9. Create a root stacking context
 */
@@ -73,4 +69,29 @@ h6 {
 #__next {
   isolation: isolate;
 }
-/*# sourceMappingURL=sub.css.map */
+
+/* 
+10. Use Smooth Scrolling
+*/
+html {
+  scroll-behavior: smooth;
+}
+
+/* General Style */
+section {
+  min-height: 700px;
+}
+
+.form-floating-group input {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.form-floating.form-floating-group input {
+  border-right: none;
+}
+
+span.input-group-text {
+  background: none;
+  cursor: pointer;
+}

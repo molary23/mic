@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import axios from "axios";
 
 import Dashboard from "./dashboard/Dashboard";
 import Main from "./main/Main";
@@ -22,7 +23,15 @@ function App() {
   const mainrouting = useRoutes(MainRoutes);
 
   return <div>{subdomain === "dashboard" ? subrouting : mainrouting}</div>;*/
-
+  const tryfunc = () => {
+    /*  axios
+      .get("api/public/finder")
+      .then((res) => console.log(res))
+      .catch((err) => {
+        console.log(err);
+      });*/
+  };
+  tryfunc();
   return (
     <Routes>
       <Route

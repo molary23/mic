@@ -1,19 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import logo from "../asset/images/logo.png";
 
 function MainNav() {
   return (
-    <nav className="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center">
+    <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img
-            src="logo.png"
+            src={logo}
             alt="MIC Earn Business Logo"
-            style={{ width: "40px" }}
+            style={{ width: "30px" }}
             className="rounded-pill"
           />
         </Link>
-        <span className="navbar-text">Navbar text</span>
+        <span className="navbar-text">MIC Earn Business</span>
         <button
           className="navbar-toggler"
           type="button"
@@ -23,10 +24,15 @@ function MainNav() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="mainNavbarMenu">
-          <ul className="navbar-nav ">
+          <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <Link className="nav-link" to="/">
                 Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/">
+                About us
               </Link>
             </li>
             <li className="nav-item">
@@ -35,7 +41,7 @@ function MainNav() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/">
+              <Link className="nav-link" to="/register">
                 Register
               </Link>
             </li>

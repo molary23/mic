@@ -1,0 +1,46 @@
+@import "both.scss";
+
+/* Register */
+.main-register {
+  margin-top: 50px;
+  .register-box {
+    width: 600px;
+    margin: auto;
+  }
+}
+
+/* Main Home */
+.main-home {
+  .main-home-top,
+  .main-home-middle {
+    height: 600px;
+    background: url("../asset/images/colleague.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .main-home-intro,
+  .main-home-about {
+    height: 600px;
+    text-align: center;
+    background: rgba($color: #ebf4fc, $alpha: 0.6);
+    padding-top: 200px;
+  }
+  .main-home-middle {
+    height: 600px;
+    background: url("../asset/images/busy.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .main-home-contact {
+    height: 800px;
+    background: url("../asset/images/contact.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
