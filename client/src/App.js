@@ -9,7 +9,9 @@ import PageNotFound from "./util/404Page";
 import Register from "./main/component/Register";
 import Referral from "./main/component/Referral";
 import Forgot from "./dashboard/component/Forgot";
+import Login from "./dashboard/component/Login";
 import HomePage from "./dashboard/component/HomePage";
+import Signal from "./dashboard/component/Signal";
 
 function App() {
   const [subdomain, setSubdomain] = useState(null);
@@ -53,11 +55,9 @@ function App() {
         {subdomain === "dashboard" ? (
           <Route path="/" element={<Dashboard />}>
             <Route path="/forgot" element={<Forgot />}></Route>
-            <Route
-              path="/dashboard"
-              element={<HomePage />}
-              render={(props) => {}}
-            ></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/" element={<HomePage />}></Route>
+            <Route exact path="/signal" element={<Signal />} />
           </Route>
         ) : (
           <Route path="/" element={<Main />}>

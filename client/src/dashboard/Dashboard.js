@@ -5,19 +5,18 @@ import Footer from "./../layout/Footer";
 import Login from "./component/Login";
 import Forgot from "./component/Forgot";
 import HomePage from "./component/HomePage";
+import Signal from "./component/Signal";
 
 function Dashboard() {
   return (
     <div className="Dashboard">
       <section>
         <Routes>
-          <Route path="/" element={<Login />}></Route>
+          <Route path="/login" element={<Login />}></Route>
           <Route path="/forgot" element={<Forgot />}></Route>
-          <Route
-            path="/dashboard/*"
-            element={<HomePage />}
-            render={(props) => {}}
-          ></Route>
+          <Route path="/" element={<HomePage />}>
+            <Route exact path="/signal" element={<Signal />} />
+          </Route>
         </Routes>
       </section>
       <Footer />
