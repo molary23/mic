@@ -117,6 +117,17 @@ span.input-group-text {
   width: 30px;
 }
 
+/* Modal */
+#myModal {
+  background: rgba(2, 40, 84, 0.5);
+}
+
+.modal-content {
+  -webkit-box-shadow: 1px 2px 3px #cecece;
+          box-shadow: 1px 2px 3px #cecece;
+  border: #fcfcfc;
+}
+
 /* Register */
 .main-register {
   margin-top: 50px;

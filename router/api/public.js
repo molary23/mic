@@ -34,11 +34,6 @@ router.get("/finder", (_req, res) => {
   });
 });
 
-router.post("/tester", (req, res) => {
-  const { referral, username, email, password } = req.body.newUser;
-  res.json(username);
-});
-
 /*
 @route POST api/public/register
 @desc Add new user
@@ -63,13 +58,13 @@ router.post("/register", (req, res) => {
       .then((user) => {
         if (user) {
           errors.email = "Email Addresss has been taken!";
-          res.status(400).json(errors);
+          return res.status(400).json(errors);
         } else {
           User.findOne({ where: { username: userField.username } }).then(
             (username) => {
               if (username) {
                 errors.username = "Username has been taken!";
-                res.status(400).json(errors);
+                return res.status(400).json(errors);
               } else {
                 bcrypt.genSalt(10, (_err, salt) => {
                   bcrypt.hash(userField.password, salt, (err, hash) => {
@@ -109,12 +104,14 @@ router.post("/register", (req, res) => {
                                             Referral.create({
                                               referral: ref.id,
                                               UserId: user.id,
-                                            }).catch((err) => res.json(err));
+                                            })
+                                              .then(() => res.json(1))
+                                              .catch((err) => res.json(err));
                                           }
                                         })
                                         .catch((err) => res.json(err));
                                     }
-                                    return res.json(user);
+                                    return res.json(1);
                                   })
                                   .catch((err) => res.json(err));
                               })
@@ -174,11 +171,11 @@ router.post("/email", (req, res) => {
   User.findOne({ where: { email: check } })
     .then((user) => {
       if (user) {
-        message.error = "Email Address has been taken!";
-        res.json(message);
+        message.text = "Email Address has been taken!";
+        return res.json(message);
       } else {
-        message.success = "Email Address is Available!";
-        res.json(message);
+        message.text = "Email Address is Available!";
+        return res.json(message);
       }
     })
     .catch((err) => res.status(404).json(err));
@@ -190,7 +187,7 @@ router.post("/email", (req, res) => {
 @access public
 */
 
-router.get("/username", (req, res) => {
+router.post("/username", (req, res) => {
   let check,
     message = {};
   if (req.body.username) {
@@ -200,10 +197,10 @@ router.get("/username", (req, res) => {
   User.findOne({ where: { username: check } })
     .then((user) => {
       if (user) {
-        message.error = "Username has been taken!";
+        message.text = "Username has been taken!";
         res.json(message);
       } else {
-        message.success = "Username is Available!";
+        message.text = "Username is Available!";
         res.json(message);
       }
     })
@@ -234,7 +231,7 @@ router.post("/login", (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        errors.user = "User not Found!";
+        errors.username = "User not Found!";
         return res.status(404).json(errors);
       }
       bcrypt.compare(password, user.password).then((isMatch) => {

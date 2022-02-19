@@ -4,6 +4,7 @@ import isEmpty from "../../validation/emptyChecker";
 
 import TextInputField from "../../layout/TextInputField";
 import TextPasswordField from "../../layout/TextPasswordField";
+import Modal from "../../layout/Modal";
 
 class Register extends Component {
   state = {
@@ -16,9 +17,12 @@ class Register extends Component {
     pass1: true,
     pass2: true,
     loading: false,
+    modal: false,
     headers: {
       "Content-Type": "application/json",
     },
+    typingTimer: null,
+    doneTypingInterval: 3000,
   };
 
   componentDidMount() {
@@ -26,46 +30,43 @@ class Register extends Component {
       this.setState({
         referral: this.props.referral,
       });
-
-    /*  if (this.props.match.params.referral) {
-      this.setState({
-        referral: this.props.match.params.referral,
-      });
-      console.log(this.state.referral);
-    }
-
-
-     
-    let email = "molary23@gmail.com";
-    axios
-      .post(
-        "api/public/email/",
-        { email: email },
-        {
-          headers: this.state.headers,
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => console.log(error));
-
-    axios
-      .get("api/public/finder/")
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => console.log(error));
-      */
   }
 
   changeHandler = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
     });
+
+    if (e.target.name === "email" || e.target.name === "username")
+      this.checkHandler(e.target.name, e.target.value);
   };
 
-  clickHandler = (caller) => {
+  checkHandler = (input, target) => {
+    let req = {},
+      response;
+    if (input === "email") {
+      req = { email: target };
+    } else if (input === "username") {
+      req = { username: target };
+    }
+    let typingTimer;
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+      axios
+        .post(`/api/public/${input}/`, req, {})
+        .then((res) => {
+          response = res.data.text;
+          this.setState({
+            error: {
+              [input]: response,
+            },
+          });
+        })
+        .catch((error) => console.log(error.response));
+    }, this.state.doneTypingInterval);
+  };
+
+  checkPassHandler = (caller) => {
     if (caller === 1) {
       this.setState({
         pass1: !this.state.pass1,
@@ -78,10 +79,11 @@ class Register extends Component {
   };
 
   submitHandler = (e) => {
+    e.preventDefault();
     this.setState({
       loading: true,
     });
-    e.preventDefault();
+
     const { username, email, password, password2, referral } = this.state;
 
     if (isEmpty(username)) {
@@ -132,7 +134,7 @@ class Register extends Component {
 
       axios
         .post(
-          "api/public/register/",
+          "/api/public/register/",
           {
             newUser,
           },
@@ -141,7 +143,20 @@ class Register extends Component {
           }
         )
         .then((res) => {
-          console.log(res.data);
+          let response = res.data;
+          if (response === 1) {
+            this.setState({
+              modal: true,
+              username: "",
+              email: "",
+              password: "",
+              password2: "",
+              referral: "",
+              error: {},
+              pass1: true,
+              pass2: true,
+            });
+          }
         })
         .catch((error) => {
           let err = error.response;
@@ -163,6 +178,7 @@ class Register extends Component {
       pass1,
       pass2,
       loading,
+      modal,
     } = this.state;
     return (
       <div className="main-register">
@@ -193,6 +209,7 @@ class Register extends Component {
                 onChange={this.changeHandler}
                 error={error.email}
               />
+
               <TextInputField
                 id="register-form-username"
                 placeholder="Username"
@@ -212,7 +229,7 @@ class Register extends Component {
                 name="password"
                 value={password}
                 onChange={this.changeHandler}
-                onClick={() => this.clickHandler(1)}
+                onClick={() => this.checkPassHandler(1)}
                 error={error.password}
               />
               <TextPasswordField
@@ -224,11 +241,14 @@ class Register extends Component {
                 name="password2"
                 value={password2}
                 onChange={this.changeHandler}
-                onClick={() => this.clickHandler(2)}
+                onClick={() => this.checkPassHandler(2)}
                 error={error.password2}
               />
               <div className="d-grid">
-                <button type="submit" className="btn btn-lg btn-block">
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-lg btn-block"
+                >
                   Register
                   {loading && (
                     <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -238,6 +258,7 @@ class Register extends Component {
             </form>
           </div>
         </div>
+        {modal ? <Modal {...{ modal, sender: "register" }} /> : ""}
       </div>
     );
   }

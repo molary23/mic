@@ -114,3 +114,12 @@ span.input-group-text {
 .nav-logo {
   width: 30px;
 }
+
+/* Modal */
+#myModal {
+  background: rgba($color: $bg-dark, $alpha: 0.5);
+}
+.modal-content {
+  box-shadow: 1px 2px 3px $shadow;
+  border: $border-light;
+}

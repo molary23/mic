@@ -117,6 +117,17 @@ span.input-group-text {
   width: 30px;
 }
 
+/* Modal */
+#myModal {
+  background: rgba(2, 40, 84, 0.5);
+}
+
+.modal-content {
+  -webkit-box-shadow: 1px 2px 3px #cecece;
+          box-shadow: 1px 2px 3px #cecece;
+  border: #fcfcfc;
+}
+
 .login-page {
   min-height: 700px;
   background: #023064;
@@ -183,5 +194,87 @@ ul.dropdown-menu li {
 
 ul.dropdown-menu li a {
   text-decoration: none;
+}
+
+.dash-top-nav {
+  z-index: 999;
+}
+
+.sidebar {
+  height: 100%;
+  /* 100% Full-height */
+  width: 0;
+  /* 0 width - change this with JavaScript */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Stay on top */
+  top: 0;
+  left: 0;
+  background: #022854;
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
+  padding-top: 60px;
+  /* Place content 60px from the top */
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  /* 0.5 second transition effect to slide in the sidebar */
+  /* The sidebar links */
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .close-side-nav {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  -webkit-transition: margin-left 0.5s;
+  transition: margin-left 0.5s;
+  /* If you want a transition effect */
+  padding: 20px;
+}
+
+.show-side {
+  width: 250px;
+}
+
+.move-close-btn {
+  color: #818181;
+}
+
+.move-close-btn:hover {
+  color: green;
+}
+
+.toggle-btn {
+  width: 50px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {
+    padding-top: 15px;
+  }
+  .sidebar a {
+    font-size: 18px;
+  }
 }
 /*# sourceMappingURL=sub.css.map */

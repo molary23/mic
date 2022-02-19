@@ -4,19 +4,42 @@ import logo from "../asset/images/logo.png";
 
 import Dropdown from "./Dropdown";
 
-function SubNav() {
-  const [display, setDisplay] = useState(false);
+function SubNav(props) {
+  const [close, setClose] = useState(false);
+  const openNav = () => {
+    setClose(true);
+    props.onClick(true);
+  };
+
+  const clickHandler = () => {
+    setClose(false);
+    props.onClick(false);
+  };
+
   return (
-    <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+    <nav className="navbar navbar-expand-sm bg-light navbar-light dash-top-nav">
       <div className="container-fluid">
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#sideNavBar"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        <div className="toggle-btn">
+          {close ? (
+            ""
+          ) : (
+            <button className="btn" type="button" onClick={openNav}>
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          )}
+
+          {close ? (
+            <button
+              className="btn move-close-btn"
+              type="button"
+              onClick={clickHandler}
+            >
+              <i className="fas fa-times" />
+            </button>
+          ) : (
+            ""
+          )}
+        </div>
         <Link className="navbar-brand" to="/">
           <img
             src={logo}

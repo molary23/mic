@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import TextInputField from "../../layout/TextInputField";
 import TextPasswordField from "../../layout/TextPasswordField";
@@ -7,16 +8,67 @@ import logo from "../../asset/images/logo.png";
 
 class Login extends Component {
   state = {
-    email: "",
+    username: "",
     password: "",
-    pass: false,
+    pass: true,
     loading: false,
     error: {},
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
 
-  changeHandler = (e) => {};
+  changeHandler = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  checkPassHandler = () => {
+    this.setState({
+      pass: !this.state.pass,
+    });
+  };
+
+  submitHandler = async (e) => {
+    e.preventDefault();
+    const { username, password } = this.state;
+    if (username === "" || username === undefined) {
+      this.setState({
+        error: {
+          username: "Email Address/Username Field can't be Empty",
+        },
+      });
+    } else if (password === "" || password === undefined) {
+      this.setState({
+        error: {
+          password: "Password Field can't be Empty",
+        },
+      });
+    } else {
+      const user = {
+        username,
+        password,
+      };
+
+      try {
+        const response = await axios.post("/api/public/login/", user, {
+          headers: this.state.headers,
+        });
+        const res = await response.data;
+        console.log(res);
+      } catch (error) {
+        let err = error.response.data;
+        this.setState({
+          error: err,
+        });
+        console.log(err);
+      }
+    }
+  };
+
   render() {
-    const { email, error, pass, password, loading } = this.state;
+    const { username, error, pass, password, loading } = this.state;
     return (
       <div className="login-page">
         <div className="login-box">
@@ -25,16 +77,16 @@ class Login extends Component {
             <div className="page-title mb-4 mt-2">
               <h1>Login</h1>
             </div>
-            <form>
+            <form className="login-form" onSubmit={this.submitHandler}>
               <TextInputField
                 id="login-form-email"
-                placeholder="Email Address"
-                label="Email Address"
-                type="email"
-                name="email"
-                value={email}
+                placeholder="Email Address/Username"
+                label="Email Address/Username"
+                type="text"
+                name="username"
+                value={username}
                 onChange={this.changeHandler}
-                error={error.email}
+                error={error.username}
               />
               <TextPasswordField
                 id="login-form-password"
@@ -45,7 +97,7 @@ class Login extends Component {
                 name="password"
                 value={password}
                 onChange={this.changeHandler}
-                onClick={() => this.clickHandler(1)}
+                onClick={this.checkPassHandler}
                 error={error.password}
               />
               <div className="d-grid">
