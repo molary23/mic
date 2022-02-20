@@ -5,7 +5,9 @@ function DropdownItem(props) {
   const { title, url } = props;
   return (
     <div>
-      <Link to={url}>{title}</Link>
+      <Link to={url} className="nav-link">
+        {title}
+      </Link>
     </div>
   );
 }

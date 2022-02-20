@@ -1,6 +1,8 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useState } from "react";
 
+import PrivateRoute from "../../util/PrivateRoute";
+
 import Footer from "../../layout/Footer";
 import SubNav from "../../layout/SubNav";
 import SideNav from "../../layout/SideNav";
@@ -21,7 +23,11 @@ function HomePage(props) {
         Homepage
         <Outlet />
         {/*<Routes>
-          <Route exact path="/admin-signals" element={<Signals />} />
+          <Route
+            exact
+            path="/admin-signals"
+            element={<PrivateRoute Component={Signals} />}
+          />
         </Routes>*/}
       </section>
       <Footer />

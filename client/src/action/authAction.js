@@ -30,3 +30,12 @@ export const loginuser = (userData, history) => async (dispatch) => {
 export const setCurrentUser = (decoded) => {
   return { type: SET_CURRENT_USER, payload: decoded };
 };
+
+export const logoutUser = () => (dispatch) => {
+  //Remove Token from Storage
+  localStorage.removeItem("jwtToken");
+  //Remove Auth Header  for future requests
+  setAuthToken(false);
+  // Set current user to {}  which will set isAuthenticated to false
+  dispatch(setCurrentUser({}));
+};

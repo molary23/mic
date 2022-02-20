@@ -5,6 +5,8 @@ import jwtDecode from "jwt-decode";
 import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./action/authAction";
 
+import PrivateRoute from "./util/PrivateRoute";
+
 import Dashboard from "./dashboard/Dashboard";
 import Main from "./main/Main";
 import PageNotFound from "./util/404Page";
@@ -23,6 +25,16 @@ if (localStorage.jwtToken) {
 
   // set User and isAuthenticated
   store.dispatch(setCurrentUser(decoded));
+
+  const currenTime = Date.now() / 1000;
+  if (decoded.expiry < currenTime) {
+    // Logout User
+
+    // Clear current Profile
+
+    // Redirect to Login
+    window.location.href = "/login";
+  }
 }
 
 function App() {
@@ -68,8 +80,12 @@ function App() {
           <Route path="/" element={<Dashboard />}>
             <Route path="/forgot" element={<Forgot />}></Route>
             <Route path="/login" element={<Login />}></Route>
-            <Route path="/" element={<HomePage />}></Route>
-            <Route exact path="/admin-signals" element={<Signals />} />
+            <Route path="/" element={<PrivateRoute Component={HomePage} />} />
+            <Route
+              exact
+              path="/admin-signals"
+              element={<PrivateRoute Component={Signals} />}
+            />
           </Route>
         ) : (
           <Route path="/" element={<Main />}>

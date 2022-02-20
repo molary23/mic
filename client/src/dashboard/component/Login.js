@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { loginuser } from "../../action/authAction";
 import { withRouter } from "../../util/withRouter";
@@ -19,15 +19,40 @@ class Login extends Component {
     navigate: false,
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.auth.isAuthenticated) {
-      this.setState({});
-    }
-    if (nextProps.errors) {
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
       this.setState({
-        error: nextProps.errors,
+        navigate: true,
       });
     }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (nextProps.auth.isAuthenticated && prevState.navigate) {
+      update.navigate = true;
+    }
+
+    if (nextProps.errors && prevState.error) {
+      update.error = nextProps.errors;
+    }
+
+    return update;
+
+    /*
+    if (nextProps.auth.isAuthenticated && prevState.navigate) {
+      return { navigate: true };
+    } else {
+      return { navigate: null };
+    }
+   if (nextProps.errors && prevState.error) {
+     return { error: errors };
+   } else {
+     return {
+       error: null,
+     };
+   }*/
   }
 
   changeHandler = (e) => {
@@ -82,7 +107,7 @@ class Login extends Component {
   };
 
   render() {
-    const { username, error, pass, password, loading } = this.state;
+    const { username, error, pass, password, loading, navigate } = this.state;
     return (
       <div className="login-page">
         <div className="login-box">
@@ -136,6 +161,7 @@ class Login extends Component {
             </p>
           </div>
         </div>
+        {navigate && <Navigate to="/" replace={true} />}
       </div>
     );
   }
@@ -147,8 +173,8 @@ Login.propTypes = {
   errors: PropTypes.object.isRequired,
 };
 
-const mapToStateToProps = (state) => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
 });
-export default connect(mapToStateToProps, { loginuser })(withRouter(Login));
+export default connect(mapStateToProps, { loginuser })(withRouter(Login));
