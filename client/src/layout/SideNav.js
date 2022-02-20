@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function SideNav(props) {
   let open = props.act;
@@ -12,10 +13,10 @@ function SideNav(props) {
   return (
     <div>
       <div id="mySidebar" className={`sidebar ${display ? "show-side" : ""}`}>
-        <a href="/">About</a>
-        <a href="/">Services</a>
-        <a href="/">Clients</a>
-        <a href="/">Contact</a>
+        <Link to="/">Dashboard</Link>
+        <Link to="/signal">Signal</Link>
+        <Link to="/">Clients</Link>
+        <Link to="/">Contact</Link>
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import { useState } from "react";
 
 import Footer from "../../layout/Footer";
 import SubNav from "../../layout/SubNav";
 import SideNav from "../../layout/SideNav";
-import Signal from "./Signal";
+import Signals from "./admin/Signals";
 
 function HomePage(props) {
   const [open, setOpen] = useState(false);
@@ -19,9 +19,10 @@ function HomePage(props) {
       <SideNav act={open} />
       <section>
         Homepage
-        <Routes>
-          <Route exact path="/signal" element={<Signal />} />
-        </Routes>
+        <Outlet />
+        {/*<Routes>
+          <Route exact path="/admin-signals" element={<Signals />} />
+        </Routes>*/}
       </section>
       <Footer />
     </div>

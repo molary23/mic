@@ -1,7 +1,9 @@
-import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import axios from "axios";
+import store from "./store";
+import jwtDecode from "jwt-decode";
+import setAuthToken from "./util/setAuthToken";
+import { setCurrentUser } from "./action/authAction";
 
 import Dashboard from "./dashboard/Dashboard";
 import Main from "./main/Main";
@@ -11,7 +13,17 @@ import Referral from "./main/component/Referral";
 import Forgot from "./dashboard/component/Forgot";
 import Login from "./dashboard/component/Login";
 import HomePage from "./dashboard/component/HomePage";
-import Signal from "./dashboard/component/Signal";
+import Signals from "./dashboard/component/admin/Signals";
+
+if (localStorage.jwtToken) {
+  // Set Auth Toke  Header
+  setAuthToken(localStorage.jwtToken);
+  // Decode Token then get User Info and Expiry
+  const decoded = jwtDecode(localStorage.jwtToken);
+
+  // set User and isAuthenticated
+  store.dispatch(setCurrentUser(decoded));
+}
 
 function App() {
   const [subdomain, setSubdomain] = useState(null);
@@ -57,7 +69,7 @@ function App() {
             <Route path="/forgot" element={<Forgot />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/" element={<HomePage />}></Route>
-            <Route exact path="/signal" element={<Signal />} />
+            <Route exact path="/admin-signals" element={<Signals />} />
           </Route>
         ) : (
           <Route path="/" element={<Main />}>

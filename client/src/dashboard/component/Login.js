@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import PropTypes from "prop-types";
+import { loginuser } from "../../action/authAction";
+import { withRouter } from "../../util/withRouter";
 
 import TextInputField from "../../layout/TextInputField";
 import TextPasswordField from "../../layout/TextPasswordField";
 import logo from "../../asset/images/logo.png";
+import { connect } from "react-redux";
 
 class Login extends Component {
   state = {
@@ -13,10 +16,19 @@ class Login extends Component {
     pass: true,
     loading: false,
     error: {},
-    headers: {
-      "Content-Type": "application/json",
-    },
+    navigate: false,
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.setState({});
+    }
+    if (nextProps.errors) {
+      this.setState({
+        error: nextProps.errors,
+      });
+    }
+  }
 
   changeHandler = (e) => {
     this.setState({
@@ -51,7 +63,9 @@ class Login extends Component {
         password,
       };
 
-      try {
+      this.props.loginuser(user);
+
+      /* try {
         const response = await axios.post("/api/public/login/", user, {
           headers: this.state.headers,
         });
@@ -63,7 +77,7 @@ class Login extends Component {
           error: err,
         });
         console.log(err);
-      }
+      }*/
     }
   };
 
@@ -126,4 +140,15 @@ class Login extends Component {
     );
   }
 }
-export default Login;
+
+Login.propTypes = {
+  loginuser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+};
+
+const mapToStateToProps = (state) => ({
+  auth: state.auth,
+  errors: state.errors,
+});
+export default connect(mapToStateToProps, { loginuser })(withRouter(Login));
