@@ -1,0 +1,125 @@
+@import "default.scss";
+
+/* Register */
+.main-register {
+  margin-top: 50px;
+
+  .register-box {
+    width: 600px;
+    margin: auto;
+  }
+  .form-box {
+    border: 1px solid $border-light;
+    box-shadow: 1px 2px 3px rgba($color: #2c2c2c, $alpha: 0.6);
+    padding: 50px;
+    border-radius: 5px;
+  }
+}
+
+/* Main Home */
+.main-home {
+  .main-home-top,
+  .main-home-middle {
+    height: 600px;
+    background: url("../asset/images/colleague.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .main-home-intro,
+  .main-home-about {
+    height: 600px;
+    text-align: center;
+    background: #fff;
+    padding-top: 200px;
+    .intro-icon {
+      i {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        padding-top: 15px;
+        background: rgba($color: #176dcf, $alpha: 0.2);
+        color: rgba($color: #176dcf, $alpha: 0.6);
+      }
+    }
+  }
+  .main-home-middle {
+    height: 600px;
+    background: url("../asset/images/busy.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .main-home-contact {
+    height: 600px;
+    background: url("../asset/images/contactus.jpg");
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .main-home-contact-box {
+    height: 600px;
+    padding-top: 50px;
+    background: #fefcf5;
+  }
+
+  .main-home-service {
+    min-height: 600px;
+    padding: 50px 0px;
+    background: #fefcf5;
+
+    .service-first-image,
+    .service-second-image {
+      height: 600px;
+      width: 100%;
+      margin: 100px auto !important;
+    }
+
+    .service-second-text,
+    .service-first-text {
+      width: 80%;
+      margin: 100px auto !important;
+    }
+  }
+}
+
+a.btn.nav-link.btn {
+  padding: 7.5px 25px;
+}
+
+.sub-footer {
+  height: 400px;
+  padding-top: 50px;
+
+  h2 {
+    font-size: clamp(1.5vw, 18px, 3.5vh);
+    margin-bottom: 20px;
+    font-weight: 900;
+  }
+  a {
+    text-decoration: none;
+    color: rgb(36, 36, 36);
+
+    &:hover {
+      color: #646464;
+    }
+  }
+
+  .footer-address,
+  .footer-intro,
+  .footer-connect {
+    width: 80%;
+    margin: 5px auto;
+  }
+  .footer-connect .social-icon {
+    margin-right: 10px;
+    color: #176dcf;
+  }
+  address {
+    margin-bottom: 10px;
+  }
+}
