@@ -79,7 +79,7 @@ ul.dropdown-menu {
 
 .sidebar {
   height: 100%; /* 100% Full-height */
-  width: 0; /* 0 width - change this with JavaScript */
+  width: 200px; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
   z-index: 1; /* Stay on top */
   top: 0;
@@ -91,9 +91,9 @@ ul.dropdown-menu {
 
   /* The sidebar links */
   a {
-    padding: 8px 8px 8px 32px;
+    padding: 8px 8px 8px 25px;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 15px;
     color: #818181;
     display: block;
     transition: 0.3s;
@@ -110,6 +110,10 @@ ul.dropdown-menu {
     font-size: 36px;
     margin-left: 50px;
   }
+
+  .side-nav-list {
+    margin-top: 25px;
+  }
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -118,19 +122,26 @@ ul.dropdown-menu {
   padding: 20px;
 }
 
-.show-side {
-  width: 250px;
+.hide-side {
+  width: 0;
 }
 
-.move-close-btn {
-  color: #818181;
+.toggle-btn .move-close-btn {
+  color: #474747 !important;
   &:hover {
-    color: green;
+    color: $bg-dark;
   }
 }
 
 .toggle-btn {
   width: 50px;
+}
+.toggle-btn .btn {
+  background: transparent !important;
+}
+
+.sidebar-icon {
+  margin-right: 15px;
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
@@ -140,5 +151,89 @@ ul.dropdown-menu {
   }
   .sidebar a {
     font-size: 18px;
+  }
+}
+
+/* Dashboard */
+.dashboard-content {
+  margin-left: 200px;
+  padding: 25px;
+  .card {
+    border: 1px solid $border-light;
+    box-shadow: 1px 2px 3px $shadow;
+    background: #fff;
+
+    h2 {
+      margin-bottom: 0px;
+    }
+  }
+  .referrals-box,
+  .sub-box,
+  .bonus-box {
+    width: 100%;
+    height: 100px;
+    padding: 20px 10px;
+  }
+
+  .referral-id-box {
+    height: 50px;
+    width: 100%;
+    margin-bottom: 50px;
+  }
+
+  .dashboard-intro {
+    margin-bottom: 20px;
+    height: 150px;
+    padding: 20px 40px;
+    background: rgba($color: #f3bb4a, $alpha: 0.2);
+
+    h3 {
+      color: rgba($color: #f7a707, $alpha: 1);
+      font-size: 25px;
+    }
+    p {
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    .days-left-section {
+      display: flex;
+      justify-content: flex-end;
+      align-content: flex-end;
+    }
+  }
+  .referral-details {
+    p {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    .referral-id-box {
+      display: grid;
+      grid-template-columns: 85% 10%;
+      grid-column-gap: 5%;
+
+      .referrral-id {
+        justify-self: center;
+        align-self: center;
+      }
+
+      .copy-referrral-id {
+        align-self: start;
+        justify-self: end;
+      }
+    }
+  }
+
+  .box-icon {
+    i {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      padding-top: 20%;
+      padding-left: 20%;
+      background: rgba($color: #176dcf, $alpha: 0.2);
+      color: rgba($color: #176dcf, $alpha: 0.6);
+      font-size: 150%;
+    }
   }
 }

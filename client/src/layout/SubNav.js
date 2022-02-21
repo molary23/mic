@@ -5,7 +5,7 @@ import logo from "../asset/images/logo.png";
 import Dropdown from "./Dropdown";
 
 function SubNav(props) {
-  const [close, setClose] = useState(false);
+  const [close, setClose] = useState(true);
   const openNav = () => {
     setClose(true);
     props.onClick(true);
@@ -17,7 +17,7 @@ function SubNav(props) {
   };
 
   return (
-    <nav className="navbar navbar-expand-sm bg-light navbar-light dash-top-nav">
+    <nav className="navbar navbar-expand-sm bg-light navbar-light dash-top-nav sticky-top">
       <div className="container-fluid">
         <div className="toggle-btn">
           {close ? (

@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 const PrivateRoute = ({ Component, auth }) => {
-  return auth.isAuthenticated ? <Component /> : <Navigate to="/login" />;
+  // add isAuthenticated to make authentication active
+  return auth ? <Component /> : <Navigate to="/login" />;
 };
 PrivateRoute.propTypes = {
   auth: PropTypes.object.isRequired,

@@ -144,7 +144,7 @@ class Login extends Component {
                   type="submit"
                   className="btn btn-primary btn-lg btn-block"
                 >
-                  Register
+                  Login
                   {loading && (
                     <span className="spinner-border spinner-border-sm ms-2"></span>
                   )}

@@ -91,8 +91,17 @@ textarea {
   height: 120px;
 }
 
-button {
-  background: rgba(2, 40, 84, 0.6);
+button,
+.btn {
+  background: #06c2f7 !important;
+  color: #fff !important;
+  font-weight: 600;
+  border: none;
+}
+
+input:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .form-floating-group input {
@@ -147,10 +156,6 @@ span.input-group-text {
 }
 
 /* Main Home */
-.main-home {
-  padding-bottom: 100px;
-}
-
 .main-home .main-home-top,
 .main-home .main-home-middle {
   height: 600px;
@@ -201,5 +206,32 @@ span.input-group-text {
   height: 600px;
   padding-top: 50px;
   background: #fefcf5;
+}
+
+.main-home .main-home-service {
+  min-height: 600px;
+  padding: 50px 0px;
+  background: #fefcf5;
+}
+
+.main-home .main-home-service .service-first-image,
+.main-home .main-home-service .service-second-image {
+  height: 400px;
+  width: 80%;
+  background: url("../asset/images/phone.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 100px auto !important;
+}
+
+.main-home .main-home-service .service-second-text,
+.main-home .main-home-service .service-first-text {
+  width: 80%;
+  margin: 100px auto !important;
+}
+
+a.btn.nav-link.btn {
+  padding: 7.5px 25px;
 }
 /*# sourceMappingURL=main.css.map */

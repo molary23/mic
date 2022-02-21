@@ -89,8 +89,18 @@ textarea {
   height: 120px;
 }
 
-button {
-  background: rgba($color: $bg-dark, $alpha: 0.6);
+button,
+.btn {
+  background: #06c2f7 !important;
+  color: #fff !important;
+  font-weight: 600;
+  border: none;
+}
+
+input {
+  &:focus {
+    box-shadow: none;
+  }
 }
 
 .form-floating-group input {

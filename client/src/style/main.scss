@@ -18,7 +18,6 @@
 
 /* Main Home */
 .main-home {
-  padding-bottom: 100px;
   .main-home-top,
   .main-home-middle {
     height: 600px;
@@ -67,4 +66,31 @@
     padding-top: 50px;
     background: #fefcf5;
   }
+
+  .main-home-service {
+    min-height: 600px;
+    padding: 50px 0px;
+    background: #fefcf5;
+
+    .service-first-image,
+    .service-second-image {
+      height: 400px;
+      width: 80%;
+      background: url("../asset/images/phone.jpg");
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin: 100px auto !important;
+    }
+
+    .service-second-text,
+    .service-first-text {
+      width: 80%;
+      margin: 100px auto !important;
+    }
+  }
+}
+
+a.btn.nav-link.btn {
+  padding: 7.5px 25px;
 }

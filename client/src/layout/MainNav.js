@@ -4,7 +4,7 @@ import logo from "../asset/images/logo.png";
 
 function MainNav() {
   return (
-    <nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+    <nav className="navbar navbar-expand-sm bg-light navbar-light sticky-top">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img
@@ -45,11 +45,7 @@ function MainNav() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                type="button"
-                className="btn nav-link btn-primary"
-                to="/register"
-              >
+              <Link type="button" className="btn nav-link btn" to="/register">
                 Register
               </Link>
             </li>
