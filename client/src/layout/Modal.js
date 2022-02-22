@@ -14,8 +14,11 @@ function Modal(props) {
       <div>
         <p>Your have Successfully Registered! </p>
         <p>
-          Click <Link to="//dashboard.localhost:3000">Here</Link> to view your
-          Profile
+          Click{" "}
+          <Link to="//localhost:3000/login" className="default-anchor">
+            Here
+          </Link>{" "}
+          to Login
         </p>
       </div>
     );
@@ -33,7 +36,7 @@ function Modal(props) {
               <h4 className="modal-title">{title}</h4>
               <button
                 type="button"
-                className="btn-close"
+                className="btn-close "
                 onClick={closeModal}
               ></button>
             </div>

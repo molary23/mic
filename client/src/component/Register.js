@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import isEmpty from "../validation/emptyChecker";
 
-import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "../layout/TextPasswordField";
 import Modal from "../layout/Modal";
 import Box from "../layout/Box";
-
+let typingTimer;
 class Register extends Component {
   state = {
     username: "",
@@ -18,16 +17,17 @@ class Register extends Component {
     pass1: true,
     pass2: true,
     loading: false,
-    modal: false,
+    modal: true,
     loader: {
       email: false,
       username: false,
+      referral: false,
     },
     headers: {
       "Content-Type": "application/json",
     },
     typingTimer: null,
-    doneTypingInterval: 3000,
+    doneTypingInterval: 5000,
   };
 
   componentDidMount() {
@@ -41,27 +41,26 @@ class Register extends Component {
     this.setState({
       [e.target.name]: e.target.value,
     });
-
-    if (e.target.name === "email" || e.target.name === "username")
-      this.checkHandler(e.target.name, e.target.value);
   };
 
   checkHandler = (input, target) => {
     let req = {},
       response;
+
+    clearTimeout(typingTimer);
     if (input === "email") {
       req = { email: target };
     } else if (input === "username") {
       req = { username: target };
+    } else if (input === "referral") {
+      req = { referral: target };
     }
-    this.setState({
-      loader: {
-        [input]: true,
-      },
-    });
-    let typingTimer;
-    clearTimeout(typingTimer);
     typingTimer = setTimeout(() => {
+      this.setState({
+        loader: {
+          [input]: true,
+        },
+      });
       axios
         .post(`/api/public/${input}/`, req, {})
         .then((res) => {
@@ -79,6 +78,16 @@ class Register extends Component {
     }, this.state.doneTypingInterval);
   };
 
+  keyHandler = (e) => {
+    if (
+      e.target.name === "email" ||
+      e.target.name === "username" ||
+      e.target.name === "referral"
+    ) {
+      this.checkHandler(e.target.name, e.target.value);
+    }
+  };
+
   checkPassHandler = (caller) => {
     if (caller === 1) {
       this.setState({
@@ -91,12 +100,8 @@ class Register extends Component {
     }
   };
 
-  submitHandler = (e) => {
+  submitHandler = async (e) => {
     e.preventDefault();
-    this.setState({
-      loading: true,
-    });
-
     const { username, email, password, password2, referral } = this.state;
 
     if (isEmpty(email)) {
@@ -104,39 +109,34 @@ class Register extends Component {
         error: {
           email: "Email Address Field can't be Empty",
         },
-        loading: false,
       });
     } else if (isEmpty(username)) {
       this.setState({
         error: {
           username: "Username Field can't be Empty",
         },
-        loading: false,
       });
     } else if (isEmpty(password)) {
       this.setState({
         error: {
           password: "Password Field can't be Empty",
         },
-        loading: false,
       });
     } else if (isEmpty(password2)) {
       this.setState({
         error: {
           password2: "Confirm Password Field can't be Empty",
         },
-        loading: false,
       });
     } else if (password !== password2) {
       this.setState({
         error: {
           password: "Password mismatched!",
         },
-        loading: false,
       });
     } else {
       this.setState({
-        loading: false,
+        loading: true,
       });
       const newUser = {
         referral: referral.trim(),
@@ -145,39 +145,34 @@ class Register extends Component {
         password: password,
       };
 
-      axios
-        .post(
+      try {
+        let response = await axios.post(
           "/api/public/register/",
           {
             newUser,
           },
-          {
-            headers: this.state.headers,
-          }
-        )
-        .then((res) => {
-          let response = res.data;
-          console.log(response);
-          if (response === 1) {
-            this.setState({
-              modal: true,
-              username: "",
-              email: "",
-              password: "",
-              password2: "",
-              referral: "",
-              error: {},
-              pass1: true,
-              pass2: true,
-            });
-          }
-        })
-        .catch((error) => {
-          let err = error.response;
+          {}
+        );
+        if (response.data === 1) {
           this.setState({
-            error: err.data,
+            modal: true,
+            username: "",
+            email: "",
+            password: "",
+            password2: "",
+            referral: "",
+            error: {},
+            pass1: true,
+            pass2: true,
           });
+        }
+      } catch (error) {
+        console.log(error);
+        let err = error.response;
+        this.setState({
+          error: err.data,
         });
+      }
     }
   };
 
@@ -200,40 +195,45 @@ class Register extends Component {
         <div className="register-box">
           <Box sender="Register">
             <form className="register-form" onSubmit={this.submitHandler}>
-              <TextInputField
+              <TextPasswordField
                 id="register-form-referral"
                 placeholder="Referral"
                 label="Referral"
+                icon={`${loader.referral ? "fas fa-circle-notch fa-spin" : ""}`}
                 type="text"
                 name="referral"
                 value={referral}
                 onChange={this.changeHandler}
                 disabled={this.props.referred ? "disabled" : ""}
+                error={error.referral}
+                onKeyUp={this.keyHandler}
               />
 
               <TextPasswordField
                 id="register-form-email"
                 placeholder="Email Address"
                 label="Email Address"
-                icon={`${loader.email ? "fas fa-spinner fa-spin" : ""}`}
+                icon={`${loader.email ? "fas fa-circle-notch fa-spin" : ""}`}
                 type="email"
                 name="email"
                 value={email}
                 onChange={this.changeHandler}
                 onClick={() => this.checkPassHandler(1)}
                 error={error.email}
+                onKeyUp={this.keyHandler}
               />
               <TextPasswordField
                 id="register-form-username"
                 placeholder="Username"
                 label="Username"
-                icon={`${loader.username ? "fas fa-spinner fa-spin" : ""}`}
+                icon={`${loader.username ? "fas fa-circle-notch fa-spin" : ""}`}
                 type="text"
                 name="username"
                 value={username}
                 onChange={this.changeHandler}
                 onClick={() => this.checkPassHandler(1)}
                 error={error.username}
+                onKeyUp={this.keyHandler}
               />
 
               <TextPasswordField
@@ -263,7 +263,7 @@ class Register extends Component {
               <div className="d-grid">
                 <button
                   type="submit"
-                  className="btn btn-primary btn-lg btn-block"
+                  className="btn btn-lg btn-block default-btn"
                 >
                   Register
                   {loading && (

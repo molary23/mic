@@ -53,102 +53,178 @@ router.post("/register", (req, res) => {
   if (username) userField.username = username;
   if (password) userField.password = password;
 
-  return Promise.all([
-    User.findOne({ where: { email: userField.email } })
-      .then((user) => {
-        if (user) {
-          errors.email = "Email Addresss has been taken!";
-          return res.status(400).json(errors);
-        } else {
-          User.findOne({ where: { username: userField.username } }).then(
-            (username) => {
-              if (username) {
-                errors.username = "Username has been taken!";
-                return res.status(400).json(errors);
-              } else {
-                bcrypt.genSalt(10, (_err, salt) => {
-                  bcrypt.hash(userField.password, salt, (err, hash) => {
-                    if (err) throw err;
-                    userField.password = hash;
-                    User.create(userField)
-                      .then((user) => {
-                        const UserId = user.id,
-                          avatar = gravatar.url(userField.email, {
-                            s: "200",
-                            r: "pg",
-                            d: "mm",
-                          }),
-                          date = new Date();
-                        let startdate = date.toISOString(),
-                          enddate = startdate;
-                        Profile.create({
-                          UserId,
-                          avatar,
-                        })
-                          .then(() => {
-                            Premium.create({ UserId, startdate, enddate })
-                              .then(() => {
-                                Settings.create({
-                                  UserId,
-                                  type: "l",
-                                  option: "d",
-                                })
-                                  .then(() => {
-                                    if (referral) {
-                                      User.findOne({
-                                        where: { username: req.body.referral },
-                                        attributes: ["id"],
-                                      })
-                                        .then((ref) => {
-                                          if (ref) {
-                                            Referral.create({
-                                              referral: ref.id,
-                                              UserId: user.id,
-                                            })
-                                              .then(() => res.json(1))
-                                              .catch((err) => res.json(err));
-                                          }
-                                        })
-                                        .catch((err) => res.json(err));
-                                    }
-                                    return res.json(1);
+  if (referral) {
+    return Promise.all([
+      User.findOne({
+        where: { username: referral },
+        attributes: ["id"],
+      })
+        .then((ref) => {
+          if (!ref) {
+            errors.referral = "Referral doesn't exist!";
+            return res.status(400).json(errors);
+          } else {
+            userField.referralId = ref.id;
+            User.findOne({
+              where: {
+                [Op.or]: [
+                  { email: userField.email },
+                  { username: userField.username },
+                ],
+              },
+              attributes: ["email", "username"],
+            })
+              .then((user) => {
+                if (user) {
+                  if (user.email === userField.email) {
+                    errors.email = "Email Addresss has been taken!";
+                    return res.status(400).json(errors);
+                  } else if (user.username === userField.username) {
+                    errors.email = "Username has been taken!";
+                    return res.status(400).json(errors);
+                  }
+                } else {
+                  bcrypt.genSalt(10, (_err, salt) => {
+                    bcrypt.hash(userField.password, salt, (err, hash) => {
+                      if (err) throw err;
+                      userField.password = hash;
+                      User.create(userField)
+                        .then((user) => {
+                          const UserId = user.id,
+                            avatar = gravatar.url(userField.email, {
+                              s: "200",
+                              r: "pg",
+                              d: "mm",
+                            }),
+                            date = new Date();
+                          let startdate = date.toISOString(),
+                            enddate = startdate;
+                          Profile.create({
+                            UserId,
+                            avatar,
+                          })
+                            .then(() => {
+                              Premium.create({ UserId, startdate, enddate })
+                                .then(() => {
+                                  Settings.create({
+                                    UserId,
+                                    type: "l",
+                                    option: "d",
                                   })
-                                  .catch((err) => res.json(err));
+                                    .then(() => {
+                                      Referral.create({
+                                        referral: userField.referralId,
+                                        UserId: user.id,
+                                      })
+                                        .then(() => res.json(1))
+                                        .catch((err) => res.json(err));
+                                    })
+                                    .catch((err) => res.json(err));
+                                })
+                                .catch((err) => res.json(err));
+                            })
+                            .catch((err) => res.json(err));
+                        })
+                        .catch((err) => res.json(err));
+                    });
+                  });
+                }
+              })
+              .catch((err) => res.status(400).json(err));
+          }
+        })
+        .catch((err) => res.json(err)),
+    ]);
+  } else {
+    return Promise.all([
+      User.findOne({
+        where: {
+          [Op.or]: [
+            { email: userField.email },
+            { username: userField.username },
+          ],
+        },
+        attributes: ["email", "username"],
+      })
+        .then((user) => {
+          if (user) {
+            if (user.email === userField.email) {
+              errors.email = "Email Addresss has been taken!";
+              return res.status(400).json(errors);
+            } else if (user.username === userField.username) {
+              errors.email = "Username has been taken!";
+              return res.status(400).json(errors);
+            }
+          } else {
+            bcrypt.genSalt(10, (_err, salt) => {
+              bcrypt.hash(userField.password, salt, (err, hash) => {
+                if (err) throw err;
+                userField.password = hash;
+                User.create(userField)
+                  .then((user) => {
+                    const UserId = user.id,
+                      avatar = gravatar.url(userField.email, {
+                        s: "200",
+                        r: "pg",
+                        d: "mm",
+                      }),
+                      date = new Date();
+                    let startdate = date.toISOString(),
+                      enddate = startdate;
+                    Profile.create({
+                      UserId,
+                      avatar,
+                    })
+                      .then(() => {
+                        Premium.create({ UserId, startdate, enddate })
+                          .then(() => {
+                            Settings.create({
+                              UserId,
+                              type: "l",
+                              option: "d",
+                            })
+                              .then(() => {
+                                return res.json(1);
                               })
                               .catch((err) => res.json(err));
                           })
                           .catch((err) => res.json(err));
                       })
                       .catch((err) => res.json(err));
-                  });
-                });
-              }
-            }
-          );
-        }
-      })
-      .catch((err) => res.status(400).json(err)),
-  ]);
+                  })
+                  .catch((err) => res.json(err));
+              });
+            });
+          }
+        })
+        .catch((err) => res.status(400).json(err)),
+    ]);
+  }
 });
 
 /*
-@route POST api/public/:referral
+@route POST api/public/referral
 @desc  Get Referral Username
 @access public
 */
 
-router.post("/referral/:username", (req, res) => {
-  const message = {};
+router.post("/referral", (req, res) => {
+  let check,
+    message = {};
+  if (req.body.referral) {
+    check = req.body.referral;
+  }
+
   User.findOne({
-    where: { username: req.params.referral },
+    where: { username: check },
     attributes: ["username"],
   })
     .then((user) => {
       if (!user) {
-        message.error = "There is no User with the Referral ID";
+        message.text = "There is no User with the Referral ID";
         res.json(message);
       } else {
-        message.success = user.username;
+        message.text = "Referral ID confirmed";
         res.json(message);
       }
     })
@@ -168,14 +244,14 @@ router.post("/email", (req, res) => {
     check = req.body.email;
   }
 
-  User.findOne({ where: { email: check } })
+  User.findOne({ where: { email: check }, attributes: ["email"] })
     .then((user) => {
       if (user) {
         message.text = "Email Address has been taken!";
-        return res.json(message);
+        res.json(message);
       } else {
         message.text = "Email Address is Available!";
-        return res.json(message);
+        res.json(message);
       }
     })
     .catch((err) => res.status(404).json(err));
@@ -194,7 +270,7 @@ router.post("/username", (req, res) => {
     check = req.body.username;
   }
 
-  User.findOne({ where: { username: check } })
+  User.findOne({ where: { username: check }, attributes: ["username"] })
     .then((user) => {
       if (user) {
         message.text = "Username has been taken!";

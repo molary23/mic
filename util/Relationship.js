@@ -76,15 +76,6 @@ User.hasMany(Settings, {
 });
 Settings.belongsTo(User);
 
-Currency.hasMany(Signal, {
-  onDelete: "RESTRICT",
-  hooks: true,
-  foreignKey: {
-    allowNull: false,
-  },
-});
-Signal.belongsTo(Currency);
-
 User.hasMany(Signal, {
   onDelete: "RESTRICT",
   hooks: true,

@@ -98,9 +98,13 @@ section {
 textarea {
   height: 120px;
 }
-
-button,
-.btn {
+a.default-anchor {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.btn.default-btn {
   background: #06c2f7 !important;
   color: #fff !important;
   font-weight: 600;

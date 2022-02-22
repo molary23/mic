@@ -15,12 +15,10 @@ User.init(
     email: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      unique: true,
     },
     username: {
       type: DataTypes.STRING(30),
       allowNull: false,
-      unique: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -40,10 +38,10 @@ User.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: "timeCreated",
+    createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: "timeUpdated",
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
     modelName: "User", // We need to choose the model name

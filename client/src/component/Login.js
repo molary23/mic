@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loginuser } from "../action/authAction";
-import { withRouter } from "../util/withRouter";
 
 import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "../layout/TextPasswordField";
 
 import Box from "../layout/Box";
-import { connect } from "react-redux";
 
 class Login extends Component {
   state = {
@@ -17,14 +16,26 @@ class Login extends Component {
     pass: true,
     loading: false,
     error: {},
-    navigate: false,
+    usernavigate: false,
+    adminnavigate: false,
+    providernavigate: false,
   };
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.setState({
-        navigate: true,
-      });
+      if (this.props.auth.user.level === 1) {
+        this.setState({
+          usernavigate: true,
+        });
+      } else if (this.props.auth.user.level === 2) {
+        this.setState({
+          providernavigate: true,
+        });
+      } else if (this.props.auth.user.level === 3) {
+        this.setState({
+          adminnavigate: true,
+        });
+      }
     }
   }
 
@@ -108,7 +119,16 @@ class Login extends Component {
   };
 
   render() {
-    const { username, error, pass, password, loading, navigate } = this.state;
+    const {
+      username,
+      error,
+      pass,
+      password,
+      loading,
+      usernavigate,
+      providernavigate,
+      adminnavigate,
+    } = this.state;
     return (
       <div className="">
         {/*<div className="form-box mb-3">
@@ -142,7 +162,7 @@ class Login extends Component {
             <div className="d-grid">
               <button
                 type="submit"
-                className="btn btn-primary btn-lg btn-block"
+                className="btn default-btn btn-lg btn-block"
               >
                 Login
                 {loading && (
@@ -161,7 +181,9 @@ class Login extends Component {
             <Link to="/">Forgot your Password?</Link>
           </p>
         </div>
-        {navigate && <Navigate to="/" replace={true} />}
+        {usernavigate && <Navigate to="/user" replace={true} />}
+        {adminnavigate && <Navigate to="/admin" replace={true} />}
+        {providernavigate && <Navigate to="/provider" replace={true} />}
       </div>
     );
   }
@@ -177,4 +199,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
 });
-export default connect(mapStateToProps, { loginuser })(withRouter(Login));
+export default connect(mapStateToProps, { loginuser })(Login);

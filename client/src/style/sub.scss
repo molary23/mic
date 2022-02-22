@@ -237,6 +237,12 @@ ul.dropdown-menu {
       font-size: 150%;
     }
   }
+
+  .premium-user {
+    font-size: 15px;
+    color: rgba($color: $def-blue, $alpha: 0.8);
+    margin-left: 5px;
+  }
 }
 
 /* Signal */

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import Signal from "../layout/Signal";
+import Signal from "../../layout/Signal";
 
 const signal = [
   {

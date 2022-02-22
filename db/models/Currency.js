@@ -13,7 +13,11 @@ Currency.init(
       primaryKey: true,
     },
     currency: {
-      type: DataTypes.STRING(7),
+      type: DataTypes.STRING(3),
+      allowNull: false,
+    },
+    currencycode: {
+      type: DataTypes.STRING(6),
       allowNull: false,
     },
     active: {
@@ -26,10 +30,10 @@ Currency.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: "timeCreated",
+    createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: "timeUpdated",
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
     modelName: "Currency", // We need to choose the model name

@@ -98,16 +98,22 @@ textarea {
   height: 120px;
 }
 
-button,
-.btn {
+a.default-anchor {
+  text-decoration: none;
+}
+
+a.default-anchor:hover {
+  text-decoration: underline;
+}
+
+.btn.default-btn {
   background: #06c2f7 !important;
   color: #fff !important;
   font-weight: 600;
   border: none;
 }
 
-button:focus,
-.btn:focus {
+.btn.default-btn:focus {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
 }
@@ -415,6 +421,12 @@ ul.dropdown-menu li a {
   background: rgba(23, 109, 207, 0.2);
   color: rgba(23, 109, 207, 0.6);
   font-size: 150%;
+}
+
+.dashboard-content .premium-user {
+  font-size: 15px;
+  color: rgba(23, 109, 207, 0.8);
+  margin-left: 5px;
 }
 
 /* Signal */

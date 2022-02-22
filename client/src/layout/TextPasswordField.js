@@ -2,8 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 
 function TextPasswordField(props) {
-  const { placeholder, error, name, value, onChange, type, icon, id, onClick } =
-    props;
+  const {
+    placeholder,
+    error,
+    name,
+    value,
+    onChange,
+    type,
+    icon,
+    id,
+    onClick,
+    onKeyUp,
+  } = props;
 
   return (
     <div className="mb-3 mt-3">
@@ -16,6 +26,7 @@ function TextPasswordField(props) {
             name={name}
             value={value}
             onChange={onChange}
+            onKeyUp={onKeyUp}
           />
           <label htmlFor={id}>{placeholder}</label>
         </div>
@@ -43,6 +54,7 @@ TextPasswordField.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func,
+  onKeyUp: PropTypes.func,
   error: PropTypes.string,
 };
 

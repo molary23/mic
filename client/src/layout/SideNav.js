@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 function SideNav(props) {
   let display = props.act;
+  console.log(props);
 
   return (
     <div>
@@ -22,19 +25,23 @@ function SideNav(props) {
             Signals
           </Link>
 
-          <Link to="/">
-            <span className="sidebar-icon">
-              <i className="fas fa-money-bill-wave-alt" />
-            </span>
-            Currencies
-          </Link>
+          {props.auth.user.level > 2 && (
+            <Link to="/">
+              <span className="sidebar-icon">
+                <i className="fas fa-money-bill-wave-alt" />
+              </span>
+              Currencies
+            </Link>
+          )}
 
-          <Link to="/">
-            <span className="sidebar-icon">
-              <i className="fas fa-user-friends" />
-            </span>
-            Users
-          </Link>
+          {props.auth.user.level > 2 && (
+            <Link to="/">
+              <span className="sidebar-icon">
+                <i className="fas fa-user-friends" />
+              </span>
+              Users
+            </Link>
+          )}
 
           <Link to="/signal">
             <span className="sidebar-icon">
@@ -90,4 +97,12 @@ function SideNav(props) {
   );
 }
 
-export default SideNav;
+SideNav.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, null)(SideNav);

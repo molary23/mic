@@ -1,16 +1,9 @@
-import { TEXT_DISPATCH, GET_ERRORS, SET_CURRENT_USER } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER } from "./types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "../util/setAuthToken";
 
-export const registeruser = (userData, history) => (dispatch) => {
-  dispatch({
-    type: TEXT_DISPATCH,
-    payload: userData,
-  });
-};
-
-export const loginuser = (userData, history) => async (dispatch) => {
+export const loginuser = (userData) => async (dispatch) => {
   try {
     let response = await axios.post("/api/public/login/", userData, {});
     const { token } = response.data;

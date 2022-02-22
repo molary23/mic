@@ -15,8 +15,10 @@ import Forgot from "./component/Forgot";
 import Reset from "./component/Reset";
 import Login from "./component/Login";
 import Home from "./component/Home";
-import BothSignals from "./component/BothSignals";
-import BothDashboard from "./component/BothDashboard";
+import Signals from "./component/user/Signals";
+import Transactions from "./component/user/Transactions";
+
+import Index from "./component/user";
 
 if (localStorage.jwtToken) {
   // Set Auth Toke  Header
@@ -42,24 +44,31 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<PrivateRoute Component={Dashboard} />}>
-          <Route
-            exact
-            path="/"
-            element={<PrivateRoute Component={BothDashboard} />}
-          />
-          <Route
-            exact
-            path="/signals"
-            element={<PrivateRoute Component={BothSignals} />}
-          />
-        </Route>
         <Route path="/" element={<Home />}>
-          <Route path="/login" element={<Login />}></Route>
+          <Route path="/" element={<Login />}></Route>
           <Route exact path="/forgot" element={<Forgot />}></Route>
           <Route exact path="/reset" element={<Reset />}></Route>
           <Route exact path="/register" element={<Register />} />
           <Route path="/referral/:username" element={<Referral />} />
+        </Route>
+
+        <Route path="/user" element={<PrivateRoute Component={Dashboard} />}>
+          <Route
+            exact
+            path="/user/"
+            element={<PrivateRoute Component={Index} />}
+          >
+            <Route
+              exact
+              path="/user/signals"
+              element={<PrivateRoute Component={Signals} />}
+            />
+            <Route
+              exact
+              path="/user/transactions"
+              element={<PrivateRoute Component={Transactions} />}
+            />
+          </Route>
         </Route>
 
         <Route path="*" element={<PageNotFound />} />

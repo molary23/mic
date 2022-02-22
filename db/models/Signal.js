@@ -31,6 +31,9 @@ Signal.init(
     pip: {
       type: DataTypes.DOUBLE,
     },
+    currencies: {
+      type: DataTypes.JSON,
+    },
     status: {
       type: DataTypes.ENUM("f", "c"),
       defaultValue: "f",

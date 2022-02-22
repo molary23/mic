@@ -39,7 +39,7 @@ SignalView.init(
       type: DataTypes.DATE,
     },
     currency: {
-      type: DataTypes.STRING(7),
+      type: DataTypes.JSON,
     },
     providername: {
       type: DataTypes.STRING(30),
