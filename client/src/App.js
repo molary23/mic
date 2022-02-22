@@ -4,6 +4,7 @@ import store from "./store";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./action/authAction";
+import { logoutUser } from "./action/authAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
@@ -32,7 +33,7 @@ if (localStorage.jwtToken) {
   const currenTime = Date.now() / 1000;
   if (decoded.expiry < currenTime) {
     // Logout User
-
+    store.dispatch(logoutUser());
     // Clear current Profile
 
     // Redirect to Login
@@ -57,18 +58,17 @@ function App() {
             exact
             path="/user/"
             element={<PrivateRoute Component={Index} />}
-          >
-            <Route
-              exact
-              path="/user/signals"
-              element={<PrivateRoute Component={Signals} />}
-            />
-            <Route
-              exact
-              path="/user/transactions"
-              element={<PrivateRoute Component={Transactions} />}
-            />
-          </Route>
+          ></Route>
+          <Route
+            exact
+            path="/user/signals"
+            element={<PrivateRoute Component={Signals} />}
+          />
+          <Route
+            exact
+            path="/user/transactions"
+            element={<PrivateRoute Component={Transactions} />}
+          />
         </Route>
 
         <Route path="*" element={<PageNotFound />} />

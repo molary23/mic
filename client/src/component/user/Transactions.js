@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 export class Transactions extends Component {
   render() {
-    return <div></div>;
+    return <div>Hello There</div>;
   }
 }
 

@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { getUserProfile } from "../action/profileAction";
 import logo from "../asset/images/logo.png";
 
 import Dropdown from "./Dropdown";
@@ -70,4 +74,15 @@ function SubNav(props) {
   );
 }
 
-export default SubNav;
+SubNav.propTypes = {
+  getUserProfile: PropTypes.func,
+  auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+});
+
+export default connect(mapStateToProps, { getUserProfile })(SubNav);

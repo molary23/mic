@@ -1,4 +1,4 @@
-import { GET_USER_PROFILE } from "./types";
+import { GET_USER_PROFILE, CLEAR_CURRENT_PROFILE } from "./types";
 import axios from "axios";
 
 export const getUserProfile = () => async (dispatch) => {
@@ -12,4 +12,8 @@ export const getUserProfile = () => async (dispatch) => {
   } catch (error) {
     dispatch({ type: GET_USER_PROFILE, payload: {} });
   }
+};
+
+export const clearCurrentProfile = (decoded) => {
+  return { type: CLEAR_CURRENT_PROFILE };
 };

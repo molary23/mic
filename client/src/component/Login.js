@@ -16,24 +16,26 @@ class Login extends Component {
     pass: true,
     loading: false,
     error: {},
-    usernavigate: false,
-    adminnavigate: false,
-    providernavigate: false,
+    navigate: false,
+    viewer: "",
   };
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       if (this.props.auth.user.level === 1) {
         this.setState({
-          usernavigate: true,
+          navigate: true,
+          viewer: "/user",
         });
       } else if (this.props.auth.user.level === 2) {
         this.setState({
-          providernavigate: true,
+          navigate: true,
+          viewer: "/provider",
         });
       } else if (this.props.auth.user.level === 3) {
         this.setState({
-          adminnavigate: true,
+          navigate: true,
+          viewer: "/admin",
         });
       }
     }
@@ -42,11 +44,18 @@ class Login extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
 
-    if (nextProps.auth.isAuthenticated && prevState.navigate) {
+    if (nextProps.auth.isAuthenticated && prevState.navigate === false) {
+      if (nextProps.auth.user.level === 1) {
+        update.viewer = "/user";
+      } else if (nextProps.auth.user.level === 2) {
+        update.viewer = "/provider";
+      } else if (nextProps.auth.user.level === 3) {
+        update.viewer = "/admin";
+      }
       update.navigate = true;
     }
 
-    if (nextProps.errors && prevState.error) {
+    if (nextProps.errors && Object.keys(prevState.error).length === 0) {
       update.error = nextProps.errors;
     }
 
@@ -95,6 +104,9 @@ class Login extends Component {
         },
       });
     } else {
+      this.setState({
+        loading: true,
+      });
       const user = {
         username,
         password,
@@ -119,16 +131,8 @@ class Login extends Component {
   };
 
   render() {
-    const {
-      username,
-      error,
-      pass,
-      password,
-      loading,
-      usernavigate,
-      providernavigate,
-      adminnavigate,
-    } = this.state;
+    const { username, error, pass, password, loading, navigate, viewer } =
+      this.state;
     return (
       <div className="">
         {/*<div className="form-box mb-3">
@@ -181,9 +185,7 @@ class Login extends Component {
             <Link to="/">Forgot your Password?</Link>
           </p>
         </div>
-        {usernavigate && <Navigate to="/user" replace={true} />}
-        {adminnavigate && <Navigate to="/admin" replace={true} />}
-        {providernavigate && <Navigate to="/provider" replace={true} />}
+        {navigate && <Navigate to={`${viewer}`} replace={true} />}
       </div>
     );
   }

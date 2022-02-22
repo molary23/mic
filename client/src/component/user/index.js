@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+
 import { getUserProfile } from "../../action/profileAction";
 
 function Index(props) {
   const { auth, profile } = props;
-  console.log(profile);
-  /* useEffect(() => {
-    props.getUserProfile();
-  }, []);*/
-
+  useEffect(props.getUserProfile, []);
   return (
     <div>
       <div className="container">
@@ -21,12 +18,12 @@ function Index(props) {
                   <div className="col-8">
                     <div className="dashboard-welcome">
                       <h3 className="mb-2">
-                        Welcome back {profile.profile.fullname}
-                        {profile.profile.premiumstatus === 1 && (
+                        Welcome back {/*profile.profile.fullname*/}
+                        {/*profile.profile.premiumstatus === 1 && (
                           <span className="premium-user">
                             <i class="fas fa-check-circle" />
                           </span>
-                        )}
+                        )*/}
                       </h3>
                       <p>You have 20 days left in your current Subscription.</p>
                     </div>
@@ -50,7 +47,7 @@ function Index(props) {
                 <div className="referrral-id  ms-2  pt-1">
                   <code>
                     http://localhost:3000/referral/:
-                    {profile.profile.username}
+                    {/*profile.profile.username*/}
                   </code>
                 </div>
                 <div className="copy-referrral-id">
@@ -120,8 +117,9 @@ function Index(props) {
 }
 
 Index.propTypes = {
-  getUserProfile: PropTypes.func.isRequired,
+  getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

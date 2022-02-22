@@ -1,29 +1,48 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 function SideNav(props) {
+  let navigate = useNavigate();
+  let location = useLocation();
+
+  useEffect(() => {
+    if (!props.auth.isAuthenticated) {
+      navigate(`/?next=${location.pathname}`, { replace: true });
+    }
+  });
+
   let display = props.act;
-  console.log(props);
+
+  let viewer;
+  if (props.auth.user.level === 3) {
+    viewer = "admin";
+  } else if (props.auth.user.level === 2) {
+    viewer = "provider";
+  } else if (props.auth.user.level === 1) {
+    viewer = "user";
+  }
 
   return (
     <div>
       <div id="mySidebar" className={`sidebar ${display ? "" : "hide-side"}`}>
         <div className="side-nav-list">
-          <Link to="/">
+          <Link to={`/${viewer}/dashboard`}>
             <span className="sidebar-icon">
               <i className="fas fa-home" />
             </span>
             Dashboard
           </Link>
 
-          <Link to="/signals">
-            <span className="sidebar-icon">
-              <i className="fas fa-signal" />
-            </span>
-            Signals
-          </Link>
+          {(props.auth.user.level === 1 || props.auth.user.level === 3) && (
+            <Link to={`/${viewer}/signals`}>
+              <span className="sidebar-icon">
+                <i className="fas fa-signal" />
+              </span>
+              Signals
+            </Link>
+          )}
 
           {props.auth.user.level > 2 && (
             <Link to="/">
@@ -43,14 +62,14 @@ function SideNav(props) {
             </Link>
           )}
 
-          <Link to="/signal">
+          <Link to={`/${viewer}/subscriptions`}>
             <span className="sidebar-icon">
               <i className="fas fa-user-plus" />
             </span>
             Subscriptions
           </Link>
 
-          <Link to="/">
+          <Link to="/user/transactions">
             <span className="sidebar-icon">
               <i className="fas fa-exchange-alt" />
             </span>
@@ -98,11 +117,13 @@ function SideNav(props) {
 }
 
 SideNav.propTypes = {
+  getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  profile: state.profile,
 });
 
 export default connect(mapStateToProps, null)(SideNav);

@@ -1,17 +1,21 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../action/authAction";
+import { clearCurrentProfile } from "../action/profileAction";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import DropdownItem from "./DropdownItem";
 
 function Dropdown(props) {
+  let navigate = useNavigate();
   const [display, setDisplay] = useState(false);
 
   const logoutClick = (e) => {
     e.preventDefault();
     props.logoutUser();
+    props.clearCurrentProfile();
+    navigate("/", { replace: true });
   };
 
   return (
@@ -53,6 +57,16 @@ function Dropdown(props) {
 
 Dropdown.propTypes = {
   logoutUser: PropTypes.func.isRequired,
+  clearCurrentProfile: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
-export default connect(null, { logoutUser })(Dropdown);
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+});
+
+export default connect(mapStateToProps, { logoutUser, clearCurrentProfile })(
+  Dropdown
+);
