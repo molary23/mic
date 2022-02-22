@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import axios from "axios";
-import isEmpty from "../../validation/emptyChecker";
+import isEmpty from "../validation/emptyChecker";
 
-import TextInputField from "../../layout/TextInputField";
-import TextPasswordField from "../../layout/TextPasswordField";
-import Modal from "../../layout/Modal";
+import TextInputField from "../layout/TextInputField";
+import TextPasswordField from "../layout/TextPasswordField";
+import Modal from "../layout/Modal";
+import Box from "../layout/Box";
 
 class Register extends Component {
   state = {
@@ -18,6 +19,10 @@ class Register extends Component {
     pass2: true,
     loading: false,
     modal: false,
+    loader: {
+      email: false,
+      username: false,
+    },
     headers: {
       "Content-Type": "application/json",
     },
@@ -49,6 +54,11 @@ class Register extends Component {
     } else if (input === "username") {
       req = { username: target };
     }
+    this.setState({
+      loader: {
+        [input]: true,
+      },
+    });
     let typingTimer;
     clearTimeout(typingTimer);
     typingTimer = setTimeout(() => {
@@ -59,6 +69,9 @@ class Register extends Component {
           this.setState({
             error: {
               [input]: response,
+            },
+            loader: {
+              [input]: false,
             },
           });
         })
@@ -86,17 +99,17 @@ class Register extends Component {
 
     const { username, email, password, password2, referral } = this.state;
 
-    if (isEmpty(username)) {
-      this.setState({
-        error: {
-          username: "Username Field can't be Empty",
-        },
-        loading: false,
-      });
-    } else if (isEmpty(email)) {
+    if (isEmpty(email)) {
       this.setState({
         error: {
           email: "Email Address Field can't be Empty",
+        },
+        loading: false,
+      });
+    } else if (isEmpty(username)) {
+      this.setState({
+        error: {
+          username: "Username Field can't be Empty",
         },
         loading: false,
       });
@@ -144,6 +157,7 @@ class Register extends Component {
         )
         .then((res) => {
           let response = res.data;
+          console.log(response);
           if (response === 1) {
             this.setState({
               modal: true,
@@ -179,15 +193,12 @@ class Register extends Component {
       pass2,
       loading,
       modal,
+      loader,
     } = this.state;
     return (
       <div className="main-register">
         <div className="register-box">
-          <div className="page-title mb-3">
-            <h1>Join MIC Earn Business</h1>
-          </div>
-
-          <div className="form-box">
+          <Box sender="Register">
             <form className="register-form" onSubmit={this.submitHandler}>
               <TextInputField
                 id="register-form-referral"
@@ -199,27 +210,32 @@ class Register extends Component {
                 onChange={this.changeHandler}
                 disabled={this.props.referred ? "disabled" : ""}
               />
-              <TextInputField
+
+              <TextPasswordField
                 id="register-form-email"
                 placeholder="Email Address"
                 label="Email Address"
+                icon={`${loader.email ? "fas fa-spinner fa-spin" : ""}`}
                 type="email"
                 name="email"
                 value={email}
                 onChange={this.changeHandler}
+                onClick={() => this.checkPassHandler(1)}
                 error={error.email}
               />
-
-              <TextInputField
+              <TextPasswordField
                 id="register-form-username"
                 placeholder="Username"
                 label="Username"
+                icon={`${loader.username ? "fas fa-spinner fa-spin" : ""}`}
                 type="text"
                 name="username"
                 value={username}
                 onChange={this.changeHandler}
+                onClick={() => this.checkPassHandler(1)}
                 error={error.username}
               />
+
               <TextPasswordField
                 id="register-form-password"
                 placeholder="Password"
@@ -256,7 +272,7 @@ class Register extends Component {
                 </button>
               </div>
             </form>
-          </div>
+          </Box>
         </div>
         {modal ? <Modal {...{ modal, sender: "register" }} /> : ""}
       </div>

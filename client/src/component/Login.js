@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { loginuser } from "../../action/authAction";
-import { withRouter } from "../../util/withRouter";
+import { loginuser } from "../action/authAction";
+import { withRouter } from "../util/withRouter";
 
-import TextInputField from "../../layout/TextInputField";
-import TextPasswordField from "../../layout/TextPasswordField";
-import logo from "../../asset/images/logo.png";
+import TextInputField from "../layout/TextInputField";
+import TextPasswordField from "../layout/TextPasswordField";
+
+import Box from "../layout/Box";
 import { connect } from "react-redux";
 
 class Login extends Component {
@@ -109,57 +110,56 @@ class Login extends Component {
   render() {
     const { username, error, pass, password, loading, navigate } = this.state;
     return (
-      <div className="login-page">
-        <div className="login-box">
-          <img alt="MIC Earn Business Logo" src={logo} className="mb-4" />
-          <div className="form-box mb-3">
-            <div className="page-title mb-4 mt-2">
-              <h1>Login</h1>
+      <div className="">
+        {/*<div className="form-box mb-3">
+          <div className="page-title mb-4 mt-2">
+            <h1>Login</h1>
+    </div>*/}
+        <Box sender={"login"}>
+          <form className="login-form" onSubmit={this.submitHandler}>
+            <TextInputField
+              id="login-form-email"
+              placeholder="Email Address/Username"
+              label="Email Address/Username"
+              type="text"
+              name="username"
+              value={username}
+              onChange={this.changeHandler}
+              error={error.username}
+            />
+            <TextPasswordField
+              id="login-form-password"
+              placeholder="Password"
+              label="Password"
+              icon={`far ${pass ? "fa-eye-slash" : "fa-eye"}`}
+              type={pass ? "password" : "text"}
+              name="password"
+              value={password}
+              onChange={this.changeHandler}
+              onClick={this.checkPassHandler}
+              error={error.password}
+            />
+            <div className="d-grid">
+              <button
+                type="submit"
+                className="btn btn-primary btn-lg btn-block"
+              >
+                Login
+                {loading && (
+                  <span className="spinner-border spinner-border-sm ms-2"></span>
+                )}
+              </button>
             </div>
-            <form className="login-form" onSubmit={this.submitHandler}>
-              <TextInputField
-                id="login-form-email"
-                placeholder="Email Address/Username"
-                label="Email Address/Username"
-                type="text"
-                name="username"
-                value={username}
-                onChange={this.changeHandler}
-                error={error.username}
-              />
-              <TextPasswordField
-                id="login-form-password"
-                placeholder="Password"
-                label="Password"
-                icon={`far ${pass ? "fa-eye-slash" : "fa-eye"}`}
-                type={pass ? "password" : "text"}
-                name="password"
-                value={password}
-                onChange={this.changeHandler}
-                onClick={this.checkPassHandler}
-                error={error.password}
-              />
-              <div className="d-grid">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-lg btn-block"
-                >
-                  Login
-                  {loading && (
-                    <span className="spinner-border spinner-border-sm ms-2"></span>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-          <div className="login-helper">
-            <p className="mb-1">
-              New to MIC? <Link to="//localhost:3000/register">Join</Link>
-            </p>
-            <p className="">
-              <Link to="/">Forgot your Password?</Link>
-            </p>
-          </div>
+          </form>
+        </Box>
+        {/*</div>*/}
+        <div className="login-helper">
+          <p className="mb-1">
+            New to MIC? <Link to="/register">Join</Link>
+          </p>
+          <p className="">
+            <Link to="/">Forgot your Password?</Link>
+          </p>
         </div>
         {navigate && <Navigate to="/" replace={true} />}
       </div>

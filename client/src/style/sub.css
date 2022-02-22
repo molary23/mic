@@ -11,6 +11,13 @@
 */
 * {
   margin: 0;
+  font-family: "ubuntu", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 /*
@@ -99,9 +106,16 @@ button,
   border: none;
 }
 
+button:focus,
+.btn:focus {
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+
 input:focus {
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  border: 1px solid #ced4da !important;
 }
 
 .form-floating-group input {
@@ -111,6 +125,10 @@ input:focus {
 
 .form-floating.form-floating-group input {
   border-right: none;
+}
+
+.form-floating.form-floating-group input:focus {
+  border-right: none !important;
 }
 
 span.input-group-text {
@@ -137,25 +155,25 @@ span.input-group-text {
   border: #fcfcfc;
 }
 
-.login-page {
+.home-page {
   min-height: 700px;
   background: #023064;
   background: radial-gradient(circle, #023064 0%, #031f3f 35%, #022854 100%) no-repeat;
   padding-top: 50px;
 }
 
-.login-page .login-box {
+.home-page .home-box {
   width: 500px;
   height: 500px;
   margin: auto;
 }
 
-.login-page .login-box img {
+.home-page .home-box img {
   width: 30px;
   margin: auto;
 }
 
-.login-page .login-box .form-box {
+.home-page .home-box .form-box {
   background: #fff;
   -webkit-box-shadow: 1px 2px 3px #303030;
           box-shadow: 1px 2px 3px #303030;
@@ -163,24 +181,24 @@ span.input-group-text {
   border-radius: 5px;
 }
 
-.login-page .login-box .form-box h1 {
-  font-size: clamp(1.5vw, 15px, 1.5vh);
+.home-page .home-box .form-box h1 {
+  font-size: clamp(2vw, 15px, 1.5vh);
   text-transform: uppercase;
   font-weight: 400;
 }
 
-.login-page .login-box .login-helper {
+.home-page .home-box .login-helper {
   text-align: center;
   font-weight: 600;
   color: #fff;
 }
 
-.login-page .login-box .login-helper a {
+.home-page .home-box .login-helper a {
   text-decoration: none;
   color: #fff;
 }
 
-.login-page .login-box .login-helper a:hover {
+.home-page .home-box .login-helper a:hover {
   text-decoration: underline;
 }
 
@@ -301,6 +319,7 @@ ul.dropdown-menu li a {
 
 /* Dashboard */
 .dashboard-content {
+  min-height: 1500px;
   margin-left: 200px;
   padding: 25px;
 }
@@ -396,5 +415,90 @@ ul.dropdown-menu li a {
   background: rgba(23, 109, 207, 0.2);
   color: rgba(23, 109, 207, 0.6);
   font-size: 150%;
+}
+
+/* Signal */
+.signal-detail {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: (1fr)[8];
+      grid-template-rows: repeat(8, 1fr);
+  grid-row-gap: 4%;
+  height: 400px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 5px;
+  color: #1f1e1e;
+}
+
+.signal-detail .currency-info {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (3fr)[3];
+      grid-template-columns: repeat(3, 3fr);
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.signal-detail .signal-about,
+.signal-detail .signal-from,
+.signal-detail .signal-to,
+.signal-detail .signal-sold-at,
+.signal-detail .signal-bought-at,
+.signal-detail .signal-pip {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 2fr 1fr;
+      grid-template-columns: 2fr 1fr;
+  border-bottom: 1px dashed #727272;
+  margin: 0px 10px;
+}
+
+.signal-detail .signal-pip {
+  border-bottom: none;
+}
+
+.signal-detail .signal-status {
+  border-bottom: 1px dashed #727272;
+  margin: 0px 10px;
+}
+
+.signal-detail .signal-status .signal-stat {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.signal-detail .signal-align-right {
+  justify-self: flex-end;
+}
+
+.signal-detail .take-stop {
+  margin-right: 5px;
+}
+
+.signal-detail .signal-title {
+  font-weight: 600;
+}
+
+.signal-detail .currency-image .flag {
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+.signal-detail .signal-currency {
+  background: rgba(141, 191, 248, 0.2);
+  padding: 10px 5px;
+}
+
+.signal-detail .currency-info {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.signal-detail .currency-return.signal-align-right {
+  font-size: 22px;
+  margin-right: 5px;
 }
 /*# sourceMappingURL=sub.css.map */

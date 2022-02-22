@@ -15,7 +15,17 @@
 */
 * {
   margin: 0;
+  font-family: "ubuntu", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
 /*
   3. Allow percentage-based heights in the application
 */
@@ -95,11 +105,15 @@ button,
   color: #fff !important;
   font-weight: 600;
   border: none;
+  &:focus {
+    box-shadow: none !important;
+  }
 }
 
 input {
   &:focus {
-    box-shadow: none;
+    box-shadow: none !important;
+    border: 1px solid #ced4da !important;
   }
 }
 
@@ -110,6 +124,9 @@ input {
 
 .form-floating.form-floating-group input {
   border-right: none;
+  &:focus {
+    border-right: none !important;
+  }
 }
 
 span.input-group-text {

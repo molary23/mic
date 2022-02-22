@@ -15,7 +15,7 @@ function SideNav(props) {
             Dashboard
           </Link>
 
-          <Link to="/signal">
+          <Link to="/signals">
             <span className="sidebar-icon">
               <i className="fas fa-signal" />
             </span>
@@ -59,7 +59,7 @@ function SideNav(props) {
 
           <Link to="/">
             <span className="sidebar-icon">
-              <i class="fas fa-donate" />
+              <i className="fas fa-donate" />
             </span>
             Bonus
           </Link>

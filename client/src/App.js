@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import "./style/sub.css";
 import { Routes, Route } from "react-router-dom";
 import store from "./store";
 import jwtDecode from "jwt-decode";
@@ -7,15 +7,16 @@ import { setCurrentUser } from "./action/authAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
-import Dashboard from "./dashboard/Dashboard";
-import Main from "./main/Main";
+import Dashboard from "./component/Dashboard";
 import PageNotFound from "./util/404Page";
-import Register from "./main/component/Register";
-import Referral from "./main/component/Referral";
-import Forgot from "./dashboard/component/Forgot";
-import Login from "./dashboard/component/Login";
-import HomePage from "./dashboard/component/HomePage";
-import Signals from "./dashboard/component/admin/Signals";
+import Register from "./component/Register";
+import Referral from "./component/Referral";
+import Forgot from "./component/Forgot";
+import Reset from "./component/Reset";
+import Login from "./component/Login";
+import Home from "./component/Home";
+import BothSignals from "./component/BothSignals";
+import BothDashboard from "./component/BothDashboard";
 
 if (localStorage.jwtToken) {
   // Set Auth Toke  Header
@@ -38,64 +39,32 @@ if (localStorage.jwtToken) {
 }
 
 function App() {
-  const [subdomain, setSubdomain] = useState(null);
-  useEffect(() => {
-    const host = window.location.host;
-    const domainArray = host
-      .split(".")
-      .slice(0, host.includes("localhost") ? -1 : -2);
-
-    if (domainArray.length > 0) {
-      setSubdomain(domainArray[0]);
-    }
-  }, []);
-  /*
-  const subrouting = useRoutes(SubRoutes);
-  const mainrouting = useRoutes(MainRoutes);
-
-  return <div>{subdomain === "dashboard" ? subrouting : mainrouting}</div>;*/
-  const tryfunc = () => {
-    /*  axios
-      .get("api/public/finder")
-      .then((res) => console.log(res))
-      .catch((err) => {
-        console.log(err);
-      });*/
-  };
-  tryfunc();
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={subdomain === "dashboard" ? <Dashboard /> : <Main />}
-        render={(props) => {
-          if (subdomain === "dashboard") {
-            return <Dashboard {...props} />;
-          } else {
-            return <Main {...props} />;
-          }
-        }}
-      >
-        {subdomain === "dashboard" ? (
-          <Route path="/" element={<Dashboard />}>
-            <Route path="/forgot" element={<Forgot />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/" element={<PrivateRoute Component={HomePage} />} />
-            <Route
-              exact
-              path="/admin-signals"
-              element={<PrivateRoute Component={Signals} />}
-            />
-          </Route>
-        ) : (
-          <Route path="/" element={<Main />}>
-            <Route path="/register" element={<Register />} />
-            <Route path="/referral/:username" element={<Referral />} />
-          </Route>
-        )}
-      </Route>
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+    <div>
+      <Routes>
+        <Route path="/" element={<PrivateRoute Component={Dashboard} />}>
+          <Route
+            exact
+            path="/"
+            element={<PrivateRoute Component={BothDashboard} />}
+          />
+          <Route
+            exact
+            path="/signals"
+            element={<PrivateRoute Component={BothSignals} />}
+          />
+        </Route>
+        <Route path="/" element={<Home />}>
+          <Route path="/login" element={<Login />}></Route>
+          <Route exact path="/forgot" element={<Forgot />}></Route>
+          <Route exact path="/reset" element={<Reset />}></Route>
+          <Route exact path="/register" element={<Register />} />
+          <Route path="/referral/:username" element={<Referral />} />
+        </Route>
+
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </div>
   );
 }
 
