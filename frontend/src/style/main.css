@@ -221,7 +221,7 @@ span.input-group-text {
 .main-home .main-home-service .service-second-image {
   height: 600px;
   width: 100%;
-  margin: 100px auto !important;
+  margin: 0px auto !important;
 }
 
 .main-home .main-home-service .service-second-text,
@@ -268,5 +268,9 @@ a.btn.nav-link.btn {
 
 .sub-footer address {
   margin-bottom: 10px;
+}
+
+textarea {
+  height: 100px;
 }
 /*# sourceMappingURL=main.css.map */

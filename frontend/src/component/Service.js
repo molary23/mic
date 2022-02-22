@@ -8,7 +8,7 @@ function Service() {
       <div className="main-home-service">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-sm-6 mb-5">
               <div className="service-first-image m-auto ">
                 <img
                   src={phone}
@@ -17,7 +17,7 @@ function Service() {
                 />
               </div>
             </div>
-            <div className="col-sm-6">
+            <div className="col-sm-6 mt-5">
               <div className="service-first-text m-auto ">
                 <h1>Signal at your Fingertips</h1>
                 <p>
@@ -31,7 +31,7 @@ function Service() {
               </div>
             </div>
 
-            <div className="col-sm-6">
+            <div className="col-sm-6 mt-5">
               <div className="service-second-text m-auto ">
                 <h1>Get notified on Signal change</h1>
                 <p>
@@ -47,7 +47,7 @@ function Service() {
                 </p>
               </div>
             </div>
-            <div className="col-sm-6">
+            <div className="col-sm-6 mt-5">
               <div className="service-second-image m-auto ">
                 <img
                   src={phone}

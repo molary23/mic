@@ -76,7 +76,7 @@
     .service-second-image {
       height: 600px;
       width: 100%;
-      margin: 100px auto !important;
+      margin: 0px auto !important;
     }
 
     .service-second-text,
@@ -122,4 +122,8 @@ a.btn.nav-link.btn {
   address {
     margin-bottom: 10px;
   }
+}
+
+textarea {
+  height: 100px;
 }
