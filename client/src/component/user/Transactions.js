@@ -86,7 +86,7 @@ export class Transactions extends Component {
       [e.target.name]: e.target.value,
       loading: true,
     });
-    console.log(e.target.value);
+
     // select from DB
   };
   render() {
@@ -101,7 +101,7 @@ export class Transactions extends Component {
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-2">
+              <div className="col-md-3">
                 <Select
                   sender={sender}
                   options={methodOptions}
@@ -110,7 +110,7 @@ export class Transactions extends Component {
                   value={method}
                 />
               </div>
-              <div className="col-md-2">
+              <div className="col-md-3">
                 <Select
                   sender={sender}
                   options={typeOptions}
@@ -119,38 +119,21 @@ export class Transactions extends Component {
                   value={type}
                 />
               </div>
-              <div className="col-md-8">
-                <div className="row">
-                  <div className="col-md-4">
-                    <div className="transactions-credit-total t-amount">
-                      <h4>
-                        Credit
-                        <span className="badge rounded-pill bg-primary">
-                          25000
-                        </span>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="transactions-debit-total t-amount">
-                      <h4>
-                        Debit
-                        <span className="badge rounded-pill bg-info">
-                          25000
-                        </span>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="transactions-total t-amount">
-                      <h4>
-                        Balance
-                        <span className="badge rounded-pill bg-success">
-                          2500000
-                        </span>
-                      </h4>
-                    </div>
-                  </div>
+              <div className="col-md-3">
+                <div className="col-md-3 ">
+                  <button type="button" className="btn btn-outline-primary">
+                    Download <i className="far fa-file-excel" />
+                  </button>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="transactions-total table-figure">
+                  <h4>
+                    Balance
+                    <span className="badge rounded-pill bg-success">
+                      2500000
+                    </span>
+                  </h4>
                 </div>
               </div>
             </div>

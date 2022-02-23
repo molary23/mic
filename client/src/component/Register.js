@@ -2,9 +2,13 @@ import React, { Component } from "react";
 import axios from "axios";
 import isEmpty from "../validation/emptyChecker";
 
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+
 import TextPasswordField from "../layout/TextPasswordField";
 import Modal from "../layout/Modal";
 import Box from "../layout/Box";
+import isEmail from "validator/lib/isEmail";
 let typingTimer;
 class Register extends Component {
   state = {
@@ -17,12 +21,13 @@ class Register extends Component {
     pass1: true,
     pass2: true,
     loading: false,
-    modal: true,
+    modal: false,
     loader: {
       email: false,
       username: false,
       referral: false,
     },
+    phone: "",
     headers: {
       "Content-Type": "application/json",
     },
@@ -102,12 +107,20 @@ class Register extends Component {
 
   submitHandler = async (e) => {
     e.preventDefault();
-    const { username, email, password, password2, referral } = this.state;
-
+    const { username, email, password, password2, referral, phone } =
+      this.state;
+    let pattern = new RegExp("^[a-zA-Z0-9._-]+$");
+    let tester = pattern.test(username);
     if (isEmpty(email)) {
       this.setState({
         error: {
           email: "Email Address Field can't be Empty",
+        },
+      });
+    } else if (phone.length < 12) {
+      this.setState({
+        error: {
+          phone: "Phone Number should be atleast 12 Characters",
         },
       });
     } else if (isEmpty(username)) {
@@ -116,10 +129,29 @@ class Register extends Component {
           username: "Username Field can't be Empty",
         },
       });
+    } else if (isEmail(username)) {
+      this.setState({
+        error: {
+          username: "Username Field can't be an Email",
+        },
+      });
+    } else if (!tester) {
+      this.setState({
+        error: {
+          username:
+            "Only contain Letters, Numbers and (.-_) characters allowed",
+        },
+      });
     } else if (isEmpty(password)) {
       this.setState({
         error: {
           password: "Password Field can't be Empty",
+        },
+      });
+    } else if (password.length < 8) {
+      this.setState({
+        error: {
+          password: "Password should be atleast 8 characters",
         },
       });
     } else if (isEmpty(password2)) {
@@ -142,10 +174,13 @@ class Register extends Component {
         referral: referral.trim(),
         username: username.trim(),
         email: email.trim(),
+        phone: phone.split(" ").join("").trim(),
         password: password,
       };
 
-      try {
+      console.log(newUser);
+
+      /*  try {
         let response = await axios.post(
           "/api/public/register/",
           {
@@ -161,6 +196,7 @@ class Register extends Component {
             password: "",
             password2: "",
             referral: "",
+            phone: "",
             error: {},
             pass1: true,
             pass2: true,
@@ -172,7 +208,7 @@ class Register extends Component {
         this.setState({
           error: err.data,
         });
-      }
+      }*/
     }
   };
 
@@ -189,6 +225,7 @@ class Register extends Component {
       loading,
       modal,
       loader,
+      phone,
     } = this.state;
     return (
       <div className="main-register">
@@ -222,6 +259,17 @@ class Register extends Component {
                 error={error.email}
                 onKeyUp={this.keyHandler}
               />
+
+              <PhoneInput
+                country={"ng"}
+                value={phone}
+                onChange={(phone) => this.setState({ phone })}
+                className="phone-with-input"
+                placeholder="Phone Number"
+              />
+              {error.phone && (
+                <small className="text-muted">{error.phone}</small>
+              )}
               <TextPasswordField
                 id="register-form-username"
                 placeholder="Username"

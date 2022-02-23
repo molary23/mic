@@ -5,89 +5,88 @@ import TableHead from "../../layout/TableHead";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 
-const pay = [
+const withdraw = [
   {
     amount: 200,
     reference: "bonus",
     status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 400,
     reference: "bonus",
     status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 250,
     reference: "withdrawal",
     status: "debit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 600,
     reference: "subscription",
     status: "debit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 700,
     reference: "bonus",
     status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 100,
     reference: "bonus",
     status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 500,
     reference: "bonus",
     status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 400,
     reference: "subscription",
     status: "debit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 650,
     reference: "bonus",
     status: "credit",
     date: new Date(),
+    update: new Date(),
   },
 ];
-export class Payments extends Component {
+export default class Withdrawals extends Component {
   state = {
-    sender: "payments",
+    sender: "withdrawals",
     loading: false,
-    statusOptions: [
-      { value: 0, option: "Filter by Status" },
-      { value: "f", option: "Failed" },
-      { value: "s", option: "Success" },
+    withOptions: [
+      { value: 0, option: "Filter by Use" },
+      { value: "p", option: "Payout" },
+      { value: "s", option: "Subscriptions" },
     ],
-    status: "",
+    use: "",
   };
-
-  changeHandler = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-      loading: true,
-    });
-
-    // select from DB
-  };
-
   render() {
-    const { loading, sender, statusOptions, status } = this.state;
+    const { loading, sender, withOptions, use } = this.state;
     return (
       <div>
         {loading && <ProgressBar />}
-        <div className="payments card holder-card ">
+        <div className="withdrawals card holder-card ">
           <div className="page-dash-title mb-4">
             <h1>Payments</h1>
           </div>
@@ -96,10 +95,10 @@ export class Payments extends Component {
               <div className="col-md-3">
                 <Select
                   sender={sender}
-                  options={statusOptions}
+                  options={withOptions}
                   onChange={this.changeHandler}
-                  name="status"
-                  value={status}
+                  name="use"
+                  value={use}
                 />
               </div>
               <div className="col-md-3">
@@ -122,14 +121,19 @@ export class Payments extends Component {
 
           <TableHead
             sender={sender}
-            head={["S/N", "amount", "reference", "status", "date"]}
+            head={[
+              "S/N",
+              "amount",
+              "Use",
+              "status",
+              "request date",
+              "approved date",
+            ]}
           >
-            <TableBody sender={sender} tablebody={pay} />
+            <TableBody sender={sender} tablebody={withdraw} />
           </TableHead>
         </div>
       </div>
     );
   }
 }
-
-export default Payments;

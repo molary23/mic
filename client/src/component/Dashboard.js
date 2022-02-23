@@ -14,7 +14,7 @@ function Dashboard() {
       <SubNav onClick={toggleOpen} />
       <SideNav act={open} />
       <section>
-        <div className="dashboard-content mb-4">
+        <div className={`dashboard-content pb-4 ${!open && "dash-full"}`}>
           <Outlet />
           {/*<Routes>
           

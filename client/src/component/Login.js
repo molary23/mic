@@ -133,6 +133,8 @@ class Login extends Component {
   render() {
     const { username, error, pass, password, loading, navigate, viewer } =
       this.state;
+    const { errors } = this.props;
+
     return (
       <div className="">
         {/*<div className="form-box mb-3">

@@ -22,8 +22,15 @@ import Transactions from "./component/user/Transactions";
 import Bonuses from "./component/user/Bonuses";
 import Referrals from "./component/user/Referrals";
 import Pay from "./component/user/Pay";
+import Payments from "./component/user/Payments";
+import Withdrawals from "./component/user/Withdrawals";
 
 import Index from "./component/user";
+
+//Admin
+import AdminIndex from "./component/admin/AdminIndex";
+import AdminBonuses from "./component/admin/Bonuses";
+import AdminBonus from "./component/admin/Bonus";
 
 if (localStorage.jwtToken) {
   // Set Auth Toke  Header
@@ -35,13 +42,14 @@ if (localStorage.jwtToken) {
   store.dispatch(setCurrentUser(decoded));
 
   const currenTime = Date.now() / 1000;
-  if (decoded.expiry < currenTime) {
+
+  if (decoded.exp < currenTime) {
     // Logout User
     store.dispatch(logoutUser());
     // Clear current Profile
     store.dispatch(clearCurrentProfile());
     // Redirect to Login
-    window.location.href = "/login";
+    window.location.href = "/";
   }
 }
 
@@ -87,6 +95,34 @@ function App() {
             exact
             path="/user/pay"
             element={<PrivateRoute Component={Pay} />}
+          />
+          <Route
+            exact
+            path="/user/payments"
+            element={<PrivateRoute Component={Payments} />}
+          />
+          <Route
+            exact
+            path="/user/withdrawals"
+            element={<PrivateRoute Component={Withdrawals} />}
+          />
+        </Route>
+
+        <Route path="/admin" element={<PrivateRoute Component={Dashboard} />}>
+          <Route
+            exact
+            path="/admin/"
+            element={<PrivateRoute Component={AdminIndex} />}
+          ></Route>
+          <Route
+            exact
+            path="/admin/bonuses"
+            element={<PrivateRoute Component={AdminBonuses} />}
+          />
+          <Route
+            exact
+            path="/admin/bonus/:bonusId"
+            element={<PrivateRoute Component={AdminBonus} />}
           />
         </Route>
 

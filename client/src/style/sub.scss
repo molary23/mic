@@ -50,6 +50,11 @@
       }
     }
   }
+
+  .react-tel-input.phone-with-input input {
+    height: 60px;
+    width: 100%;
+  }
 }
 
 /* Handle DropDown */
@@ -156,10 +161,11 @@ ul.dropdown-menu {
 
 /* Dashboard */
 .dashboard-content {
-  min-height: 1500px;
+  min-height: 700px;
   margin-left: 200px;
   padding: 25px;
   margin-top: 80px;
+  padding-bottom: 80px;
   .card {
     border: 1px solid $border-light;
     box-shadow: 1px 2px 3px $shadow;
@@ -250,6 +256,10 @@ ul.dropdown-menu {
   }
 }
 
+.dash-full {
+  margin-left: 50px;
+}
+
 /* Signal */
 
 .signal-detail {
@@ -327,6 +337,11 @@ ul.dropdown-menu {
   z-index: 9999;
 }
 
+.loader {
+  text-align: center;
+  margin-top: 50px;
+}
+
 /* Page cards */
 .holder-card {
   padding: 20px 10px;
@@ -384,4 +399,14 @@ ul.dropdown-menu {
   label {
     font-weight: 600;
   }
+}
+
+/* Admin */
+.dashboard-admin-intro.card {
+  margin-bottom: 20px;
+}
+.action-buttons .btn {
+  margin-right: 10px;
+  height: 30px;
+  color: #fff;
 }

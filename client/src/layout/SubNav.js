@@ -11,24 +11,18 @@ import Dropdown from "./Dropdown";
 export class SubNav extends Component {
   state = {
     close: true,
-    progress: 50,
   };
-
-  componentDidMount() {}
 
   openNav = () => {
     this.setState({
-      close: true,
+      close: !this.state.close,
     });
 
-    this.props.onClick(true);
-  };
-
-  clickHandler = () => {
-    this.setState({
-      close: false,
-    });
-    this.props.onClick(false);
+    if (this.state.close) {
+      this.props.onClick(false);
+    } else {
+      this.props.onClick(true);
+    }
   };
 
   render() {
@@ -37,19 +31,9 @@ export class SubNav extends Component {
         <nav className="navbar navbar-expand-sm bg-light navbar-light dash-top-nav fixed-top">
           <div className="container-fluid">
             <div className="toggle-btn">
-              {this.state.close ? (
-                <button
-                  className="btn move-close-btn"
-                  type="button"
-                  onClick={this.clickHandler}
-                >
-                  <i className="fas fa-times" />
-                </button>
-              ) : (
-                <button className="btn" type="button" onClick={this.openNav}>
-                  <span className="navbar-toggler-icon"></span>
-                </button>
-              )}
+              <button className="btn" type="button" onClick={this.openNav}>
+                <span className="navbar-toggler-icon"></span>
+              </button>
             </div>
             <Link className="navbar-brand" to="/">
               <img

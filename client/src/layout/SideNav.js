@@ -6,16 +6,16 @@ import { connect } from "react-redux";
 function SideNav(props) {
   let navigate = useNavigate();
   let location = useLocation();
-
+  // check user logged in
   useEffect(() => {
-    if (!props.auth.isAuthenticated) {
+    /*  if (!props.auth.isAuthenticated) {
       navigate(`/?next=${location.pathname}`, { replace: true });
-    }
+    }*/
   });
 
   let display = props.act;
 
-  let viewer;
+  let viewer = "admin";
   if (props.auth.user.level === 3) {
     viewer = "admin";
   } else if (props.auth.user.level === 2) {
@@ -26,91 +26,93 @@ function SideNav(props) {
 
   return (
     <div>
-      <div id="mySidebar" className={`sidebar ${display ? "" : "hide-side"}`}>
-        <div className="side-nav-list">
-          <Link to={`/${viewer}/`}>
-            <span className="sidebar-icon">
-              <i className="fas fa-home" />
-            </span>
-            Dashboard
-          </Link>
-
-          {(props.auth.user.level === 1 || props.auth.user.level === 3) && (
-            <Link to={`/${viewer}/signals`}>
+      <div id="mySidebar" className={`sidebar ${!display && "hide-side"}`}>
+        {display && (
+          <div className="side-nav-list">
+            <Link to={`/${viewer}/`}>
               <span className="sidebar-icon">
-                <i className="fas fa-signal" />
+                <i className="fas fa-home" />
               </span>
-              Signals
+              Dashboard
             </Link>
-          )}
 
-          {props.auth.user.level > 2 && (
+            {(props.auth.user.level === 1 || props.auth.user.level === 3) && (
+              <Link to={`/${viewer}/signals`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-signal" />
+                </span>
+                Signals
+              </Link>
+            )}
+
+            {props.auth.user.level > 2 && (
+              <Link to="/">
+                <span className="sidebar-icon">
+                  <i className="fas fa-money-bill-wave-alt" />
+                </span>
+                Currencies
+              </Link>
+            )}
+
+            {props.auth.user.level > 2 && (
+              <Link to="/">
+                <span className="sidebar-icon">
+                  <i className="fas fa-user-friends" />
+                </span>
+                Users
+              </Link>
+            )}
+
+            <Link to={`/${viewer}/subscriptions`}>
+              <span className="sidebar-icon">
+                <i className="fas fa-user-plus" />
+              </span>
+              Subscriptions
+            </Link>
+
+            <Link to="/user/transactions">
+              <span className="sidebar-icon">
+                <i className="fas fa-exchange-alt" />
+              </span>
+              Transactions
+            </Link>
+
+            <Link to={`/${viewer}/referrals`}>
+              <span className="sidebar-icon">
+                <i className="fas fa-users" />
+              </span>
+              Referrals
+            </Link>
+
+            <Link to={`/${viewer}/bonus`}>
+              <span className="sidebar-icon">
+                <i className="fas fa-donate" />
+              </span>
+              Bonus
+            </Link>
+
+            <Link to={`/${viewer}/payments`}>
+              <span className="sidebar-icon">
+                <i className="fas fa-dollar-sign" />
+              </span>
+              Payments
+            </Link>
+
+            <Link to={`/${viewer}/withdrawals`}>
+              <span className="sidebar-icon">
+                <i className="fas fa-hand-holding-usd" />
+              </span>
+              Withdrawals
+            </Link>
+
             <Link to="/">
               <span className="sidebar-icon">
-                <i className="fas fa-money-bill-wave-alt" />
+                <i className="fas fa-bullhorn" />
               </span>
-              Currencies
+              Announcements
             </Link>
-          )}
-
-          {props.auth.user.level > 2 && (
-            <Link to="/">
-              <span className="sidebar-icon">
-                <i className="fas fa-user-friends" />
-              </span>
-              Users
-            </Link>
-          )}
-
-          <Link to={`/${viewer}/subscriptions`}>
-            <span className="sidebar-icon">
-              <i className="fas fa-user-plus" />
-            </span>
-            Subscriptions
-          </Link>
-
-          <Link to="/user/transactions">
-            <span className="sidebar-icon">
-              <i className="fas fa-exchange-alt" />
-            </span>
-            Transactions
-          </Link>
-
-          <Link to={`/${viewer}/referrals`}>
-            <span className="sidebar-icon">
-              <i className="fas fa-users" />
-            </span>
-            Referrals
-          </Link>
-
-          <Link to={`/${viewer}/bonus`}>
-            <span className="sidebar-icon">
-              <i className="fas fa-donate" />
-            </span>
-            Bonus
-          </Link>
-
-          <Link to="/signal">
-            <span className="sidebar-icon">
-              <i className="fas fa-dollar-sign" />
-            </span>
-            Payments
-          </Link>
-
-          <Link to="/">
-            <span className="sidebar-icon">
-              <i className="fas fa-hand-holding-usd" />
-            </span>
-            Withdrawals
-          </Link>
-
-          <Link to="/">
-            <span className="sidebar-icon">
-              <i className="fas fa-bullhorn" />
-            </span>
-            Announcements
-          </Link>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
