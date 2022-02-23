@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 import { getUserProfile } from "../../action/profileAction";
 
@@ -42,9 +43,12 @@ export class Index extends Component {
                     </div>
                     <div className="col-4 days-left-section">
                       <div className="days-left">
-                        <button className="btn dashboard-pay-btn default-btn">
+                        <Link
+                          className="btn dashboard-pay-btn default-btn"
+                          to="/user/pay"
+                        >
                           Pay Now
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>

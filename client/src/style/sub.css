@@ -340,8 +340,11 @@ ul.dropdown-menu li a {
   border: 1px solid #fcfcfc;
   -webkit-box-shadow: 1px 2px 3px #cecece;
           box-shadow: 1px 2px 3px #cecece;
-  background: #fff none repeat scroll 0% 0% h2;
-  background-margin-bottom: 0px;
+  background: #fff none repeat scroll 0% 0%;
+}
+
+.dashboard-content .card h2 {
+  margin-bottom: 0px;
 }
 
 .dashboard-content .referrals-box,
@@ -430,6 +433,11 @@ ul.dropdown-menu li a {
   font-size: 15px;
   color: rgba(23, 109, 207, 0.8);
   margin-left: 5px;
+}
+
+.dashboard-content input.form-control select,
+.dashboard-content button {
+  height: 40px;
 }
 
 /* Signal */
@@ -530,7 +538,57 @@ ul.dropdown-menu li a {
 }
 
 /* Transactions Badges */
-.t-amount .badge {
+.table-figure .badge {
   margin-left: 5px;
+}
+
+/* Pay Page */
+.pay-plan .pay-plan-box {
+  height: 100px;
+  width: 200px;
+  display: inline-block;
+  margin-right: 10px;
+  text-align: center;
+  padding: 10px;
+}
+
+.pay-plan .pay-plan-box h2 {
+  font-weight: 900;
+}
+
+.pay-plan .pay-plan-box h4 {
+  font-weight: 600;
+}
+
+.pay-plan .pay-method button {
+  height: 100px;
+  margin-right: 10px;
+}
+
+.pay-plan .customer-plan {
+  padding: 5px 10px;
+}
+
+.pay-plan .customer-plan h2 {
+  font-weight: 600;
+}
+
+.pay-plan h3 {
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: clamp(1.5vw, 14px, 2.5vh);
+}
+
+.pay-plan input#pay-months {
+  width: 40px;
+  max-width: 40px;
+}
+
+.pay-plan .pay-plan-selected {
+  background: rgba(184, 184, 184, 0.5);
+}
+
+.pay-plan label {
+  font-weight: 600;
 }
 /*# sourceMappingURL=sub.css.map */

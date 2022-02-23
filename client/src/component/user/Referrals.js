@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
-import TextInputField from "../../layout/TextInputField";
+import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
 
 const refer = [
@@ -81,16 +81,15 @@ export class Referrals extends Component {
           <div className="container-fluid mb-3">
             <div className="row">
               <div className="col-md-3">
-                <TextInputField
-                  id="referral-search-name"
-                  label="Search by Name"
+                <SearchInput
+                  placeholder="Search by Name"
                   type="text"
                   name="referred"
                   value={referred}
                   onChange={this.changeHandler}
                 />
               </div>
-              <div className="col-md-2 mt-4">
+              <div className="col-md-3 ">
                 <Select
                   sender={sender}
                   options={statusOptions}
@@ -99,38 +98,19 @@ export class Referrals extends Component {
                   value={premiumstatus}
                 />
               </div>
-              <div className="col-md-7 mt-4">
-                <div className="row">
-                  <div className="col-md-4">
-                    <div className="referrals-active-total t-amount">
-                      <h4>
-                        Active
-                        <span className="badge rounded-pill bg-primary">
-                          25000
-                        </span>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="referrals-inactive-total t-amount">
-                      <h4>
-                        Inactive
-                        <span className="badge rounded-pill bg-info">
-                          25000
-                        </span>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="referrals-total t-amount">
-                      <h4>
-                        Total
-                        <span className="badge rounded-pill bg-success">
-                          2500000
-                        </span>
-                      </h4>
-                    </div>
-                  </div>
+              <div className="col-md-3 ">
+                <button type="button" className="btn btn-outline-primary">
+                  Download <i className="far fa-file-excel" />
+                </button>
+              </div>
+              <div className="col-md-3 ">
+                <div className="table-figure">
+                  <h5>
+                    Total
+                    <span className="badge rounded-pill bg-success">
+                      2500000
+                    </span>
+                  </h5>
                 </div>
               </div>
             </div>
@@ -138,7 +118,14 @@ export class Referrals extends Component {
 
           <TableHead
             sender={sender}
-            head={["S/N", "Full Name", "Status", "registered date"]}
+            head={[
+              "S/N",
+              "Full Name",
+              "email",
+              "phone number",
+              "Status",
+              "registered date",
+            ]}
           >
             <TableBody sender={sender} tablebody={refer} />
           </TableHead>

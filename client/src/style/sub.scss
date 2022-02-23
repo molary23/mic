@@ -163,7 +163,9 @@ ul.dropdown-menu {
   .card {
     border: 1px solid $border-light;
     box-shadow: 1px 2px 3px $shadow;
-    background: #fff none repeat scroll 0% 0% h2 {
+    background: #fff none repeat scroll 0% 0%;
+
+    h2 {
       margin-bottom: 0px;
     }
   }
@@ -241,6 +243,10 @@ ul.dropdown-menu {
     font-size: 15px;
     color: rgba($color: $def-blue, $alpha: 0.8);
     margin-left: 5px;
+  }
+  input.form-control select,
+  button {
+    height: 40px;
   }
 }
 
@@ -327,6 +333,55 @@ ul.dropdown-menu {
 }
 
 /* Transactions Badges */
-.t-amount .badge {
+.table-figure .badge {
   margin-left: 5px;
+}
+
+/* Pay Page */
+.pay-plan {
+  .pay-plan-box {
+    height: 100px;
+    width: 200px;
+    display: inline-block;
+    margin-right: 10px;
+    text-align: center;
+    padding: 10px;
+
+    h2 {
+      font-weight: 900;
+    }
+    h4 {
+      font-weight: 600;
+    }
+  }
+
+  .pay-method button {
+    height: 100px;
+    margin-right: 10px;
+  }
+  .customer-plan {
+    padding: 5px 10px;
+
+    h2 {
+      font-weight: 600;
+    }
+  }
+  h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: clamp(1.5vw, 14px, 2.5vh);
+  }
+
+  input#pay-months {
+    width: 40px;
+    max-width: 40px;
+  }
+
+  .pay-plan-selected {
+    background: rgba(184, 184, 184, 0.5);
+  }
+
+  label {
+    font-weight: 600;
+  }
 }

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 function TextAreaField(props) {
-  const { label, error, name, value, onChange, type, id, row } = props;
+  const { label, error, name, value, onChange, type, id } = props;
   return (
     <div className="mb-3 mt-3">
       <div className="form-floating">
@@ -14,7 +14,6 @@ function TextAreaField(props) {
           name={name}
           value={value}
           onChange={onChange}
-          rows="4"
         />
         <label htmlFor={id}>{label}</label>
       </div>
@@ -25,7 +24,6 @@ function TextAreaField(props) {
 
 TextAreaField.defaultProps = {
   type: "text",
-  row: 4,
 };
 
 TextAreaField.propTypes = {
@@ -36,7 +34,6 @@ TextAreaField.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   error: PropTypes.string,
-  row: PropTypes.number,
 };
 
 export default TextAreaField;

@@ -21,6 +21,7 @@ import Signals from "./component/user/Signals";
 import Transactions from "./component/user/Transactions";
 import Bonuses from "./component/user/Bonuses";
 import Referrals from "./component/user/Referrals";
+import Pay from "./component/user/Pay";
 
 import Index from "./component/user";
 
@@ -81,6 +82,11 @@ function App() {
             exact
             path="/user/referrals"
             element={<PrivateRoute Component={Referrals} />}
+          />
+          <Route
+            exact
+            path="/user/pay"
+            element={<PrivateRoute Component={Pay} />}
           />
         </Route>
 
