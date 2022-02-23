@@ -5,6 +5,7 @@ import jwtDecode from "jwt-decode";
 import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
+import { clearCurrentProfile } from "./action/profileAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
@@ -18,6 +19,8 @@ import Login from "./component/Login";
 import Home from "./component/Home";
 import Signals from "./component/user/Signals";
 import Transactions from "./component/user/Transactions";
+import Bonuses from "./component/user/Bonuses";
+import Referrals from "./component/user/Referrals";
 
 import Index from "./component/user";
 
@@ -35,7 +38,7 @@ if (localStorage.jwtToken) {
     // Logout User
     store.dispatch(logoutUser());
     // Clear current Profile
-
+    store.dispatch(clearCurrentProfile());
     // Redirect to Login
     window.location.href = "/login";
   }
@@ -68,6 +71,16 @@ function App() {
             exact
             path="/user/transactions"
             element={<PrivateRoute Component={Transactions} />}
+          />
+          <Route
+            exact
+            path="/user/bonus"
+            element={<PrivateRoute Component={Bonuses} />}
+          />
+          <Route
+            exact
+            path="/user/referrals"
+            element={<PrivateRoute Component={Referrals} />}
           />
         </Route>
 

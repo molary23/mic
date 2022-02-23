@@ -98,6 +98,11 @@ textarea {
   height: 120px;
 }
 
+table {
+  text-align: center;
+  text-transform: capitalize;
+}
+
 a.default-anchor {
   text-decoration: none;
 }
@@ -328,17 +333,15 @@ ul.dropdown-menu li a {
   min-height: 1500px;
   margin-left: 200px;
   padding: 25px;
+  margin-top: 80px;
 }
 
 .dashboard-content .card {
   border: 1px solid #fcfcfc;
   -webkit-box-shadow: 1px 2px 3px #cecece;
           box-shadow: 1px 2px 3px #cecece;
-  background: #fff;
-}
-
-.dashboard-content .card h2 {
-  margin-bottom: 0px;
+  background: #fff none repeat scroll 0% 0% h2;
+  background-margin-bottom: 0px;
 }
 
 .dashboard-content .referrals-box,
@@ -512,5 +515,22 @@ ul.dropdown-menu li a {
 .signal-detail .currency-return.signal-align-right {
   font-size: 22px;
   margin-right: 5px;
+}
+
+/* Loader */
+.progress {
+  height: 5px;
+  inset: 0;
+  z-index: 9999;
+}
+
+/* Page cards */
+.holder-card {
+  padding: 20px 10px;
+}
+
+/* Transactions Badges */
+.t-amount .badge {
+  margin-left: 5px;
 }
 /*# sourceMappingURL=sub.css.map */

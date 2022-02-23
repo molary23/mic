@@ -28,7 +28,7 @@ function SideNav(props) {
     <div>
       <div id="mySidebar" className={`sidebar ${display ? "" : "hide-side"}`}>
         <div className="side-nav-list">
-          <Link to={`/${viewer}/dashboard`}>
+          <Link to={`/${viewer}/`}>
             <span className="sidebar-icon">
               <i className="fas fa-home" />
             </span>
@@ -76,14 +76,14 @@ function SideNav(props) {
             Transactions
           </Link>
 
-          <Link to="/">
+          <Link to={`/${viewer}/referrals`}>
             <span className="sidebar-icon">
               <i className="fas fa-users" />
             </span>
             Referrals
           </Link>
 
-          <Link to="/">
+          <Link to={`/${viewer}/bonus`}>
             <span className="sidebar-icon">
               <i className="fas fa-donate" />
             </span>

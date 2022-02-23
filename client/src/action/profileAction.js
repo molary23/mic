@@ -1,7 +1,12 @@
-import { GET_USER_PROFILE, CLEAR_CURRENT_PROFILE } from "./types";
+import {
+  GET_USER_PROFILE,
+  CLEAR_CURRENT_PROFILE,
+  PROFILE_LOADING,
+} from "./types";
 import axios from "axios";
 
 export const getUserProfile = () => async (dispatch) => {
+  dispatch(setProfileLoading());
   try {
     let response = await axios.get("/api/users/details/", {});
     const result = await dispatch({
@@ -16,4 +21,8 @@ export const getUserProfile = () => async (dispatch) => {
 
 export const clearCurrentProfile = (decoded) => {
   return { type: CLEAR_CURRENT_PROFILE };
+};
+
+export const setProfileLoading = (decoded) => {
+  return { type: PROFILE_LOADING };
 };

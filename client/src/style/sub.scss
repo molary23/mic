@@ -159,12 +159,11 @@ ul.dropdown-menu {
   min-height: 1500px;
   margin-left: 200px;
   padding: 25px;
+  margin-top: 80px;
   .card {
     border: 1px solid $border-light;
     box-shadow: 1px 2px 3px $shadow;
-    background: #fff;
-
-    h2 {
+    background: #fff none repeat scroll 0% 0% h2 {
       margin-bottom: 0px;
     }
   }
@@ -312,4 +311,22 @@ ul.dropdown-menu {
     font-size: 22px;
     margin-right: 5px;
   }
+}
+
+/* Loader */
+
+.progress {
+  height: 5px;
+  inset: 0;
+  z-index: 9999;
+}
+
+/* Page cards */
+.holder-card {
+  padding: 20px 10px;
+}
+
+/* Transactions Badges */
+.t-amount .badge {
+  margin-left: 5px;
 }

@@ -98,6 +98,11 @@ section {
 textarea {
   height: 120px;
 }
+table {
+  text-align: center;
+  text-transform: capitalize;
+}
+
 a.default-anchor {
   text-decoration: none;
   &:hover {
