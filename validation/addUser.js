@@ -7,12 +7,16 @@ module.exports = function validateAddUserInput(data) {
   data.email = !isEmpty(data.email) ? data.email : "";
   data.password = !isEmpty(data.password) ? data.password : "";
   data.username = !isEmpty(data.username) ? data.username : "";
+  data.phone = !isEmpty(data.phone) ? data.phone : "";
 
   if (validator.isEmpty(data.email)) {
     errors.email = "Email Field can't be Empty";
   }
   if (!validator.isEmail(data.email)) {
     errors.email = "Email is invalid";
+  }
+  if (validator.isEmpty(data.phone)) {
+    errors.phone = "Phone number Field can't be Empty";
   }
   if (validator.isEmpty(data.username)) {
     errors.username = "Username Field can't be Empty";

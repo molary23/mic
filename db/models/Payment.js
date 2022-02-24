@@ -25,10 +25,6 @@ Payment.init(
       type: DataTypes.TINYINT,
       defaultValue: 1,
     },
-    payday: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
   },
   {
     // don't forget to enable timestamps!

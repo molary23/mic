@@ -46,11 +46,12 @@ router.post("/register", (req, res) => {
     return res.status(404).json(errors);
   }
 
-  const { referral, username, email, password } = req.body.newUser;
+  const { referral, username, email, phone, password } = req.body.newUser;
   const userField = {};
 
   if (email) userField.email = email;
   if (username) userField.username = username;
+  if (phone) userField.phone = phone;
   if (password) userField.password = password;
 
   if (referral) {
