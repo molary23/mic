@@ -45,23 +45,27 @@ function SideNav(props) {
               </Link>
             )}
 
-            {props.auth.user.level > 2 && (
-              <Link to="/">
+            {
+              //props.auth.user.level > 2 && (
+              <Link to={`/${viewer}/currencies`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-money-bill-wave-alt" />
                 </span>
                 Currencies
               </Link>
-            )}
+              //)
+            }
 
-            {props.auth.user.level > 2 && (
-              <Link to="/">
+            {
+              //props.auth.user.level > 2 && (
+              <Link to={`/${viewer}/users`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-user-friends" />
                 </span>
                 Users
               </Link>
-            )}
+              //)
+            }
 
             <Link to={`/${viewer}/subscriptions`}>
               <span className="sidebar-icon">
@@ -86,7 +90,7 @@ function SideNav(props) {
 
             <Link to={`/${viewer}/bonus`}>
               <span className="sidebar-icon">
-                <i className="fas fa-donate" />
+                <i className="fas fa-wallet" />
               </span>
               Bonus
             </Link>
@@ -105,7 +109,7 @@ function SideNav(props) {
               Withdrawals
             </Link>
 
-            <Link to="/">
+            <Link to={`/${viewer}/announcements`}>
               <span className="sidebar-icon">
                 <i className="fas fa-bullhorn" />
               </span>

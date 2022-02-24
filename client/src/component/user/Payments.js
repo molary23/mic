@@ -122,7 +122,14 @@ export class Payments extends Component {
 
           <TableHead
             sender={sender}
-            head={["S/N", "amount", "reference", "status", "date"]}
+            head={[
+              "S/N",
+              "amount",
+              "Payment Gateway",
+              "reference",
+              "status",
+              "date",
+            ]}
           >
             <TableBody sender={sender} tablebody={pay} />
           </TableHead>

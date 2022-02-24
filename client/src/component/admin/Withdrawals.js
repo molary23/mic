@@ -1,123 +1,106 @@
 import React, { Component } from "react";
 
-import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
+import TableHead from "../../layout/TableHead";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 
-const trans = [
+const withdraw = [
   {
     amount: 200,
-    method: "bonus",
-    type: "credit",
+    reference: "bonus",
+    status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 400,
-    method: "bonus",
-    type: "credit",
+    reference: "bonus",
+    status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 250,
-    method: "withdrawal",
-    type: "debit",
+    reference: "withdrawal",
+    status: "debit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 600,
-    method: "subscription",
-    type: "debit",
+    reference: "subscription",
+    status: "debit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 700,
-    method: "bonus",
-    type: "credit",
+    reference: "bonus",
+    status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 100,
-    method: "bonus",
-    type: "credit",
+    reference: "bonus",
+    status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 500,
-    method: "bonus",
-    type: "credit",
+    reference: "bonus",
+    status: "credit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 400,
-    method: "subscription",
-    type: "debit",
+    reference: "subscription",
+    status: "debit",
     date: new Date(),
+    update: new Date(),
   },
   {
     amount: 650,
-    method: "bonus",
-    type: "credit",
+    reference: "bonus",
+    status: "credit",
     date: new Date(),
+    update: new Date(),
   },
 ];
-
-export class Transactions extends Component {
+export default class Withdrawals extends Component {
   state = {
-    sender: "admin-transactions",
-
+    sender: "admin-withdrawals",
     loading: false,
-    methodOptions: [
-      { value: 0, option: "Filter by Method" },
-      { value: "b", option: "Bonus" },
+    withOptions: [
+      { value: 0, option: "Filter by Use" },
+      { value: "p", option: "Payout" },
       { value: "s", option: "Subscriptions" },
-      { value: "w", option: "Withdrawal" },
     ],
-    typeOptions: [
-      { value: 0, option: "Filter by Type" },
-      { value: "d", option: "Debit" },
-      { value: "c", option: "Credit" },
-    ],
-    type: "",
-    method: "",
+    use: "",
   };
 
-  changeHandler = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-      loading: true,
-    });
-
-    // select from DB
-  };
+  changeHandler = () => {};
   render() {
-    const { loading, sender, methodOptions, typeOptions, type, method } =
-      this.state;
+    const { loading, sender, withOptions, use } = this.state;
     return (
       <div>
         {loading && <ProgressBar />}
-        <div className="transactions card holder-card ">
+        <div className="withdrawals card holder-card ">
           <div className="page-dash-title mb-4">
-            <h1>Transactions</h1>
+            <h1>Withdrawals</h1>
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
               <div className="col-md-3">
                 <Select
                   sender={sender}
-                  options={methodOptions}
+                  options={withOptions}
                   onChange={this.changeHandler}
-                  name="method"
-                  value={method}
-                />
-              </div>
-              <div className="col-md-3">
-                <Select
-                  sender={sender}
-                  options={typeOptions}
-                  onChange={this.changeHandler}
-                  name="type"
-                  value={type}
+                  name="use"
+                  value={use}
                 />
               </div>
               <div className="col-md-3">
@@ -140,14 +123,20 @@ export class Transactions extends Component {
 
           <TableHead
             sender={sender}
-            head={["S/N", "amount", "User", "method", "type", "date", "action"]}
+            head={[
+              "S/N",
+              "amount",
+              "Full Name",
+              "Used For",
+              "status",
+              "request date",
+              "approved date",
+            ]}
           >
-            <TableBody sender={sender} tablebody={trans} />
+            <TableBody sender={sender} tablebody={withdraw} />
           </TableHead>
         </div>
       </div>
     );
   }
 }
-
-export default Transactions;

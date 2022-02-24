@@ -120,11 +120,9 @@ export class Transactions extends Component {
                 />
               </div>
               <div className="col-md-3">
-                <div className="col-md-3 ">
-                  <button type="button" className="btn btn-outline-primary">
-                    Download <i className="far fa-file-excel" />
-                  </button>
-                </div>
+                <button type="button" className="btn btn-outline-primary">
+                  Download <i className="far fa-file-excel" />
+                </button>
               </div>
               <div className="col-md-3">
                 <div className="transactions-total table-figure">

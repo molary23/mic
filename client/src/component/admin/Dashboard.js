@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import SubNav from "../layout/SubNav";
-import SideNav from "../layout/SideNav";
-import Footer from "../layout/Footer";
+import SubNav from "../../layout/SubNav";
+import SideNav from "../../layout/SideNav";
+import Footer from "../../layout/Footer";
 function Dashboard() {
   const [open, setOpen] = useState(true);
 

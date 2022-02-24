@@ -9,7 +9,6 @@ import { clearCurrentProfile } from "./action/profileAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
-import Dashboard from "./component/Dashboard";
 import PageNotFound from "./util/404Page";
 import Register from "./component/Register";
 import Referral from "./component/Referral";
@@ -17,6 +16,9 @@ import Forgot from "./component/Forgot";
 import Reset from "./component/Reset";
 import Login from "./component/Login";
 import Home from "./component/Home";
+
+//User
+import Dashboard from "./component/user/Dashboard";
 import Signals from "./component/user/Signals";
 import Transactions from "./component/user/Transactions";
 import Bonuses from "./component/user/Bonuses";
@@ -26,11 +28,21 @@ import Payments from "./component/user/Payments";
 import Withdrawals from "./component/user/Withdrawals";
 
 import Index from "./component/user";
+import Subscriptions from "./component/user/Subscriptions";
 
 //Admin
+import AdminDashboard from "./component/admin/Dashboard";
 import AdminIndex from "./component/admin/AdminIndex";
 import AdminBonuses from "./component/admin/Bonuses";
 import AdminBonus from "./component/admin/Bonus";
+import AddminTransaction from "./component/admin/Transaction";
+import AdminReferrals from "./component/admin/Referrals";
+import AdminUsers from "./component/admin/Users";
+import AdminUser from "./component/admin/User";
+import AdminWithdrawals from "./component/admin/Withdrawals";
+import AdminPayments from "./component/admin/Payments";
+import AdminSubscriptions from "./component/admin/Subscriptions";
+import AdminCurrency from "./component/admin/Currency";
 
 if (localStorage.jwtToken) {
   // Set Auth Toke  Header
@@ -93,6 +105,11 @@ function App() {
           />
           <Route
             exact
+            path="/user/subscriptions"
+            element={<PrivateRoute Component={Subscriptions} />}
+          />
+          <Route
+            exact
             path="/user/pay"
             element={<PrivateRoute Component={Pay} />}
           />
@@ -108,7 +125,10 @@ function App() {
           />
         </Route>
 
-        <Route path="/admin" element={<PrivateRoute Component={Dashboard} />}>
+        <Route
+          path="/admin"
+          element={<PrivateRoute Component={AdminDashboard} />}
+        >
           <Route
             exact
             path="/admin/"
@@ -116,13 +136,53 @@ function App() {
           ></Route>
           <Route
             exact
-            path="/admin/bonuses"
+            path="/admin/bonus"
             element={<PrivateRoute Component={AdminBonuses} />}
+          />
+          <Route
+            exact
+            path="/admin/subscriptions"
+            element={<PrivateRoute Component={AdminSubscriptions} />}
+          />
+          <Route
+            exact
+            path="/admin/currencies"
+            element={<PrivateRoute Component={AdminCurrency} />}
+          />
+          <Route
+            exact
+            path="/admin/referrals"
+            element={<PrivateRoute Component={AdminReferrals} />}
+          />
+          <Route
+            exact
+            path="/admin/users"
+            element={<PrivateRoute Component={AdminUsers} />}
+          />
+          <Route
+            exact
+            path="/admin/withdrawals"
+            element={<PrivateRoute Component={AdminWithdrawals} />}
+          />
+          <Route
+            exact
+            path="/admin/payments"
+            element={<PrivateRoute Component={AdminPayments} />}
+          />
+          <Route
+            exact
+            path="/admin/:userId"
+            element={<PrivateRoute Component={AdminUser} />}
           />
           <Route
             exact
             path="/admin/bonus/:bonusId"
             element={<PrivateRoute Component={AdminBonus} />}
+          />
+          <Route
+            exact
+            path="/admin/transaction/:transactionId"
+            element={<PrivateRoute Component={AddminTransaction} />}
           />
         </Route>
 

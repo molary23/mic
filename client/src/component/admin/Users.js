@@ -6,7 +6,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 
-const sub = [
+const users = [
   {
     amount: 200,
     method: "bonus",
@@ -62,31 +62,20 @@ const sub = [
     date: new Date(),
   },
 ];
-export class Subscriptions extends Component {
+
+class Users extends Component {
   state = {
-    sender: "admin-subscriptions",
+    sender: "admin-users",
     loading: false,
     searchname: "",
-    statusOptions: [
-      { value: "", option: "Filter by Status" },
-      { value: "0", option: "Disapproved" },
-      { value: "1", option: "Pending" },
-      { value: "2", option: "Approved" },
-    ],
-    typeOptions: [
-      { value: "", option: "Filter by Type" },
-      { value: "b", option: "Bonus" },
-      { value: "p", option: "Pay" },
+
+    premiumstatusOpt: [
+      { value: "", option: "Filter by Package" },
+      { value: "1", option: "Active" },
+      { value: "2", option: "Inactive" },
     ],
 
-    packageOptions: [
-      { value: 0, option: "Filter by Package" },
-      { value: "m", option: "Monthly" },
-      { value: "y", option: "Yearly" },
-    ],
-    type: "",
-    status: "",
-    subPackage: "",
+    premiumstatus: "",
   };
 
   changeHandler = (e) => {
@@ -94,19 +83,16 @@ export class Subscriptions extends Component {
       [e.target.name]: e.target.value,
       loading: true,
     });
-
-    // select from DB
   };
+
   render() {
     const {
       loading,
       sender,
-      statusOptions,
-      typeOptions,
-      packageOptions,
-      type,
-      status,
-      subPackage,
+      premiumstatus,
+
+      premiumstatusOpt,
+
       searchname,
     } = this.state;
     return (
@@ -118,10 +104,10 @@ export class Subscriptions extends Component {
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-2">
+              <div className="col-md-3">
                 <SearchInput
                   sender={sender}
-                  placeholder="Search by Name"
+                  placeholder="Search by Name, Email, Username"
                   onChange={this.changeHandler}
                   name="searchname"
                   value={searchname}
@@ -130,36 +116,24 @@ export class Subscriptions extends Component {
               <div className="col-md-2">
                 <Select
                   sender={sender}
-                  options={statusOptions}
+                  options={premiumstatusOpt}
                   onChange={this.changeHandler}
-                  name="status"
-                  value={status}
+                  name="premiumstatus"
+                  value={premiumstatus}
                 />
               </div>
-              <div className="col-md-2">
-                <Select
-                  sender={sender}
-                  options={typeOptions}
-                  onChange={this.changeHandler}
-                  name="type"
-                  value={type}
-                />
-              </div>
-              <div className="col-md-2">
-                <Select
-                  sender={sender}
-                  options={packageOptions}
-                  onChange={this.changeHandler}
-                  name="subPackage"
-                  value={subPackage}
-                />
-              </div>
+
               <div className="col-md-2">
                 <button type="button" className="btn btn-outline-primary">
                   Download <i className="far fa-file-excel" />
                 </button>
               </div>
               <div className="col-md-2">
+                <button type="button" className="btn btn-outline-primary">
+                  Add SP <i className="fas fa-user-plus" />
+                </button>
+              </div>
+              <div className="col-md-3">
                 <div className="transactions-total table-figure">
                   <h6>
                     Balance
@@ -177,17 +151,15 @@ export class Subscriptions extends Component {
             head={[
               "S/N",
               "amount",
-              "User Fullname",
-              "method",
-              "type",
-              "package",
-              "duration",
-              "plan",
-              "date",
+              "Fullname",
+              "email",
+              "phone number",
+              "Premium Status",
+              "Registration Date",
               "View",
             ]}
           >
-            <TableBody sender={sender} tablebody={sub} />
+            <TableBody sender={sender} tablebody={users} />
           </TableHead>
         </div>
       </div>
@@ -195,4 +167,4 @@ export class Subscriptions extends Component {
   }
 }
 
-export default Subscriptions;
+export default Users;

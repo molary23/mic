@@ -81,6 +81,8 @@ export default class Withdrawals extends Component {
     ],
     use: "",
   };
+
+  changeHandler = () => {};
   render() {
     const { loading, sender, withOptions, use } = this.state;
     return (
@@ -88,7 +90,7 @@ export default class Withdrawals extends Component {
         {loading && <ProgressBar />}
         <div className="withdrawals card holder-card ">
           <div className="page-dash-title mb-4">
-            <h1>Payments</h1>
+            <h1>Withdrawals</h1>
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
