@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 const PrivateRoute = ({ Component, auth }) => {
   // add isAuthenticated to make authentication active
-  return auth ? <Component /> : <Navigate to="/login" />;
+  return auth ? <Component /> : <Navigate to="/login" replace={true} />;
 };
 PrivateRoute.propTypes = {
   auth: PropTypes.object.isRequired,

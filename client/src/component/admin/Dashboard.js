@@ -16,14 +16,6 @@ function Dashboard() {
       <section>
         <div className={`dashboard-content pb-4 ${!open && "dash-full"}`}>
           <Outlet />
-          {/*<Routes>
-          
-          <Route
-            exact
-            path="/signals"
-            element={<PrivateRoute Component={Signals} />}
-          />
-        </Routes>*/}
         </div>
       </section>
       <Footer />

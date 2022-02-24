@@ -36,6 +36,7 @@ import AdminIndex from "./component/admin/AdminIndex";
 import AdminBonuses from "./component/admin/Bonuses";
 import AdminBonus from "./component/admin/Bonus";
 import AddminTransaction from "./component/admin/Transaction";
+import AddminTransactions from "./component/admin/Transactions";
 import AdminReferrals from "./component/admin/Referrals";
 import AdminUsers from "./component/admin/Users";
 import AdminUser from "./component/admin/User";
@@ -169,6 +170,12 @@ function App() {
             path="/admin/payments"
             element={<PrivateRoute Component={AdminPayments} />}
           />
+          <Route
+            exact
+            path="/admin/transactions"
+            element={<PrivateRoute Component={AddminTransactions} />}
+          />
+
           <Route
             exact
             path="/admin/:userId"

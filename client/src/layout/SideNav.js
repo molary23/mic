@@ -67,14 +67,36 @@ function SideNav(props) {
               //)
             }
 
+            {
+              //props.auth.user.level > 2 && (
+              <Link to={`/${viewer}/viewadmins`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-user-tie" />
+                </span>
+                Admins
+              </Link>
+              //)
+            }
+
+            {
+              //props.auth.user.level > 2 && (
+              <Link to={`/${viewer}/signalproviders`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-user-tag" />
+                </span>
+                Signal Providers
+              </Link>
+              //)
+            }
+
             <Link to={`/${viewer}/subscriptions`}>
               <span className="sidebar-icon">
-                <i className="fas fa-user-plus" />
+                <i className="fas fa-id-card-alt" />
               </span>
               Subscriptions
             </Link>
 
-            <Link to="/user/transactions">
+            <Link to={`/${viewer}/transactions`}>
               <span className="sidebar-icon">
                 <i className="fas fa-exchange-alt" />
               </span>

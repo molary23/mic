@@ -55,7 +55,7 @@ const signal = [
   },
   {
     option: "sell",
-    takeprofit: [0.1, 0.6, 0.7],
+    takeprofit: [0.1, 0.6, 0.0657],
     stoploss: [1.2, 1.6],
     range: "0.506 - 0.402",
     status: "filled",
@@ -65,7 +65,7 @@ const signal = [
   },
   {
     option: "sell",
-    takeprofit: [0.1, 0.6, 0.7],
+    takeprofit: [0.1],
     stoploss: [1.2, 1.6],
     range: "0.506 - 0.402",
     status: "filled",
@@ -97,7 +97,7 @@ const signal = [
 export class BothSignals extends Component {
   render() {
     return (
-      <div>
+      <div className="signal-page">
         <div className="page-dash-title mb-4">
           <h1>Signals</h1>
         </div>
@@ -105,7 +105,7 @@ export class BothSignals extends Component {
           <div className="row">
             {signal.map((signal, i) => {
               return (
-                <div className="col-4" key={i}>
+                <div className="col-md-4 col-xs-12 col-sm-12" key={i}>
                   <div className="signal-one mb-4">
                     <Signal propkey={i} signal={signal} />
                   </div>

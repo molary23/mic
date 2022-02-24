@@ -36,10 +36,11 @@ class Register extends Component {
   };
 
   componentDidMount() {
-    if (this.props.referred)
+    if (this.props.referred) {
       this.setState({
         referral: this.props.referral,
       });
+    }
   }
 
   changeHandler = (e) => {
@@ -227,6 +228,7 @@ class Register extends Component {
       loader,
       phone,
     } = this.state;
+    const { referred } = this.props;
     return (
       <div className="main-register">
         <div className="register-box">
@@ -241,7 +243,7 @@ class Register extends Component {
                 name="referral"
                 value={referral}
                 onChange={this.changeHandler}
-                disabled={this.props.referred ? "disabled" : ""}
+                disabled={referred ? "disabled" : ""}
                 error={error.referral}
                 onKeyUp={this.keyHandler}
               />

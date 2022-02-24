@@ -9,7 +9,10 @@ function Referral() {
 
   return (
     <div>
-      <Register referred={referral !== "" ? true : false} referral={referral} />
+      <Register
+        referred={referral !== "" || referral !== undefined ? true : false}
+        referral={referral}
+      />
     </div>
   );
 }

@@ -57,46 +57,24 @@ function Signal(props) {
         <div className="signal-status">
           <div className="signal-stat">{signal.status}</div>
         </div>
-        <div className="signal-sold-at">
-          <div className="signal-sold-title signal-title">Take Profit</div>
-          <div className="signal-sold-value signal-align-right">
-            {signal.takeprofit.map((tp, i) => {
-              if (i < signal.takeprofit.length - 1) {
-                return (
-                  <span className="take-stop" key={i}>
-                    {tp},
-                  </span>
-                );
-              } else {
-                return (
-                  <span className="take-stop" key={i}>
-                    {tp}
-                  </span>
-                );
-              }
-            })}
-          </div>
-        </div>
-        <div className="signal-bought-at">
-          <div className="signal-bought-title signal-title">Stop Loss</div>
-          <div className="signal-bought-value signal-align-right">
-            {signal.stoploss.map((sl, i) => {
-              if (i < signal.stoploss.length - 1) {
-                return (
-                  <span className="take-stop" key={i}>
-                    {sl},
-                  </span>
-                );
-              } else {
-                return (
-                  <span className="take-stop" key={i}>
-                    {sl}
-                  </span>
-                );
-              }
-            })}
-          </div>
-        </div>
+
+        {signal.takeprofit.map((tp, i) => {
+          return (
+            <div className="signal-sold-at" key={i}>
+              <div className="signal-sold-title signal-title">Take Profit</div>
+              <div className="signal-sold-value signal-align-right">{tp}</div>
+            </div>
+          );
+        })}
+        {signal.stoploss.map((sl, i) => {
+          return (
+            <div className="signal-bought-at" key={i}>
+              <div className="signal-bought-title signal-title">Stop Loss</div>
+              <div className="signal-bought-value signal-align-right">{sl}</div>
+            </div>
+          );
+        })}
+
         <div className="signal-pip">
           <div className="signal-pip-title signal-title">Profit, Pip</div>
           <div className="signal-pip-value signal-align-right">

@@ -13,6 +13,7 @@ function TextPasswordField(props) {
     id,
     onClick,
     onKeyUp,
+    disabled,
   } = props;
 
   return (
@@ -27,6 +28,7 @@ function TextPasswordField(props) {
             value={value}
             onChange={onChange}
             onKeyUp={onKeyUp}
+            disabled={disabled}
           />
           <label htmlFor={id}>{placeholder}</label>
         </div>
@@ -56,6 +58,7 @@ TextPasswordField.propTypes = {
   onClick: PropTypes.func,
   onKeyUp: PropTypes.func,
   error: PropTypes.string,
+  disabled: PropTypes.string,
 };
 
 export default TextPasswordField;

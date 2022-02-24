@@ -451,12 +451,14 @@ ul.dropdown-menu li a {
 }
 
 /* Signal */
+.signal-page {
+  min-height: 1400px;
+}
+
 .signal-detail {
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: (1fr)[8];
-      grid-template-rows: repeat(8, 1fr);
-  grid-row-gap: 4%;
+  grid-row-gap: 2%;
   height: 400px;
   -webkit-box-align: center;
       -ms-flex-align: center;
