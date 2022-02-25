@@ -151,7 +151,7 @@ function App() {
           />
           <Route
             exact
-            path="/admin/subscriptions"
+            path="/admin/subscriptions/"
             element={<PrivateRoute Component={AdminSubscriptions} />}
           />
           <Route

@@ -25,7 +25,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     const table = JSON.parse(req.params.table);
-
+    let unapprovedSubQuery, pendingSubQuery, approvedSubQuery;
     let view;
     if (table === "users") {
       view = UserView;
@@ -37,6 +37,9 @@ router.get(
       view = TransactionView;
     } else if (table === "subscriptions") {
       view = SubscriptionView;
+      unapprovedSubQuery = { where: { status: 0 } };
+      pendingSubQuery = { where: { status: 1 } };
+      approvedSubQuery = { where: { status: 2 } };
     } else if (table === "bonus") {
       view = BonusView;
     } else if (table === "providers") {
@@ -46,9 +49,12 @@ router.get(
     } else if (table === "referrals") {
       view = ReferralView;
     }
-
+    const count = {};
     try {
-      count = await view.count();
+      count.all = await view.count();
+      count.unapproved = await view.count(unapprovedSubQuery);
+      count.pending = await view.count(pendingSubQuery);
+      count.approved = await view.count(approvedSubQuery);
       res.json(count);
     } catch (error) {
       res.status(404).json(error);

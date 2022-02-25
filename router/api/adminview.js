@@ -72,7 +72,7 @@ router.post(
     offset = req.body.offset;
 
     let where = {};
-    if (req.body.search) {
+    if (req.body.search !== undefined) {
       const searchTerms = req.body.search;
       let searchArray = searchTerms.split(" ");
 
@@ -84,7 +84,7 @@ router.post(
           newSearchArray.push(newSearchObj);
         }
 
-        if (req.body.type && req.body.package === "") {
+        if (req.body.type && req.body.subPackage === undefined) {
           where = {
             [Op.and]: [
               {
@@ -93,25 +93,25 @@ router.post(
               { type: req.body.type },
             ],
           };
-        } else if (req.body.type === "" && req.body.package) {
+        } else if (req.body.type === undefined && req.body.subPackage) {
           where = {
             [Op.and]: [
               {
                 [Op.and]: newSearchArray,
               },
-              { package: req.body.package },
+              { package: req.body.subPackage },
             ],
           };
-        } else if (req.body.type && req.body.package) {
+        } else if (req.body.type && req.body.subPackage) {
           where = {
             [Op.and]: [
               {
                 [Op.and]: newSearchArray,
               },
               {
-                [Op.or]: [
+                [Op.and]: [
                   { type: req.body.type },
-                  { package: req.body.package },
+                  { package: req.body.subPackage },
                 ],
               },
             ],
@@ -123,28 +123,28 @@ router.post(
         }
       } else {
         let search = searchArray[0];
-        if (req.body.type && req.body.package === "") {
+        if (req.body.type && req.body.subPackage === undefined) {
           where = {
             [Op.and]: [
               { user: { [Op.substring]: search } },
               { type: req.body.type },
             ],
           };
-        } else if (req.body.type === "" && req.body.package) {
+        } else if (req.body.type === undefined && req.body.subPackage) {
           where = {
             [Op.and]: [
               { user: { [Op.substring]: search } },
-              { package: req.body.package },
+              { package: req.body.subPackage },
             ],
           };
-        } else if (req.body.type && req.body.package) {
+        } else if (req.body.type && req.body.subPackage) {
           where = {
             [Op.and]: [
               { user: { [Op.substring]: search } },
               {
-                [Op.or]: [
+                [Op.and]: [
                   { type: req.body.type },
-                  { package: req.body.package },
+                  { package: req.body.subPackage },
                 ],
               },
             ],
@@ -156,13 +156,13 @@ router.post(
         }
       }
     } else {
-      if (req.body.type && req.body.package === "") {
+      if (req.body.type && req.body.subPackage === undefined) {
         where.type = req.body.type;
-      } else if (req.body.type === "" && req.body.package) {
-        where.package = req.body.package;
-      } else if (req.body.type && req.body.package) {
+      } else if (req.body.type === undefined && req.body.subPackage) {
+        where.package = req.body.subPackage;
+      } else if (req.body.type && req.body.subPackage) {
         where = {
-          [Op.or]: [{ type: req.body.type }, { package: req.body.package }],
+          [Op.and]: [{ type: req.body.type }, { package: req.body.subPackage }],
         };
       }
     }

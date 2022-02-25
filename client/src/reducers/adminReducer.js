@@ -5,7 +5,12 @@ import {
   GET_SUBSCRIPTION_COUNT,
 } from "../action/types";
 
-const initialState = { sub: [], subcount: null, trans: null, loading: false };
+const initialState = {
+  sub: [],
+  subcount: {},
+  loading: false,
+  fetching: false,
+};
 
 export default function adminReducer(state = initialState, action) {
   switch (action.type) {
@@ -14,6 +19,7 @@ export default function adminReducer(state = initialState, action) {
         ...state,
         sub: [...state.sub, ...action.payload],
         loading: false,
+        fetching: true,
       };
     case GET_SUBSCRIPTION_COUNT: {
       return { ...state, subcount: action.payload };
@@ -22,7 +28,7 @@ export default function adminReducer(state = initialState, action) {
       return { ...state, loading: true };
     }
     case CLEAR_SUBSCRIPTIONS_ACTION: {
-      return { ...state, sub: null };
+      return { ...state, sub: {} };
     }
     default:
       return state;

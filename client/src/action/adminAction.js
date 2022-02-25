@@ -27,11 +27,11 @@ export const getTableCount = (tablename) => async (dispatch) => {
     tabCount = "subcount";
   }
   let params = JSON.stringify(tablename);
-  dispatch(setLoading());
   try {
     let response = await axios.get(`/api/count/table/${params}`);
     const tablecount = response.data;
-    sessionStorage.setItem(tabCount, tablecount);
+
+    sessionStorage.setItem(tabCount, JSON.stringify(tablecount));
     const result = await dispatch({
       type: action_type,
       payload: tablecount,
