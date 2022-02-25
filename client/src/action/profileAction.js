@@ -19,10 +19,10 @@ export const getUserProfile = () => async (dispatch) => {
   }
 };
 
-export const clearCurrentProfile = (decoded) => {
+export const clearCurrentProfile = () => {
   return { type: CLEAR_CURRENT_PROFILE };
 };
 
-export const setProfileLoading = (decoded) => {
+export const setProfileLoading = () => {
   return { type: PROFILE_LOADING };
 };

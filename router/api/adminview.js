@@ -48,19 +48,29 @@ router.get(
 );
 
 /*
-@route GET api/adminview/subscription
+@route GET api/adminview/subscriptions
 @desc Admin View subscriptions
 @access private
 */
 
-router.get(
-  "/subscriptions",
+router.post(
+  "/subscriptions/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { error, isLevel } = checkSuperAdmin(req.user.level);
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
+    let limit = null,
+      offset = null;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
+    limit = req.body.limit;
+    offset = req.body.offset;
+
     let where = {};
     if (req.body.search) {
       const searchTerms = req.body.search;
@@ -159,6 +169,8 @@ router.get(
 
     const query = {
       order: [["subscriptionid", "DESC"]],
+      offset: offset,
+      limit: limit,
       attributes: [
         "subscriptionid",
         "amount",

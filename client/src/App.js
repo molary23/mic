@@ -44,7 +44,16 @@ import AdminWithdrawals from "./component/admin/Withdrawals";
 import AdminPayments from "./component/admin/Payments";
 import AdminSubscriptions from "./component/admin/Subscriptions";
 import AdminCurrency from "./component/admin/Currency";
-
+/*
+import axios from "axios";
+let params = { name: "adeola" };
+axios
+  .get(`/api/public/finder/${JSON.stringify(params)}`)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((err) => console.log(err.response));
+*/
 if (localStorage.jwtToken) {
   // Set Auth Toke  Header
   setAuthToken(localStorage.jwtToken);
@@ -178,7 +187,7 @@ function App() {
 
           <Route
             exact
-            path="/admin/:userId"
+            path="/admin/user/:userId"
             element={<PrivateRoute Component={AdminUser} />}
           />
           <Route

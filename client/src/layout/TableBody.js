@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
+import DateFormat from "./DateFormat";
+
 function TableBody(props) {
   const { sender, tablebody, onClick } = props;
 
@@ -266,30 +268,23 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
+
           <td>
             <Link
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${i}`}
+              to={`/admin/user/:${item.subscriptionid}`}
             >
-              {item.method}
+              {item.user}
             </Link>
           </td>
-          <td>{item.type}</td>
-          <td>{item.date.toISOString()}</td>
+          <td>{item["Payment Type"]}</td>
+
+          <td>{item.Package}</td>
+          <td>{item.plan}</td>
           <td>
-            <div className="action-buttons">
-              <Link
-                type="button"
-                className="btn btn-info btn-sm"
-                data-id={i}
-                title="View Payment"
-                to={`/admin/subscription/:${i}`}
-              >
-                <i className="far fa-eye" />
-              </Link>
-            </div>
+            <DateFormat date={item.subscriptiondate} />
           </td>
         </tr>
       );

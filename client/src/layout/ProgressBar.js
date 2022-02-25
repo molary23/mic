@@ -6,7 +6,8 @@ function ProgressBar() {
   useEffect(() => {
     const moveProgress = () => {
       if (progress === 100) {
-        setProgress((prevProgress) => prevProgress - 1);
+        setProgress(0);
+        setProgress((prevProgress) => prevProgress + 1);
       } else if (progress < 100) {
         setProgress((prevProgress) => prevProgress + 1);
       }

@@ -28,10 +28,9 @@ const express = require("express"),
 @access public
 */
 
-router.get("/finder", (_req, res) => {
-  User.findAll().then((users) => {
-    res.json(users);
-  });
+router.get("/finder/:page", (req, res) => {
+  let nm = JSON.parse(req.params.page);
+  return res.json(nm);
 });
 
 /*

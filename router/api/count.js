@@ -21,10 +21,11 @@ const express = require("express"),
 */
 
 router.get(
-  "/:table",
+  "/table/:table",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const table = req.params.table;
+    const table = JSON.parse(req.params.table);
+
     let view;
     if (table === "users") {
       view = UserView;
