@@ -61,4 +61,36 @@ router.get(
     }
   }
 );
+
+/*
+@route GET api/count/admin/all
+@desc Admin Count rows in specified tables
+@access private
+*/
+
+router.get(
+  "/admin/all",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const count = {};
+
+    try {
+      count.users = await UserView.count();
+      count.signals = await SignalView.count();
+      count.payments = await Payment.count();
+      count.transactions = await TransactionView.count();
+      count.subscriptions = await SubscriptionView.count();
+      count.bonus = await BonusView.count();
+      count.providers = await ProviderView.count();
+      count.referrals = await ReferralView.count();
+      res.json(count);
+    } catch (error) {
+      res.status(404).json(error);
+    }
+  }
+);
 module.exports = router;

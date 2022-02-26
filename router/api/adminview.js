@@ -74,7 +74,7 @@ router.post(
     let where = {};
     if (req.body.search !== undefined) {
       const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
+      let searchArray = searchTerms.split("+");
 
       if (searchArray.length > 1) {
         let newSearchArray = [],
@@ -194,6 +194,7 @@ router.post(
         ],
         "plan",
         "user",
+        "userId",
         "subscriptiondate",
       ],
       where,
@@ -744,7 +745,7 @@ desc Admin View transactions
 @access private
 */
 
-router.get(
+router.post(
   "/transactions",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
@@ -752,10 +753,20 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
+    let limit = null,
+      offset = null;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
+    limit = req.body.limit;
+    offset = req.body.offset;
+
     let where = {};
-    if (req.body.search) {
+    if (req.body.search !== undefined) {
       const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
+      let searchArray = searchTerms.split("+");
 
       if (searchArray.length > 1) {
         let newSearchArray = [],
@@ -765,7 +776,7 @@ router.get(
           newSearchArray.push(newSearchObj);
         }
 
-        if (req.body.type && req.body.method === "") {
+        if (req.body.type && req.body.method === undefined) {
           where = {
             [Op.and]: [
               {
@@ -774,7 +785,7 @@ router.get(
               { type: req.body.type },
             ],
           };
-        } else if (req.body.type === "" && req.body.method) {
+        } else if (req.body.type === undefined && req.body.method) {
           where = {
             [Op.and]: [
               {
@@ -790,7 +801,10 @@ router.get(
                 [Op.and]: newSearchArray,
               },
               {
-                [Op.or]: [{ type: req.body.type }, { method: req.body.method }],
+                [Op.and]: [
+                  { type: req.body.type },
+                  { method: req.body.method },
+                ],
               },
             ],
           };
@@ -801,14 +815,14 @@ router.get(
         }
       } else {
         let search = searchArray[0];
-        if (req.body.type && req.body.method === "") {
+        if (req.body.type && req.body.method === undefined) {
           where = {
             [Op.and]: [
               { user: { [Op.substring]: search } },
               { type: req.body.type },
             ],
           };
-        } else if (req.body.type === "" && req.body.method) {
+        } else if (req.body.type === undefined && req.body.method) {
           where = {
             [Op.and]: [
               { user: { [Op.substring]: search } },
@@ -820,7 +834,10 @@ router.get(
             [Op.and]: [
               { user: { [Op.substring]: search } },
               {
-                [Op.or]: [{ type: req.body.type }, { method: req.body.method }],
+                [Op.and]: [
+                  { type: req.body.type },
+                  { method: req.body.method },
+                ],
               },
             ],
           };
@@ -831,19 +848,21 @@ router.get(
         }
       }
     } else {
-      if (req.body.type && req.body.method === "") {
+      if (req.body.type && req.body.method === undefined) {
         where.type = req.body.type;
-      } else if (req.body.type === "" && req.body.method) {
+      } else if (req.body.type === undefined && req.body.method) {
         where.method = req.body.method;
       } else if (req.body.type && req.body.method) {
         where = {
-          [Op.or]: [{ type: req.body.type }, { method: req.body.method }],
+          [Op.and]: [{ type: req.body.type }, { method: req.body.method }],
         };
       }
     }
 
     const query = {
       order: [["transactionid", "DESC"]],
+      offset: offset,
+      limit: limit,
       attributes: [
         "transactionid",
         "amount",
@@ -851,7 +870,7 @@ router.get(
           Sequelize.literal(
             `CASE WHEN type = 'c' THEN 'Credit' WHEN type = 'd' THEN 'Debit' END `
           ),
-          "Type",
+          "type",
         ],
         [
           Sequelize.literal(
@@ -860,14 +879,18 @@ router.get(
           "method",
         ],
         "user",
+        "userId",
         "transactiondate",
       ],
       where,
       raw: true,
     };
-    TransactionView.findAll(query)
-      .then((transactions) => {
-        res.json(transactions);
+    let result = [];
+    TransactionView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }

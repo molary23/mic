@@ -12,6 +12,10 @@ export const loginuser = (userData) => async (dispatch) => {
     setAuthToken(token);
     //Decode Token
     const decoded = jwtDecode(token);
+
+    if (decoded.level === 3) {
+      getAllCounts();
+    }
     const result = await dispatch(setCurrentUser(decoded));
     return result;
   } catch (error) {
@@ -22,6 +26,17 @@ export const loginuser = (userData) => async (dispatch) => {
 // Set Login User
 export const setCurrentUser = (decoded) => {
   return { type: SET_CURRENT_USER, payload: decoded };
+};
+
+// Get All Counts
+export const getAllCounts = async () => {
+  try {
+    let response = await axios.get("/api/count/admin/all/", {});
+    const allCounts = response.data;
+    sessionStorage.setItem("tableCounts", JSON.stringify(allCounts));
+  } catch (error) {
+    console.log(error.response.data);
+  }
 };
 
 export const logoutUser = () => (dispatch) => {

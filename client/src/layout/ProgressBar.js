@@ -12,7 +12,7 @@ function ProgressBar() {
         setProgress((prevProgress) => prevProgress + 1);
       }
     };
-    let interval = setInterval(moveProgress, 500);
+    let interval = setInterval(moveProgress, 50);
     return () => {
       clearInterval(interval);
     };

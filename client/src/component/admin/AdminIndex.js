@@ -7,11 +7,16 @@ import { getUserProfile } from "../../action/profileAction";
 import ProgressBar from "../../layout/ProgressBar";
 
 export class Index extends Component {
+  state = {
+    allCounts: JSON.parse(sessionStorage.getItem("tableCounts")),
+  };
   componentDidMount() {
     this.props.getUserProfile();
+    console.log(this.state.allCounts);
   }
 
   render() {
+    const { allCounts } = this.state;
     const { profile, loading } = this.props;
 
     let load = true,
@@ -56,12 +61,12 @@ export class Index extends Component {
                     <div className="row">
                       <div className="col-4">
                         <div className="box-icon">
-                          <i className="fas fa-exchange-alt" />
+                          <i className="fas fa-user-friends" />
                         </div>
                       </div>
                       <div className="col-8">
-                        <h2>30</h2>
-                        <p>Transactions</p>
+                        <h2>{allCounts.users}</h2>
+                        <p>Users</p>
                       </div>
                     </div>
                   </div>
@@ -73,12 +78,12 @@ export class Index extends Component {
                     <div className="row">
                       <div className="col-4">
                         <div className="box-icon">
-                          <i className="fas fa-user-friends " />
+                          <i className="fas fa-user-tag" />
                         </div>
                       </div>
                       <div className="col-8">
-                        <h2>20</h2>
-                        <p>Referrals</p>
+                        <h2>{allCounts.providers}</h2>
+                        <p>Signal Providers</p>
                       </div>
                     </div>
                   </div>
@@ -90,12 +95,12 @@ export class Index extends Component {
                     <div className="row">
                       <div className="col-4">
                         <div className="box-icon">
-                          <i className="fas fa-hand-holding-usd" />
+                          <i className="fas fa-signal" />
                         </div>
                       </div>
                       <div className="col-8">
-                        <h2>$20</h2>
-                        <p>Bonus</p>
+                        <h2>{allCounts.signals}</h2>
+                        <p>Signals</p>
                       </div>
                     </div>
                   </div>
@@ -107,12 +112,12 @@ export class Index extends Component {
                     <div className="row">
                       <div className="col-4">
                         <div className="box-icon">
-                          <i className="fas fa-exchange-alt" />
+                          <i className="fas fa-wallet" />
                         </div>
                       </div>
                       <div className="col-8">
-                        <h2>30</h2>
-                        <p>Transactions</p>
+                        <h2>{allCounts.bonus}</h2>
+                        <p>Pending Bonus</p>
                       </div>
                     </div>
                   </div>
@@ -124,12 +129,12 @@ export class Index extends Component {
                     <div className="row">
                       <div className="col-4">
                         <div className="box-icon">
-                          <i className="fas fa-user-friends " />
+                          <i className="fas fa-hand-holding-usd" />
                         </div>
                       </div>
                       <div className="col-8">
                         <h2>20</h2>
-                        <p>Referrals</p>
+                        <p>Pending Payouts</p>
                       </div>
                     </div>
                   </div>
@@ -141,12 +146,12 @@ export class Index extends Component {
                     <div className="row">
                       <div className="col-4">
                         <div className="box-icon">
-                          <i className="fas fa-hand-holding-usd" />
+                          <i className="fas fa-money-bill-wave-alt" />
                         </div>
                       </div>
                       <div className="col-8">
                         <h2>$20</h2>
-                        <p>Bonus</p>
+                        <p>Currencies</p>
                       </div>
                     </div>
                   </div>

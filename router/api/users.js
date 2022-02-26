@@ -12,6 +12,8 @@ const express = require("express"),
   Profile = require("../../db/models/Profile"),
   // Bring in View
   UserView = require("../../db/models/UserView"),
+  ProviderView = require("../../db/models/ProviderView"),
+  SuperView = require("../../db/models/SuperView"),
   //Bring in the Validation
 
   validateEmailInput = require("../../validation/email"),
@@ -142,8 +144,18 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const userid = req.user.id;
+    const level = req.user.level;
+    let view;
+    if (level === 1) {
+      view = UserView;
+    } else if (level === 2) {
+      view = ProviderView;
+    } else if (level === 3) {
+      view = SuperView;
+    }
 
-    UserView.findByPk(userid)
+    view
+      .findOne({ where: { userid } })
       .then((user) => {
         res.json(user);
       })

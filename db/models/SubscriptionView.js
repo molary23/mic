@@ -34,6 +34,9 @@ SubscriptionView.init(
     user: {
       type: DataTypes.STRING(50), // Duration in days
     },
+    userId: {
+      type: DataTypes.INTEGER.UNSIGNED, // Duration in days
+    },
   },
   {
     // don't forget to enable timestamps!

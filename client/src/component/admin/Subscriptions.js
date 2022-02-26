@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getSub } from "../../action/adminAction";
-import { getTableCount, clearActions } from "../../action/adminAction";
+import { getSub, clearActions } from "../../action/adminAction";
 import { searchSub, clearSearchActions } from "../../action/searchAction";
 
 import TableHead from "../../layout/TableHead";
@@ -32,13 +31,14 @@ export class Subscriptions extends Component {
     limit: 4,
     offset: 0,
     sub: "",
-    subcount: JSON.parse(sessionStorage.getItem("subcount")),
     numOfPages: 0,
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
     isLoading: false,
     doneTypingInterval: 5000,
+    subcount: JSON.parse(sessionStorage.getItem("tableCounts")).subscriptions,
+    upLoad: true,
   };
 
   componentDidMount() {
@@ -49,17 +49,18 @@ export class Subscriptions extends Component {
       offset,
     };
     this.setState({
-      numOfPages: Math.ceil(subcount.all / limit),
+      numOfPages: Math.ceil(subcount / limit),
     });
-    this.props.getTableCount("subscriptions");
+
+    this.props.clearActions("sub");
+
     this.props.getSub(paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
-    // window.removeEventListener("scroll", this.loadMore);
-    // sessionStorage.removeItem("subcount");
+    window.removeEventListener("scroll", this.loadMore);
   }
 
   loadMore = () => {
@@ -67,7 +68,7 @@ export class Subscriptions extends Component {
     let searchParams = window.location.search;
 
     let winScroll = window.scrollY;
-    console.log(winScroll);
+
     if (winScroll > iScrollPos) {
       if (currentPage <= numOfPages) {
         this.setState((prevState) => ({
@@ -128,6 +129,7 @@ export class Subscriptions extends Component {
       queryTerms = queryTerms.split("&");
       let terms = queryTerms.map((term) => term.split("="));
       let params = Object.fromEntries(terms);
+      console.log(params);
       window.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -135,7 +137,6 @@ export class Subscriptions extends Component {
       params.offset = 0;
       params.limit = this.state.limit;
 
-      console.log(params);
       // Search Now
       if (selected === "search") {
         clearTimeout(typingTimer);
@@ -153,10 +154,13 @@ export class Subscriptions extends Component {
       }
     } else {
       const paginate = {
-        offset: this.state.offset,
+        offset: 0,
         limit: this.state.limit,
       };
       this.props.clearActions("sub");
+      this.setState((prevState) => ({
+        upLoad: (prevState.upLoad = false),
+      }));
       this.props.getSub(paginate);
     }
   };
@@ -171,13 +175,14 @@ export class Subscriptions extends Component {
       search,
       subcount,
       isLoading,
+      upLoad,
     } = this.state;
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
 
-    let load = true,
+    let load = upLoad,
       loader = isLoading,
       sub,
       searchSub,
@@ -193,7 +198,7 @@ export class Subscriptions extends Component {
         load = true;
       } else if (admin.sub.length > 0 && !loading) {
         sub = admin.sub;
-        load = false;
+        load = upLoad;
         loader = false;
       } else if (admin.sub.length > 0 && loading) {
         sub = admin.sub;
@@ -244,7 +249,7 @@ export class Subscriptions extends Component {
                 <div className="col-md-3 mb-2">
                   <SearchInput
                     sender={sender}
-                    placeholder="Search by Name"
+                    placeholder="Search by User Name"
                     onChange={this.changeHandler}
                     name="search"
                     value={search}
@@ -279,7 +284,7 @@ export class Subscriptions extends Component {
                     <h6>
                       Total
                       <span className="badge rounded-pill bg-success">
-                        {subcount.all}
+                        {subcount}
                       </span>
                     </h6>
                   </div>
@@ -299,7 +304,12 @@ export class Subscriptions extends Component {
                 "date",
               ]}
             >
-              {!showSearch && <TableBody sender={sender} tablebody={sub} />}
+              {!showSearch && (
+                <TableBody
+                  sender={sender}
+                  tablebody={sub !== undefined ? sub : null}
+                />
+              )}
 
               {showSearch && (
                 <TableBody sender={sender} tablebody={searchSub} />
@@ -326,7 +336,6 @@ const mapStateToProps = (state) => ({
 });
 export default connect(mapStateToProps, {
   getSub,
-  getTableCount,
   searchSub,
   clearSearchActions,
   clearActions,

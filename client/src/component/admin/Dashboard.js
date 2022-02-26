@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
 import { Outlet } from "react-router-dom";
 import SubNav from "../../layout/SubNav";
 import SideNav from "../../layout/SideNav";
 import Footer from "../../layout/Footer";
+
 function Dashboard() {
   const [open, setOpen] = useState(true);
 
@@ -23,4 +27,13 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+Dashboard.propTypes = {
+  getTableCount: PropTypes.func,
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  admin: state.admin,
+});
+export default connect(mapStateToProps, null)(Dashboard);

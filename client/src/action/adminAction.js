@@ -4,6 +4,8 @@ import {
   CLEAR_SUBSCRIPTIONS_ACTION,
   ACTION_LOADING,
   GET_SUBSCRIPTION_COUNT,
+  GET_ALL_TRANSACTIONS,
+  CLEAR_TRANSACTIONS_ACTION,
 } from "./types";
 
 export const getSub = (paginate) => async (dispatch) => {
@@ -16,7 +18,21 @@ export const getSub = (paginate) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ALL_SUBSCRIPTIONS, payload: {} });
+    dispatch({ type: GET_ALL_SUBSCRIPTIONS, payload: [] });
+  }
+};
+
+export const getTrans = (paginate) => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    let response = await axios.post("/api/adminview/transactions/", paginate);
+    const result = await dispatch({
+      type: GET_ALL_TRANSACTIONS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    dispatch({ type: GET_ALL_TRANSACTIONS, payload: [] });
   }
 };
 
@@ -45,6 +61,9 @@ export const getTableCount = (tablename) => async (dispatch) => {
 export const clearActions = (actionToClear) => {
   if (actionToClear === "sub") {
     return { type: CLEAR_SUBSCRIPTIONS_ACTION };
+  }
+  if (actionToClear === "trans") {
+    return { type: CLEAR_TRANSACTIONS_ACTION };
   }
 };
 

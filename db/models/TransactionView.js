@@ -27,6 +27,9 @@ TransactionView.init(
     transactiondate: {
       type: DataTypes.DATE,
     },
+    userId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
   },
   {
     // don't forget to enable timestamps!

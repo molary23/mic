@@ -6,7 +6,7 @@ const view_name = "SubscriptionViews";
 
 const original_query = [
   "SELECT ",
-  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,",
+  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
   "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Subscriptions.createdAt AS subscriptiondate ",
   " FROM Subscriptions ",
   " LEFT JOIN Profiles ",
@@ -15,7 +15,7 @@ const original_query = [
 
 const new_query = [
   "SELECT ",
-  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,",
+  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
   "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Subscriptions.createdAt AS subscriptiondate ",
   " FROM Subscriptions ",
   " LEFT JOIN Profiles ",

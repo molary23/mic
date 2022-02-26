@@ -140,21 +140,20 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
+          <td>
+            <Link
+              className=""
+              data-id={i}
+              title="View Details"
+              to={`/admin/user/:${item.userId}`} // change to user ID later
+            >
+              {item.user}
+            </Link>
+          </td>
           <td>{item.method}</td>
           <td>{item.type}</td>
-          <td>{item.date.toISOString()}</td>
           <td>
-            <div className="action-buttons">
-              <Link
-                type="button"
-                className="btn btn-info btn-sm"
-                data-id={i}
-                title="View Bonus"
-                to={`/admin/transaction/:${i}`}
-              >
-                <i className="far fa-eye" />
-              </Link>
-            </div>
+            <DateFormat date={item.transactiondate}></DateFormat>
           </td>
         </tr>
       );
@@ -274,7 +273,7 @@ function TableBody(props) {
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${item.subscriptionid}`}
+              to={`/admin/user/:${item.userId}`}
             >
               {item.user}
             </Link>

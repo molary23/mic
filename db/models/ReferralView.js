@@ -15,6 +15,12 @@ ReferralView.init(
     referral: {
       type: DataTypes.STRING(50),
     },
+    referralId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    referredId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
     referred: {
       type: DataTypes.STRING(50),
     },

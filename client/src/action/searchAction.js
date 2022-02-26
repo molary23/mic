@@ -3,6 +3,8 @@ import {
   CLEAR_SEARCH_SUBSCRIPTIONS_ACTION,
   ACTION_LOADING,
   GET_SEARCH_SUBSCRIPTIONS,
+  CLEAR_SEARCH_TRANSACTIONS_ACTION,
+  GET_SEARCH_TRANSACTIONS,
 } from "./types";
 
 export const searchSub = (searchData) => async (dispatch) => {
@@ -16,16 +18,32 @@ export const searchSub = (searchData) => async (dispatch) => {
       type: GET_SEARCH_SUBSCRIPTIONS,
       payload: response.data,
     });
-    console.log(response.data);
     return result;
   } catch (error) {
     dispatch({ type: GET_SEARCH_SUBSCRIPTIONS, payload: {} });
   }
 };
 
+export const searchTrans = (searchData) => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    let response = await axios.post("/api/adminview/transactions/", searchData);
+    const result = await dispatch({
+      type: GET_SEARCH_TRANSACTIONS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    dispatch({ type: GET_SEARCH_TRANSACTIONS, payload: [] });
+  }
+};
+
 export const clearSearchActions = (actionToClear) => {
   if (actionToClear === "sub") {
     return { type: CLEAR_SEARCH_SUBSCRIPTIONS_ACTION };
+  }
+  if (actionToClear === "trans") {
+    return { type: CLEAR_SEARCH_TRANSACTIONS_ACTION };
   }
 };
 
