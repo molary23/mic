@@ -28,7 +28,7 @@ export default function adminReducer(state = initialState, action) {
       return { ...state, loading: true };
     }
     case CLEAR_SUBSCRIPTIONS_ACTION: {
-      return { ...state, sub: {} };
+      return { ...state, sub: [], fetching: false };
     }
     default:
       return state;

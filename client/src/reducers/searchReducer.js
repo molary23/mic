@@ -1,7 +1,7 @@
 import {
   ACTION_LOADING,
   GET_SEARCH_SUBSCRIPTIONS,
-  CLEAR_SUBSCRIPTIONS_ACTION,
+  CLEAR_SEARCH_SUBSCRIPTIONS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -18,14 +18,15 @@ export default function searchReducer(state = initialState, action) {
     case GET_SEARCH_SUBSCRIPTIONS:
       return {
         ...state,
-        sub: [...action.payload],
+        sub: [...state.sub, ...action.payload],
         loading: false,
         searching: true,
       };
-    case CLEAR_SUBSCRIPTIONS_ACTION:
+    case CLEAR_SEARCH_SUBSCRIPTIONS_ACTION:
       return {
         ...state,
         sub: [],
+        searching: false,
       };
     default:
       return state;

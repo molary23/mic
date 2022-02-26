@@ -10,5 +10,5 @@ export default combineReducers({
   errors: errorReducer,
   profile: profileReducer,
   admin: adminReducer,
-  search: searchReducer,
+  searchTerms: searchReducer,
 });

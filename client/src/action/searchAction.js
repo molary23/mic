@@ -1,13 +1,12 @@
 import axios from "axios";
 import {
-  CLEAR_SUBSCRIPTIONS_ACTION,
+  CLEAR_SEARCH_SUBSCRIPTIONS_ACTION,
   ACTION_LOADING,
   GET_SEARCH_SUBSCRIPTIONS,
 } from "./types";
 
 export const searchSub = (searchData) => async (dispatch) => {
   dispatch(setLoading());
-  clearActions("sub");
   try {
     let response = await axios.post(
       "/api/adminview/subscriptions/",
@@ -24,9 +23,9 @@ export const searchSub = (searchData) => async (dispatch) => {
   }
 };
 
-export const clearActions = (actionToClear) => {
+export const clearSearchActions = (actionToClear) => {
   if (actionToClear === "sub") {
-    return { type: CLEAR_SUBSCRIPTIONS_ACTION };
+    return { type: CLEAR_SEARCH_SUBSCRIPTIONS_ACTION };
   }
 };
 

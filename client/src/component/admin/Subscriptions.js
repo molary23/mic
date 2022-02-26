@@ -3,20 +3,20 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { getSub } from "../../action/adminAction";
-import { getTableCount } from "../../action/adminAction";
-import { searchSub } from "../../action/searchAction";
+import { getTableCount, clearActions } from "../../action/adminAction";
+import { searchSub, clearSearchActions } from "../../action/searchAction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
-import { url } from "gravatar";
 
+let typingTimer;
 export class Subscriptions extends Component {
   state = {
     sender: "admin-subscriptions",
-    searchname: "",
+    search: "",
     typeOptions: [
       { value: "", option: "Filter by Type" },
       { value: "b", option: "Bonus" },
@@ -37,6 +37,8 @@ export class Subscriptions extends Component {
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
+    isLoading: false,
+    doneTypingInterval: 5000,
   };
 
   componentDidMount() {
@@ -62,38 +64,56 @@ export class Subscriptions extends Component {
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage } = this.state;
+    let searchParams = window.location.search;
+
     let winScroll = window.scrollY;
+    console.log(winScroll);
     if (winScroll > iScrollPos) {
       if (currentPage <= numOfPages) {
         this.setState((prevState) => ({
           offset: prevState.offset + limit,
         }));
-        const paginate = {
-          offset: this.state.offset,
-          limit: this.state.limit,
-        };
-        this.props.getSub(paginate);
-        this.setState((prevState) => ({
-          currentPage: prevState.currentPage + 1,
-        }));
+
+        if (searchParams !== "") {
+          let queryTerms = searchParams.split("?")[1];
+          queryTerms = queryTerms.split("&");
+          let terms = queryTerms.map((term) => term.split("="));
+          let params = Object.fromEntries(terms);
+          params.offset = this.state.offset;
+          params.limit = this.state.limit;
+          // Search Now
+          this.props.searchSub(params);
+        } else {
+          const paginate = {
+            offset: this.state.offset,
+            limit: this.state.limit,
+          };
+          this.props.getSub(paginate);
+        }
+
+        this.setState({
+          currentPage: this.state.currentPage + 1,
+        });
       }
     }
-  };
-
-  keyHandler = (searchText) => {
-    const { url } = this.state;
-    this.setSearchParams("search", searchText);
   };
 
   changeHandler = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
     });
+
+    this.props.clearSearchActions("sub");
     this.setSearchParams(e.target.name, e.target.value);
   };
 
   setSearchParams = (selected, valueOfSelected) => {
     const { url } = this.state;
+    this.setState({
+      offset: 0,
+      limit: 4,
+      currentPage: 2,
+    });
     if (valueOfSelected !== "") {
       url.searchParams.set(selected, valueOfSelected);
       window.history.pushState({}, "", url);
@@ -108,9 +128,36 @@ export class Subscriptions extends Component {
       queryTerms = queryTerms.split("&");
       let terms = queryTerms.map((term) => term.split("="));
       let params = Object.fromEntries(terms);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      params.offset = 0;
+      params.limit = this.state.limit;
+
       console.log(params);
       // Search Now
-      this.props.searchSub(params);
+      if (selected === "search") {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => {
+          this.setState({
+            isLoading: true,
+          });
+          this.props.searchSub(params);
+        }, this.state.doneTypingInterval);
+      } else {
+        this.setState({
+          isLoading: true,
+        });
+        this.props.searchSub(params);
+      }
+    } else {
+      const paginate = {
+        offset: this.state.offset,
+        limit: this.state.limit,
+      };
+      this.props.clearActions("sub");
+      this.props.getSub(paginate);
     }
   };
 
@@ -121,23 +168,27 @@ export class Subscriptions extends Component {
       packageOptions,
       type,
       subPackage,
-      searchname,
+      search,
       subcount,
+      isLoading,
     } = this.state;
-    const { admin, search } = this.props;
+    const { admin, searchTerms } = this.props;
     const { loading } = admin;
     const { fetching } = admin;
-    const { searching } = search;
+    const { searching } = searchTerms;
 
     let load = true,
-      loader = false,
+      loader = isLoading,
       sub,
       searchSub,
       showSearch,
+      emptyRecord = false,
       noRecord = false;
 
     if (fetching) {
       showSearch = false;
+      loader = true;
+
       if (admin.sub === [] && loading) {
         load = true;
       } else if (admin.sub.length > 0 && !loading) {
@@ -148,6 +199,10 @@ export class Subscriptions extends Component {
         sub = admin.sub;
         load = false;
         loader = true;
+      } else {
+        load = false;
+        emptyRecord = true;
+        sub = [];
       }
     }
 
@@ -155,18 +210,19 @@ export class Subscriptions extends Component {
       showSearch = searching;
     } else {
       showSearch = true;
-      if (search.sub === [] || search.sub.length <= 0) {
+      loader = true;
+      if (searchTerms.sub === [] || searchTerms.sub.length <= 0) {
         noRecord = true;
         searchSub = [];
-      } else if (search.sub.length > 0) {
-        searchSub = search.sub;
+        loader = false;
+      } else if (searchTerms.sub.length > 0 && !searchTerms.loading) {
+        searchSub = searchTerms.sub;
+        loader = false;
+      } else if (searchTerms.sub.length > 0 && searchTerms.loading) {
+        searchSub = searchTerms.sub;
+        loader = true;
       }
     }
-    /* if (search.sub === [] && searching) {
-      load = true;
-    }else if ( && searching) {
-      searchSub = search.sub;
-    }*/
     return (
       <div>
         {loader && (
@@ -176,10 +232,7 @@ export class Subscriptions extends Component {
         )}
         {load ? (
           <div className="loader">
-            <ProgressBar />
-            <div>
-              <i className="fas fa-circle-notch fa-2x fa-spin" />
-            </div>
+            <i className="fas fa-circle-notch fa-2x fa-spin" />
           </div>
         ) : (
           <div className="transactions card holder-card ">
@@ -192,10 +245,9 @@ export class Subscriptions extends Component {
                   <SearchInput
                     sender={sender}
                     placeholder="Search by Name"
-                    readOnly
-                    name="searchname"
-                    value={searchname}
-                    onKeyUp={this.keyHandler}
+                    onChange={this.changeHandler}
+                    name="search"
+                    value={search}
                   />
                 </div>
 
@@ -234,7 +286,7 @@ export class Subscriptions extends Component {
                 </div>
               </div>
             </div>
-            {noRecord && "No Record(s) found"}
+            {(noRecord || emptyRecord) && "No Record(s) found"}
             <TableHead
               sender={sender}
               head={[
@@ -248,6 +300,7 @@ export class Subscriptions extends Component {
               ]}
             >
               {!showSearch && <TableBody sender={sender} tablebody={sub} />}
+
               {showSearch && (
                 <TableBody sender={sender} tablebody={searchSub} />
               )}
@@ -269,8 +322,12 @@ Subscriptions.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
-  search: state.search,
+  searchTerms: state.searchTerms,
 });
-export default connect(mapStateToProps, { getSub, getTableCount, searchSub })(
-  Subscriptions
-);
+export default connect(mapStateToProps, {
+  getSub,
+  getTableCount,
+  searchSub,
+  clearSearchActions,
+  clearActions,
+})(Subscriptions);
