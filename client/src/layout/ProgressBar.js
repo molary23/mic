@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-function ProgressBar() {
+function ProgressBar(props) {
+  const { load, loader } = props.loading;
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -19,16 +20,23 @@ function ProgressBar() {
   });
   return (
     <div>
-      <div className="progress fixed-top">
-        <div
-          className="progress-bar"
-          role="progressbar"
-          style={{ width: `${progress}%` }}
-          aria-valuenow={progress}
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
+      {loader && (
+        <div className="progress fixed-top">
+          <div
+            className="progress-bar"
+            role="progressbar"
+            style={{ width: `${progress}%` }}
+            aria-valuenow={progress}
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+      )}
+      {load && (
+        <div className="loader">
+          <i className="fas fa-circle-notch fa-2x fa-spin" />
+        </div>
+      )}
     </div>
   );
 }

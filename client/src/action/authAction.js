@@ -1,4 +1,4 @@
-import { GET_ERRORS, SET_CURRENT_USER } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, CLEAR_ERRORS } from "./types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "../util/setAuthToken";
@@ -16,7 +16,9 @@ export const loginuser = (userData) => async (dispatch) => {
     if (decoded.level === 3) {
       getAllCounts();
     }
+    dispatch(clearErrors());
     const result = await dispatch(setCurrentUser(decoded));
+
     return result;
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
@@ -26,6 +28,11 @@ export const loginuser = (userData) => async (dispatch) => {
 // Set Login User
 export const setCurrentUser = (decoded) => {
   return { type: SET_CURRENT_USER, payload: decoded };
+};
+
+// Clear Errors
+export const clearErrors = () => {
+  return { type: CLEAR_ERRORS, payload: {} };
 };
 
 // Get All Counts

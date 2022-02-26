@@ -4,6 +4,7 @@ import {
   CLEAR_SEARCH_SUBSCRIPTIONS_ACTION,
   GET_SEARCH_TRANSACTIONS,
   CLEAR_SEARCH_TRANSACTIONS_ACTION,
+  GET_SEARCH_USERS,
 } from "../action/types";
 
 const initialState = {
@@ -11,6 +12,8 @@ const initialState = {
   searching: false,
   loading: false,
   transCount: 0,
+  users: [],
+  usersCount: [],
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -26,11 +29,20 @@ export default function searchReducer(state = initialState, action) {
         searching: true,
       };
     case GET_SEARCH_TRANSACTIONS:
-      let count = action.payload.shift();
+      let countTrans = action.payload.shift();
       return {
         ...state,
         trans: [...state.trans, ...action.payload],
-        transCount: count,
+        transCount: countTrans,
+        loading: false,
+        searching: true,
+      };
+    case GET_SEARCH_USERS:
+      let countUser = action.payload.shift();
+      return {
+        ...state,
+        users: [...state.users, ...action.payload],
+        transCount: countUser,
         loading: false,
         searching: true,
       };

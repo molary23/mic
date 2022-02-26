@@ -5,7 +5,9 @@ import {
   ACTION_LOADING,
   GET_SUBSCRIPTION_COUNT,
   GET_ALL_TRANSACTIONS,
+  GET_ALL_USERS,
   CLEAR_TRANSACTIONS_ACTION,
+  CLEAR_USERS_ACTION,
 } from "./types";
 
 export const getSub = (paginate) => async (dispatch) => {
@@ -33,6 +35,20 @@ export const getTrans = (paginate) => async (dispatch) => {
     return result;
   } catch (error) {
     dispatch({ type: GET_ALL_TRANSACTIONS, payload: [] });
+  }
+};
+
+export const getUser = (paginate) => async (dispatch) => {
+  dispatch(setLoading());
+  try {
+    let response = await axios.post("/api/adminview/users/", paginate);
+    const result = await dispatch({
+      type: GET_ALL_USERS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    dispatch({ type: GET_ALL_USERS, payload: [] });
   }
 };
 
@@ -64,6 +80,9 @@ export const clearActions = (actionToClear) => {
   }
   if (actionToClear === "trans") {
     return { type: CLEAR_TRANSACTIONS_ACTION };
+  }
+  if (actionToClear === "users") {
+    return { type: CLEAR_USERS_ACTION };
   }
 };
 

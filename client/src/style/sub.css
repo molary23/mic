@@ -103,6 +103,10 @@ table {
   text-transform: capitalize;
 }
 
+table .td-lower {
+  text-transform: lowercase;
+}
+
 a.default-anchor {
   text-decoration: none;
 }

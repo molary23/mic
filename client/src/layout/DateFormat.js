@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 function DateFormat(props) {
   const { date } = props;
@@ -14,6 +14,7 @@ function DateFormat(props) {
   let day = newDate.getDate(),
     month = newDate.getMonth() + 1,
     year = newDate.getFullYear();
+  day = `0${day}`.slice(-2);
   month = `${month}`.length < 2 ? `0${month}` : month;
   let strTime = hours + ":" + minutes + " " + ampm;
   let strDate = `${day}/${month}/${year}`;

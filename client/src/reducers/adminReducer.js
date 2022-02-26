@@ -5,6 +5,8 @@ import {
   GET_SUBSCRIPTION_COUNT,
   GET_ALL_TRANSACTIONS,
   CLEAR_TRANSACTIONS_ACTION,
+  GET_ALL_USERS,
+  CLEAR_USERS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -14,6 +16,9 @@ const initialState = {
   loading: false,
   fetching: false,
   transCount: 0,
+  subCount: 0,
+  users: [],
+  usersCount: 0,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -26,11 +31,20 @@ export default function adminReducer(state = initialState, action) {
         fetching: true,
       };
     case GET_ALL_TRANSACTIONS:
-      let count = action.payload.shift();
+      let countTrans = action.payload.shift();
       return {
         ...state,
         trans: [...state.trans, ...action.payload],
-        transCount: count,
+        transCount: countTrans,
+        loading: false,
+        fetching: true,
+      };
+    case GET_ALL_USERS:
+      let countUser = action.payload.shift();
+      return {
+        ...state,
+        users: [...state.users, ...action.payload],
+        usersCount: countUser,
         loading: false,
         fetching: true,
       };
@@ -45,6 +59,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_TRANSACTIONS_ACTION: {
       return { ...state, trans: [], fetching: false };
+    }
+    case CLEAR_USERS_ACTION: {
+      return { ...state, users: [], fetching: false };
     }
     default:
       return state;

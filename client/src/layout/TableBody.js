@@ -295,18 +295,20 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
-          <td>{item.method}</td>
-          <td>{item.type}</td>
-          <td>{item.date.toISOString()}</td>
+          <td>{item.fullname}</td>
+          <td className="td-lower">{item.email}</td>
+          <td className="td-lower">{item.username}</td>
+          <td>{item.phone}</td>
+          <td>{item.userstatus}</td>
+          <td>{item.premiumstatus}</td>
           <td>
             <div className="action-buttons">
               <Link
                 type="button"
-                className="btn btn-danger btn-sm"
+                className="btn btn-info btn-sm"
                 data-id={i}
-                title="Delete Currency"
-                to={`/admin/user/:${i}`}
+                title="View User"
+                to={`/admin/user/:${item.userid}`}
               >
                 <i className="far fa-eye" />
               </Link>

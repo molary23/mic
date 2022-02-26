@@ -101,6 +101,10 @@ textarea {
 table {
   text-align: center;
   text-transform: capitalize;
+
+  .td-lower {
+    text-transform: lowercase;
+  }
 }
 
 a.default-anchor {

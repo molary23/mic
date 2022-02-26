@@ -476,7 +476,7 @@ desc Admin View Users
 @access private
 */
 
-router.get(
+router.post(
   "/users",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
@@ -485,10 +485,19 @@ router.get(
       return res.status(400).json(error);
     }
 
+    let limit = null,
+      offset = null;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
+    limit = req.body.limit;
+    offset = req.body.offset;
+
     let where = {};
     if (req.body.search) {
       const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
+      let searchArray = searchTerms.split("+");
 
       if (searchArray.length > 1) {
         let newSearchArray = [],
@@ -500,7 +509,7 @@ router.get(
           newSearchArray.push(newSearchObj);
         }
 
-        if (req.body.userstatus && req.body.premiumstatus === "") {
+        if (req.body.userstatus && req.body.premiumstatus === undefined) {
           where = {
             [Op.and]: [
               {
@@ -509,7 +518,10 @@ router.get(
               { userstatus: req.body.userstatus },
             ],
           };
-        } else if (req.body.userstatus === "" && req.body.premiumstatus) {
+        } else if (
+          req.body.userstatus === undefined &&
+          req.body.premiumstatus
+        ) {
           where = {
             [Op.and]: [
               {
@@ -525,7 +537,7 @@ router.get(
                 [Op.and]: newSearchArray,
               },
               {
-                [Op.or]: [
+                [Op.and]: [
                   { userstatus: req.body.userstatus },
                   { premiumstatus: req.body.premiumstatus },
                 ],
@@ -544,7 +556,7 @@ router.get(
             [Op.and]: [
               {
                 [Op.or]: [
-                  { user: { [Op.substring]: search } },
+                  { fullname: { [Op.substring]: search } },
                   { email: { [Op.substring]: search } },
                   { username: { [Op.substring]: search } },
                 ],
@@ -552,12 +564,15 @@ router.get(
               { userstatus: req.body.userstatus },
             ],
           };
-        } else if (req.body.userstatus === "" && req.body.premiumstatus) {
+        } else if (
+          req.body.userstatus === undefined &&
+          req.body.premiumstatus
+        ) {
           where = {
             [Op.and]: [
               {
                 [Op.or]: [
-                  { user: { [Op.substring]: search } },
+                  { fullname: { [Op.substring]: search } },
                   { email: { [Op.substring]: search } },
                   { username: { [Op.substring]: search } },
                 ],
@@ -576,7 +591,7 @@ router.get(
                 ],
               },
               {
-                [Op.or]: [
+                [Op.and]: [
                   { userstatus: req.body.userstatus },
                   { premiumstatus: req.body.premiumstatus },
                 ],
@@ -586,7 +601,7 @@ router.get(
         } else {
           where = {
             [Op.or]: [
-              { user: { [Op.substring]: search } },
+              { fullname: { [Op.substring]: search } },
               { email: { [Op.substring]: search } },
               { username: { [Op.substring]: search } },
             ],
@@ -594,13 +609,13 @@ router.get(
         }
       }
     } else {
-      if (req.body.userstatus && req.body.premiumstatus === "") {
+      if (req.body.userstatus && req.body.premiumstatus === undefined) {
         where.userstatus = req.body.userstatus;
-      } else if (req.body.userstatus === "" && req.body.premiumstatus) {
+      } else if (req.body.userstatus === undefined && req.body.premiumstatus) {
         where.premiumstatus = req.body.premiumstatus;
       } else if (req.body.userstatus && req.body.premiumstatus) {
         where = {
-          [Op.or]: [
+          [Op.and]: [
             { userstatus: req.body.userstatus },
             { premiumstatus: req.body.premiumstatus },
           ],
@@ -610,6 +625,8 @@ router.get(
 
     const query = {
       order: [["userid", "DESC"]],
+      limit,
+      offset,
       attributes: [
         "userid",
         "username",
@@ -619,22 +636,24 @@ router.get(
           Sequelize.literal(
             `CASE WHEN userstatus = 1 THEN 'Deactivated' WHEN userstatus = 2 THEN 'Active' END `
           ),
-          "User Status",
+          "userstatus",
         ],
         [
           Sequelize.literal(
             `CASE WHEN premiumstatus = 0 THEN 'New  User' WHEN premiumstatus = 1 THEN 'Not Subscribed' WHEN premiumstatus = 2 THEN 'Active' END `
           ),
-          "Premium Status",
+          "premiumstatus",
         ],
       ],
       where,
       raw: true,
     };
-
-    UserView.findAll(query)
-      .then((user) => {
-        res.json(user);
+    let result = [];
+    UserView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }
