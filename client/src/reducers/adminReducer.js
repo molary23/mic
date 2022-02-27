@@ -9,6 +9,11 @@ import {
   CLEAR_USERS_ACTION,
   GET_ALL_CURRENCY,
   CLEAR_CURRENCY_ACTION,
+  GET_ALL_PAYMENTS,
+  GET_ALL_REFERRALS,
+  CLEAR_REFERRALS_ACTION,
+  CLEAR_BONUS_ACTION,
+  GET_ALL_BONUS,
 } from "../action/types";
 
 const initialState = {
@@ -23,6 +28,12 @@ const initialState = {
   usersCount: 0,
   curCount: 0,
   currency: [],
+  pay: [],
+  payCount: 0,
+  referrals: [],
+  refCount: 0,
+  bonus: [],
+  bonusCount: 0,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -40,6 +51,15 @@ export default function adminReducer(state = initialState, action) {
         ...state,
         trans: [...state.trans, ...action.payload],
         transCount: countTrans,
+        loading: false,
+        fetching: true,
+      };
+    case GET_ALL_PAYMENTS:
+      let payCount = action.payload.shift();
+      return {
+        ...state,
+        pay: [...state.pay, ...action.payload],
+        payCount,
         loading: false,
         fetching: true,
       };
@@ -61,6 +81,24 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case GET_ALL_REFERRALS:
+      let refCount = action.payload.shift();
+      return {
+        ...state,
+        referrals: [...state.referrals, ...action.payload],
+        refCount,
+        loading: false,
+        fetching: true,
+      };
+    case GET_ALL_BONUS:
+      let bonusCount = action.payload.shift();
+      return {
+        ...state,
+        bonus: [...state.bonus, ...action.payload],
+        bonusCount,
+        loading: false,
+        fetching: true,
+      };
     case GET_SUBSCRIPTION_COUNT: {
       return { ...state, subcount: action.payload };
     }
@@ -78,6 +116,12 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_CURRENCY_ACTION: {
       return { ...state, currency: [], fetching: false };
+    }
+    case CLEAR_REFERRALS_ACTION: {
+      return { ...state, referrals: [], fetching: false };
+    }
+    case CLEAR_BONUS_ACTION: {
+      return { ...state, bonus: [], fetching: false };
     }
     default:
       return state;

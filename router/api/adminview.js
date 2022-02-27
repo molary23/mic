@@ -22,6 +22,7 @@ const express = require("express"),
   ProviderView = require("../../db/models/ProviderView"),
   Signal = require("../../db/models/Signal"),
   SignalView = require("../../db/models/SignalView"),
+  PaymentView = require("../../db/models/PaymentView"),
   BonusView = require("../../db/models/BonusView"),
   UserView = require("../../db/models/UserView"),
   SuperView = require("../../db/models/SuperView"),
@@ -34,7 +35,7 @@ const express = require("express"),
 @access private
 */
 
-router.get(
+router.post(
   "/payments",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
@@ -42,9 +43,149 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    Payment.findAll()
-      .then((pay) => {
-        res.json(pay);
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
+    let where = {};
+    if (req.body.search !== undefined) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              { username: { [Op.substring]: searchArray[i] } },
+              { reference: { [Op.substring]: searchArray[i] } },
+            ],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (req.body.status && req.body.gateway === undefined) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { type: req.body.status },
+            ],
+          };
+        } else if (req.body.status === undefined && req.body.gateway) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { package: req.body.gateway },
+            ],
+          };
+        } else if (req.body.status && req.body.gateway) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              {
+                [Op.and]: [
+                  { type: req.body.status },
+                  { package: req.body.gateway },
+                ],
+              },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: newSearchArray,
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (req.body.status && req.body.gateway === undefined) {
+          where = {
+            [Op.and]: [
+              { user: { [Op.substring]: search } },
+              { type: req.body.status },
+            ],
+          };
+        } else if (req.body.status === undefined && req.body.gateway) {
+          where = {
+            [Op.and]: [
+              { user: { [Op.substring]: search } },
+              { package: req.body.gateway },
+            ],
+          };
+        } else if (req.body.status && req.body.gateway) {
+          where = {
+            [Op.and]: [
+              { user: { [Op.substring]: search } },
+              {
+                [Op.and]: [
+                  { type: req.body.status },
+                  { package: req.body.gateway },
+                ],
+              },
+            ],
+          };
+        } else {
+          where = {
+            username: { [Op.substring]: search },
+          };
+        }
+      }
+    } else {
+      if (req.body.status && req.body.gateway === undefined) {
+        where.type = req.body.status;
+      } else if (req.body.status === undefined && req.body.gateway) {
+        where.gateway = req.body.gateway;
+      } else if (req.body.status && req.body.gateway) {
+        where = {
+          [Op.and]: [{ type: req.body.status }, { gateway: req.body.gateway }],
+        };
+      }
+    }
+
+    const query = {
+      order: [["payid", "DESC"]],
+      offset,
+      limit,
+      attributes: [
+        "payid",
+        "amount",
+        [
+          Sequelize.literal(
+            `CASE WHEN gateway = 'b' THEN 'BitPay' WHEN gateway = 's' THEN 'Stripe' END `
+          ),
+          "gateway",
+        ],
+        [
+          Sequelize.literal(
+            `CASE WHEN status = 0 THEN 'failed' WHEN status = 1 THEN 'successful' END`
+          ),
+          "status",
+        ],
+        "reference",
+        "username",
+        "UserId",
+        "payid",
+        "createdAt",
+        "updatedAt",
+      ],
+      where,
+      raw: true,
+    };
+    let result = {};
+    PaymentView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -70,9 +211,6 @@ router.post(
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
-
-    limit = req.body.limit;
-    offset = req.body.offset;
 
     let where = {};
     if (req.body.search !== undefined) {
@@ -218,7 +356,7 @@ desc Admin View bonus
 @access private
 */
 
-router.get(
+router.post(
   "/bonus",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
@@ -226,6 +364,12 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
 
     let where = {};
     if (req.body.search) {
@@ -236,7 +380,7 @@ router.get(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = { user: { [Op.substring]: searchArray[i] } };
+          newSearchObj = { username: { [Op.substring]: searchArray[i] } };
           newSearchArray.push(newSearchObj);
         }
 
@@ -258,11 +402,14 @@ router.get(
         let search = searchArray[0];
         if (req.body.status) {
           where = {
-            [Op.and]: [{ user: { [Op.substring]: search } }, { userstatus }],
+            [Op.and]: [
+              { username: { [Op.substring]: search } },
+              { userstatus },
+            ],
           };
         } else {
           where = {
-            user: { [Op.substring]: search },
+            username: { [Op.substring]: search },
           };
         }
       }
@@ -274,6 +421,8 @@ router.get(
 
     const query = {
       order: [["bonusid", "DESC"]],
+      limit,
+      offset,
       attributes: [
         "bonusid",
         "amount",
@@ -281,18 +430,21 @@ router.get(
           Sequelize.literal(
             `CASE WHEN status = 1 THEN 'Pending' WHEN status = 0 THEN 'Unapproved' WHEN status = 2 THEN 'Approved' END `
           ),
-          "Status",
+          "status",
         ],
-        "user",
-        "bonusdate",
+        "username",
+        "createdAt",
+        "updatedAt",
       ],
       where,
       raw: true,
     };
-
-    BonusView.findAll(query)
-      .then((bonus) => {
-        res.json(bonus);
+    let result = {};
+    BonusView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -509,15 +661,15 @@ router.post(
           newSearchObj = {
             [Op.or]: [
               {
-            username: { [Op.substring]: searchArray[i] }
-            },
-            {
-              fullname: { [Op.substring]: searchArray[i] }
-            },
-           { 
-             email: { [Op.substring]: searchArray[i] }
-             }
-             ],
+                username: { [Op.substring]: searchArray[i] },
+              },
+              {
+                fullname: { [Op.substring]: searchArray[i] },
+              },
+              {
+                email: { [Op.substring]: searchArray[i] },
+              },
+            ],
           };
 
           newSearchArray.push(newSearchObj);
@@ -803,16 +955,15 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          
-               newSearchObj = {
+          newSearchObj = {
             [Op.or]: [
               {
-            firstcurrency: { [Op.substring]: searchArray[i] }
-            },
-            {
-              secondcurrency: { [Op.substring]: searchArray[i] }
-            },
-             ],
+                firstcurrency: { [Op.substring]: searchArray[i] },
+              },
+              {
+                secondcurrency: { [Op.substring]: searchArray[i] },
+              },
+            ],
           };
           newSearchArray.push(newSearchObj);
         }
@@ -836,10 +987,11 @@ router.post(
         if (req.body.status !== undefined) {
           where = {
             [Op.and]: [
-              { [Op.or]: [
-                {firstcurrency: { [Op.substring]: search }},
-                {secondcurrency: { [Op.substring]: search }},
-              ] 
+              {
+                [Op.or]: [
+                  { firstcurrency: { [Op.substring]: search } },
+                  { secondcurrency: { [Op.substring]: search } },
+                ],
               },
               { status: req.body.status },
             ],
@@ -847,9 +999,9 @@ router.post(
         } else {
           where = {
             [Op.or]: [
-                {firstcurrency: { [Op.substring]: search }},
-                {secondcurrency: { [Op.substring]: search }},
-              ] 
+              { firstcurrency: { [Op.substring]: search } },
+              { secondcurrency: { [Op.substring]: search } },
+            ],
           };
         }
       }
@@ -859,16 +1011,13 @@ router.post(
       }
     }
 
-    
-
-
     let result = {};
-   Currency.findAndCountAll({
+    Currency.findAndCountAll({
       order: [["id", "DESC"]],
       offset,
       limit,
       where,
-      include: [{model: User, attributes: [ 'username'] }],
+      include: [{ model: User, attributes: ["username"] }],
     })
       .then((entries) => {
         const { count, rows } = entries;
@@ -1312,7 +1461,7 @@ desc Admin View referrals
 @access private
 */
 
-router.get(
+router.post(
   "/referrals",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
@@ -1320,10 +1469,17 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
     let where = {};
     if (req.body.search) {
       const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
+      let searchArray = searchTerms.split("+");
 
       if (searchArray.length > 1) {
         let newSearchArray = [],
@@ -1350,9 +1506,17 @@ router.get(
         };
       }
     }
-    ReferralView.findAll({ where })
-      .then((referrals) => {
-        res.json(referrals);
+    let result = {};
+    ReferralView.findAndCountAll({
+      where,
+      order: [["id", "desc"]],
+      limit,
+      offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }

@@ -1,25 +1,25 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "BonusViews";
-const view_name = "BonusViews";
+const auto_created_model_table_name = "PaymentViews";
+const view_name = "PaymentViews";
 
 const original_query = [
   "SELECT ",
-  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Bonuses.createdAt AS bonusdate, Bonuses.SubscriptionId ",
-  " FROM Bonuses ",
-  " LEFT JOIN Profiles ",
-  " ON Bonuses.UserId = Profiles.UserId ",
+  " Payments.id AS payid, Payments.amount, Payments.reference, Payments.status, Payments.gateway, Users.id AS UserId,",
+  "Users.username, Payments.createdAt AS createdAt, Payments.createdAt AS updatedAt ",
+  " FROM Payments ",
+  " INNER JOIN Users ",
+  " ON Payments.UserId = Users.id ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Bonuses.createdAt AS bonusdate, Bonuses.SubscriptionId  ",
-  " FROM Bonuses ",
-  " LEFT JOIN Profiles ",
-  " ON Bonuses.UserId = Profiles.UserId ",
+  " Payments.id AS payid, Payments.amount, Payments.reference, Payments.status, Payments.gateway, Users.id AS UserId,",
+  "Users.username, Payments.createdAt AS createdAt, Payments.createdAt AS updatedAt ",
+  " FROM Payments ",
+  " INNER JOIN Users ",
+  " ON Payments.UserId = Users.id ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

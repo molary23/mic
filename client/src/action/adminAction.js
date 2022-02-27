@@ -10,6 +10,12 @@ import {
   CLEAR_USERS_ACTION,
   GET_ALL_CURRENCY,
   CLEAR_CURRENCY_ACTION,
+  CLEAR_PAYMENTS_ACTION,
+  GET_ALL_PAYMENTS,
+  CLEAR_REFERRALS_ACTION,
+  GET_ALL_REFERRALS,
+  GET_ALL_BONUS,
+  CLEAR_BONUS_ACTION,
 } from "./types";
 
 export const getSub = (paginate) => async (dispatch) => {
@@ -54,13 +60,22 @@ export const getUser = (paginate) => async (dispatch) => {
   }
 };
 
-export const getContent = (target, paginate) => async (dispatch) => {
+export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
   let url = "/api/adminview/",
     type;
-  if (target === "currency") {
+  if (content === "currency") {
     url = `${url}currency`;
     type = GET_ALL_CURRENCY;
+  } else if (content === "payments") {
+    url = `${url}payments`;
+    type = GET_ALL_PAYMENTS;
+  } else if (content === "referrals") {
+    url = `${url}referrals`;
+    type = GET_ALL_REFERRALS;
+  } else if (content === "bonus") {
+    url = `${url}bonus`;
+    type = GET_ALL_BONUS;
   }
   try {
     let response = await axios.post(url, paginate);
@@ -97,7 +112,6 @@ export const getTableCount = (tablename) => async (dispatch) => {
   }
 };
 
-
 export const clearActions = (actionToClear) => {
   if (actionToClear === "sub") {
     return { type: CLEAR_SUBSCRIPTIONS_ACTION };
@@ -107,6 +121,12 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USERS_ACTION };
   } else if (actionToClear === "currency") {
     return { type: CLEAR_CURRENCY_ACTION };
+  } else if (actionToClear === "payment") {
+    return { type: CLEAR_PAYMENTS_ACTION };
+  } else if (actionToClear === "referrals") {
+    return { type: CLEAR_REFERRALS_ACTION };
+  } else if (actionToClear === "bonus") {
+    return { type: CLEAR_BONUS_ACTION };
   }
 };
 

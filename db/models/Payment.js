@@ -25,6 +25,10 @@ Payment.init(
       type: DataTypes.TINYINT,
       defaultValue: 1,
     },
+    gateway: {
+      type: DataTypes.ENUM("b", "s"),
+      allowNull: false,
+    },
   },
   {
     // don't forget to enable timestamps!

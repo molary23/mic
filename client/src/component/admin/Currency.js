@@ -15,7 +15,6 @@ let typingTimer;
 class Currency extends Component {
   state = {
     sender: "admin-currencies",
-    loading: false,
     statusOpt: [
       { value: "", option: "Filter by Status" },
       { value: "1", option: "Active" },
@@ -125,27 +124,27 @@ class Currency extends Component {
       params.limit = this.state.limit;
 
       // Search Now
-      this.props.clearSearchActions("currency");
+      this.props.clearSearchActions(content);
       if (selected === "search") {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(() => {
           this.setState({
             isLoading: true,
           });
-                window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
           this.props.searchContent(content, params);
         }, this.state.doneTypingInterval);
       } else {
         this.setState({
           isLoading: true,
         });
-              window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
         this.props.searchContent(content, params);
       }
     } else {
@@ -168,7 +167,6 @@ class Currency extends Component {
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
-
 
     let load = upLoad,
       loader = isLoading,
@@ -225,13 +223,11 @@ class Currency extends Component {
 
     return (
       <div>
-        {loader && 
-        <ProgressBar />
-        }
-        { load ? (
+        {loader && <ProgressBar />}
+        {load ? (
           <div className="loader">
-          <i className="fas fa-circle-notch fa-2x fa-spin" />
-        </div>
+            <i className="fas fa-circle-notch fa-2x fa-spin" />
+          </div>
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -263,12 +259,11 @@ class Currency extends Component {
                   </button>
                 </div>
 
-                 <div className="col-md-2 mb-3">
+                <div className="col-md-2 mb-3">
                   <button type="button" className="btn btn-outline-primary">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
-
 
                 <div className="col-md-3 mb-2">
                   <div className="transactions-total table-figure">

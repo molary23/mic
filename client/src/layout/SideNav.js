@@ -8,9 +8,9 @@ function SideNav(props) {
   let location = useLocation();
   // check user logged in
   useEffect(() => {
-    /*  if (!props.auth.isAuthenticated) {
+    if (!props.auth.isAuthenticated) {
       navigate(`/?next=${location.pathname}`, { replace: true });
-    }*/
+    }
   });
 
   let display = props.act;
@@ -110,7 +110,7 @@ function SideNav(props) {
               Referrals
             </Link>
 
-            <Link to={`/${viewer}/bonus`}>
+            <Link to={`/${viewer}/bonuses`}>
               <span className="sidebar-icon">
                 <i className="fas fa-wallet" />
               </span>

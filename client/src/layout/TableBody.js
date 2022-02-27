@@ -97,35 +97,39 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
-          <td>{item.createdAt.toISOString()}</td>
-          <td>{item.updatedAt.toISOString()}</td>
-
+          <td>{item.status}</td>
+          <td>{item.username}</td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          <td>
+            <DateFormat date={item.updatedAt} />
+          </td>
           <td>
             <div className="action-buttons">
               <Link
                 type="button"
                 className="btn btn-info btn-sm"
-                data-id={i}
                 title="View Bonus"
-                to={`/admin/bonus/:${i}`}
+                to={`/admin/bonus/:${item.bonusid}`}
               >
                 <i className="far fa-eye" />
               </Link>
               <button
                 type="button"
                 className="btn btn-success btn-sm"
-                data-id={i}
+                data-id={item.bonusid}
                 title="Approve Bonus"
-                onClick={() => onClick(i)}
+                onClick={() => onClick()}
               >
                 <i className="fas fa-check" />
               </button>
               <button
                 type="button"
                 className="btn btn-danger btn-sm"
-                data-id={i}
+                data-id={item.bonusid}
                 title="Disapprove Bonus"
-                onClick={() => onClick(i)}
+                onClick={() => onClick()}
               >
                 <i className="fas fa-ban" />
               </button>
@@ -167,28 +171,26 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>
+          <td className="td-lower">
             <Link
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${i}`}
+              to={`/admin/user/:${item.referredId}`}
             >
               {item.referred}
             </Link>
           </td>
-          <td>{item.status}</td>
-          <td>
+          <td className="td-lower">
             <Link
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${i}`}
+              to={`/admin/user/:${item.referral}`}
             >
-              {item.referred}
+              {item.referral}
             </Link>
           </td>
-          <td>{item.createdAt.toISOString()}</td>
         </tr>
       );
     });
@@ -224,37 +226,46 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
-          <td>
+          <td className="td-lower">
             <Link
+              type=""
               className=""
-              data-id={i}
-              title="View Details"
-              to={`/admin/user/:${i}`}
+              title="View Payment"
+              to={`/admin/user/:${item.UserId}`}
             >
-              {item.reference}
+              {item.username}
             </Link>
           </td>
+
           <td>{item.status}</td>
-          <td>{item.date.toISOString()}</td>
+          <td>{item.gateway}</td>
+          <td className="td-shorter">{item.reference}</td>
           <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          <td>
+            <DateFormat date={item.updatedAt} />
+          </td>
+          <td className="td-lower">
             <div className="action-buttons">
-              <Link
-                type="button"
-                className="btn btn-info btn-sm"
-                data-id={i}
-                title="View Payment"
-                to={`/admin/payment/:${i}`}
-              >
-                <i className="far fa-eye" />
-              </Link>
               <button
                 type="button"
-                className="btn btn-success btn-sm"
-                data-id={i}
+                className="btn btn-success btn-sm mb-1"
+                data-id={item.payid}
                 title="Update Payment"
                 onClick={() => onClick(i)}
               >
                 <i className="fas fa-sync" />
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-danger btn-sm mt-1"
+                data-id={item.payid}
+                title="Cancel Payment"
+                onClick={() => onClick(i)}
+              >
+                <i className="fas fa-ban" />
               </button>
             </div>
           </td>
@@ -326,28 +337,43 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{/*item.firstcurrency[1]}/{item.secondcurrency[1]*/
-          JSON.parse(item.firstcurrency.split(", "))[1] +'/'+ JSON.parse(item.secondcurrency.split(", "))[1]
-          }</td>
           <td>
-            {<>
-              <Flag code={JSON.parse(item.firstcurrency.split(", "))[0].toUpperCase()} size='M'/>
-              <Flag code={JSON.parse(item.secondcurrency.split(", "))[0].toUpperCase()} size='M'/></>
-
+            {
+              /*item.firstcurrency[1]}/{item.secondcurrency[1]*/
+              JSON.parse(item.firstcurrency.split(", "))[1] +
+                "/" +
+                JSON.parse(item.secondcurrency.split(", "))[1]
             }
           </td>
-          <td>{item.status}</td>
-          
+          <td>
+            {
+              <>
+                <Flag
+                  code={JSON.parse(
+                    item.firstcurrency.split(", ")
+                  )[0].toUpperCase()}
+                  size="M"
+                />
+                <Flag
+                  code={JSON.parse(
+                    item.secondcurrency.split(", ")
+                  )[0].toUpperCase()}
+                  size="M"
+                />
+              </>
+            }
+          </td>
+          <td>{item.status === 1 ? "active" : "inactive"}</td>
+
           <td>
             <DateFormat date={item.createdAt} />
           </td>
-          
+
           <td>
             <DateFormat date={item.updatedAt} />
-            
           </td>
-          <td className="td-lower">    
-           <div className="action-buttons">
+          <td className="td-lower">
+            <div className="action-buttons">
               <Link
                 type=""
                 className=""
@@ -357,8 +383,7 @@ function TableBody(props) {
                 {item.User.username}
               </Link>
             </div>
-            
-            </td>
+          </td>
           <td>
             <div className="action-buttons">
               <button

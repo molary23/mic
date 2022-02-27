@@ -1,12 +1,12 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class BonusView extends Model {}
+class PaymentView extends Model {}
 
-BonusView.init(
+PaymentView.init(
   {
     // Model attributes are defined here
-    bonusid: {
+    payid: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,
@@ -15,20 +15,22 @@ BonusView.init(
     amount: {
       type: DataTypes.DOUBLE,
     },
+    reference: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     status: {
       type: DataTypes.TINYINT,
+      defaultValue: 1,
     },
-    user: {
-      type: DataTypes.STRING(50),
+    gateway: {
+      type: DataTypes.STRING(1),
     },
-    createdAt: {
-      type: DataTypes.DATE,
+    userId: {
+      type: DataTypes.INTEGER.UNSIGNED, // Duration in days
     },
-    updatedAt: {
-      type: DataTypes.DATE,
-    },
-    SubscriptionId: {
-      type: DataTypes.INTEGER.UNSIGNED,
+    username: {
+      type: DataTypes.STRING(30), // username of user
     },
   },
   {
@@ -37,9 +39,9 @@ BonusView.init(
 
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "BonusView", // We need to choose the model name
+    modelName: "PaymentView", // We need to choose the model name
   }
 );
 
-BonusView.sync = () => Promise.resolve();
-module.exports = BonusView;
+PaymentView.sync = () => Promise.resolve();
+module.exports = PaymentView;

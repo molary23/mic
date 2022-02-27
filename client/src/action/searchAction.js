@@ -7,7 +7,14 @@ import {
   CLEAR_SEARCH_USERS_ACTION,
   GET_SEARCH_TRANSACTIONS,
   GET_SEARCH_USERS,
-  GET_SEARCH_CURRENCY,CLEAR_SEARCH_CURRENCY_ACTION
+  GET_SEARCH_CURRENCY,
+  CLEAR_SEARCH_CURRENCY_ACTION,
+  GET_SEARCH_PAYMENTS,
+  CLEAR_SEARCH_PAYMENTS_ACTION,
+  GET_SEARCH_REFERRALS,
+  CLEAR_SEARCH_REFERRALS_ACTION,
+  CLEAR_SEARCH_BONUS_ACTION,
+  GET_SEARCH_BONUS,
 } from "./types";
 
 export const searchSub = (searchData) => async (dispatch) => {
@@ -62,6 +69,15 @@ export const searchContent = (content, searchData) => async (dispatch) => {
   if (content === "currency") {
     type = GET_SEARCH_CURRENCY;
     url = `${url}currency`;
+  } else if (content === "payments") {
+    url = `${url}payments`;
+    type = GET_SEARCH_PAYMENTS;
+  } else if (content === "referrals") {
+    url = `${url}referrals`;
+    type = GET_SEARCH_REFERRALS;
+  } else if (content === "bonus") {
+    url = `${url}bonus`;
+    type = GET_SEARCH_BONUS;
   }
   try {
     let response = await axios.post(url, searchData);
@@ -83,8 +99,14 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_SEARCH_TRANSACTIONS_ACTION };
   } else if (actionToClear === "users") {
     return { type: CLEAR_SEARCH_USERS_ACTION };
-  }else if (actionToClear === "currency") {
+  } else if (actionToClear === "currency") {
     return { type: CLEAR_SEARCH_CURRENCY_ACTION };
+  } else if (actionToClear === "payments") {
+    return { type: CLEAR_SEARCH_PAYMENTS_ACTION };
+  } else if (actionToClear === "referrals") {
+    return { type: CLEAR_SEARCH_REFERRALS_ACTION };
+  } else if (actionToClear === "bonus") {
+    return { type: CLEAR_SEARCH_BONUS_ACTION };
   }
 };
 
