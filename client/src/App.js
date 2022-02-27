@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import store from "./store";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "./util/setAuthToken";
-import { setCurrentUser } from "./action/authAction";
+import { getAllCounts, setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
 import { clearCurrentProfile } from "./action/profileAction";
 
@@ -44,6 +44,7 @@ import AdminWithdrawals from "./component/admin/Withdrawals";
 import AdminPayments from "./component/admin/Payments";
 import AdminSubscriptions from "./component/admin/Subscriptions";
 import AdminCurrency from "./component/admin/Currency";
+import AdminSignalProviders from "./component/admin/SignalProviders";
 /*
 import axios from "axios";
 let params = { name: "adeola" };
@@ -158,6 +159,11 @@ function App() {
             exact
             path="/admin/currencies"
             element={<PrivateRoute Component={AdminCurrency} />}
+          />
+          <Route
+            exact
+            path="/admin/signal-providers"
+            element={<PrivateRoute Component={AdminSignalProviders} />}
           />
           <Route
             exact

@@ -39,7 +39,7 @@ export class Transactions extends Component {
     url: new URL(window.location),
     isLoading: false,
     doneTypingInterval: 5000,
-    transcount: JSON.parse(sessionStorage.getItem("tableCounts")).transactions,
+    transcount: JSON.parse(sessionStorage.getItem("counts")).transactions,
     upLoad: true,
   };
 
@@ -54,7 +54,7 @@ export class Transactions extends Component {
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
     });
-    this.props.clearActions("trans");
+
     this.props.getTrans(paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
@@ -62,6 +62,8 @@ export class Transactions extends Component {
 
   componentWillUnmount() {
     window.removeEventListener("scroll", this.loadMore);
+    this.props.clearActions("trans");
+    this.props.clearSearchActions("trans");
   }
 
   loadMore = () => {
@@ -105,7 +107,6 @@ export class Transactions extends Component {
       [e.target.name]: e.target.value,
     });
 
-    this.props.clearSearchActions("trans");
     this.setSearchParams(e.target.name, e.target.value);
   };
 
@@ -139,6 +140,7 @@ export class Transactions extends Component {
       params.limit = this.state.limit;
 
       // Search Now
+      this.props.clearSearchActions("trans");
       if (selected === "search") {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(() => {
@@ -238,14 +240,9 @@ export class Transactions extends Component {
 
     return (
       <div>
-        {loader && (
+        {loader || load ? (
           <div>
-            <ProgressBar />
-          </div>
-        )}
-        {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
+            <ProgressBar loading={{ loader, load }} />
           </div>
         ) : (
           <div className="transactions card holder-card ">

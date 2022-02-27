@@ -12,15 +12,15 @@ Currency.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    currency: {
-      type: DataTypes.STRING(3),
+    firstcurrency: {
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
-    currencycode: {
-      type: DataTypes.STRING(6),
+    secondcurrency: {
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
-    active: {
+    status: {
       type: DataTypes.TINYINT,
       defaultValue: 1,
     },

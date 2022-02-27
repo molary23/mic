@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loginuser } from "../action/authAction";
+import { loginuser, getAllCounts } from "../action/authAction";
 
 import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "../layout/TextPasswordField";
+import ProgressBar from '../layout/ProgressBar';
+import LoadCount from '../layout/LoadCount';
 
 import Box from "../layout/Box";
 
@@ -18,6 +20,8 @@ class Login extends Component {
     error: {},
     navigate: false,
     viewer: "",
+    move: false,
+    level: 0
   };
 
   componentDidMount() {
@@ -44,7 +48,8 @@ class Login extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
 
-    if (nextProps.auth.isAuthenticated && prevState.navigate === false) {
+    if (nextProps.auth.isAuthenticated && prevState.move === false) {
+      update.level = nextProps.auth.user.level
       if (nextProps.auth.user.level === 1) {
         update.viewer = "/user";
       } else if (nextProps.auth.user.level === 2) {
@@ -52,28 +57,20 @@ class Login extends Component {
       } else if (nextProps.auth.user.level === 3) {
         update.viewer = "/admin";
       }
-      update.navigate = true;
+      update.move = true;
     }
 
     if (nextProps.errors && Object.keys(prevState.error).length === 0) {
       update.error = nextProps.errors;
+      
+    }
+
+    if (nextProps.auth.isAuthenticated && Object.keys(nextProps.auth.allCounts).length > 0) {
+      update.loading = false;
+      update.navigate = true;
     }
 
     return update;
-
-    /*
-    if (nextProps.auth.isAuthenticated && prevState.navigate) {
-      return { navigate: true };
-    } else {
-      return { navigate: null };
-    }
-   if (nextProps.errors && prevState.error) {
-     return { error: errors };
-   } else {
-     return {
-       error: null,
-     };
-   }*/
   }
 
   changeHandler = (e) => {
@@ -113,34 +110,20 @@ class Login extends Component {
       };
 
       this.props.loginuser(user);
-
-      /* try {
-        const response = await axios.post("/api/public/login/", user, {
-          headers: this.state.headers,
-        });
-        const res = await response.data;
-        console.log(res);
-      } catch (error) {
-        let err = error.response.data;
-        this.setState({
-          error: err,
-        });
-        console.log(err);
-      }*/
     }
   };
 
   render() {
-    const { username, error, pass, password, loading, navigate, viewer } =
+    const { username, error, pass, password, loading, navigate, viewer, move, level } =
       this.state;
     const { errors } = this.props;
 
     return (
       <div className="">
-        {/*<div className="form-box mb-3">
-          <div className="page-title mb-4 mt-2">
-            <h1>Login</h1>
-    </div>*/}
+        {move && <>
+        <ProgressBar />
+        <LoadCount sender={'login'} level={level}/></>
+        }
         <Box sender={"login"}>
           <form className="login-form" onSubmit={this.submitHandler}>
             <TextInputField
@@ -195,6 +178,7 @@ class Login extends Component {
 
 Login.propTypes = {
   loginuser: PropTypes.func.isRequired,
+  getAllCounts: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
@@ -203,4 +187,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
 });
-export default connect(mapStateToProps, { loginuser })(Login);
+export default connect(mapStateToProps, { loginuser, getAllCounts })(Login);

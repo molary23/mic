@@ -1,4 +1,9 @@
-import { GET_ERRORS, SET_CURRENT_USER, CLEAR_ERRORS } from "./types";
+import {
+  GET_ERRORS,
+  SET_CURRENT_USER,
+  CLEAR_ERRORS,
+  SET_ALL_COUNTS,
+} from "./types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "../util/setAuthToken";
@@ -13,12 +18,8 @@ export const loginuser = (userData) => async (dispatch) => {
     //Decode Token
     const decoded = jwtDecode(token);
 
-    if (decoded.level === 3) {
-      getAllCounts();
-    }
     dispatch(clearErrors());
     const result = await dispatch(setCurrentUser(decoded));
-
     return result;
   } catch (error) {
     dispatch({ type: GET_ERRORS, payload: error.response.data });
@@ -36,11 +37,19 @@ export const clearErrors = () => {
 };
 
 // Get All Counts
-export const getAllCounts = async () => {
+export const getAllCounts = (level) => async (dispatch) => {
+let url = '/api/count/'
+if (level === 3) {
+  url = `${url}admin/all/`
+}
   try {
-    let response = await axios.get("/api/count/admin/all/", {});
-    const allCounts = response.data;
-    sessionStorage.setItem("tableCounts", JSON.stringify(allCounts));
+    const response = await axios.get(url, {});
+    localStorage.setItem("counts", JSON.stringify(response.data));
+    const result = await dispatch({
+      type: SET_ALL_COUNTS,
+      payload: await response.data,
+    });
+    return result;
   } catch (error) {
     console.log(error.response.data);
   }
@@ -49,6 +58,7 @@ export const getAllCounts = async () => {
 export const logoutUser = () => (dispatch) => {
   //Remove Token from Storage
   localStorage.removeItem("jwtToken");
+  localStorage.removeItem("counts");
   //Remove Auth Header  for future requests
   setAuthToken(false);
   // Set current user to {}  which will set isAuthenticated to false

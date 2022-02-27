@@ -230,14 +230,9 @@ export class Subscriptions extends Component {
     }
     return (
       <div>
-        {loader && (
+        {loader || load ? (
           <div>
-            <ProgressBar />
-          </div>
-        )}
-        {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
+            <ProgressBar loading={{ loader, load }} />
           </div>
         ) : (
           <div className="transactions card holder-card ">

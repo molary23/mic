@@ -5,6 +5,7 @@ import {
   GET_SEARCH_TRANSACTIONS,
   CLEAR_SEARCH_TRANSACTIONS_ACTION,
   GET_SEARCH_USERS,
+  GET_SEARCH_CURRENCY,CLEAR_SEARCH_CURRENCY_ACTION
 } from "../action/types";
 
 const initialState = {
@@ -13,7 +14,9 @@ const initialState = {
   loading: false,
   transCount: 0,
   users: [],
-  usersCount: [],
+  usersCount: 0,
+  curCount: 0,
+  currency: [],
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -46,6 +49,15 @@ export default function searchReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case GET_SEARCH_CURRENCY:
+      let curCount = action.payload.shift();
+      return {
+        ...state,
+        currency: [...state.currency, ...action.payload],
+        curCount,
+        loading: false,
+        searching: true,
+      };
     case CLEAR_SEARCH_SUBSCRIPTIONS_ACTION:
       return {
         ...state,
@@ -56,6 +68,12 @@ export default function searchReducer(state = initialState, action) {
       return {
         ...state,
         trans: [],
+        searching: false,
+      }; 
+      case CLEAR_SEARCH_CURRENCY_ACTION:
+      return {
+        ...state,
+        currency: [],
         searching: false,
       };
     default:

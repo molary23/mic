@@ -3,6 +3,7 @@ const express = require("express"),
   passport = require("passport"),
   { Op } = require("sequelize"),
   Payment = require("../../db/models/Payment"),
+  Currency = require("../../db/models/Currency"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
   TransactionView = require("../../db/models/TransactionView"),
   ProviderView = require("../../db/models/ProviderView"),
@@ -87,6 +88,7 @@ router.get(
       count.bonus = await BonusView.count();
       count.providers = await ProviderView.count();
       count.referrals = await ReferralView.count();
+      count.currency = await Currency.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);

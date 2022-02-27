@@ -6,60 +6,6 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 
 const pay = [
-  {
-    amount: 200,
-    reference: "bonus",
-    status: "credit",
-    date: new Date(),
-  },
-  {
-    amount: 400,
-    reference: "bonus",
-    status: "credit",
-    date: new Date(),
-  },
-  {
-    amount: 250,
-    reference: "withdrawal",
-    status: "debit",
-    date: new Date(),
-  },
-  {
-    amount: 600,
-    reference: "subscription",
-    status: "debit",
-    date: new Date(),
-  },
-  {
-    amount: 700,
-    reference: "bonus",
-    status: "credit",
-    date: new Date(),
-  },
-  {
-    amount: 100,
-    reference: "bonus",
-    status: "credit",
-    date: new Date(),
-  },
-  {
-    amount: 500,
-    reference: "bonus",
-    status: "credit",
-    date: new Date(),
-  },
-  {
-    amount: 400,
-    reference: "subscription",
-    status: "debit",
-    date: new Date(),
-  },
-  {
-    amount: 650,
-    reference: "bonus",
-    status: "credit",
-    date: new Date(),
-  },
 ];
 export class Payments extends Component {
   state = {

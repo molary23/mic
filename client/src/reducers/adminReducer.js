@@ -7,6 +7,8 @@ import {
   CLEAR_TRANSACTIONS_ACTION,
   GET_ALL_USERS,
   CLEAR_USERS_ACTION,
+  GET_ALL_CURRENCY,
+  CLEAR_CURRENCY_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -19,6 +21,8 @@ const initialState = {
   subCount: 0,
   users: [],
   usersCount: 0,
+  curCount: 0,
+  currency: [],
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -48,6 +52,15 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case GET_ALL_CURRENCY:
+      let curCount = action.payload.shift();
+      return {
+        ...state,
+        currency: [...state.currency, ...action.payload],
+        curCount,
+        loading: false,
+        fetching: true,
+      };
     case GET_SUBSCRIPTION_COUNT: {
       return { ...state, subcount: action.payload };
     }
@@ -62,6 +75,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_USERS_ACTION: {
       return { ...state, users: [], fetching: false };
+    }
+    case CLEAR_CURRENCY_ACTION: {
+      return { ...state, currency: [], fetching: false };
     }
     default:
       return state;

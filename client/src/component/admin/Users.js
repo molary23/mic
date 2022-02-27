@@ -31,7 +31,7 @@ class Users extends Component {
     url: new URL(window.location),
     isLoading: false,
     doneTypingInterval: 5000,
-    usercount: JSON.parse(sessionStorage.getItem("tableCounts")).users,
+    usercount: 9,
     upLoad: true,
   };
 
@@ -230,10 +230,13 @@ class Users extends Component {
     }
     return (
       <div>
-        {loader || load ? (
-          <div>
-            <ProgressBar loading={{ loader, load }} />
-          </div>
+        {loader && 
+        <ProgressBar />
+        }
+        { load ? (
+          <div className="loader">
+          <i className="fas fa-circle-notch fa-2x fa-spin" />
+        </div>
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">

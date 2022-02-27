@@ -8,6 +8,8 @@ import {
   GET_ALL_USERS,
   CLEAR_TRANSACTIONS_ACTION,
   CLEAR_USERS_ACTION,
+  GET_ALL_CURRENCY,
+  CLEAR_CURRENCY_ACTION,
 } from "./types";
 
 export const getSub = (paginate) => async (dispatch) => {
@@ -52,6 +54,27 @@ export const getUser = (paginate) => async (dispatch) => {
   }
 };
 
+export const getContent = (target, paginate) => async (dispatch) => {
+  dispatch(setLoading());
+  let url = "/api/adminview/",
+    type;
+  if (target === "currency") {
+    url = `${url}currency`;
+    type = GET_ALL_CURRENCY;
+  }
+  try {
+    let response = await axios.post(url, paginate);
+    const result = await dispatch({
+      type,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type, payload: [] });
+  }
+};
+
 export const getTableCount = (tablename) => async (dispatch) => {
   let action_type, tabCount;
   if (tablename === "subscriptions") {
@@ -74,15 +97,16 @@ export const getTableCount = (tablename) => async (dispatch) => {
   }
 };
 
+
 export const clearActions = (actionToClear) => {
   if (actionToClear === "sub") {
     return { type: CLEAR_SUBSCRIPTIONS_ACTION };
-  }
-  if (actionToClear === "trans") {
+  } else if (actionToClear === "trans") {
     return { type: CLEAR_TRANSACTIONS_ACTION };
-  }
-  if (actionToClear === "users") {
+  } else if (actionToClear === "users") {
     return { type: CLEAR_USERS_ACTION };
+  } else if (actionToClear === "currency") {
+    return { type: CLEAR_CURRENCY_ACTION };
   }
 };
 

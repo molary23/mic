@@ -80,7 +80,7 @@ function SideNav(props) {
 
             {
               //props.auth.user.level > 2 && (
-              <Link to={`/${viewer}/signalproviders`}>
+              <Link to={`/${viewer}/signal-providers`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-user-tag" />
                 </span>

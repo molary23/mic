@@ -12,7 +12,10 @@ const express = require("express"),
   Subscription = require("../../db/models/Subscription"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
   Bonus = require("../../db/models/Bonus"),
+  Currency = require("../../db/models/Currency"),
   Referral = require("../../db/models/Referral"),
+  Profile = require("../../db/models/Profile"),
+  User = require("../../db/models/User"),
   ReferralView = require("../../db/models/ReferralView"),
   Transaction = require("../../db/models/Transaction"),
   TransactionView = require("../../db/models/TransactionView"),
@@ -63,7 +66,7 @@ router.post(
     }
 
     let limit = null,
-      offset = null;
+      offset = 0;
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
@@ -504,8 +507,19 @@ router.post(
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
           newSearchObj = {
-            user: { [Op.substring]: searchArray[i] },
+            [Op.or]: [
+              {
+            username: { [Op.substring]: searchArray[i] }
+            },
+            {
+              fullname: { [Op.substring]: searchArray[i] }
+            },
+           { 
+             email: { [Op.substring]: searchArray[i] }
+             }
+             ],
           };
+
           newSearchArray.push(newSearchObj);
         }
 
@@ -759,6 +773,113 @@ router.get(
 );
 
 /*
+@route POST api/adminview/currency
+desc Admin View Currency
+@access private
+*/
+
+router.post(
+  "/currency",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = parseInt(req.body.limit);
+    if (req.body.offset) offset = parseInt(req.body.offset);
+
+    let where = {};
+
+    if (req.body.search !== undefined) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          
+               newSearchObj = {
+            [Op.or]: [
+              {
+            firstcurrency: { [Op.substring]: searchArray[i] }
+            },
+            {
+              secondcurrency: { [Op.substring]: searchArray[i] }
+            },
+             ],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (req.body.status !== undefined) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { status: req.body.status },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: newSearchArray,
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (req.body.status !== undefined) {
+          where = {
+            [Op.and]: [
+              { [Op.or]: [
+                {firstcurrency: { [Op.substring]: search }},
+                {secondcurrency: { [Op.substring]: search }},
+              ] 
+              },
+              { status: req.body.status },
+            ],
+          };
+        } else {
+          where = {
+            [Op.or]: [
+                {firstcurrency: { [Op.substring]: search }},
+                {secondcurrency: { [Op.substring]: search }},
+              ] 
+          };
+        }
+      }
+    } else {
+      if (req.body.status !== undefined) {
+        where.status = req.body.status;
+      }
+    }
+
+    
+
+
+    let result = {};
+   Currency.findAndCountAll({
+      order: [["id", "DESC"]],
+      offset,
+      limit,
+      where,
+      include: [{model: User, attributes: [ 'username'] }],
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
 @route GET api/admin/transactions
 desc Admin View transactions
 @access private
@@ -774,13 +895,10 @@ router.post(
     }
 
     let limit = null,
-      offset = null;
+      offset = 0;
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
-
-    limit = req.body.limit;
-    offset = req.body.offset;
 
     let where = {};
     if (req.body.search !== undefined) {

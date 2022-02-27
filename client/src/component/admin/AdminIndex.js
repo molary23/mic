@@ -4,15 +4,15 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 import { getUserProfile } from "../../action/profileAction";
+import { getAllCounts } from "../../action/authAction";
 import ProgressBar from "../../layout/ProgressBar";
 
 export class Index extends Component {
   state = {
-    allCounts: JSON.parse(sessionStorage.getItem("tableCounts")),
+    allCounts: JSON.parse(localStorage.getItem("counts")),
   };
   componentDidMount() {
     this.props.getUserProfile();
-    console.log(this.state.allCounts);
   }
 
   render() {
@@ -20,26 +20,23 @@ export class Index extends Component {
     const { profile, loading } = this.props;
 
     let load = true,
+      loader = true,
       user = {},
       fullname = "";
-
     if (profile.profile === null && loading) {
       load = true;
+      loader = true;
     } else if (profile.profile !== null && !loading) {
       user = profile.profile;
-
-      fullname = user.fullname;
-
+      //fullname = user.fullname;
+      loader = false;
       load = false;
     }
     return (
-      <div className="dashboard-item">
-        {load ? (
-          <div className="loader">
-            <ProgressBar />
-            <div>
-              <i className="fas fa-circle-notch fa-2x fa-spin" />
-            </div>
+      <div>
+        {loader || load ? (
+          <div>
+            <ProgressBar loading={{ loader, load }} />
           </div>
         ) : (
           <div className="container">
@@ -150,8 +147,8 @@ export class Index extends Component {
                         </div>
                       </div>
                       <div className="col-8">
-                        <h2>$20</h2>
-                        <p>Currencies</p>
+                        <h2>{allCounts.currency}</h2>
+                        <p>Currencies Pair</p>
                       </div>
                     </div>
                   </div>
@@ -167,11 +164,15 @@ export class Index extends Component {
 Index.propTypes = {
   getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  admin: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  admin: state.admin,
   profile: state.profile,
 });
-export default connect(mapStateToProps, { getUserProfile })(Index);
+export default connect(mapStateToProps, { getUserProfile, getAllCounts })(
+  Index
+);

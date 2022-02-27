@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
+import Flag from "react-flagpack";
+
 import DateFormat from "./DateFormat";
 
 function TableBody(props) {
@@ -324,16 +326,45 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
-          <td>{item.method}</td>
-          <td>{item.type}</td>
-          <td>{item.date.toISOString()}</td>
+          <td>{/*item.firstcurrency[1]}/{item.secondcurrency[1]*/
+          JSON.parse(item.firstcurrency.split(", "))[1] +'/'+ JSON.parse(item.secondcurrency.split(", "))[1]
+          }</td>
+          <td>
+            {<>
+              <Flag code={JSON.parse(item.firstcurrency.split(", "))[0].toUpperCase()} size='M'/>
+              <Flag code={JSON.parse(item.secondcurrency.split(", "))[0].toUpperCase()} size='M'/></>
+
+            }
+          </td>
+          <td>{item.status}</td>
+          
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          
+          <td>
+            <DateFormat date={item.updatedAt} />
+            
+          </td>
+          <td className="td-lower">    
+           <div className="action-buttons">
+              <Link
+                type=""
+                className=""
+                title="View Admin"
+                to={`/admin/user/:${item.UserId}`}
+              >
+                {item.User.username}
+              </Link>
+            </div>
+            
+            </td>
           <td>
             <div className="action-buttons">
               <button
                 type="button"
                 className="btn btn-danger btn-sm"
-                data-id={i}
+                data-id={item.id}
                 title="Delete Currency "
                 onClick={() => onClick(i)}
               >
