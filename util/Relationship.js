@@ -1,5 +1,6 @@
 // Bring in Models
-const Payment = require("../db/models/Payment"),
+const Account = require("../db/models/Account"),
+  Payment = require("../db/models/Payment"),
   Premium = require("../db/models/Premium"),
   User = require("../db/models/User"),
   Profile = require("../db/models/Profile"),
@@ -10,7 +11,8 @@ const Payment = require("../db/models/Payment"),
   Signal = require("../db/models/Signal"),
   Currency = require("../db/models/Currency"),
   Settings = require("../db/models/Settings"),
-  Transaction = require("../db/models/Transaction");
+  Transaction = require("../db/models/Transaction"),
+  Withdrawal = require("../db/models/Withdrawal");
 
 // Define Relationsship between tables
 User.hasOne(Profile, {
@@ -120,6 +122,24 @@ User.hasMany(Transaction, {
   },
 });
 Transaction.belongsTo(User);
+
+User.hasMany(Account, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Account.belongsTo(User);
+
+User.hasMany(Withdrawal, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Withdrawal.belongsTo(User);
 
 User.hasOne(Premium, {
   onDelete: "RESTRICT",
