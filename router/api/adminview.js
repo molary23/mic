@@ -404,7 +404,7 @@ router.post(
           where = {
             [Op.and]: [
               { username: { [Op.substring]: search } },
-              { userstatus },
+              { status: req.body.status },
             ],
           };
         } else {
@@ -646,9 +646,6 @@ router.post(
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
 
-    limit = req.body.limit;
-    offset = req.body.offset;
-
     let where = {};
     if (req.body.search) {
       const searchTerms = req.body.search;
@@ -826,19 +823,25 @@ router.post(
 );
 
 /*
-@route GET api/adminview/admins/:table
+@route GET api/adminview/admins/admin
 desc Admin View Admins
 @access private
 */
 
-router.get(
-  "/admins/:table",
+router.post(
+  "/admins",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { error, isLevel } = checkSuperAdmin(req.user.level);
     if (!isLevel) {
       return res.status(400).json(error);
     }
+    let limit = null,
+      offset = 0,
+      table = "providers";
+    if (req.body.table) table = req.body.table;
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
 
     let where = {};
     if (req.body.search) {
@@ -850,18 +853,22 @@ router.get(
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
           newSearchObj = {
-            user: { [Op.substring]: searchArray[i] },
+            [Op.or]: [
+              { username: { [Op.substring]: searchArray[i] } },
+              { email: { [Op.substring]: searchArray[i] } },
+              { fullname: { [Op.substring]: searchArray[i] } },
+            ],
           };
           newSearchArray.push(newSearchObj);
         }
 
-        if (req.body.userstatus) {
+        if (req.body.status) {
           where = {
             [Op.and]: [
               {
                 [Op.and]: newSearchArray,
               },
-              { userstatus: req.body.userstatus },
+              { userstatus: req.body.status },
             ],
           };
         } else {
@@ -871,27 +878,39 @@ router.get(
         }
       } else {
         let search = searchArray[0];
-        if (req.body.userstatus) {
+        if (req.body.status) {
           where = {
             [Op.and]: [
               { user: { [Op.substring]: search } },
-              { userstatus: req.body.userstatus },
+              {
+                [Op.or]: [
+                  { username: { [Op.substring]: search } },
+                  { fullname: { [Op.substring]: search } },
+                  { email: { [Op.substring]: search } },
+                ],
+              },
             ],
           };
         } else {
           where = {
-            user: { [Op.substring]: search },
+            [Op.or]: [
+              { username: { [Op.substring]: search } },
+              { fullname: { [Op.substring]: search } },
+              { email: { [Op.substring]: search } },
+            ],
           };
         }
       }
     } else {
-      if (req.body.userstatus) {
-        where.userstatus = req.body.userstatus;
+      if (req.body.status) {
+        where.userstatus = req.body.status;
       }
     }
 
     const query = {
       order: [["userid", "DESC"]],
+      offset,
+      limit,
       attributes: [
         "userid",
         "username",
@@ -901,24 +920,25 @@ router.get(
           Sequelize.literal(
             `CASE WHEN userstatus = 1 THEN 'Deactivated' WHEN userstatus = 2 THEN 'Active' END `
           ),
-          "User Status",
+          "status",
         ],
       ],
       where,
       raw: true,
     };
-    const table = req.params.table;
-    let view;
+    let result = {},
+      view;
     if (table === "providers") {
       view = ProviderView;
     } else if (table === "superadmin") {
       view = SuperView;
     }
-
     view
-      .findAll(query)
-      .then((user) => {
-        res.json(user);
+      .findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }

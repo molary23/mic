@@ -5,13 +5,14 @@ import PropTypes from "prop-types";
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
+import { getMore, setSearchParams } from "../../util/LoadFunction";
+
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 
-let typingTimer;
 class Currency extends Component {
   state = {
     sender: "admin-currencies",
@@ -56,6 +57,22 @@ class Currency extends Component {
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
+  };
+
+  /*  loadMore = () => {
+    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
     let searchParams = window.location.search;
 
     let winScroll = window.scrollY;
@@ -89,17 +106,27 @@ class Currency extends Component {
         });
       }
     }
-  };
+  };*/
 
   changeHandler = (e) => {
+    const { url, content, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
     });
-    this.setSearchParams(e.target.name, e.target.value);
+    setSearchParams({
+      selected: e.target.name,
+      valueOfSelected: e.target.value,
+      url,
+      content,
+      limit,
+      offset,
+      doneTypingInterval: this.state.doneTypingInterval,
+      self: this,
+    });
   };
 
-  setSearchParams = (selected, valueOfSelected) => {
+  /* setSearchParams = (selected, valueOfSelected) => {
     const { url, content } = this.state;
     this.setState({
       offset: 0,
@@ -158,7 +185,7 @@ class Currency extends Component {
       }));
       this.props.getContent(content, paginate);
     }
-  };
+  };*/
 
   render() {
     const { sender, status, statusOpt, isLoading, upLoad, search } = this.state;
@@ -254,13 +281,19 @@ class Currency extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                  >
                     Add New <i className="fas fa-folder-plus" />
                   </button>
                 </div>
 
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                  >
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>

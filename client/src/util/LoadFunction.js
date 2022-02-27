@@ -7,37 +7,62 @@ export function mutiply(x, y) {
 }
 
 */
-export const loadMore = ({
+export const getMore = ({
   limit,
   numOfPages,
   iScrollPos,
   currentPage,
   content,
+  winScroll,
   searchParams,
+  self,
 }) => {
-  console.log(limit, currentPage, iScrollPos);
-  let winScroll = window.scrollY;
-
   if (winScroll > iScrollPos) {
     if (currentPage <= numOfPages) {
+      self.setState((prevState) => ({
+        offset: prevState.offset + limit,
+        upLoad: (prevState.upLoad = false),
+      }));
+
+      if (searchParams !== "") {
+        let queryTerms = searchParams.split("?")[1];
+        queryTerms = queryTerms.split("&");
+        let terms = queryTerms.map((term) => term.split("="));
+        let params = Object.fromEntries(terms);
+        params.offset = self.state.offset;
+        params.limit = self.state.limit;
+        // Search Now
+        self.props.searchContent(content, params);
+      } else {
+        const paginate = {
+          offset: self.state.offset,
+          limit: self.state.limit,
+        };
+        self.props.getContent(content, paginate);
+      }
+
+      self.setState({
+        currentPage: self.state.currentPage + 1,
+      });
     }
   }
 };
-
+let typingTimer;
 export const setSearchParams = ({
   selected,
   valueOfSelected,
-  typingTimer,
   url,
   content,
+  limit,
+  doneTypingInterval,
+  self,
 }) => {
-  console.log(content);
-  /*
-  this.setState({
+  self.setState({
     offset: 0,
     limit: 4,
     currentPage: 2,
   });
+
   if (valueOfSelected !== "") {
     url.searchParams.set(selected, valueOfSelected);
     window.history.pushState({}, "", url);
@@ -53,41 +78,41 @@ export const setSearchParams = ({
     let terms = queryTerms.map((term) => term.split("="));
     let params = Object.fromEntries(terms);
     params.offset = 0;
-    params.limit = this.state.limit;
+    params.limit = limit;
 
     // Search Now
-    this.props.clearSearchActions(content);
     if (selected === "search") {
       clearTimeout(typingTimer);
       typingTimer = setTimeout(() => {
-        this.setState({
+        self.setState({
           isLoading: true,
         });
         window.scrollTo({
           top: 0,
           behavior: "smooth",
         });
-        this.props.searchContent(content, params);
-      }, this.state.doneTypingInterval);
+        self.props.clearSearchActions(content);
+        self.props.searchContent(content, params);
+      }, doneTypingInterval);
     } else {
-      this.setState({
+      self.setState({
         isLoading: true,
       });
       window.scrollTo({
         top: 0,
         behavior: "smooth",
       });
-      this.props.searchContent(content, params);
+      self.props.searchContent(content, params);
     }
   } else {
     const paginate = {
       offset: 0,
-      limit: this.state.limit,
+      limit: self.state.limit,
     };
-    this.props.clearActions(content);
-    this.setState((prevState) => ({
+    self.props.clearActions(content);
+    self.setState((prevState) => ({
       upLoad: (prevState.upLoad = false),
     }));
-    this.props.getContent(content, paginate);
-  }*/
+    self.props.getContent(content, paginate);
+  }
 };

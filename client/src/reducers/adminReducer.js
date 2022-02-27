@@ -14,6 +14,10 @@ import {
   CLEAR_REFERRALS_ACTION,
   CLEAR_BONUS_ACTION,
   GET_ALL_BONUS,
+  GET_ALL_ADMINS,
+  CLEAR_ADMINS_ACTION,
+  GET_ALL_PROVIDERS,
+  CLEAR_PROVIDERS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -34,6 +38,10 @@ const initialState = {
   refCount: 0,
   bonus: [],
   bonusCount: 0,
+  admins: [],
+  adCount: 0,
+  providers: [],
+  prCount: 0,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -99,6 +107,24 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case GET_ALL_ADMINS:
+      let adCount = action.payload.shift();
+      return {
+        ...state,
+        admins: [...state.admins, ...action.payload],
+        adCount,
+        loading: false,
+        fetching: true,
+      };
+    case GET_ALL_PROVIDERS:
+      let prCount = action.payload.shift();
+      return {
+        ...state,
+        providers: [...state.providers, ...action.payload],
+        prCount,
+        loading: false,
+        fetching: true,
+      };
     case GET_SUBSCRIPTION_COUNT: {
       return { ...state, subcount: action.payload };
     }
@@ -122,6 +148,12 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_BONUS_ACTION: {
       return { ...state, bonus: [], fetching: false };
+    }
+    case CLEAR_ADMINS_ACTION: {
+      return { ...state, admin: [], fetching: false };
+    }
+    case CLEAR_PROVIDERS_ACTION: {
+      return { ...state, providers: [], fetching: false };
     }
     default:
       return state;

@@ -15,6 +15,10 @@ import {
   CLEAR_SEARCH_REFERRALS_ACTION,
   CLEAR_SEARCH_BONUS_ACTION,
   GET_SEARCH_BONUS,
+  CLEAR_SEARCH_ADMINS_ACTION,
+  GET_SEARCH_ADMINS,
+  GET_SEARCH_PROVIDERS,
+  CLEAR_SEARCH_PROVIDERS_ACTION,
 } from "./types";
 
 export const searchSub = (searchData) => async (dispatch) => {
@@ -78,6 +82,14 @@ export const searchContent = (content, searchData) => async (dispatch) => {
   } else if (content === "bonus") {
     url = `${url}bonus`;
     type = GET_SEARCH_BONUS;
+  } else if (content === "admins") {
+    url = `${url}admins`;
+    type = GET_SEARCH_ADMINS;
+    searchData.table = "superadmin";
+  } else if (content === "providers") {
+    url = `${url}admins`;
+    type = GET_SEARCH_PROVIDERS;
+    searchData.table = "providers";
   }
   try {
     let response = await axios.post(url, searchData);
@@ -107,9 +119,12 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_SEARCH_REFERRALS_ACTION };
   } else if (actionToClear === "bonus") {
     return { type: CLEAR_SEARCH_BONUS_ACTION };
+  } else if (actionToClear === "admins") {
+    return { type: CLEAR_SEARCH_ADMINS_ACTION };
+  } else if (actionToClear === "providers") {
+    return { type: CLEAR_SEARCH_PROVIDERS_ACTION };
   }
 };
-
 export const setLoading = () => {
   return { type: ACTION_LOADING };
 };

@@ -332,6 +332,34 @@ function TableBody(props) {
     });
   }
 
+  if (sender === "admin-admins") {
+    tabeldata = tablebody.map((item, i) => {
+      return (
+        <tr key={i}>
+          <td>{i + 1}</td>
+          <td>{item.fullname}</td>
+          <td className="td-lower">{item.email}</td>
+          <td className="td-lower">{item.username}</td>
+          <td>{item.phone}</td>
+          <td>{item.userstatus}</td>
+          <td>
+            <div className="action-buttons">
+              <Link
+                type="button"
+                className="btn btn-info btn-sm"
+                data-id={i}
+                title="View User"
+                to={`/admin/user/:${item.userid}`}
+              >
+                <i className="far fa-eye" />
+              </Link>
+            </div>
+          </td>
+        </tr>
+      );
+    });
+  }
+
   if (sender === "admin-currencies") {
     tabeldata = tablebody.map((item, i) => {
       return (

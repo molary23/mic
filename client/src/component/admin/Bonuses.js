@@ -11,32 +11,38 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 
-import { loadMore, setSearchParams } from "../../util/LoadFunction";
+import { getMore, setSearchParams } from "../../util/LoadFunction";
 
 let typingTimer;
 export class Bonuses extends Component {
-  state = {
-    sender: "admin-bonus",
-    statusOpt: [
-      { value: "", option: "Filter by Status" },
-      { value: "1", option: "Pending" },
-      { value: "2", option: "Approved" },
-      { value: "0", option: "Disapprovd" },
-    ],
-    search: "",
-    status: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
-    url: new URL(window.location),
-    isLoading: false,
-    doneTypingInterval: 5000,
-    bonuscount: JSON.parse(localStorage.getItem("counts")).bonus,
-    upLoad: true,
-    content: "bonus",
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      sender: "admin-bonus",
+      statusOpt: [
+        { value: "", option: "Filter by Status" },
+        { value: "1", option: "Pending" },
+        { value: "2", option: "Approved" },
+        { value: "0", option: "Disapprovd" },
+      ],
+      search: "",
+      status: "",
+      limit: 4,
+      offset: 0,
+      numOfPages: 0,
+      iScrollPos: 10,
+      currentPage: 2,
+      url: new URL(window.location),
+      isLoading: false,
+      doneTypingInterval: 5000,
+      bonuscount: JSON.parse(localStorage.getItem("counts")).bonus,
+      upLoad: true,
+      content: "bonus",
+    };
+
+    //this.setSearchParams = setSearchParams.bind(this);
+  }
 
   componentDidMount() {
     const { limit, offset, bonuscount, content } = this.state;
@@ -60,10 +66,27 @@ export class Bonuses extends Component {
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
+  };
+  /*
+  loadMore = () => {
+    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
     let searchParams = window.location.search;
 
     let winScroll = window.scrollY;
-
+    console.log(winScroll);
+    
     if (winScroll > iScrollPos) {
       if (currentPage <= numOfPages) {
         this.setState((prevState) => ({
@@ -93,21 +116,25 @@ export class Bonuses extends Component {
         });
       }
     }
-  };
+  };*/
 
   changeHandler = (e) => {
-    const { url, content } = this.state;
+    const { url, content, currentPage, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
     });
-    setSearchParams(
-      e.target.name,
-      e.target.value,
+    setSearchParams({
+      selected: [e.target.name],
+      valueOfSelected: [e.target.value],
       typingTimer,
       url,
-      this.state.content
-    );
+      content,
+      currentPage,
+      limit,
+      offset,
+      self: this,
+    });
   };
 
   /*  setSearchParams = (selected, valueOfSelected) => {
@@ -296,7 +323,10 @@ export class Bonuses extends Component {
                 "action",
               ]}
             >
-              <TableBody sender={sender} tablebody={bonus} />
+              <TableBody
+                sender={sender}
+                tablebody={!showSearch ? bonus : searchbonus}
+              />
             </TableHead>
           </div>
         )}

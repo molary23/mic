@@ -89,6 +89,8 @@ router.get(
       count.providers = await ProviderView.count();
       count.referrals = await ReferralView.count();
       count.currency = await Currency.count();
+      count.admins = await SuperView.count();
+      count.providers = await ProviderView.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);

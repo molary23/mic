@@ -16,6 +16,10 @@ import {
   GET_ALL_REFERRALS,
   GET_ALL_BONUS,
   CLEAR_BONUS_ACTION,
+  GET_ALL_ADMINS,
+  CLEAR_ADMINS_ACTION,
+  GET_ALL_PROVIDERS,
+  CLEAR_PROVIDERS_ACTION,
 } from "./types";
 
 export const getSub = (paginate) => async (dispatch) => {
@@ -76,6 +80,14 @@ export const getContent = (content, paginate) => async (dispatch) => {
   } else if (content === "bonus") {
     url = `${url}bonus`;
     type = GET_ALL_BONUS;
+  } else if (content === "admins") {
+    url = `${url}admins`;
+    type = GET_ALL_ADMINS;
+    paginate.table = "superadmin";
+  } else if (content === "providers") {
+    url = `${url}admins`;
+    type = GET_ALL_PROVIDERS;
+    paginate.table = "providers";
   }
   try {
     let response = await axios.post(url, paginate);
@@ -121,12 +133,16 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USERS_ACTION };
   } else if (actionToClear === "currency") {
     return { type: CLEAR_CURRENCY_ACTION };
-  } else if (actionToClear === "payment") {
+  } else if (actionToClear === "payments") {
     return { type: CLEAR_PAYMENTS_ACTION };
   } else if (actionToClear === "referrals") {
     return { type: CLEAR_REFERRALS_ACTION };
   } else if (actionToClear === "bonus") {
     return { type: CLEAR_BONUS_ACTION };
+  } else if (actionToClear === "admins") {
+    return { type: CLEAR_ADMINS_ACTION };
+  } else if (actionToClear === "providers") {
+    return { type: CLEAR_PROVIDERS_ACTION };
   }
 };
 

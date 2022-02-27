@@ -31,7 +31,7 @@ class Users extends Component {
     url: new URL(window.location),
     isLoading: false,
     doneTypingInterval: 5000,
-    usercount: 9,
+    usercount: JSON.parse(localStorage.getItem("counts")).users,
     upLoad: true,
   };
 
@@ -163,7 +163,6 @@ class Users extends Component {
     const {
       sender,
       premiumstatus,
-
       premiumstatusOpt,
       usercount,
       isLoading,
@@ -184,14 +183,14 @@ class Users extends Component {
       emptyRecord = false,
       noRecord = false,
       totalText = "",
-      totalCount = 0;
+      totalCount = usercount;
 
     console.log(admin.users);
     if (fetching) {
       showSearch = false;
       loader = true;
       totalCount = admin.usersCount;
-      totalText = "Total Students";
+      totalText = "Total User";
       if (admin.users === [] && loading) {
         loader = true;
         load = upLoad;
@@ -230,13 +229,11 @@ class Users extends Component {
     }
     return (
       <div>
-        {loader && 
-        <ProgressBar />
-        }
-        { load ? (
+        {loader && <ProgressBar />}
+        {load ? (
           <div className="loader">
-          <i className="fas fa-circle-notch fa-2x fa-spin" />
-        </div>
+            <i className="fas fa-circle-notch fa-2x fa-spin" />
+          </div>
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">

@@ -12,6 +12,10 @@ import {
   GET_SEARCH_REFERRALS,
   CLEAR_SEARCH_REFERRALS_ACTION,
   GET_SEARCH_BONUS,
+  CLEAR_SEARCH_ADMINS_ACTION,
+  CLEAR_SEARCH_PROVIDERS_ACTION,
+  GET_SEARCH_ADMINS,
+  GET_SEARCH_PROVIDERS,
 } from "../action/types";
 
 const initialState = {
@@ -29,6 +33,10 @@ const initialState = {
   refCount: 0,
   bonus: [],
   bonusCount: 0,
+  admins: [],
+  adCounts: 0,
+  providers: [],
+  prCount: 0,
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -97,6 +105,24 @@ export default function searchReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case GET_SEARCH_ADMINS:
+      let adCount = action.payload.shift();
+      return {
+        ...state,
+        admins: [...state.admins, ...action.payload],
+        adCount,
+        loading: false,
+        searching: true,
+      };
+    case GET_SEARCH_PROVIDERS:
+      let prCount = action.payload.shift();
+      return {
+        ...state,
+        providers: [...state.providers, ...action.payload],
+        prCount,
+        loading: false,
+        searching: true,
+      };
     case CLEAR_SEARCH_SUBSCRIPTIONS_ACTION:
       return {
         ...state,
@@ -125,6 +151,18 @@ export default function searchReducer(state = initialState, action) {
       return {
         ...state,
         referrals: [],
+        searching: false,
+      };
+    case CLEAR_SEARCH_ADMINS_ACTION:
+      return {
+        ...state,
+        admins: [],
+        searching: false,
+      };
+    case CLEAR_SEARCH_PROVIDERS_ACTION:
+      return {
+        ...state,
+        providers: [],
         searching: false,
       };
     default:
