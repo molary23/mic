@@ -18,11 +18,12 @@ import {
   CLEAR_ADMINS_ACTION,
   GET_ALL_PROVIDERS,
   CLEAR_PROVIDERS_ACTION,
+  GET_ALL_SIGNALS,
+  CLEAR_SIGNALS_ACTION,
 } from "../action/types";
 
 const initialState = {
   sub: [],
-  subcount: {},
   trans: [],
   loading: false,
   fetching: false,
@@ -42,14 +43,18 @@ const initialState = {
   adCount: 0,
   providers: [],
   prCount: 0,
+  signals: [],
+  signalCount: 0,
 };
 
 export default function adminReducer(state = initialState, action) {
   switch (action.type) {
     case GET_ALL_SUBSCRIPTIONS:
+      let subCount = action.payload.shift();
       return {
         ...state,
         sub: [...state.sub, ...action.payload],
+        subCount,
         loading: false,
         fetching: true,
       };
@@ -125,6 +130,15 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case GET_ALL_SIGNALS:
+      let signalCount = action.payload.shift();
+      return {
+        ...state,
+        signals: [...state.signals, ...action.payload],
+        signalCount,
+        loading: false,
+        fetching: true,
+      };
     case GET_SUBSCRIPTION_COUNT: {
       return { ...state, subcount: action.payload };
     }
@@ -154,6 +168,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_PROVIDERS_ACTION: {
       return { ...state, providers: [], fetching: false };
+    }
+    case CLEAR_SIGNALS_ACTION: {
+      return { ...state, signals: [], fetching: false };
     }
     default:
       return state;

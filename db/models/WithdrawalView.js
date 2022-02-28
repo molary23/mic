@@ -1,41 +1,44 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Announcement extends Model {}
+class Withdrawal extends Model {}
 
-Announcement.init(
+Withdrawal.init(
   {
     // Model attributes are defined here
-    id: {
+    withdrawalid: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
+    amount: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    account: {
+      type: DataTypes.JSON(),
+      allowNull: false,
+    },
+    userid: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    fullname: {
       type: DataTypes.STRING(50),
-      allowNull: false,
     },
-    summary: {
-      type: DataTypes.STRING(150),
-      allowNull: false,
-    },
-    link: {
+    username: {
       type: DataTypes.STRING(30),
-      allowNull: false,
     },
-    startdate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
+    createdAt: {
+      type: DataTypes.DATE,
     },
-    enddate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
+    updattedAt: {
+      type: DataTypes.DATE,
     },
   },
   {
     // don't forget to enable timestamps!
-    timestamps: true,
+    timestamps: false,
 
     // I want createdAt
     createdAt: true,
@@ -44,8 +47,8 @@ Announcement.init(
     updatedAt: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Announcement", // We need to choose the model name
+    modelName: "Withdrawal", // We need to choose the model name
   }
 );
 
-module.exports = Announcement;
+module.exports = Withdrawal;

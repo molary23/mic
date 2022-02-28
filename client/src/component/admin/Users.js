@@ -3,8 +3,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getUser, clearActions } from "../../action/adminAction";
-import { searchUser, clearSearchActions } from "../../action/searchAction";
+import { getContent, clearActions } from "../../action/adminAction";
+import { searchContent, clearSearchActions } from "../../action/searchAction";
+
+import { getMore, setSearchParams } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
@@ -29,14 +31,14 @@ class Users extends Component {
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
-    isLoading: false,
-    doneTypingInterval: 5000,
     usercount: JSON.parse(localStorage.getItem("counts")).users,
-    upLoad: true,
+    startLoad: false,
+    getLoad: true,
+    content: "users",
   };
 
   componentDidMount() {
-    const { limit, offset, usercount } = this.state;
+    const { limit, offset, usercount, content } = this.state;
 
     const paginate = {
       limit,
@@ -44,9 +46,10 @@ class Users extends Component {
     };
     this.setState({
       numOfPages: Math.ceil(usercount / limit),
+      startLoad: true,
     });
 
-    this.props.getUser(paginate);
+    this.props.getContent(content, paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
@@ -58,105 +61,36 @@ class Users extends Component {
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage } = this.state;
-    let searchParams = window.location.search;
-
-    let winScroll = window.scrollY;
-
-    if (winScroll > iScrollPos) {
-      if (currentPage <= numOfPages) {
-        this.setState((prevState) => ({
-          offset: prevState.offset + limit,
-        }));
-
-        if (searchParams !== "") {
-          let queryTerms = searchParams.split("?")[1];
-          queryTerms = queryTerms.split("&");
-          let terms = queryTerms.map((term) => term.split("="));
-          let params = Object.fromEntries(terms);
-          params.offset = this.state.offset;
-          params.limit = this.state.limit;
-          // Search Now
-          this.props.searchUser(params);
-        } else {
-          const paginate = {
-            offset: this.state.offset,
-            limit: this.state.limit,
-          };
-          this.props.getUser(paginate);
-        }
-
-        this.setState({
-          currentPage: this.state.currentPage + 1,
-        });
-      }
-    }
+    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
   };
 
   changeHandler = (e) => {
+    const { url, content, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
-      loading: true,
     });
-    this.setSearchParams(e.target.name, e.target.value);
-  };
 
-  setSearchParams = (selected, valueOfSelected) => {
-    const { url } = this.state;
-    this.setState({
-      offset: 0,
-      limit: 4,
-      currentPage: 2,
+    setSearchParams({
+      selected: e.target.name,
+      valueOfSelected: e.target.value,
+      url,
+      content,
+      limit,
+      offset,
+      self: this,
     });
-    if (valueOfSelected !== "") {
-      url.searchParams.set(selected, valueOfSelected);
-      window.history.pushState({}, "", url);
-    } else if (valueOfSelected === "") {
-      url.searchParams.delete(selected);
-      window.history.pushState({}, "", url);
-    }
-
-    let searchParams = window.location.search;
-    if (searchParams !== "") {
-      let queryTerms = searchParams.split("?")[1];
-      queryTerms = queryTerms.split("&");
-      let terms = queryTerms.map((term) => term.split("="));
-      let params = Object.fromEntries(terms);
-      console.log(params);
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-      params.offset = 0;
-      params.limit = this.state.limit;
-
-      // Search Now
-      this.props.clearSearchActions("users");
-      if (selected === "search") {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-          this.setState({
-            isLoading: true,
-          });
-          this.props.searchUser(params);
-        }, this.state.doneTypingInterval);
-      } else {
-        this.setState({
-          isLoading: true,
-        });
-        this.props.searchUser(params);
-      }
-    } else {
-      const paginate = {
-        offset: 0,
-        limit: this.state.limit,
-      };
-      this.props.clearActions("users");
-      this.setState((prevState) => ({
-        upLoad: (prevState.upLoad = false),
-      }));
-      this.props.getUser(paginate);
-    }
   };
 
   render() {
@@ -309,8 +243,8 @@ class Users extends Component {
 }
 
 Users.propTypes = {
-  getUser: PropTypes.func,
-  searchUsers: PropTypes.func,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -320,7 +254,7 @@ const mapStateToProps = (state) => ({
 });
 export default connect(mapStateToProps, {
   clearActions,
-  getUser,
-  searchUser,
+  getContent,
+  searchContent,
   clearSearchActions,
 })(Users);

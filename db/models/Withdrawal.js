@@ -13,7 +13,7 @@ Withdrawal.init(
       primaryKey: true,
     },
     amount: {
-      type: DataTypes.ENUM("b", "c"),
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     account: {
@@ -29,7 +29,7 @@ Withdrawal.init(
     createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: false,
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
     modelName: "Withdrawal", // We need to choose the model name

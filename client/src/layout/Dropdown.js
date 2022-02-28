@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../action/authAction";
 import { clearCurrentProfile } from "../action/profileAction";
+import { clearActions } from "../action/adminAction";
+import { clearSearchActions } from "../action/searchAction";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -15,6 +17,8 @@ function Dropdown(props) {
     e.preventDefault();
     props.logoutUser();
     props.clearCurrentProfile();
+    props.clearActions("all");
+    props.clearSearchActions("all");
     navigate("/", { replace: true });
   };
 
@@ -67,6 +71,9 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, { logoutUser, clearCurrentProfile })(
-  Dropdown
-);
+export default connect(mapStateToProps, {
+  logoutUser,
+  clearCurrentProfile,
+  clearActions,
+  clearSearchActions,
+})(Dropdown);

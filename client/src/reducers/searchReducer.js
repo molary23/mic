@@ -16,6 +16,8 @@ import {
   CLEAR_SEARCH_PROVIDERS_ACTION,
   GET_SEARCH_ADMINS,
   GET_SEARCH_PROVIDERS,
+  GET_SEARCH_SIGNALS,
+  CLEAR_SEARCH_SIGNALS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -37,6 +39,10 @@ const initialState = {
   adCounts: 0,
   providers: [],
   prCount: 0,
+  signalCount: 0,
+  signals: [],
+  sub: [],
+  subCount: 0,
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -45,9 +51,11 @@ export default function searchReducer(state = initialState, action) {
       return { ...state, loading: true };
     }
     case GET_SEARCH_SUBSCRIPTIONS:
+      let subCount = action.payload.shift();
       return {
         ...state,
         sub: [...state.sub, ...action.payload],
+        subCount,
         loading: false,
         searching: true,
       };
@@ -123,6 +131,15 @@ export default function searchReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case GET_SEARCH_SIGNALS:
+      let signalCount = action.payload.shift();
+      return {
+        ...state,
+        signals: [...state.signals, ...action.payload],
+        signalCount,
+        loading: false,
+        searching: true,
+      };
     case CLEAR_SEARCH_SUBSCRIPTIONS_ACTION:
       return {
         ...state,
@@ -163,6 +180,12 @@ export default function searchReducer(state = initialState, action) {
       return {
         ...state,
         providers: [],
+        searching: false,
+      };
+    case CLEAR_SEARCH_SIGNALS_ACTION:
+      return {
+        ...state,
+        signals: [],
         searching: false,
       };
     default:

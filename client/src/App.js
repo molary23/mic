@@ -6,6 +6,8 @@ import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
 import { clearCurrentProfile } from "./action/profileAction";
+import { clearActions } from "./action/adminAction";
+import { clearSearchActions } from "./action/searchAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
@@ -46,6 +48,7 @@ import AdminSubscriptions from "./component/admin/Subscriptions";
 import AdminCurrency from "./component/admin/Currency";
 import AdminSignalProviders from "./component/admin/SignalProviders";
 import AdminViewAdmins from "./component/admin/ViewAdmin";
+import AdminSignals from "./component/admin/Signals";
 
 /*
 import axios from "axios";
@@ -67,10 +70,11 @@ if (localStorage.jwtToken) {
   store.dispatch(setCurrentUser(decoded));
 
   const currenTime = Date.now() / 1000;
-
   if (decoded.exp < currenTime) {
     // Logout User
     store.dispatch(logoutUser());
+    store.dispatch(clearActions("all"));
+    store.dispatch(clearSearchActions("all"));
     // Clear current Profile
     store.dispatch(clearCurrentProfile());
     // Redirect to Login
@@ -151,6 +155,11 @@ function App() {
             exact
             path="/admin/bonuses"
             element={<PrivateRoute Component={AdminBonuses} />}
+          />
+          <Route
+            exact
+            path="/admin/signals"
+            element={<PrivateRoute Component={AdminSignals} />}
           />
           <Route
             exact

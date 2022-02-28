@@ -3,6 +3,7 @@ import {
   SET_CURRENT_USER,
   CLEAR_ERRORS,
   SET_ALL_COUNTS,
+  CLEAR_ALL_ACTIONS,
 } from "./types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -38,10 +39,10 @@ export const clearErrors = () => {
 
 // Get All Counts
 export const getAllCounts = (level) => async (dispatch) => {
-let url = '/api/count/'
-if (level === 3) {
-  url = `${url}admin/all/`
-}
+  let url = "/api/count/";
+  if (level === 3) {
+    url = `${url}admin/all/`;
+  }
   try {
     const response = await axios.get(url, {});
     localStorage.setItem("counts", JSON.stringify(response.data));
@@ -59,8 +60,14 @@ export const logoutUser = () => (dispatch) => {
   //Remove Token from Storage
   localStorage.removeItem("jwtToken");
   localStorage.removeItem("counts");
+
   //Remove Auth Header  for future requests
   setAuthToken(false);
   // Set current user to {}  which will set isAuthenticated to false
+
   dispatch(setCurrentUser({}));
+  dispatch({
+    type: CLEAR_ALL_ACTIONS,
+    payload: {},
+  });
 };

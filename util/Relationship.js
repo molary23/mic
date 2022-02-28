@@ -12,6 +12,7 @@ const Account = require("../db/models/Account"),
   Currency = require("../db/models/Currency"),
   Settings = require("../db/models/Settings"),
   Transaction = require("../db/models/Transaction"),
+  Announcement = require("../db/models/Announcement"),
   Withdrawal = require("../db/models/Withdrawal");
 
 // Define Relationsship between tables
@@ -41,6 +42,15 @@ User.hasMany(Subscription, {
   },
 });
 Subscription.belongsTo(User);
+
+User.hasMany(Announcement, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Announcement.belongsTo(User);
 
 User.hasMany(Payment, {
   onDelete: "RESTRICT",
@@ -95,6 +105,15 @@ User.hasMany(Currency, {
   },
 });
 Currency.belongsTo(User);
+
+Currency.hasMany(Signal, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Signal.belongsTo(Currency);
 
 User.hasMany(Subscription, {
   onDelete: "RESTRICT",

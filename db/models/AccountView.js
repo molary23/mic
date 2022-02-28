@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Announcement extends Model {}
+class AccountView extends Model {}
 
-Announcement.init(
+AccountView.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,40 +12,43 @@ Announcement.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
+    type: {
+      type: DataTypes.ENUM("b", "c"),
+      allowNull: false,
+    },
+    account: {
+      type: DataTypes.JSON(),
+      allowNull: false,
+    },
+    userid: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    fullname: {
       type: DataTypes.STRING(50),
-      allowNull: false,
     },
-    summary: {
-      type: DataTypes.STRING(150),
-      allowNull: false,
-    },
-    link: {
+    username: {
       type: DataTypes.STRING(30),
-      allowNull: false,
     },
-    startdate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
+    createdAt: {
+      type: DataTypes.DATE,
     },
-    enddate: {
-      type: DataTypes.DATEONLY,
-      allowNull: false,
+    updatedAt: {
+      type: DataTypes.DATE,
     },
   },
   {
     // don't forget to enable timestamps!
-    timestamps: true,
+    timestamps: false,
 
     // I want createdAt
     createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: false,
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Announcement", // We need to choose the model name
+    modelName: "AccountView", // We need to choose the model name
   }
 );
 
-module.exports = Announcement;
+module.exports = AccountView;

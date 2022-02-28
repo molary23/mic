@@ -3,8 +3,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getTrans, clearActions } from "../../action/adminAction";
-import { searchTrans, clearSearchActions } from "../../action/searchAction";
+import { getContent, clearActions } from "../../action/adminAction";
+import { searchContent, clearSearchActions } from "../../action/searchAction";
+
+import { getMore, setSearchParams } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
@@ -12,7 +14,6 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 
-let typingTimer;
 export class Transactions extends Component {
   state = {
     sender: "admin-transactions",
@@ -37,14 +38,14 @@ export class Transactions extends Component {
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
-    isLoading: false,
-    doneTypingInterval: 5000,
-    transcount: JSON.parse(sessionStorage.getItem("counts")).transactions,
-    upLoad: true,
+    transcount: JSON.parse(localStorage.getItem("counts")).subscriptions,
+    startLoad: false,
+    getLoad: true,
+    content: "transactions",
   };
 
   componentDidMount() {
-    const { limit, offset, transcount } = this.state;
+    const { limit, offset, transcount, content } = this.state;
 
     const paginate = {
       limit,
@@ -53,9 +54,10 @@ export class Transactions extends Component {
 
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
+      startLoad: true,
     });
 
-    this.props.getTrans(paginate);
+    this.props.getContent(content, paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
@@ -63,109 +65,41 @@ export class Transactions extends Component {
   componentWillUnmount() {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions("trans");
+    this.props.clearSearchActions("users");
     this.props.clearSearchActions("trans");
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage } = this.state;
-    let searchParams = window.location.search;
-
-    let winScroll = window.scrollY;
-
-    if (winScroll > iScrollPos) {
-      if (currentPage <= numOfPages) {
-        this.setState((prevState) => ({
-          offset: prevState.offset + limit,
-        }));
-
-        if (searchParams !== "") {
-          let queryTerms = searchParams.split("?")[1];
-          queryTerms = queryTerms.split("&");
-          let terms = queryTerms.map((term) => term.split("="));
-          let params = Object.fromEntries(terms);
-          params.offset = this.state.offset;
-          params.limit = this.state.limit;
-          // Search Now
-          this.props.searchTrans(params);
-        } else {
-          const paginate = {
-            offset: this.state.offset,
-            limit: this.state.limit,
-          };
-          this.props.getTrans(paginate);
-        }
-
-        this.setState({
-          currentPage: this.state.currentPage + 1,
-        });
-      }
-    }
+    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
   };
 
   changeHandler = (e) => {
+    const { url, content, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
 
-    this.setSearchParams(e.target.name, e.target.value);
-  };
-
-  setSearchParams = (selected, valueOfSelected) => {
-    const { url } = this.state;
-    this.setState({
-      offset: 0,
-      limit: 4,
-      currentPage: 2,
+    setSearchParams({
+      selected: e.target.name,
+      valueOfSelected: e.target.value,
+      url,
+      content,
+      limit,
+      offset,
+      self: this,
     });
-    if (valueOfSelected !== "") {
-      url.searchParams.set(selected, valueOfSelected);
-      window.history.pushState({}, "", url);
-    } else if (valueOfSelected === "") {
-      url.searchParams.delete(selected);
-      window.history.pushState({}, "", url);
-    }
-
-    let searchParams = window.location.search;
-    if (searchParams !== "") {
-      let queryTerms = searchParams.split("?")[1];
-      queryTerms = queryTerms.split("&");
-      let terms = queryTerms.map((term) => term.split("="));
-      let params = Object.fromEntries(terms);
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-      params.offset = 0;
-      params.limit = this.state.limit;
-
-      // Search Now
-      this.props.clearSearchActions("trans");
-      if (selected === "search") {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-          this.setState({
-            isLoading: true,
-          });
-          this.props.searchTrans(params);
-        }, this.state.doneTypingInterval);
-      } else {
-        this.setState({
-          isLoading: true,
-        });
-        this.props.searchTrans(params);
-      }
-    } else {
-      const paginate = {
-        offset: 0,
-        limit: this.state.limit,
-      };
-      this.props.clearActions("trans");
-      this.setState((prevState) => ({
-        upLoad: (prevState.upLoad = false),
-      }));
-      this.props.getTrans(paginate);
-    }
   };
 
   render() {
@@ -176,8 +110,9 @@ export class Transactions extends Component {
       type,
       method,
       search,
-      isLoading,
-      upLoad,
+      startLoad,
+      getLoad,
+      transcount,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -185,15 +120,15 @@ export class Transactions extends Component {
     const { fetching } = admin;
     const { searching } = searchTerms;
 
-    let load = upLoad,
-      loader = isLoading,
+    let load = startLoad,
+      loader = getLoad,
       trans = [],
       searchTrans,
       showSearch,
       emptyRecord = false,
       noRecord = false,
-      totalText = "",
-      totalCount = 0;
+      totalText = "Total Transactions",
+      totalCount = transcount;
 
     if (fetching) {
       showSearch = false;
@@ -202,7 +137,7 @@ export class Transactions extends Component {
       totalText = "Total Transactions";
       if (admin.trans === [] && loading) {
         loader = true;
-        load = upLoad;
+        load = false;
       } else if (admin.trans.length > 0 && !loading) {
         trans = admin.trans;
         load = false;
@@ -319,7 +254,8 @@ export class Transactions extends Component {
 }
 
 Transactions.propTypes = {
-  getTrans: PropTypes.func,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -327,8 +263,8 @@ const mapStateToProps = (state) => ({
   searchTerms: state.searchTerms,
 });
 export default connect(mapStateToProps, {
-  getTrans,
-  searchTrans,
+  getContent,
+  searchContent,
   clearSearchActions,
   clearActions,
 })(Transactions);

@@ -21,7 +21,7 @@ export const getMore = ({
     if (currentPage <= numOfPages) {
       self.setState((prevState) => ({
         offset: prevState.offset + limit,
-        upLoad: (prevState.upLoad = false),
+        getLoad: (prevState.getLoad = false),
       }));
 
       if (searchParams !== "") {
@@ -54,7 +54,6 @@ export const setSearchParams = ({
   url,
   content,
   limit,
-  doneTypingInterval,
   self,
 }) => {
   self.setState({
@@ -72,47 +71,69 @@ export const setSearchParams = ({
   }
 
   let searchParams = window.location.search;
-  if (searchParams !== "") {
-    let queryTerms = searchParams.split("?")[1];
-    queryTerms = queryTerms.split("&");
-    let terms = queryTerms.map((term) => term.split("="));
-    let params = Object.fromEntries(terms);
-    params.offset = 0;
-    params.limit = limit;
 
-    // Search Now
-    if (selected === "search") {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(() => {
+  if (selected === "search") {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+      if (searchParams !== "") {
+        let queryTerms = searchParams.split("?")[1];
+        queryTerms = queryTerms.split("&");
+        let terms = queryTerms.map((term) => term.split("="));
+        let params = Object.fromEntries(terms);
+        params.offset = 0;
+        params.limit = limit;
+
         self.setState({
-          isLoading: true,
+          getLoad: true,
         });
         window.scrollTo({
           top: 0,
           behavior: "smooth",
         });
+        //Search now
         self.props.clearSearchActions(content);
         self.props.searchContent(content, params);
-      }, doneTypingInterval);
-    } else {
-      self.setState({
-        isLoading: true,
-      });
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-      self.props.searchContent(content, params);
-    }
+      } else {
+        const paginate = {
+          offset: 0,
+          limit: self.state.limit,
+        };
+        self.props.clearActions(content);
+        self.props.clearSearchActions(content);
+        self.setState((prevState) => ({
+          getLoad: (prevState.getLoad = true),
+          startLoad: (prevState.startLoad = false),
+        }));
+        self.props.getContent(content, paginate);
+      }
+    }, 5000);
   } else {
-    const paginate = {
-      offset: 0,
-      limit: self.state.limit,
-    };
-    self.props.clearActions(content);
-    self.setState((prevState) => ({
-      upLoad: (prevState.upLoad = false),
-    }));
-    self.props.getContent(content, paginate);
+    if (searchParams !== "") {
+      let queryTerms = searchParams.split("?")[1];
+      queryTerms = queryTerms.split("&");
+      let terms = queryTerms.map((term) => term.split("="));
+      let params = Object.fromEntries(terms);
+      params.offset = 0;
+      params.limit = limit;
+      self.setState({
+        getLoad: true,
+      });
+
+      // Search Now
+      self.props.clearSearchActions(content);
+      self.props.searchContent(content, params);
+    } else {
+      const paginate = {
+        offset: 0,
+        limit: self.state.limit,
+      };
+      self.props.clearActions(content);
+      self.props.clearSearchActions(content);
+      self.setState((prevState) => ({
+        getLoad: (prevState.getLoad = true),
+        startLoad: (prevState.startLoad = false),
+      }));
+      self.props.getContent(content, paginate);
+    }
   }
 };

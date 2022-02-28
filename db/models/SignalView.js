@@ -32,20 +32,24 @@ SignalView.init(
     status: {
       type: DataTypes.ENUM("f", "c"),
     },
-    timecreated: {
+    createdAt: {
       type: DataTypes.DATE,
     },
-    timeupdated: {
+    updatedAt: {
       type: DataTypes.DATE,
     },
-    currency: {
-      type: DataTypes.JSON,
+    firstcurrency: {
+      type: DataTypes.STRING(20),
     },
-    providername: {
+    secondcurrency: {
+      type: DataTypes.STRING(20),
+    },
+    provider: {
       type: DataTypes.STRING(30),
     },
-    provideremail: {
-      type: DataTypes.STRING(30),
+    userid: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
     },
   },
   {

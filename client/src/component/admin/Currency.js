@@ -19,7 +19,7 @@ class Currency extends Component {
     statusOpt: [
       { value: "", option: "Filter by Status" },
       { value: "1", option: "Active" },
-      { value: "2", option: "Inactive" },
+      { value: "0", option: "Inactive" },
     ],
     search: "",
     status: "",
@@ -29,10 +29,10 @@ class Currency extends Component {
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
-    isLoading: false,
+    startLoad: false,
     doneTypingInterval: 5000,
     currencycount: JSON.parse(localStorage.getItem("counts")).currency,
-    upLoad: true,
+    getLoad: true,
     content: "currency",
   };
 
@@ -44,6 +44,7 @@ class Currency extends Component {
     };
     this.setState({
       numOfPages: Math.ceil(currencycount / limit),
+      startLoad: true,
     });
     this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
@@ -81,7 +82,7 @@ class Currency extends Component {
       if (currentPage <= numOfPages) {
         this.setState((prevState) => ({
           offset: prevState.offset + limit,
-          upLoad: (prevState.upLoad = false),
+          getLoad: (prevState.getLoad = false),
         }));
 
         if (searchParams !== "") {
@@ -124,15 +125,19 @@ class Currency extends Component {
       doneTypingInterval: this.state.doneTypingInterval,
       self: this,
     });
+
+    //  this.setSearchParams(e.target.name, e.target.value);
   };
 
-  /* setSearchParams = (selected, valueOfSelected) => {
+  /*
+  setSearchParams = (selected, valueOfSelected) => {
     const { url, content } = this.state;
     this.setState({
       offset: 0,
       limit: 4,
       currentPage: 2,
     });
+
     if (valueOfSelected !== "") {
       url.searchParams.set(selected, valueOfSelected);
       window.history.pushState({}, "", url);
@@ -140,8 +145,68 @@ class Currency extends Component {
       url.searchParams.delete(selected);
       window.history.pushState({}, "", url);
     }
-
     let searchParams = window.location.search;
+    if (selected !== "search") {
+      if (searchParams !== "") {
+        let queryTerms = searchParams.split("?")[1];
+        queryTerms = queryTerms.split("&");
+        let terms = queryTerms.map((term) => term.split("="));
+        let params = Object.fromEntries(terms);
+        params.offset = 0;
+        params.limit = this.state.limit;
+        //this.props.clearSearchActions(content);
+
+        this.setState({
+          isLoading: true,
+        });
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        this.props.searchContent(content, params);
+      } else {
+        const paginate = {
+          offset: 0,
+          limit: this.state.limit,
+        };
+        this.props.clearActions(content);
+        this.setState((prevState) => ({
+          getLoad: (prevState.getLoad = false),
+        }));
+        this.props.getContent(content, paginate);
+      }
+    } else {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        this.setState({
+          isLoading: true,
+        });
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        console.log(searchParams);
+        if (searchParams !== "") {
+          let queryTerms = searchParams.split("?")[1];
+          queryTerms = queryTerms.split("&");
+          let terms = queryTerms.map((term) => term.split("="));
+          let params = Object.fromEntries(terms);
+          params.offset = 0;
+          params.limit = this.state.limit;
+        } else {
+          /*  const paginate = {
+            offset: 0,
+            limit: this.state.limit,
+          };
+          this.props.clearActions(content);
+          this.setState((prevState) => ({
+            getLoad: (prevState.getLoad = false),
+          }));
+          this.props.getContent(content, paginate);
+        }
+      }, this.state.doneTypingInterval);
+    }
+      console.log(searchParams);
     if (searchParams !== "") {
       let queryTerms = searchParams.split("?")[1];
       queryTerms = queryTerms.split("&");
@@ -162,7 +227,12 @@ class Currency extends Component {
             top: 0,
             behavior: "smooth",
           });
-          this.props.searchContent(content, params);
+          if (valueOfSelected !== "") {
+            //this.props.searchContent(content, params);
+            console.log(valueOfSelected);
+          } else {
+            console.log(valueOfSelected);
+          }
         }, this.state.doneTypingInterval);
       } else {
         this.setState({
@@ -181,22 +251,23 @@ class Currency extends Component {
       };
       this.props.clearActions(content);
       this.setState((prevState) => ({
-        upLoad: (prevState.upLoad = false),
+        getLoad: (prevState.getLoad = false),
       }));
       this.props.getContent(content, paginate);
     }
   };*/
 
   render() {
-    const { sender, status, statusOpt, isLoading, upLoad, search } = this.state;
+    const { sender, status, statusOpt, startLoad, getLoad, search } =
+      this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
 
-    let load = upLoad,
-      loader = isLoading,
+    let load = startLoad,
+      loader = getLoad,
       currency = [],
       searchCurrency,
       showSearch,
@@ -212,7 +283,7 @@ class Currency extends Component {
       totalText = "Total Currencies";
       if (admin.currency === [] && loading) {
         loader = true;
-        load = upLoad;
+        load = false;
       } else if (admin.currency.length > 0 && !loading) {
         currency = admin.currency;
         load = false;
@@ -267,6 +338,7 @@ class Currency extends Component {
                     sender={sender}
                     placeholder="Search by Name, Email, Username"
                     onChange={this.changeHandler}
+                    onKeyUp={this.keyHandler}
                     name="search"
                     value={search}
                   />

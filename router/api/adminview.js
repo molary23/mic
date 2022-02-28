@@ -341,10 +341,12 @@ router.post(
       where,
       raw: true,
     };
-
-    SubscriptionView.findAll(query)
-      .then((sub) => {
-        res.json(sub);
+    let result = {};
+    SubscriptionView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -456,7 +458,7 @@ router.post(
 @access private
 */
 
-router.get(
+router.post(
   "/signals",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
@@ -464,20 +466,39 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
     let where = {};
     if (req.body.search) {
       const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
+      let searchArray = searchTerms.split("+");
 
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = { providername: { [Op.substring]: searchArray[i] } };
+          newSearchObj = {
+            [Op.or]: [
+              {
+                provider: { [Op.substring]: searchArray[i] },
+              },
+              {
+                firstcurrency: { [Op.substring]: searchArray[i] },
+              },
+              {
+                secondcurrency: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
           newSearchArray.push(newSearchObj);
         }
 
-        if (req.body.signaloption && req.body.status === "") {
+        if (req.body.signaloption && req.body.status === undefined) {
           where = {
             [Op.and]: [
               {
@@ -486,7 +507,7 @@ router.get(
               { signaloption: req.body.signaloption },
             ],
           };
-        } else if (req.body.signaloption === "" && req.body.status) {
+        } else if (req.body.signaloption === undefined && req.body.status) {
           where = {
             [Op.and]: [
               {
@@ -502,7 +523,7 @@ router.get(
                 [Op.and]: newSearchArray,
               },
               {
-                [Op.or]: [
+                [Op.and]: [
                   { signaloption: req.body.signaloption },
                   { status: req.body.status },
                 ],
@@ -516,27 +537,27 @@ router.get(
         }
       } else {
         let search = searchArray[0];
-        if (req.body.signaloption && req.body.status === "") {
+        if (req.body.signaloption && req.body.status === undefined) {
           where = {
             [Op.and]: [
               {
                 [Op.or]: [
-                  { providername: { [Op.substring]: search } },
-                  { currency: { [Op.substring]: search } },
-                  { provideremail: { [Op.substring]: search } },
+                  { provider: { [Op.substring]: search } },
+                  { firstcurrency: { [Op.substring]: search } },
+                  { secondcurrency: { [Op.substring]: search } },
                 ],
               },
               { signaloption: req.body.signaloption },
             ],
           };
-        } else if (req.body.signaloption === "" && req.body.status) {
+        } else if (req.body.signaloption === undefined && req.body.status) {
           where = {
             [Op.and]: [
               {
                 [Op.or]: [
-                  { providername: { [Op.substring]: search } },
-                  { currency: { [Op.substring]: search } },
-                  { provideremail: { [Op.substring]: search } },
+                  { provider: { [Op.substring]: search } },
+                  { firstcurrency: { [Op.substring]: search } },
+                  { secondcurrency: { [Op.substring]: search } },
                 ],
               },
               { status: req.body.status },
@@ -547,13 +568,13 @@ router.get(
             [Op.and]: [
               {
                 [Op.or]: [
-                  { providername: { [Op.substring]: search } },
-                  { currency: { [Op.substring]: search } },
-                  { provideremail: { [Op.substring]: search } },
+                  { provider: { [Op.substring]: search } },
+                  { firstcurrency: { [Op.substring]: search } },
+                  { secondcurrency: { [Op.substring]: search } },
                 ],
               },
               {
-                [Op.or]: [
+                [Op.and]: [
                   { signaloption: req.body.signaloption },
                   { status: req.body.status },
                 ],
@@ -563,21 +584,21 @@ router.get(
         } else {
           where = {
             [Op.or]: [
-              { providername: { [Op.substring]: search } },
-              { currency: { [Op.substring]: search } },
-              { provideremail: { [Op.substring]: search } },
+              { provider: { [Op.substring]: search } },
+              { firstcurrency: { [Op.substring]: search } },
+              { secondcurrency: { [Op.substring]: search } },
             ],
           };
         }
       }
     } else {
-      if (req.body.signaloption && req.body.status === "") {
+      if (req.body.signaloption && req.body.status === undefined) {
         where.signaloption = req.body.signaloption;
-      } else if (req.body.signaloption === "" && req.body.status) {
+      } else if (req.body.signaloption === undefined && req.body.status) {
         where.status = req.body.status;
       } else if (req.body.signaloption && req.body.status) {
         where = {
-          [Op.or]: [
+          [Op.and]: [
             { signaloption: req.body.signaloption },
             { status: req.body.status },
           ],
@@ -587,39 +608,41 @@ router.get(
 
     const query = {
       order: [["signalid", "DESC"]],
+      limit,
+      offset,
       attributes: [
         "signalid",
-        "currency",
+        "firstcurrency",
+        "secondcurrency",
         "takeprofit",
         "stoploss",
         "pip",
         "createdAt",
-        "providername",
-        "provideremail",
+        "updatedAt",
+        "provider",
         [
           Sequelize.literal(
             `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `
           ),
-          "Signal Option",
+          "signaloption",
         ],
         [
           Sequelize.literal(
             `CASE WHEN status = 'f' THEN 'Filled' WHEN status = 'c' THEN 'Cancelled' END `
           ),
-          "Signal Status",
+          "status",
         ],
-        [
-          Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`),
-          "Signal Range",
-        ],
+        [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
       ],
       where,
       raw: true,
     };
-
-    SignalView.findAll(query)
-      .then((signal) => {
-        res.json(signal);
+    let result = {};
+    SignalView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -641,7 +664,7 @@ router.post(
     }
 
     let limit = null,
-      offset = null;
+      offset = 0;
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
@@ -1167,8 +1190,8 @@ router.post(
 
     const query = {
       order: [["transactionid", "DESC"]],
-      offset: offset,
-      limit: limit,
+      offset,
+      limit,
       attributes: [
         "transactionid",
         "amount",
@@ -1180,7 +1203,7 @@ router.post(
         ],
         [
           Sequelize.literal(
-            `CASE WHEN method = 'b' THEN 'Bonus' WHEN type = 's' THEN 'Subscribed' WHEN type = 'w' THEN 'Withdrawal' END `
+            `CASE WHEN method = 'b' THEN 'Bonus' WHEN method = 's' THEN 'Subscriptions' WHEN method = 'w' THEN 'Withdrawal' END `
           ),
           "method",
         ],

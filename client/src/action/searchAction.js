@@ -19,6 +19,8 @@ import {
   GET_SEARCH_ADMINS,
   GET_SEARCH_PROVIDERS,
   CLEAR_SEARCH_PROVIDERS_ACTION,
+  GET_SEARCH_SIGNALS,
+  CLEAR_SEARCH_SIGNALS_ACTION,
 } from "./types";
 
 export const searchSub = (searchData) => async (dispatch) => {
@@ -90,7 +92,20 @@ export const searchContent = (content, searchData) => async (dispatch) => {
     url = `${url}admins`;
     type = GET_SEARCH_PROVIDERS;
     searchData.table = "providers";
+  } else if (content === "signals") {
+    url = `${url}signals`;
+    type = GET_SEARCH_SIGNALS;
+  } else if (content === "subscriptions") {
+    url = `${url}subscriptions`;
+    type = GET_SEARCH_SUBSCRIPTIONS;
+  } else if (content === "transactions") {
+    url = `${url}transactions`;
+    type = GET_SEARCH_TRANSACTIONS;
+  } else if (content === "users") {
+    url = `${url}users`;
+    type = GET_SEARCH_USERS;
   }
+
   try {
     let response = await axios.post(url, searchData);
     const result = await dispatch({
@@ -123,6 +138,14 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_SEARCH_ADMINS_ACTION };
   } else if (actionToClear === "providers") {
     return { type: CLEAR_SEARCH_PROVIDERS_ACTION };
+  } else if (actionToClear === "signals") {
+    return { type: CLEAR_SEARCH_SIGNALS_ACTION };
+  } else if (actionToClear === "subscriptions") {
+    return { type: CLEAR_SEARCH_SUBSCRIPTIONS_ACTION };
+  } else if (actionToClear === "transactions") {
+    return { type: CLEAR_SEARCH_TRANSACTIONS_ACTION };
+  } else if (actionToClear === "users") {
+    return { type: CLEAR_SEARCH_USERS_ACTION };
   }
 };
 export const setLoading = () => {

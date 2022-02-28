@@ -3,7 +3,6 @@ import {
   GET_ALL_SUBSCRIPTIONS,
   CLEAR_SUBSCRIPTIONS_ACTION,
   ACTION_LOADING,
-  GET_SUBSCRIPTION_COUNT,
   GET_ALL_TRANSACTIONS,
   GET_ALL_USERS,
   CLEAR_TRANSACTIONS_ACTION,
@@ -20,21 +19,9 @@ import {
   CLEAR_ADMINS_ACTION,
   GET_ALL_PROVIDERS,
   CLEAR_PROVIDERS_ACTION,
+  CLEAR_SIGNALS_ACTION,
+  GET_ALL_SIGNALS,
 } from "./types";
-
-export const getSub = (paginate) => async (dispatch) => {
-  dispatch(setLoading());
-  try {
-    let response = await axios.post("/api/adminview/subscriptions/", paginate);
-    const result = await dispatch({
-      type: GET_ALL_SUBSCRIPTIONS,
-      payload: response.data,
-    });
-    return result;
-  } catch (error) {
-    dispatch({ type: GET_ALL_SUBSCRIPTIONS, payload: [] });
-  }
-};
 
 export const getTrans = (paginate) => async (dispatch) => {
   dispatch(setLoading());
@@ -88,6 +75,18 @@ export const getContent = (content, paginate) => async (dispatch) => {
     url = `${url}admins`;
     type = GET_ALL_PROVIDERS;
     paginate.table = "providers";
+  } else if (content === "signals") {
+    url = `${url}signals`;
+    type = GET_ALL_SIGNALS;
+  } else if (content === "subscriptions") {
+    url = `${url}subscriptions`;
+    type = GET_ALL_SUBSCRIPTIONS;
+  } else if (content === "transactions") {
+    url = `${url}transactions`;
+    type = GET_ALL_TRANSACTIONS;
+  } else if (content === "users") {
+    url = `${url}users`;
+    type = GET_ALL_USERS;
   }
   try {
     let response = await axios.post(url, paginate);
@@ -99,28 +98,6 @@ export const getContent = (content, paginate) => async (dispatch) => {
   } catch (error) {
     console.log(error.response);
     dispatch({ type, payload: [] });
-  }
-};
-
-export const getTableCount = (tablename) => async (dispatch) => {
-  let action_type, tabCount;
-  if (tablename === "subscriptions") {
-    action_type = GET_SUBSCRIPTION_COUNT;
-    tabCount = "subcount";
-  }
-  let params = JSON.stringify(tablename);
-  try {
-    let response = await axios.get(`/api/count/table/${params}`);
-    const tablecount = response.data;
-
-    sessionStorage.setItem(tabCount, JSON.stringify(tablecount));
-    const result = await dispatch({
-      type: action_type,
-      payload: tablecount,
-    });
-    return result;
-  } catch (error) {
-    dispatch({ type: GET_SUBSCRIPTION_COUNT, payload: {} });
   }
 };
 
@@ -143,6 +120,14 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ADMINS_ACTION };
   } else if (actionToClear === "providers") {
     return { type: CLEAR_PROVIDERS_ACTION };
+  } else if (actionToClear === "signals") {
+    return { type: CLEAR_SIGNALS_ACTION };
+  } else if (actionToClear === "subscriptions") {
+    return { type: CLEAR_SUBSCRIPTIONS_ACTION };
+  } else if (actionToClear === "transactions") {
+    return { type: CLEAR_TRANSACTIONS_ACTION };
+  } else if (actionToClear === "users") {
+    return { type: CLEAR_USERS_ACTION };
   }
 };
 

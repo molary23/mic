@@ -366,12 +366,9 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>
-            {
-              /*item.firstcurrency[1]}/{item.secondcurrency[1]*/
-              JSON.parse(item.firstcurrency.split(", "))[1] +
-                "/" +
-                JSON.parse(item.secondcurrency.split(", "))[1]
-            }
+            {JSON.parse(item.firstcurrency.split(", "))[1] +
+              "/" +
+              JSON.parse(item.secondcurrency.split(", "))[1]}
           </td>
           <td>
             {
@@ -401,16 +398,14 @@ function TableBody(props) {
             <DateFormat date={item.updatedAt} />
           </td>
           <td className="td-lower">
-            <div className="action-buttons">
-              <Link
-                type=""
-                className=""
-                title="View Admin"
-                to={`/admin/user/:${item.UserId}`}
-              >
-                {item.User.username}
-              </Link>
-            </div>
+            <Link
+              type=""
+              className=""
+              title="View Admin"
+              to={`/admin/user/:${item.UserId}`}
+            >
+              {item.User.username}
+            </Link>
           </td>
           <td>
             <div className="action-buttons">
@@ -422,6 +417,95 @@ function TableBody(props) {
                 onClick={() => onClick(i)}
               >
                 <i className="fas fa-trash" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      );
+    });
+  }
+
+  if (sender === "admin-signals") {
+    tabeldata = tablebody.map((item, i) => {
+      return (
+        <tr key={i}>
+          <td>{i + 1}</td>
+          <td>
+            {JSON.parse(item.firstcurrency.split(", "))[1] +
+              "/" +
+              JSON.parse(item.secondcurrency.split(", "))[1]}
+          </td>
+          <td>
+            {
+              <>
+                <Flag
+                  code={JSON.parse(
+                    item.firstcurrency.split(", ")
+                  )[0].toUpperCase()}
+                  size="M"
+                />
+                <Flag
+                  code={JSON.parse(
+                    item.secondcurrency.split(", ")
+                  )[0].toUpperCase()}
+                  size="M"
+                />
+              </>
+            }
+          </td>
+          <td>{item.signaloption}</td>
+          <td>{item.status}</td>
+          <td>
+            {item.takeprofit.map((tp, i) => {
+              let profit;
+              if (i === item.takeprofit.length - 1) {
+                profit = <span key={i}>{tp}</span>;
+              } else {
+                profit = <span key={i}>{tp}, </span>;
+              }
+              return profit;
+            })}
+          </td>
+          <td>
+            {item.stoploss.map((sl, i) => {
+              let loss;
+              if (i === item.stoploss.length - 1) {
+                loss = <span key={i}>{sl}</span>;
+              } else {
+                loss = <span key={i}>{sl}, </span>;
+              }
+              return loss;
+            })}
+          </td>
+          <td>{item.range}</td>
+          <td>{item.pip}</td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+
+          <td>
+            <DateFormat date={item.updatedAt} />
+          </td>
+          <td className="td-lower">
+            <Link
+              type=""
+              className=""
+              title="View Admin"
+              to={`/admin/signal-provider/:${item.userid}`}
+            >
+              {item.provider}
+            </Link>
+          </td>
+          <td>
+            <div className="action-buttons">
+              <button
+                type="button"
+                className="btn btn-info btn-sm"
+                data-id={item.signalid}
+                title="View Signal"
+                onClick={() => onClick(i)}
+              >
+                <i className="far fa-eye" />
               </button>
             </div>
           </td>
