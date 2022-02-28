@@ -1,12 +1,3 @@
-/*export function add(x, y) {
-  return x + y;
-}
-
-export function mutiply(x, y) {
-  return x * y;
-}
-
-*/
 export const getMore = ({
   limit,
   numOfPages,
@@ -136,4 +127,20 @@ export const setSearchParams = ({
       self.props.getContent(content, paginate);
     }
   }
+};
+
+export const renderArrange = ({
+  fetching,
+  searching,
+  startLoad,
+  getLoad,
+  showSearch,
+  main,
+  search,
+  emptyRecord,
+  noRecord,
+  totalText,
+  totalCount,
+}) => {
+  console.log("first");
 };

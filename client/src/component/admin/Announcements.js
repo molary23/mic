@@ -1,56 +1,48 @@
 import React, { Component } from "react";
+
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
-import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 
-export class Subscriptions extends Component {
+class Announcements extends Component {
   state = {
-    sender: "admin-subscriptions",
+    sender: "admin-announcements",
     search: "",
-    typeOptions: [
-      { value: "", option: "Filter by Type" },
-      { value: "b", option: "Bonus" },
-      { value: "p", option: "Pay" },
-    ],
-    packageOptions: [
-      { value: "", option: "Filter by Package" },
-      { value: "m", option: "Monthly" },
-      { value: "y", option: "Yearly" },
-    ],
-    type: "",
-    subPackage: "",
     limit: 4,
     offset: 0,
-    sub: "",
     numOfPages: 0,
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
-    subcount: JSON.parse(localStorage.getItem("counts")).subscriptions,
+    announcementcount: JSON.parse(localStorage.getItem("counts")).announcements,
     startLoad: false,
     getLoad: true,
-    content: "subscriptions",
+    content: "announcements",
   };
 
   componentDidMount() {
-    const { limit, offset, subcount, content } = this.state;
+    const { limit, offset, announcementcount, content } = this.state;
 
     const paginate = {
       limit,
       offset,
     };
     this.setState({
-      numOfPages: Math.ceil(subcount / limit),
+      numOfPages: Math.ceil(announcementcount / limit),
+      startLoad: true,
     });
 
     this.props.getContent(content, paginate);
@@ -59,9 +51,9 @@ export class Subscriptions extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(this.state.content);
     this.props.clearSearchActions(this.state.content);
+    window.removeEventListener("scroll", this.loadMore);
   }
 
   loadMore = () => {
@@ -93,60 +85,64 @@ export class Subscriptions extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
     });
   };
 
   render() {
-    const {
-      sender,
-      typeOptions,
-      packageOptions,
-      type,
-      subPackage,
-      search,
-      subcount,
-      startLoad,
-      getLoad,
-    } = this.state;
+    const { sender, announcementcount, startLoad, getLoad, search } =
+      this.state;
+
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
 
-    console.log(admin.sub);
-
     let load = startLoad,
       loader = getLoad,
-      sub = [],
-      searchsub,
+      ann = [],
+      searchann,
       showSearch,
       emptyRecord = false,
       noRecord = false,
       totalText = "",
-      totalCount = subcount;
+      totalCount = announcementcount;
+
+    renderArrange({
+      fetching,
+      searching,
+      startLoad,
+      getLoad,
+      showSearch,
+      ann,
+      searchann,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+    });
 
     if (fetching) {
       showSearch = false;
       loader = true;
-      totalCount = admin.subCount;
-      totalText = "Total sub";
-      if (admin.sub === [] && loading) {
+      totalCount = admin.annCount;
+      totalText = "";
+      if (admin.ann === [] && loading) {
         loader = true;
         load = false;
-      } else if (admin.sub.length > 0 && !loading) {
-        sub = admin.sub;
+      } else if (admin.ann.length > 0 && !loading) {
+        ann = admin.ann;
         load = false;
+
         loader = false;
-      } else if (admin.sub.length > 0 && loading) {
-        sub = admin.sub;
+      } else if (admin.ann.length > 0 && loading) {
+        ann = admin.ann;
         load = false;
         loader = true;
       } else {
         load = false;
         emptyRecord = true;
-        sub = [];
+        ann = [];
       }
     }
 
@@ -155,21 +151,20 @@ export class Subscriptions extends Component {
     } else {
       showSearch = true;
       loader = true;
-      totalCount = searchTerms.subCount;
-      totalText = "Selected/Searched Subscriptions";
-      if (searchTerms.sub === [] || searchTerms.sub.length <= 0) {
+      totalCount = searchTerms.annCount;
+      totalText = "Selected/Searched";
+      if (searchTerms.ann === [] || searchTerms.ann.length <= 0) {
         noRecord = true;
-        searchsub = [];
+        searchann = [];
         loader = false;
-      } else if (searchTerms.sub.length > 0 && !searchTerms.loading) {
-        searchsub = searchTerms.sub;
+      } else if (searchTerms.ann.length > 0 && !searchTerms.loading) {
+        searchann = searchTerms.ann;
         loader = false;
-      } else if (searchTerms.sub.length > 0 && searchTerms.loading) {
-        searchsub = searchTerms.sub;
+      } else if (searchTerms.ann.length > 0 && searchTerms.loading) {
+        searchann = searchTerms.ann;
         loader = true;
       }
     }
-
     return (
       <div>
         {loader && <ProgressBar />}
@@ -180,47 +175,28 @@ export class Subscriptions extends Component {
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Subscriptions</h1>
+              <h1>Accounts</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
-                <div className="col-md-3 mb-2">
+                <div className="col-md-4 mb-2">
                   <SearchInput
                     sender={sender}
-                    placeholder="Search by User Name"
+                    placeholder="Search by Title, Summary, Link"
                     onChange={this.changeHandler}
                     name="search"
                     value={search}
                   />
                 </div>
-
-                <div className="col-md-2 mb-2">
-                  <Select
-                    sender={sender}
-                    options={typeOptions}
-                    onChange={this.changeHandler}
-                    name="type"
-                    value={type}
-                  />
-                </div>
-                <div className="col-md-2 mb-2">
-                  <Select
-                    sender={sender}
-                    options={packageOptions}
-                    onChange={this.changeHandler}
-                    name="subPackage"
-                    value={subPackage}
-                  />
-                </div>
-                <div className="col-md-2 mb-2">
+                <div className="col-md-4 mb-3">
                   <button type="button" className="btn btn-outline-primary">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
-                <div className="col-md-3 mb-2">
+                <div className="col-md-4 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
-                      {totalText}
+                      {totalText} Announcements
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>
@@ -234,17 +210,17 @@ export class Subscriptions extends Component {
               sender={sender}
               head={[
                 "S/N",
-                "amount",
-                "User Fullname",
-                "type",
-                "package",
-                "plan",
-                "date",
+                "title",
+                "link",
+                "summary",
+                "start date",
+                "end date",
+                "created by",
               ]}
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? sub : searchsub}
+                tablebody={!showSearch ? ann : searchann}
               />
             </TableHead>
           </div>
@@ -254,11 +230,11 @@ export class Subscriptions extends Component {
   }
 }
 
-Subscriptions.propTypes = {
-  getSub: PropTypes.func,
-  getTableCount: PropTypes.func,
-  searchSub: PropTypes.func,
-  auth: PropTypes.object.isRequired,
+Announcements.propTypes = {
+  getContent: PropTypes.func.isRequired,
+  searchContent: PropTypes.func.isRequired,
+  clearActions: PropTypes.func.isRequired,
+  clearSearchActions: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -267,8 +243,8 @@ const mapStateToProps = (state) => ({
   searchTerms: state.searchTerms,
 });
 export default connect(mapStateToProps, {
+  clearActions,
   getContent,
   searchContent,
   clearSearchActions,
-  clearActions,
-})(Subscriptions);
+})(Announcements);

@@ -20,6 +20,10 @@ import {
   CLEAR_PROVIDERS_ACTION,
   GET_ALL_SIGNALS,
   CLEAR_SIGNALS_ACTION,
+  CLEAR_ACCOUNTS_ACTION,
+  GET_ALL_ACCOUNTS,
+  CLEAR_ANNOUNCEMENTS_ACTION,
+  GET_ALL_ANNOUNCEMENTS,
 } from "../action/types";
 
 const initialState = {
@@ -45,6 +49,10 @@ const initialState = {
   prCount: 0,
   signals: [],
   signalCount: 0,
+  accounts: [],
+  accCounts: 0,
+  ann: [],
+  annCount: 0,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -139,38 +147,58 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
-    case GET_SUBSCRIPTION_COUNT: {
-      return { ...state, subcount: action.payload };
-    }
+    case GET_ALL_ACCOUNTS:
+      let accCount = action.payload.shift();
+      return {
+        ...state,
+        accounts: [...state.accounts, ...action.payload],
+        accCount,
+        loading: false,
+        fetching: true,
+      };
+    case GET_ALL_ANNOUNCEMENTS:
+      return {
+        ...state,
+        annCount: action.payload.shift(),
+        ann: [...state.accounts, ...action.payload],
+        loading: false,
+        fetching: true,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
     case CLEAR_SUBSCRIPTIONS_ACTION: {
-      return { ...state, sub: [], fetching: false };
+      return { ...state, sub: [], subCount: 0, fetching: false };
     }
     case CLEAR_TRANSACTIONS_ACTION: {
-      return { ...state, trans: [], fetching: false };
+      return { ...state, trans: [], transCount: 0, fetching: false };
     }
     case CLEAR_USERS_ACTION: {
-      return { ...state, users: [], fetching: false };
+      return { ...state, users: [], usersCount: 0, fetching: false };
     }
     case CLEAR_CURRENCY_ACTION: {
-      return { ...state, currency: [], fetching: false };
+      return { ...state, currency: [], curCount: 0, fetching: false };
     }
     case CLEAR_REFERRALS_ACTION: {
-      return { ...state, referrals: [], fetching: false };
+      return { ...state, referrals: [], refCount: 0, fetching: false };
     }
     case CLEAR_BONUS_ACTION: {
-      return { ...state, bonus: [], fetching: false };
+      return { ...state, bonus: [], bonusCount: 0, fetching: false };
     }
     case CLEAR_ADMINS_ACTION: {
-      return { ...state, admin: [], fetching: false };
+      return { ...state, admin: [], adCount: 0, fetching: false };
     }
     case CLEAR_PROVIDERS_ACTION: {
-      return { ...state, providers: [], fetching: false };
+      return { ...state, providers: [], prCount: 0, fetching: false };
     }
     case CLEAR_SIGNALS_ACTION: {
-      return { ...state, signals: [], fetching: false };
+      return { ...state, signals: [], signalCount: 0, fetching: false };
+    }
+    case CLEAR_ACCOUNTS_ACTION: {
+      return { ...state, accounts: [], accCount: 0, fetching: false };
+    }
+    case CLEAR_ANNOUNCEMENTS_ACTION: {
+      return { ...state, ann: [], annCount: 0, fetching: false };
     }
     default:
       return state;

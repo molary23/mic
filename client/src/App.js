@@ -49,6 +49,8 @@ import AdminCurrency from "./component/admin/Currency";
 import AdminSignalProviders from "./component/admin/SignalProviders";
 import AdminViewAdmins from "./component/admin/ViewAdmin";
 import AdminSignals from "./component/admin/Signals";
+import AdminAccounts from "./component/admin/Accounts";
+import AdminAnnouncements from "./component/admin/Announcements";
 
 /*
 import axios from "axios";
@@ -73,8 +75,6 @@ if (localStorage.jwtToken) {
   if (decoded.exp < currenTime) {
     // Logout User
     store.dispatch(logoutUser());
-    store.dispatch(clearActions("all"));
-    store.dispatch(clearSearchActions("all"));
     // Clear current Profile
     store.dispatch(clearCurrentProfile());
     // Redirect to Login
@@ -180,6 +180,16 @@ function App() {
             exact
             path="/admin/referrals"
             element={<PrivateRoute Component={AdminReferrals} />}
+          />
+          <Route
+            exact
+            path="/admin/accounts"
+            element={<PrivateRoute Component={AdminAccounts} />}
+          />
+          <Route
+            exact
+            path="/admin/announcements"
+            element={<PrivateRoute Component={AdminAnnouncements} />}
           />
           <Route
             exact

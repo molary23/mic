@@ -18,6 +18,11 @@ import {
   GET_SEARCH_PROVIDERS,
   GET_SEARCH_SIGNALS,
   CLEAR_SEARCH_SIGNALS_ACTION,
+  CLEAR_SEARCH_ACCOUNTS_ACTION,
+  GET_SEARCH_ACCOUNTS,
+  CLEAR_SEARCH_ANNOUNCEMENTS_ACTION,
+  GET_SEARCH_ANNOUNCEMENTS,
+  CLEAR_SEARCH_USERS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -43,6 +48,10 @@ const initialState = {
   signals: [],
   sub: [],
   subCount: 0,
+  accounts: [],
+  accCount: 0,
+  ann: [],
+  annCount: 0,
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -140,52 +149,98 @@ export default function searchReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case GET_SEARCH_ACCOUNTS:
+      let accCount = action.payload.shift();
+      return {
+        ...state,
+        accounts: [...state.accounts, ...action.payload],
+        accCount,
+        loading: false,
+        searching: true,
+      };
+    case GET_SEARCH_ANNOUNCEMENTS:
+      return {
+        ...state,
+        annCount: action.payload.shift(),
+        ann: [...state.ann, ...action.payload],
+        loading: false,
+        searching: true,
+      };
     case CLEAR_SEARCH_SUBSCRIPTIONS_ACTION:
       return {
         ...state,
         sub: [],
+        subCount: 0,
         searching: false,
       };
     case CLEAR_SEARCH_TRANSACTIONS_ACTION:
       return {
         ...state,
         trans: [],
+        transCount: 0,
         searching: false,
       };
     case CLEAR_SEARCH_CURRENCY_ACTION:
       return {
         ...state,
         currency: [],
+        curCount: 0,
         searching: false,
       };
     case CLEAR_SEARCH_PAYMENTS_ACTION:
       return {
         ...state,
         pay: [],
+        payCount: 0,
         searching: false,
       };
     case CLEAR_SEARCH_REFERRALS_ACTION:
       return {
         ...state,
         referrals: [],
+        refCount: 0,
         searching: false,
       };
     case CLEAR_SEARCH_ADMINS_ACTION:
       return {
         ...state,
         admins: [],
+        adCount: 0,
         searching: false,
       };
     case CLEAR_SEARCH_PROVIDERS_ACTION:
       return {
         ...state,
         providers: [],
+        prCount: 0,
         searching: false,
       };
     case CLEAR_SEARCH_SIGNALS_ACTION:
       return {
         ...state,
         signals: [],
+        signalCount: 0,
+        searching: false,
+      };
+    case CLEAR_SEARCH_ACCOUNTS_ACTION:
+      return {
+        ...state,
+        accounts: [],
+        accCount: 0,
+        searching: false,
+      };
+    case CLEAR_SEARCH_ANNOUNCEMENTS_ACTION:
+      return {
+        ...state,
+        ann: [],
+        annCount: 0,
+        searching: false,
+      };
+    case CLEAR_SEARCH_USERS_ACTION:
+      return {
+        ...state,
+        users: [],
+        usersCount: 0,
         searching: false,
       };
     default:

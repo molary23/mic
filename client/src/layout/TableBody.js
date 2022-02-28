@@ -332,6 +332,30 @@ function TableBody(props) {
     });
   }
 
+  if (sender === "admin-accounts") {
+    tabeldata = tablebody.map((item, i) => {
+      return (
+        <tr key={i}>
+          <td>{i + 1}</td>
+          <td>{item.fullname}</td>
+          <td className="td-lower">{item.username}</td>
+          <td>{item.type}</td>
+          <td>
+            {item.type === "bank" ? item.account.bank : item.account.wallet}
+          </td>
+          <td>{item.account.account}</td>
+          <td>{item.type === "bank" ? item.account.type : null}</td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          <td>
+            <DateFormat date={item.updatedAt} />
+          </td>
+        </tr>
+      );
+    });
+  }
+
   if (sender === "admin-admins") {
     tabeldata = tablebody.map((item, i) => {
       return (
@@ -352,6 +376,33 @@ function TableBody(props) {
                 to={`/admin/user/:${item.userid}`}
               >
                 <i className="far fa-eye" />
+              </Link>
+            </div>
+          </td>
+        </tr>
+      );
+    });
+  }
+
+  if (sender === "admin-announcements") {
+    tabeldata = tablebody.map((item, i) => {
+      return (
+        <tr key={i}>
+          <td>{i + 1}</td>
+          <td>{item.title}</td>
+          <td className="td-lower">{item.link}</td>
+          <td>{item.summary.substring(0, 200)}...</td>
+          <td>{item.startdate}</td>
+          <td>{item.enddate}</td>
+          <td className="td-lower">
+            <div className="action-buttons">
+              <Link
+                type=""
+                className=""
+                title="View Addmin"
+                to={`/admin/user/:${item.UserId}`}
+              >
+                {item.User.username}
               </Link>
             </div>
           </td>

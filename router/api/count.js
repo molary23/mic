@@ -4,6 +4,7 @@ const express = require("express"),
   { Op } = require("sequelize"),
   Payment = require("../../db/models/Payment"),
   Currency = require("../../db/models/Currency"),
+  Announcement = require("../../db/models/Announcement"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
   TransactionView = require("../../db/models/TransactionView"),
   ProviderView = require("../../db/models/ProviderView"),
@@ -12,6 +13,7 @@ const express = require("express"),
   BonusView = require("../../db/models/BonusView"),
   UserView = require("../../db/models/UserView"),
   SuperView = require("../../db/models/SuperView"),
+  AccountView = require("../../db/models/AccountView"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck");
 
@@ -91,6 +93,8 @@ router.get(
       count.currency = await Currency.count();
       count.admins = await SuperView.count();
       count.providers = await ProviderView.count();
+      count.accounts = await AccountView.count();
+      count.announcement = await Announcement.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);

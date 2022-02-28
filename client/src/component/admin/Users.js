@@ -55,8 +55,8 @@ class Users extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearActions("users");
-    this.props.clearSearchActions("users");
+    this.props.clearActions(this.state.content);
+    this.props.clearSearchActions(this.state.content);
     window.removeEventListener("scroll", this.loadMore);
   }
 
@@ -124,7 +124,7 @@ class Users extends Component {
       showSearch = false;
       loader = true;
       totalCount = admin.usersCount;
-      totalText = "Total User";
+      totalText = "Total Users";
       if (admin.users === [] && loading) {
         loader = true;
         load = upLoad;
@@ -149,6 +149,8 @@ class Users extends Component {
     } else {
       showSearch = true;
       loader = true;
+      totalCount = searchTerms.subCount;
+      totalText = "Selected/Searched Users";
       if (searchTerms.users === [] || searchTerms.users.length <= 0) {
         noRecord = true;
         searchUsers = [];
@@ -221,9 +223,9 @@ class Users extends Component {
               sender={sender}
               head={[
                 "S/N",
-                "Fullname",
+                "fullname",
                 "email",
-                "ussername",
+                "username",
                 "phone number",
                 "User Status ",
                 "Premium Status",

@@ -17,11 +17,11 @@ Announcement.init(
       allowNull: false,
     },
     summary: {
-      type: DataTypes.STRING(150),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     link: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     startdate: {

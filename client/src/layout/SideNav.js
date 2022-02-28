@@ -117,6 +117,13 @@ function SideNav(props) {
               Bonus
             </Link>
 
+            <Link to={`/${viewer}/accounts`}>
+              <span className="sidebar-icon">
+                <i className="fas fa-file-invoice-dollar" />
+              </span>
+              Accounts
+            </Link>
+
             <Link to={`/${viewer}/payments`}>
               <span className="sidebar-icon">
                 <i className="fas fa-dollar-sign" />

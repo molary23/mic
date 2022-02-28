@@ -17,8 +17,6 @@ function Dropdown(props) {
     e.preventDefault();
     props.logoutUser();
     props.clearCurrentProfile();
-    props.clearActions("all");
-    props.clearSearchActions("all");
     navigate("/", { replace: true });
   };
 

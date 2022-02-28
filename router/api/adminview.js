@@ -1,8 +1,8 @@
+const Announcement = require("../../db/models/Announcement");
+
 const express = require("express"),
   router = express.Router(),
-  bcrypt = require("bcryptjs"),
   Sequelize = require("sequelize"),
-  gravatar = require("gravatar"),
   passport = require("passport"),
   { Op } = require("sequelize"),
   // Use Json Web Token
@@ -26,6 +26,7 @@ const express = require("express"),
   BonusView = require("../../db/models/BonusView"),
   UserView = require("../../db/models/UserView"),
   SuperView = require("../../db/models/SuperView"),
+  AccountView = require("../../db/models/AccountView"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck");
 
@@ -180,7 +181,7 @@ router.post(
       where,
       raw: true,
     };
-    let result = {};
+    let result = [];
     PaymentView.findAndCountAll(query)
       .then((entries) => {
         const { count, rows } = entries;
@@ -341,7 +342,7 @@ router.post(
       where,
       raw: true,
     };
-    let result = {};
+    let result = [];
     SubscriptionView.findAndCountAll(query)
       .then((entries) => {
         const { count, rows } = entries;
@@ -441,7 +442,7 @@ router.post(
       where,
       raw: true,
     };
-    let result = {};
+    let result = [];
     BonusView.findAndCountAll(query)
       .then((entries) => {
         const { count, rows } = entries;
@@ -637,7 +638,7 @@ router.post(
       where,
       raw: true,
     };
-    let result = {};
+    let result = [];
     SignalView.findAndCountAll(query)
       .then((entries) => {
         const { count, rows } = entries;
@@ -949,7 +950,7 @@ router.post(
       where,
       raw: true,
     };
-    let result = {},
+    let result = [],
       view;
     if (table === "providers") {
       view = ProviderView;
@@ -1054,7 +1055,7 @@ router.post(
       }
     }
 
-    let result = {};
+    let result = [];
     Currency.findAndCountAll({
       order: [["id", "DESC"]],
       offset,
@@ -1549,12 +1550,187 @@ router.post(
         };
       }
     }
-    let result = {};
+    let result = [];
     ReferralView.findAndCountAll({
       where,
       order: [["id", "desc"]],
       limit,
       offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/adminview/accounts
+desc Admin View Users
+@access private
+*/
+
+router.post(
+  "/accounts",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
+    let where = {};
+    if (req.body.search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              {
+                username: { [Op.substring]: searchArray[i] },
+              },
+              {
+                fullname: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
+
+          newSearchArray.push(newSearchObj);
+        }
+
+        where = {
+          [Op.and]: newSearchArray,
+        };
+      } else {
+        let search = searchArray[0];
+        where = {
+          [Op.or]: [
+            { fullname: { [Op.substring]: search } },
+            { username: { [Op.substring]: search } },
+          ],
+        };
+      }
+    }
+
+    const query = {
+      order: [["accountid", "DESC"]],
+      limit,
+      offset,
+      attributes: [
+        "UserId",
+        "username",
+        "fullname",
+        "account",
+        "createdAt",
+        "updatedAt",
+        [
+          Sequelize.literal(
+            `CASE WHEN type = 'b' THEN 'bank' WHEN type = 'c' THEN 'crypto-wallet' END `
+          ),
+          "type",
+        ],
+      ],
+      where,
+      raw: true,
+    };
+    let result = [];
+    AccountView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/adminview/announcements
+@desc Admin View Announcements
+@access private
+*/
+
+router.post(
+  "/announcements",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
+    let where = {};
+    if (req.body.search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              {
+                summary: { [Op.substring]: searchArray[i] },
+              },
+              {
+                link: { [Op.substring]: searchArray[i] },
+              },
+              {
+                title: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
+
+          newSearchArray.push(newSearchObj);
+        }
+
+        where = {
+          [Op.and]: newSearchArray,
+        };
+      } else {
+        let search = searchArray[0];
+        where = {
+          [Op.or]: [
+            {
+              summary: { [Op.substring]: search },
+            },
+            {
+              link: { [Op.substring]: search },
+            },
+            {
+              title: { [Op.substring]: search },
+            },
+          ],
+        };
+      }
+    }
+
+    let result = [];
+
+    Announcement.findAndCountAll({
+      where,
+      limit,
+      offset,
+      include: [{ model: User, attributes: ["username"] }],
     })
       .then((entries) => {
         const { count, rows } = entries;

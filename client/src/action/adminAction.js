@@ -21,6 +21,10 @@ import {
   CLEAR_PROVIDERS_ACTION,
   CLEAR_SIGNALS_ACTION,
   GET_ALL_SIGNALS,
+  GET_ALL_ACCOUNTS,
+  CLEAR_ACCOUNTS_ACTION,
+  GET_ALL_ANNOUNCEMENTS,
+  CLEAR_ANNOUNCEMENTS_ACTION,
 } from "./types";
 
 export const getTrans = (paginate) => async (dispatch) => {
@@ -87,6 +91,12 @@ export const getContent = (content, paginate) => async (dispatch) => {
   } else if (content === "users") {
     url = `${url}users`;
     type = GET_ALL_USERS;
+  } else if (content === "accounts") {
+    url = `${url}accounts`;
+    type = GET_ALL_ACCOUNTS;
+  } else if (content === "announcements") {
+    url = `${url}announcements`;
+    type = GET_ALL_ANNOUNCEMENTS;
   }
   try {
     let response = await axios.post(url, paginate);
@@ -128,6 +138,10 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_TRANSACTIONS_ACTION };
   } else if (actionToClear === "users") {
     return { type: CLEAR_USERS_ACTION };
+  } else if (actionToClear === "accounts") {
+    return { type: CLEAR_ACCOUNTS_ACTION };
+  } else if (actionToClear === "announcements") {
+    return { type: CLEAR_ANNOUNCEMENTS_ACTION };
   }
 };
 

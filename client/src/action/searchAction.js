@@ -21,52 +21,11 @@ import {
   CLEAR_SEARCH_PROVIDERS_ACTION,
   GET_SEARCH_SIGNALS,
   CLEAR_SEARCH_SIGNALS_ACTION,
+  GET_SEARCH_ACCOUNTS,
+  CLEAR_SEARCH_ACCOUNTS_ACTION,
+  GET_SEARCH_ANNOUNCEMENTS,
+  CLEAR_SEARCH_ANNOUNCEMENTS_ACTION,
 } from "./types";
-
-export const searchSub = (searchData) => async (dispatch) => {
-  dispatch(setLoading());
-  try {
-    let response = await axios.post(
-      "/api/adminview/subscriptions/",
-      searchData
-    );
-    const result = await dispatch({
-      type: GET_SEARCH_SUBSCRIPTIONS,
-      payload: response.data,
-    });
-    return result;
-  } catch (error) {
-    dispatch({ type: GET_SEARCH_SUBSCRIPTIONS, payload: {} });
-  }
-};
-
-export const searchTrans = (searchData) => async (dispatch) => {
-  dispatch(setLoading());
-  try {
-    let response = await axios.post("/api/adminview/transactions/", searchData);
-    const result = await dispatch({
-      type: GET_SEARCH_TRANSACTIONS,
-      payload: response.data,
-    });
-    return result;
-  } catch (error) {
-    dispatch({ type: GET_SEARCH_TRANSACTIONS, payload: [] });
-  }
-};
-export const searchUser = (searchData) => async (dispatch) => {
-  dispatch(setLoading());
-  try {
-    let response = await axios.post("/api/adminview/users/", searchData);
-    const result = await dispatch({
-      type: GET_SEARCH_USERS,
-      payload: response.data,
-    });
-    return result;
-  } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_SEARCH_USERS, payload: [] });
-  }
-};
 
 export const searchContent = (content, searchData) => async (dispatch) => {
   dispatch(setLoading());
@@ -104,6 +63,12 @@ export const searchContent = (content, searchData) => async (dispatch) => {
   } else if (content === "users") {
     url = `${url}users`;
     type = GET_SEARCH_USERS;
+  } else if (content === "accounts") {
+    url = `${url}accounts`;
+    type = GET_SEARCH_ACCOUNTS;
+  } else if (content === "announcements") {
+    url = `${url}announcements`;
+    type = GET_SEARCH_ANNOUNCEMENTS;
   }
 
   try {
@@ -146,6 +111,10 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_SEARCH_TRANSACTIONS_ACTION };
   } else if (actionToClear === "users") {
     return { type: CLEAR_SEARCH_USERS_ACTION };
+  } else if (actionToClear === "accounts") {
+    return { type: CLEAR_SEARCH_ACCOUNTS_ACTION };
+  } else if (actionToClear === "announcements") {
+    return { type: CLEAR_SEARCH_ANNOUNCEMENTS_ACTION };
   }
 };
 export const setLoading = () => {
