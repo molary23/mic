@@ -1699,10 +1699,8 @@ router.post(
               },
             ],
           };
-
           newSearchArray.push(newSearchObj);
         }
-
         where = {
           [Op.and]: newSearchArray,
         };
@@ -1727,10 +1725,16 @@ router.post(
     let result = [];
 
     Announcement.findAndCountAll({
-      where,
       limit,
       offset,
-      include: [{ model: User, attributes: ["username"] }],
+      include: [
+        {
+          model: User,
+          attributes: ["username"],
+          required: true,
+        },
+      ],
+      where,
     })
       .then((entries) => {
         const { count, rows } = entries;

@@ -4,6 +4,7 @@ import {
   CLEAR_ERRORS,
   SET_ALL_COUNTS,
   CLEAR_ALL_ACTIONS,
+  SET_PROVIDER_COUNTS,
 } from "./types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -39,15 +40,23 @@ export const clearErrors = () => {
 
 // Get All Counts
 export const getAllCounts = (level) => async (dispatch) => {
-  let url = "/api/count/";
+  let url = "/api/count/",
+    lsName,
+    type;
   if (level === 3) {
     url = `${url}admin/all/`;
+    lsName = "counts";
+    type = SET_ALL_COUNTS;
+  } else if (level === 2) {
+    url = `${url}admin/provider/`;
+    lsName = "providerCounts";
+    type = SET_PROVIDER_COUNTS;
   }
   try {
     const response = await axios.get(url, {});
-    localStorage.setItem("counts", JSON.stringify(response.data));
+    localStorage.setItem(lsName, JSON.stringify(response.data));
     const result = await dispatch({
-      type: SET_ALL_COUNTS,
+      type,
       payload: await response.data,
     });
     return result;

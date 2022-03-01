@@ -6,8 +6,6 @@ import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
 import { clearCurrentProfile } from "./action/profileAction";
-import { clearActions } from "./action/adminAction";
-import { clearSearchActions } from "./action/searchAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
@@ -52,6 +50,10 @@ import AdminSignals from "./component/admin/Signals";
 import AdminAccounts from "./component/admin/Accounts";
 import AdminAnnouncements from "./component/admin/Announcements";
 
+// Signal Provider
+import ProviderDashboard from "./component/signalprovider/Dashboard";
+import ProviderSignals from "./component/signalprovider/Signals";
+
 /*
 import axios from "axios";
 let params = { name: "adeola" };
@@ -93,7 +95,15 @@ function App() {
           <Route exact path="/register" element={<Register />} />
           <Route path="/referral/:username" element={<Referral />} />
         </Route>
-
+        <Route
+          path="/sp"
+          element={<PrivateRoute Component={ProviderDashboard} />}
+        >
+          <Route
+            path="/sp/"
+            element={<PrivateRoute Component={ProviderSignals} />}
+          />
+        </Route>
         <Route path="/user" element={<PrivateRoute Component={Dashboard} />}>
           <Route
             exact

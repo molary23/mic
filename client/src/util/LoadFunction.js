@@ -131,16 +131,77 @@ export const setSearchParams = ({
 
 export const renderArrange = ({
   fetching,
+  loading,
+  list,
+  count,
   searching,
+  searchcount,
+  searchlist,
+  searchloading,
   startLoad,
   getLoad,
-  showSearch,
-  main,
-  search,
-  emptyRecord,
-  noRecord,
-  totalText,
-  totalCount,
+  announcementcount,
 }) => {
-  console.log("first");
+  let load = getLoad,
+    loader = startLoad,
+    ann = [],
+    searchann,
+    showSearch,
+    emptyRecord = false,
+    noRecord = false,
+    totalText = "",
+    totalCount = announcementcount;
+
+  if (fetching) {
+    showSearch = false;
+    loader = true;
+    totalCount = count;
+    totalText = "";
+    if (list === [] && loading) {
+      loader = true;
+      load = false;
+    } else if (list.length > 0 && !loading) {
+      ann = list;
+      load = false;
+
+      loader = false;
+    } else if (list.length > 0 && loading) {
+      ann = list;
+      load = false;
+      loader = true;
+    } else {
+      load = false;
+      emptyRecord = true;
+      ann = [];
+    }
+  }
+
+  if (!searching) {
+    showSearch = searching;
+  } else {
+    showSearch = true;
+    loader = true;
+    totalCount = searchcount;
+    totalText = "Selected/Searched";
+    if (searchlist === [] || searchlist.length <= 0) {
+      noRecord = true;
+      searchann = [];
+      loader = false;
+    } else if (searchlist.length > 0 && !searchloading) {
+      searchann = searchlist;
+      loader = false;
+    } else if (searchlist.length > 0 && searchloading) {
+      searchann = searchlist;
+      loader = true;
+    }
+  }
+  return {
+    showSearch,
+    ann,
+    searchann,
+    emptyRecord,
+    noRecord,
+    totalText,
+    totalCount,
+  };
 };

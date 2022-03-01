@@ -1,25 +1,20 @@
-import React from 'react'
+import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import {getAllCounts} from "../action/authAction";
+import { getAllCounts } from "../action/authAction";
 
 function LoadCount(props) {
-
-  const {sender, level} = props;
-     if (sender === 'login') {
-     if (level === 3) {
-       props.getAllCounts(level)
-     }
+  const { sender, level } = props;
+  if (sender === "login") {
+    if (level === 3) {
+      props.getAllCounts(level);
+    } else if (level === 2) {
+      props.getAllCounts(level);
     }
+  }
 
-
-
-  return (
-    <div>
-    
-    </div>
-  )
+  return <div></div>;
 }
 
 LoadCount.propTypes = {

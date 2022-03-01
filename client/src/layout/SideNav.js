@@ -15,11 +15,11 @@ function SideNav(props) {
 
   let display = props.act;
 
-  let viewer = "admin";
+  let viewer = "sp";
   if (props.auth.user.level === 3) {
     viewer = "admin";
   } else if (props.auth.user.level === 2) {
-    viewer = "provider";
+    viewer = "sp";
   } else if (props.auth.user.level === 1) {
     viewer = "user";
   }
@@ -36,14 +36,16 @@ function SideNav(props) {
               Dashboard
             </Link>
 
-            {(props.auth.user.level === 1 || props.auth.user.level === 3) && (
+            {
+              //(props.auth.user.level === 1 || props.auth.user.level === 3) && (
               <Link to={`/${viewer}/signals`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-signal" />
                 </span>
                 Signals
               </Link>
-            )}
+              // )
+            }
 
             {
               //props.auth.user.level > 2 && (

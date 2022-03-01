@@ -1,4 +1,7 @@
 export const SET_ALL_COUNTS = "SET_ALL_COUNTS";
+export const SET_PROVIDER_COUNTS = "SET_PROVIDER_COUNTS";
+export const SET_USER_COUNTS = "SET_USER_COUNTS";
+
 export const GET_ERRORS = "GET_ERRORS";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";

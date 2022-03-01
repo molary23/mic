@@ -94,25 +94,25 @@ class Announcements extends Component {
       this.state;
 
     const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
+    const { loading, fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.annCount,
+      list = admin.ann,
+      searchcount = searchTerms.annCount,
+      searchlist = searchTerms.ann,
+      searchloading = searchTerms.loading;
 
-    let load = startLoad,
-      loader = getLoad,
-      ann = [],
-      searchann,
-      showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = announcementcount;
+    // let load = startLoad,
+    //   loader = getLoad;
+    // ann = [],
+    //  searchann,
+    //  showSearch,
+    //  emptyRecord = false,
+    //  noRecord = false,
+    //  totalText = "",
+    //  totalCount = announcementcount;
 
-    renderArrange({
-      fetching,
-      searching,
-      startLoad,
-      getLoad,
+    const {
       showSearch,
       ann,
       searchann,
@@ -120,9 +120,25 @@ class Announcements extends Component {
       noRecord,
       totalText,
       totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      announcementcount,
     });
 
-    if (fetching) {
+    console.log(ann);
+
+    /*  if (fetching) {
       showSearch = false;
       loader = true;
       totalCount = admin.annCount;
@@ -164,7 +180,7 @@ class Announcements extends Component {
         searchann = searchTerms.ann;
         loader = true;
       }
-    }
+    }*/
     return (
       <div>
         {loader && <ProgressBar />}

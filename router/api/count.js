@@ -15,7 +15,8 @@ const express = require("express"),
   SuperView = require("../../db/models/SuperView"),
   AccountView = require("../../db/models/AccountView"),
   //Bring in Super Admin Checker
-  checkSuperAdmin = require("../../validation/superCheck");
+  checkSuperAdmin = require("../../validation/superCheck"),
+  checkPr = require("../../validation/checkPr");
 
 /*
 @route GET api/count/:table
@@ -95,6 +96,24 @@ router.get(
       count.providers = await ProviderView.count();
       count.accounts = await AccountView.count();
       count.announcement = await Announcement.count();
+      res.json(count);
+    } catch (error) {
+      res.status(404).json(error);
+    }
+  }
+);
+
+router.get(
+  "/admin/provider",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const { error, isLevel } = checkPr(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const count = {};
+    try {
+      count.signals = await SignalView.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);

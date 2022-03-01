@@ -6,8 +6,8 @@ import { loginuser, getAllCounts } from "../action/authAction";
 
 import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "../layout/TextPasswordField";
-import ProgressBar from '../layout/ProgressBar';
-import LoadCount from '../layout/LoadCount';
+import ProgressBar from "../layout/ProgressBar";
+import LoadCount from "../layout/LoadCount";
 
 import Box from "../layout/Box";
 
@@ -21,7 +21,7 @@ class Login extends Component {
     navigate: false,
     viewer: "",
     move: false,
-    level: 0
+    level: 0,
   };
 
   componentDidMount() {
@@ -34,7 +34,7 @@ class Login extends Component {
       } else if (this.props.auth.user.level === 2) {
         this.setState({
           navigate: true,
-          viewer: "/provider",
+          viewer: "/sp",
         });
       } else if (this.props.auth.user.level === 3) {
         this.setState({
@@ -49,11 +49,11 @@ class Login extends Component {
     let update = {};
 
     if (nextProps.auth.isAuthenticated && prevState.move === false) {
-      update.level = nextProps.auth.user.level
+      update.level = nextProps.auth.user.level;
       if (nextProps.auth.user.level === 1) {
         update.viewer = "/user";
       } else if (nextProps.auth.user.level === 2) {
-        update.viewer = "/provider";
+        update.viewer = "/sp";
       } else if (nextProps.auth.user.level === 3) {
         update.viewer = "/admin";
       }
@@ -62,10 +62,13 @@ class Login extends Component {
 
     if (nextProps.errors && Object.keys(prevState.error).length === 0) {
       update.error = nextProps.errors;
-      
     }
 
-    if (nextProps.auth.isAuthenticated && Object.keys(nextProps.auth.allCounts).length > 0) {
+    if (
+      nextProps.auth.isAuthenticated &&
+      (Object.keys(nextProps.auth.allCounts).length > 0 ||
+        Object.keys(nextProps.auth.providerCounts).length)
+    ) {
       update.loading = false;
       update.navigate = true;
     }
@@ -114,16 +117,27 @@ class Login extends Component {
   };
 
   render() {
-    const { username, error, pass, password, loading, navigate, viewer, move, level } =
-      this.state;
-    const { errors } = this.props;
+    const {
+      username,
+      error,
+      pass,
+      password,
+      loading,
+      navigate,
+      viewer,
+      move,
+      level,
+    } = this.state;
+    //const { errors } = this.props;
 
     return (
       <div className="">
-        {move && <>
-        <ProgressBar />
-        <LoadCount sender={'login'} level={level}/></>
-        }
+        {move && (
+          <>
+            <ProgressBar />
+            <LoadCount sender={"login"} level={level} />
+          </>
+        )}
         <Box sender={"login"}>
           <form className="login-form" onSubmit={this.submitHandler}>
             <TextInputField
@@ -167,7 +181,7 @@ class Login extends Component {
             New to MIC? <Link to="/register">Join</Link>
           </p>
           <p className="">
-            <Link to="/">Forgot your Password?</Link>
+            <Link to="/forgot">Forgot your Password?</Link>
           </p>
         </div>
         {navigate && <Navigate to={`${viewer}`} replace={true} />}
