@@ -7,11 +7,7 @@ import { getAllCounts } from "../action/authAction";
 function LoadCount(props) {
   const { sender, level } = props;
   if (sender === "login") {
-    if (level === 3) {
-      props.getAllCounts(level);
-    } else if (level === 2) {
-      props.getAllCounts(level);
-    }
+    props.getAllCounts(level);
   }
 
   return <div></div>;

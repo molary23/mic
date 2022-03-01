@@ -28,9 +28,50 @@ const express = require("express"),
 @access public
 */
 
-router.get("/finder/:page", (req, res) => {
-  let nm = JSON.parse(req.params.page);
-  return res.json(nm);
+router.get("/finder", async (req, res) => {
+  let limit = 18,
+    offset = 0,
+    where = {};
+  const query = {
+    order: [["signalid", "DESC"]],
+    limit,
+    offset,
+    attributes: [
+      "signalid",
+      "firstcurrency",
+      "secondcurrency",
+      "takeprofit",
+      "stoploss",
+      "pip",
+      "createdAt",
+      "updatedAt",
+      "provider",
+      "providerid",
+      [
+        Sequelize.literal(
+          `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `
+        ),
+        "signaloption",
+      ],
+      [
+        Sequelize.literal(
+          `CASE WHEN status = 'f' THEN 'Filled' WHEN status = 'c' THEN 'Cancelled' END `
+        ),
+        "status",
+      ],
+      [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
+    ],
+    where,
+    distinct: true,
+    col: "CurrencyId",
+    raw: true,
+  };
+
+  SignalView.findAndCountAll(query)
+    .then((signals) => {
+      res.json(signals);
+    })
+    .catch((err) => res.status(404).json(err));
 });
 
 /*

@@ -140,4 +140,110 @@ router.get(
       .catch((err) => res.status(404).json(err));
   }
 );
+
+/*
+@route GET api/userview/signals
+@desc Admin View signals
+@access private
+*/
+
+router.post(
+  "/signals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    let where = {};
+    if (req.body.search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              {
+                provider: { [Op.substring]: searchArray[i] },
+              },
+              {
+                firstcurrency: { [Op.substring]: searchArray[i] },
+              },
+              {
+                secondcurrency: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        where = {
+          [Op.and]: newSearchArray,
+        };
+      } else {
+        let search = searchArray[0];
+
+        where = {
+          [Op.or]: [
+            { provider: { [Op.substring]: search } },
+            { firstcurrency: { [Op.substring]: search } },
+            { secondcurrency: { [Op.substring]: search } },
+          ],
+        };
+      }
+    }
+
+    const query = {
+      order: [["signalid", "DESC"]],
+      limit,
+      offset,
+      attributes: [
+        "signalid",
+        "firstcurrency",
+        "secondcurrency",
+        "takeprofit",
+        "stoploss",
+        "pip",
+        "createdAt",
+        "updatedAt",
+        "provider",
+        "providerid",
+        [
+          Sequelize.literal(
+            `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `
+          ),
+          "signaloption",
+        ],
+        [
+          Sequelize.literal(
+            `CASE WHEN status = 'f' THEN 'Filled' WHEN status = 'c' THEN 'Cancelled' END `
+          ),
+          "status",
+        ],
+        [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
+      ],
+      where,
+      distinct: true,
+      col: "CurrencyId",
+      raw: true,
+    };
+    let result = [];
+    SignalView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 module.exports = router;

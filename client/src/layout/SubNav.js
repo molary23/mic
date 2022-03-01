@@ -13,7 +13,6 @@ export class SubNav extends Component {
     close: true,
   };
 
-
   openNav = () => {
     this.setState({
       close: !this.state.close,
@@ -48,16 +47,19 @@ export class SubNav extends Component {
 
             <div className="collapse navbar-collapse" id="sideNavBar">
               <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <img
                     src={logo}
                     alt="MIC Earn Business Logo"
                     style={{ width: "30px" }}
                     className="rounded-pill"
                   />
-                </li>
+    </li>*/}
                 <li className="nav-item dropdown">
                   <Dropdown />
+                </li>
+                <li className="nav-item dropdown">
+                  <i className="fas fa-cog nav-settings" />
                 </li>
               </ul>
             </div>

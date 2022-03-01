@@ -7,6 +7,7 @@ import { clearSearchActions } from "../action/searchAction";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import logo from "../asset/images/logo.png";
 import DropdownItem from "./DropdownItem";
 
 function Dropdown(props) {
@@ -23,7 +24,7 @@ function Dropdown(props) {
   return (
     <div className="Dropdown">
       <Link
-        className="nav-link dropdown-toggle"
+        //className='nav-link dropdown-toggle'
         to="#"
         role="button"
         data-bs-toggle="dropdown"
@@ -33,7 +34,14 @@ function Dropdown(props) {
         onBlur={() => {
           setDisplay(false);
         }}
-      ></Link>
+      >
+        <img
+          src={logo}
+          alt="MIC Earn Business Logo"
+          style={{ width: "30px" }}
+          className="rounded-pill"
+        />
+      </Link>
 
       <ul className={`dropdown-menu ${display ? "show" : ""}`}>
         <li className="dropdown-item">

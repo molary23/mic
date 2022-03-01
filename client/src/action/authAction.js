@@ -5,6 +5,7 @@ import {
   SET_ALL_COUNTS,
   CLEAR_ALL_ACTIONS,
   SET_PROVIDER_COUNTS,
+  SET_USER_COUNTS,
 } from "./types";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -48,9 +49,13 @@ export const getAllCounts = (level) => async (dispatch) => {
     lsName = "counts";
     type = SET_ALL_COUNTS;
   } else if (level === 2) {
-    url = `${url}admin/provider/`;
+    url = `${url}provider/all/`;
     lsName = "providerCounts";
     type = SET_PROVIDER_COUNTS;
+  } else if (level === 1) {
+    url = `${url}user/all/`;
+    lsName = "userCounts";
+    type = SET_USER_COUNTS;
   }
   try {
     const response = await axios.get(url, {});

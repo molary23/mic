@@ -32,7 +32,6 @@ class ViewAdmin extends Component {
     url: new URL(window.location),
     isLoading: false,
     doneTypingInterval: 5000,
-    usercount: 9,
     upLoad: true,
     admincount: JSON.parse(localStorage.getItem("counts")).admins,
     content: "admins",

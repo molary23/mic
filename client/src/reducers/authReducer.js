@@ -3,6 +3,7 @@ import {
   SET_ALL_COUNTS,
   CLEAR_ALL_ACTIONS,
   SET_PROVIDER_COUNTS,
+  SET_USER_COUNTS,
 } from "../action/types";
 import isEmpty from "../validation/emptyChecker";
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   user: {},
   allCounts: {},
   providerCounts: {},
+  userCounts: {},
 };
 
 export default function authReducer(state = initialState, action) {
@@ -23,6 +25,11 @@ export default function authReducer(state = initialState, action) {
       return {
         ...state,
         providerCounts: action.payload,
+      };
+    case SET_USER_COUNTS:
+      return {
+        ...state,
+        userCounts: action.payload,
       };
     case SET_CURRENT_USER:
       return {

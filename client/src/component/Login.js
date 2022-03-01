@@ -67,7 +67,8 @@ class Login extends Component {
     if (
       nextProps.auth.isAuthenticated &&
       (Object.keys(nextProps.auth.allCounts).length > 0 ||
-        Object.keys(nextProps.auth.providerCounts).length)
+        Object.keys(nextProps.auth.providerCounts).length > 0 ||
+        Object.keys(nextProps.auth.userCounts).length > 0)
     ) {
       update.loading = false;
       update.navigate = true;

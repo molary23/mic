@@ -20,6 +20,10 @@ Currency.init(
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    currencypair: {
+      type: DataTypes.JSON(),
+      allowNull: false,
+    },
     status: {
       type: DataTypes.TINYINT,
       defaultValue: 1,

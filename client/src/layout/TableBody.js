@@ -566,7 +566,7 @@ function TableBody(props) {
                   className="btn btn-success btn-sm"
                   data-id={item.signalid}
                   title="View Signal"
-                  onClick={() => onClick(i)}
+                  onClick={() => onClick(item.signalid)}
                 >
                   <i className="fas fa-edit" />
                 </button>

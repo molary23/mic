@@ -102,6 +102,10 @@ class Signals extends Component {
     });
   };
 
+  clickHandler = (value) => {
+    console.log("first", value);
+  };
+
   render() {
     const {
       sender,
@@ -237,6 +241,7 @@ class Signals extends Component {
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>

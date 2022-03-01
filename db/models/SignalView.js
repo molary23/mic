@@ -44,6 +44,12 @@ SignalView.init(
     secondcurrency: {
       type: DataTypes.STRING(20),
     },
+    currencyid: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    currencypair: {
+      type: DataTypes.JSON(),
+    },
     provider: {
       type: DataTypes.STRING(30),
     },

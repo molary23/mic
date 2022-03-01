@@ -251,6 +251,16 @@ ul.dropdown-menu li a {
   z-index: 999;
 }
 
+.nav-item.dropdown {
+  margin-right: 10px;
+}
+
+.nav-item.dropdown .nav-settings {
+  font-size: 25px;
+  color: #818181;
+  margin-top: 5px;
+}
+
 .sidebar {
   height: 100%;
   /* 100% Full-height */
@@ -460,14 +470,16 @@ ul.dropdown-menu li a {
 
 /* Signal */
 .signal-page {
-  min-height: 1400px;
+  min-height: 1000px;
+  margin-bottom: 50px;
 }
 
 .signal-detail {
   display: -ms-grid;
   display: grid;
-  grid-row-gap: 2%;
-  height: 400px;
+  grid-row-gap: 1%;
+  min-height: 400px;
+  margin-bottom: 20px;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -489,7 +501,8 @@ ul.dropdown-menu li a {
 .signal-detail .signal-to,
 .signal-detail .signal-sold-at,
 .signal-detail .signal-bought-at,
-.signal-detail .signal-pip {
+.signal-detail .signal-pip,
+.signal-detail .signal-provider {
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 2fr 1fr;
