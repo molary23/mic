@@ -144,8 +144,8 @@ export const renderArrange = ({
 }) => {
   let load = getLoad,
     loader = startLoad,
-    ann = [],
-    searchann,
+    main = [],
+    searchMain,
     showSearch,
     emptyRecord = false,
     noRecord = false,
@@ -156,23 +156,22 @@ export const renderArrange = ({
     showSearch = false;
     loader = true;
     totalCount = count;
-    totalText = "";
+    totalText = "Total";
     if (list === [] && loading) {
       loader = true;
       load = false;
     } else if (list.length > 0 && !loading) {
-      ann = list;
+      main = list;
       load = false;
-
       loader = false;
     } else if (list.length > 0 && loading) {
-      ann = list;
+      main = list;
       load = false;
       loader = true;
     } else {
       load = false;
       emptyRecord = true;
-      ann = [];
+      main = [];
     }
   }
 
@@ -185,23 +184,25 @@ export const renderArrange = ({
     totalText = "Selected/Searched";
     if (searchlist === [] || searchlist.length <= 0) {
       noRecord = true;
-      searchann = [];
+      searchMain = [];
       loader = false;
     } else if (searchlist.length > 0 && !searchloading) {
-      searchann = searchlist;
+      searchMain = searchlist;
       loader = false;
     } else if (searchlist.length > 0 && searchloading) {
-      searchann = searchlist;
+      searchMain = searchlist;
       loader = true;
     }
   }
   return {
     showSearch,
-    ann,
-    searchann,
+    main,
+    searchMain,
     emptyRecord,
     noRecord,
     totalText,
     totalCount,
+    load,
+    loader,
   };
 };

@@ -621,6 +621,7 @@ router.post(
         "createdAt",
         "updatedAt",
         "provider",
+        "providerid",
         [
           Sequelize.literal(
             `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `

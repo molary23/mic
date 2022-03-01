@@ -476,7 +476,7 @@ function TableBody(props) {
     });
   }
 
-  if (sender === "admin-signals") {
+  if (sender === "admin-signals" || sender === "provider-signals") {
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
@@ -537,16 +537,18 @@ function TableBody(props) {
           <td>
             <DateFormat date={item.updatedAt} />
           </td>
-          <td className="td-lower">
-            <Link
-              type=""
-              className=""
-              title="View Admin"
-              to={`/admin/signal-provider/:${item.userid}`}
-            >
-              {item.provider}
-            </Link>
-          </td>
+          {sender === "admin-signals" && (
+            <td className="td-lower">
+              <Link
+                type=""
+                className=""
+                title="View Admin"
+                to={`/admin/signal-provider/:${item.userid}`}
+              >
+                {item.provider}
+              </Link>
+            </td>
+          )}
           <td>
             <div className="action-buttons">
               <button
@@ -558,6 +560,17 @@ function TableBody(props) {
               >
                 <i className="far fa-eye" />
               </button>
+              {sender === "provider-signals" && (
+                <button
+                  type="button"
+                  className="btn btn-success btn-sm"
+                  data-id={item.signalid}
+                  title="View Signal"
+                  onClick={() => onClick(i)}
+                >
+                  <i className="fas fa-edit" />
+                </button>
+              )}
             </div>
           </td>
         </tr>

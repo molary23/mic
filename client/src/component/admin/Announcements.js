@@ -102,20 +102,10 @@ class Announcements extends Component {
       searchlist = searchTerms.ann,
       searchloading = searchTerms.loading;
 
-    // let load = startLoad,
-    //   loader = getLoad;
-    // ann = [],
-    //  searchann,
-    //  showSearch,
-    //  emptyRecord = false,
-    //  noRecord = false,
-    //  totalText = "",
-    //  totalCount = announcementcount;
-
     const {
       showSearch,
-      ann,
-      searchann,
+      main,
+      searchMain,
       emptyRecord,
       noRecord,
       totalText,
@@ -135,8 +125,6 @@ class Announcements extends Component {
       getLoad,
       announcementcount,
     });
-
-    console.log(ann);
 
     /*  if (fetching) {
       showSearch = false;
@@ -236,7 +224,7 @@ class Announcements extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? ann : searchann}
+                tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
           </div>

@@ -27,34 +27,6 @@ import {
   CLEAR_ANNOUNCEMENTS_ACTION,
 } from "./types";
 
-export const getTrans = (paginate) => async (dispatch) => {
-  dispatch(setLoading());
-  try {
-    let response = await axios.post("/api/adminview/transactions/", paginate);
-    const result = await dispatch({
-      type: GET_ALL_TRANSACTIONS,
-      payload: response.data,
-    });
-    return result;
-  } catch (error) {
-    dispatch({ type: GET_ALL_TRANSACTIONS, payload: [] });
-  }
-};
-
-export const getUser = (paginate) => async (dispatch) => {
-  dispatch(setLoading());
-  try {
-    let response = await axios.post("/api/adminview/users/", paginate);
-    const result = await dispatch({
-      type: GET_ALL_USERS,
-      payload: response.data,
-    });
-    return result;
-  } catch (error) {
-    dispatch({ type: GET_ALL_USERS, payload: [] });
-  }
-};
-
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
   let url = "/api/adminview/",
