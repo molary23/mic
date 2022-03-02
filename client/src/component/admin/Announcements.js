@@ -239,6 +239,9 @@ Announcements.propTypes = {
   searchContent: PropTypes.func.isRequired,
   clearActions: PropTypes.func.isRequired,
   clearSearchActions: PropTypes.func.isRequired,
+  renderArrange: PropTypes.func.isRequired,
+  getMore: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

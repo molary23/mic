@@ -26,7 +26,7 @@ Payment.init(
       defaultValue: 1,
     },
     gateway: {
-      type: DataTypes.ENUM("b", "s"),
+      type: DataTypes.ENUM("b", "c"), //Bank,Crypto
       allowNull: false,
     },
   },

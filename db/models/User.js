@@ -32,7 +32,7 @@ User.init(
       type: DataTypes.TINYINT,
       defaultValue: 1,
     },
-    active: {
+    status: {
       type: DataTypes.TINYINT,
       defaultValue: 1,
     },

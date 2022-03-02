@@ -111,6 +111,14 @@ table .td-shorter {
   font-size: 14px;
 }
 
+table .active-status span {
+  color: #04c734;
+}
+
+table .inactive-status span {
+  color: #dd1010;
+}
+
 a.default-anchor {
   text-decoration: none;
 }

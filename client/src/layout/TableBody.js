@@ -10,29 +10,60 @@ function TableBody(props) {
   const { sender, tablebody, onClick } = props;
 
   let tabeldata;
-  if (sender === "transactions") {
+  if (sender === "user-transactions") {
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
-          <td>{item.method}</td>
-          <td>{item.type}</td>
-          <td>{item.date.toISOString()}</td>
+          <td>
+            {item.method === "b" && "bonus"}
+            {item.method === "s" && "subscription"}
+            {item.method === "w" && "withdrawal"}
+          </td>
+          <td>{item.type === "d" ? "debit" : "credit"}</td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
         </tr>
       );
     });
   }
 
-  if (sender === "subscriptions") {
+  if (sender === "user-subscriptions") {
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
-          <td>{item.method}</td>
-          <td>{item.type}</td>
-          <td>{item.date.toISOString()}</td>
+          <td>
+            {item.status === 1 && "disapproved"}
+            {item.status === 2 && "pending"}
+            {item.status === 3 && "approved"}
+          </td>
+          <td>{item.type === "b" ? "bonus" : "pay"}</td>
+          <td>
+            {item.plan} {item.package === "m" ? "month" : "year"}
+            {item.plan > 1 && "s"}
+          </td>
+          <td>{item.duration} days</td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          <td>
+            {item.payID && (
+              <div className="action-buttons">
+                <Link
+                  type="button"
+                  className="btn btn-info btn-sm"
+                  title="View Payment"
+                  to={`/user/payment/:${item.payID}`}
+                >
+                  View Payment
+                </Link>
+              </div>
+            )}
+          </td>
         </tr>
       );
     });
@@ -51,27 +82,53 @@ function TableBody(props) {
     });
   }
 
-  if (sender === "referrals") {
+  if (sender === "user-referrals") {
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.referred}</td>
-          <td>{item.status}</td>
-          <td>{item.createdAt.toISOString()}</td>
+          <td className="td-lower">
+            <Link
+              type="button"
+              className=""
+              title="View User"
+              to={`/user/user/:${item.referredId}`}
+            >
+              {item.referred}
+            </Link>
+          </td>
+          <td>{item.phone}</td>
+          <td>
+            {item.status === 1 ? (
+              <span className="active-status">
+                <span>&bull;</span> Active
+              </span>
+            ) : (
+              <span className="inactive-status">
+                <span>&bull;</span> Inactive
+              </span>
+            )}
+          </td>
+          <td>
+            <DateFormat date={item.enddate} />
+          </td>
         </tr>
       );
     });
   }
-  if (sender === "payments") {
+  if (sender === "user-payments") {
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
+          <td>{item.gateway === "c" ? "crypto" : "bank"}</td>
           <td>{item.reference}</td>
-          <td>{item.status}</td>
-          <td>{item.date.toISOString()}</td>
+          <td>{item.status === 2 ? "successful" : "failed"}</td>
+
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
         </tr>
       );
     });

@@ -18,7 +18,9 @@ const express = require("express"),
   Settings = require("../../db/models/Settings"),
   // Bring in View
   SignalView = require("../../db/models/SignalView"),
+  ReferralView = require("../../db/models/ReferralView"),
   UserView = require("../../db/models/UserView"),
+  Transaction = require("../../db/models/Transaction"),
   // Bring in User Checker
   checkUser = require("../../validation/checkUser");
 /*
@@ -246,4 +248,399 @@ router.post(
       .catch((err) => res.status(404).json(err));
   }
 );
+
+/*
+@route GET api/user/referrals
+desc user View referrals
+@access private
+*/
+
+router.post(
+  "/referrals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let referralId = req.user.id;
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
+    let where = {};
+    if (req.body.search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [{ referred: { [Op.substring]: searchArray[i] } }],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (req.body.status !== undefined) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { status: req.body.status },
+              { referralId },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: [{ [Op.and]: newSearchArray }, { referral }],
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (req.body.status !== undefined) {
+          where = {
+            [Op.and]: [
+              { referred: { [Op.substring]: search } },
+              { status: req.body.status },
+              { referralId },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: [
+              { referred: { [Op.substring]: search } },
+              { referralId },
+            ],
+          };
+        }
+      }
+    } else if (req.body.status) {
+      where = {
+        [Op.and]: [{ status: req.body.status }, { referralId }],
+      };
+    } else {
+      where = {
+        referralId,
+      };
+    }
+    let result = [];
+    ReferralView.findAndCountAll({
+      where,
+      order: [["id", "desc"]],
+      attributes: ["referredId", "referred", "phone", "status", "enddate"],
+      limit,
+      offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/subscriptions
+desc user View subscriptions
+@access private
+*/
+
+router.post(
+  "/subscriptions",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    let limit = null,
+      offset = 0,
+      status = null,
+      package = null,
+      type = null;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.status) status = req.body.status;
+    if (req.body.subpackage) package = req.body.subpackage;
+    if (req.body.type) type = req.body.type;
+
+    let where = {};
+    if (type && status === null && package === null) {
+      where = {
+        [Op.and]: [{ type }, { UserId }],
+      };
+    } else if (type && status && package === null) {
+      where = {
+        [Op.and]: [{ type }, { status: status }, { UserId }],
+      };
+    } else if (type === null && status === null && package) {
+      where = {
+        [Op.and]: [{ package }, { UserId }],
+      };
+    } else if (type && package && status === null) {
+      where = {
+        [Op.and]: [{ type }, { package }, { UserId }],
+      };
+    } else if (type === null && status && package === null) {
+      where = {
+        [Op.and]: [{ status }, { UserId }],
+      };
+    } else if (type === null && status && package) {
+      where = {
+        [Op.and]: [{ package }, { status }, { UserId }],
+      };
+    } else if (type && status && package) {
+      where = {
+        [Op.and]: [{ package }, { status }, { type }, { UserId }],
+      };
+    } else {
+      where = {
+        UserId,
+      };
+    }
+    let result = [];
+    Subscription.findAndCountAll({
+      where,
+      order: [["id", "desc"]],
+      attributes: [
+        "amount",
+        "type",
+        "plan",
+        "status",
+        "package",
+        "duration",
+        "plan",
+        "payID",
+        "createdAt",
+      ],
+      limit,
+      offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/transactions
+desc user View transactions
+@access private
+*/
+
+router.post(
+  "/transactions",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    let limit = null,
+      offset = 0,
+      method = null,
+      type = null;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.method) method = req.body.method;
+    if (req.body.type) type = req.body.type;
+
+    let where = {};
+    if (type && method === null) {
+      where = {
+        [Op.and]: [{ type }, { UserId }],
+      };
+    } else if (type === null && method) {
+      where = {
+        [Op.and]: [{ method }, { UserId }],
+      };
+    } else if (type && method) {
+      where = {
+        [Op.and]: [{ type }, { method }, { UserId }],
+      };
+    } else {
+      where = {
+        UserId,
+      };
+    }
+    let result = [];
+    Transaction.findAndCountAll({
+      where,
+      order: [["id", "desc"]],
+      attributes: ["amount", "type", "method", "createdAt"],
+      limit,
+      offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/payments
+desc user View payments
+@access private
+*/
+
+router.post(
+  "/payments",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    let limit = null,
+      gateway = null,
+      status = null,
+      search = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.gateway) gateway = req.body.gateway;
+    if (req.body.status) status = req.body.status;
+    if (req.body.search) search = req.body.search;
+
+    let where = {};
+    if (search) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [{ reference: { [Op.substring]: searchArray[i] } }],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (status && gateway === null) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { status },
+              { UserId },
+            ],
+          };
+        } else if (status === null && gateway) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { gateway },
+              { UserId },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: [{ [Op.and]: newSearchArray }, { UserId }],
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (status && gateway !== null) {
+          where = {
+            [Op.and]: [
+              { reference: { [Op.substring]: search } },
+              { status },
+              { UserId },
+            ],
+          };
+        }
+        if (status !== null && gateway) {
+          where = {
+            [Op.and]: [
+              { reference: { [Op.substring]: search } },
+              { gateway },
+              { UserId },
+            ],
+          };
+        } else if (status && gateway) {
+          where = {
+            [Op.and]: [
+              { reference: { [Op.substring]: search } },
+              { gateway },
+              { status },
+              { UserId },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: [{ reference: { [Op.substring]: search } }, { UserId }],
+          };
+        }
+      }
+    } else if (status && gateway === null) {
+      where = {
+        [Op.and]: [{ status }, { UserId }],
+      };
+    } else if (status === null && gateway) {
+      where = {
+        [Op.and]: [{ gateway }, { UserId }],
+      };
+    } else if (status && gateway) {
+      where = {
+        [Op.and]: [{ status }, { gateway }, { UserId }],
+      };
+    } else {
+      where = {
+        UserId,
+      };
+    }
+    let result = [];
+    Payment.findAndCountAll({
+      where,
+      order: [["id", "desc"]],
+      attributes: [
+        "amount",
+        "reference",
+        "gateway",
+        "status",
+        "createdAt",
+        "updatedAt",
+      ],
+      limit,
+      offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
 module.exports = router;

@@ -24,6 +24,15 @@ ReferralView.init(
     referred: {
       type: DataTypes.STRING(50),
     },
+    phone: {
+      type: DataTypes.STRING(20),
+    },
+    status: {
+      type: DataTypes.STRING(1),
+    },
+    enddate: {
+      type: DataTypes.DATE,
+    },
   },
   {
     // don't forget to enable timestamps!

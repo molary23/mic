@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 function ProgressBar() {
-
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -16,29 +15,22 @@ function ProgressBar() {
     let interval = setInterval(moveProgress, 50);
     return () => {
       clearInterval(interval);
-  }
- 
-
-    
+    };
   });
   return (
     <div>
-        <div className="progress fixed-top">
-          <div
-            className="progress-bar"
-            role="progressbar"
-            style={{ width: `${progress}%` }}
-            aria-valuenow={progress}
-            aria-valuemin="0"
-            aria-valuemax="100"
-          ></div>
-        </div>
+      <div className="progress fixed-top">
+        <div
+          className="progress-bar"
+          role="progressbar"
+          style={{ width: `${progress}%` }}
+          aria-valuenow={progress}
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
     </div>
   );
 }
-
-
-
-
 
 export default ProgressBar;

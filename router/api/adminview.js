@@ -1569,7 +1569,7 @@ router.post(
 
 /*
 @route GET api/adminview/accounts
-desc Admin View Users
+desc Admin View User accounts
 @access private
 */
 

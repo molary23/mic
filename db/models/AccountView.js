@@ -50,5 +50,5 @@ AccountView.init(
     modelName: "AccountView", // We need to choose the model name
   }
 );
-
+AccountView.sync = () => Promise.resolve();
 module.exports = AccountView;

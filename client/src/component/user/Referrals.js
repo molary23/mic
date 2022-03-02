@@ -1,4 +1,18 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
+import { getContent, clearActions } from "../../action/userAction";
+import {
+  searchContent,
+  clearSearchActions,
+} from "../../action/userSearchAction";
+
+import {
+  getMore,
+  setSearchParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
@@ -6,133 +20,213 @@ import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
 
-const refer = [
-  {
-    referred: 200,
-    createdAt: new Date(),
-    status: "inactive",
-  },
-  {
-    referred: 400,
-    createdAt: new Date(),
-    status: "active",
-  },
-  {
-    referred: 250,
-    createdAt: new Date(),
-    status: "active",
-  },
-  {
-    referred: 600,
-    createdAt: new Date(),
-    status: "active",
-  },
-  {
-    referred: 700,
-    createdAt: new Date(),
-    status: "active",
-  },
-  {
-    referred: 100,
-    createdAt: new Date(),
-    status: "inactive",
-  },
-  {
-    referred: 500,
-    createdAt: new Date(),
-    status: "active",
-  },
-  {
-    referred: 400,
-    createdAt: new Date(),
-    status: "active",
-  },
-  {
-    referred: 650,
-    createdAt: new Date(),
-    status: "active",
-  },
-];
-
 export class Referrals extends Component {
   state = {
-    sender: "referrals",
-    loading: false,
-    referred: "",
+    sender: "user-referrals",
     statusOptions: [
-      { value: 0, option: "Filter by Status" },
-      { value: "a", option: "Active" },
-      { value: "i", option: "Inactive" },
+      { value: "", option: "Filter by Status" },
+      { value: "1", option: "Active" },
+      { value: "0", option: "Inactive" },
     ],
-    premiumstatus: "",
+    status: "",
+    search: "",
+    limit: 4,
+    offset: 0,
+    numOfPages: 0,
+    iScrollPos: 10,
+    currentPage: 2,
+    url: new URL(window.location),
+    isLoading: false,
+    refcount: JSON.parse(localStorage.getItem("userCounts")).referrals,
+    upLoad: true,
+    content: "referrals",
   };
 
-  changeHandler = (e) => {};
+  componentDidMount() {
+    const { limit, offset, refcount, content } = this.state;
+    const paginate = {
+      limit,
+      offset,
+    };
+    this.setState({
+      numOfPages: Math.ceil(refcount / limit),
+    });
+    this.props.getContent(content, paginate);
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+  }
+
+  loadMore = () => {
+    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.loadMore);
+    this.props.clearActions(this.state.content);
+    this.props.clearSearchActions(this.state.content);
+  }
+
+  changeHandler = (e) => {
+    const { url, content, limit, offset } = this.state;
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+
+    setSearchParams({
+      selected: e.target.name,
+      valueOfSelected: e.target.value,
+      url,
+      content,
+      limit,
+      offset,
+      self: this,
+    });
+  };
+
   render() {
-    const { loading, sender, referred, premiumstatus, statusOptions } =
-      this.state;
+    const {
+      sender,
+      refcount,
+      startLoad,
+      getLoad,
+      search,
+      status,
+      statusOptions,
+    } = this.state;
+
+    const { user, userSearch } = this.props;
+    const { loading, fetching } = user;
+    const { searching } = userSearch;
+    const count = user.referralcount,
+      list = user.referrals,
+      searchcount = userSearch.referralcount,
+      searchlist = userSearch.referrals,
+      searchloading = userSearch.loading;
+
+    const {
+      showSearch,
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      refcount,
+    });
     return (
       <div>
-        {loading && <ProgressBar />}
-        <div className="transactions card holder-card ">
-          <div className="page-dash-title mb-4">
-            <h1>Referrals</h1>
+        {loader && <ProgressBar />}
+        {load ? (
+          <div className="loader">
+            <i className="fas fa-circle-notch fa-2x fa-spin" />
           </div>
-          <div className="container-fluid mb-3">
-            <div className="row">
-              <div className="col-md-3">
-                <SearchInput
-                  placeholder="Search by Name"
-                  type="text"
-                  name="referred"
-                  value={referred}
-                  onChange={this.changeHandler}
-                />
-              </div>
-              <div className="col-md-3 ">
-                <Select
-                  sender={sender}
-                  options={statusOptions}
-                  onChange={this.changeHandler}
-                  name="premiumstatus"
-                  value={premiumstatus}
-                />
-              </div>
-              <div className="col-md-3 ">
-                <button type="button" className="btn btn-outline-primary">
-                  Download <i className="far fa-file-excel" />
-                </button>
-              </div>
-              <div className="col-md-3 ">
-                <div className="table-figure">
-                  <h5>
-                    Total
-                    <span className="badge rounded-pill bg-success">
-                      2500000
-                    </span>
-                  </h5>
+        ) : (
+          <div className="transactions card holder-card ">
+            <div className="page-dash-title mb-4">
+              <h1>Referrals</h1>
+            </div>
+            <div className="container-fluid mb-3">
+              <div className="row">
+                <div className="col-md-3">
+                  <SearchInput
+                    placeholder="Search by Name"
+                    type="text"
+                    name="search"
+                    value={search}
+                    onChange={this.changeHandler}
+                  />
+                </div>
+                <div className="col-md-3 ">
+                  <Select
+                    sender={sender}
+                    options={statusOptions}
+                    onChange={this.changeHandler}
+                    name="status"
+                    value={status}
+                  />
+                </div>
+                <div className="col-md-3 ">
+                  <button type="button" className="btn download-btn">
+                    Download <i className="far fa-file-excel" />
+                  </button>
+                </div>
+                <div className="col-md-3 ">
+                  <div className="table-figure">
+                    <h5>
+                      {totalText} Referrals
+                      <span className="badge rounded-pill bg-success">
+                        {totalCount}
+                      </span>
+                    </h5>
+                  </div>
                 </div>
               </div>
             </div>
+            {(noRecord || emptyRecord) && "No Record(s) found"}
+            <TableHead
+              sender={sender}
+              head={[
+                "S/N",
+                "username",
+                "phone number",
+                "Status",
+                "registered date",
+              ]}
+            >
+              <TableBody
+                sender={sender}
+                tablebody={!showSearch ? main : searchMain}
+              />
+            </TableHead>
           </div>
-
-          <TableHead
-            sender={sender}
-            head={[
-              "S/N",
-              "Full Name",
-              "email",
-              "phone number",
-              "Status",
-              "registered date",
-            ]}
-          >
-            <TableBody sender={sender} tablebody={refer} />
-          </TableHead>
-        </div>
+        )}
       </div>
     );
   }
 }
 
-export default Referrals;
+Referrals.propTypes = {
+  getContent: PropTypes.func.isRequired,
+  searchContent: PropTypes.func.isRequired,
+  clearActions: PropTypes.func.isRequired,
+  clearSearchActions: PropTypes.func.isRequired,
+  renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
+  setSearchParams: PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  user: state.user,
+  userSearch: state.userSearch,
+});
+export default connect(mapStateToProps, {
+  clearActions,
+  getContent,
+  searchContent,
+  clearSearchActions,
+})(Referrals);

@@ -12,12 +12,12 @@ Premium.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    active: {
-      type: DataTypes.TINYINT, // Subscribed or Not
+    status: {
+      type: DataTypes.TINYINT, // New, Subscribed or Not
       defaultValue: 0,
     },
     startdate: {
-      type: DataTypes.DATEONLY, // Bonus or Payment
+      type: DataTypes.DATEONLY, // Start date of recent sub
       allowNull: false,
     },
     enddate: {

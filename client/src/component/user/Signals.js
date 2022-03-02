@@ -17,7 +17,7 @@ import {
   setSearchParams,
   renderArrange,
 } from "../../util/LoadFunction";
-
+let interval;
 export class Signals extends Component {
   state = {
     sender: "user-signals",
@@ -48,17 +48,22 @@ export class Signals extends Component {
     this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
 
-    setTimeout(() => {
+    /*  interval = setInterval(() => {
       this.setState({
-        //  autoRefresh: true,
+        autoRefresh: true,
       });
-    }, 5000);
+      this.props.getContent(content, paginate);
+      this.setState({
+        autoRefresh: false,
+      });
+    }, 5000);*/
   }
 
   componentWillUnmount() {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(this.state.content);
     this.props.clearSearchActions(this.state.content);
+    //  clearInterval(interval);
   }
 
   loadMore = () => {
