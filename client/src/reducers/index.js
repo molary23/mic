@@ -8,6 +8,7 @@ import providerReducer from "./providerReducer";
 import providerSearchReducer from "./providerSearchReducer";
 import userReducer from "./userReducer";
 import userSearchReducer from "./userSearchReducer";
+import confirmReducer from "./confirmReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -19,4 +20,5 @@ export default combineReducers({
   searchTerms: searchReducer,
   providerSearch: providerSearchReducer,
   userSearch: userSearchReducer,
+  confirm: confirmReducer,
 });

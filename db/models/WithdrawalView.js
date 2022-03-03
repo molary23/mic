@@ -53,5 +53,5 @@ WithdrawalView.init(
     modelName: "WithdrawalView", // We need to choose the model name
   }
 );
-
+WithdrawalView.sync = () => Promise.resolve();
 module.exports = WithdrawalView;

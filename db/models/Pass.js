@@ -16,8 +16,8 @@ Pass.init(
       type: DataTypes.STRING(8),
     },
     confirm: {
-      type: DataTypes.TINYINT,
-      defaultValue: 0,
+      type: DataTypes.ENUM("n", "y"),
+      defaultValue: "n",
     },
   },
   {
@@ -28,7 +28,7 @@ Pass.init(
     createdAt: false,
 
     // I dont want updatedAt
-    updatedAt: "timeUpdated",
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
     modelName: "Pass", // We need to choose the model name

@@ -1,19 +1,70 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 import TextInputField from "../layout/TextInputField";
-
+import Modal from "../layout/Modal";
 import Box from "../layout/Box";
 
 export class Forgot extends Component {
   state = {
     username: "",
-
+    modall: false,
     loading: false,
     error: {},
   };
 
+  changeHandler = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  submitHandler = async (e) => {
+    e.preventDefault();
+
+    const { username } = this.state;
+    if (username === "" || username === undefined) {
+      this.setState({
+        error: {
+          username: "Email Address/Username Field can't be Empty",
+        },
+      });
+    } else {
+      this.setState({
+        loading: true,
+      });
+      const user = {
+        username,
+      };
+      try {
+        let response = await axios.post(
+          "/api/public/forgot/",
+          {
+            user,
+          },
+          {}
+        );
+        console.log(response);
+        if (response.data.update === 1) {
+          this.setState({
+            modal: true,
+            loading: false,
+            username: "",
+            error: {},
+          });
+        }
+      } catch (error) {
+        let err = error.response;
+        this.setState({
+          error: { username: err.data.error },
+          loading: false,
+        });
+      }
+    }
+  };
+
   render() {
-    const { username, error, loading } = this.state;
+    const { username, error, loading, modal } = this.state;
     return (
       <div>
         <Box sender="Forgot Password">
@@ -31,7 +82,7 @@ export class Forgot extends Component {
             <div className="d-grid">
               <button
                 type="submit"
-                className="btn btn-primary btn-lg btn-block"
+                className="btn btn-lg btn-block default-btn"
               >
                 Get Code
                 {loading && (
@@ -41,6 +92,7 @@ export class Forgot extends Component {
             </div>
           </form>
         </Box>
+        {modal ? <Modal {...{ modal, sender: "forgot" }} /> : ""}
       </div>
     );
   }

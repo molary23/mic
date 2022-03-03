@@ -15,6 +15,7 @@ import Referral from "./component/Referral";
 import Forgot from "./component/Forgot";
 import Reset from "./component/Reset";
 import Login from "./component/Login";
+import Confirm from "./component/Confirm";
 import Home from "./component/Home";
 
 //User
@@ -92,6 +93,7 @@ function App() {
           <Route path="/" element={<Login />}></Route>
           <Route exact path="/forgot" element={<Forgot />}></Route>
           <Route exact path="/reset" element={<Reset />}></Route>
+          <Route exact path="/confirm" element={<Confirm />}></Route>
           <Route exact path="/register" element={<Register />} />
           <Route path="/referral/:username" element={<Referral />} />
         </Route>

@@ -385,7 +385,7 @@ router.post("/login", (req, res) => {
 
 router.post("/forgot", (req, res) => {
   const message = {},
-    username = req.body.username;
+    { username } = req.body.user;
 
   if (username === "") {
     errors.username =
@@ -415,18 +415,20 @@ router.post("/forgot", (req, res) => {
           UserId: user.id,
         },
         defaults: {
-          passField,
+          reset: passField.reset,
+          UserId: user.id,
         },
       })
         .then(([found, created]) => {
           if (created) {
             // Send  Mail to User
-            message.add = "A Password Reset Code has been sent to your Mail";
+            message.update = 1;
             res.json(message);
           } else {
             Pass.update(
               {
                 reset: passField.reset,
+                confirm: "n",
               },
               {
                 where: {
@@ -434,8 +436,8 @@ router.post("/forgot", (req, res) => {
                 },
               }
             ).then(() => {
-              message.update =
-                "A Password Reset Code has been sent to your Mail";
+              // Send  Mail to User
+              message.update = 1;
               res.json(message);
             });
           }
@@ -446,52 +448,54 @@ router.post("/forgot", (req, res) => {
 });
 
 /*
-@route POST api/public/reset/
-@desc User Reset Password
+@route POST api/public/confirm/
+@desc User confirm Password
 @access public
 */
 
-router.post("/reset", (req, res) => {
+router.post("/confirm", (req, res) => {
   const { errors, isValid } = validateResetInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  const username = req.body.username,
-    code = req.body.code;
-
+  const { username, code } = req.body;
   User.findOne({
     where: {
       [Op.or]: [{ username }, { email: username }],
     },
   }).then((user) => {
     if (!user) {
-      errors.error = "User doesn't exist!";
+      errors.username = "User doesn't exist!";
       return res.status(400).json(errors);
     }
-    const now = Date.now() - 3600 * 1000;
+    let UserId = user.id;
+    const now = Date.now() - 3600000;
     Pass.findOne({
       where: {
-        UserId: user.id,
+        UserId,
       },
-      attributes: ["reset", "timeUpdated"],
+      attributes: ["reset", "updatedAt", "confirm"],
     })
       .then((pass) => {
         if (!pass) {
-          errors.error = "You are yet to request for a Password Reset Code";
+          errors.code = "You are yet to request for a Password Reset Code";
+          return res.status(400).json(errors);
+        } else if (pass.confirm !== "n") {
+          errors.code = "You are yet to request for a Password Reset Code";
           return res.status(400).json(errors);
         } else if (code !== pass.reset) {
-          errors.error = "You have entered the wrong Password Reset Code";
+          errors.code = "You have entered the wrong Password Reset Code";
           return res.status(400).json(errors);
-        } else if (pass.timeUpdated.getTime() < now) {
-          errors.error =
+        } else if (pass.updatedAt.getTime() < now) {
+          errors.code =
             "Your Password Reset Code has expired. Kindly request for a new one";
           return res.status(400).json(errors);
         } else {
           // GET back here molary
           Pass.update(
             {
-              confirm: 1,
+              confirm: "y",
             },
             {
               where: {

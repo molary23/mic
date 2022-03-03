@@ -8,7 +8,7 @@ module.exports = function validateResetInput(data) {
   data.code = !isEmpty(data.code) ? data.code : "";
 
   if (validator.isEmpty(data.username)) {
-    errors.username = "To Login Username/Email Address Field can't be Empty";
+    errors.username = "Username/Email Address Field can't be Empty";
   }
   if (validator.isEmpty(data.code)) {
     errors.code = "Please enter the Password Reset Code sent to your Mail";

@@ -15,10 +15,25 @@ function Modal(props) {
         <p>Your have Successfully Registered! </p>
         <p>
           Click{" "}
-          <Link to="//localhost:3000/login" className="default-anchor">
+          <Link to="/" className="default-anchor">
             Here
           </Link>{" "}
           to Login
+        </p>
+      </div>
+    );
+    title = "Registration Successful!";
+  }
+  if (sender === "forgot") {
+    text = (
+      <div>
+        <p>A Password Reset Code has been sent to your Email. </p>
+        <p>
+          Click{" "}
+          <Link to="/confirm" className="default-anchor">
+            Here
+          </Link>{" "}
+          to confirm.
         </p>
       </div>
     );

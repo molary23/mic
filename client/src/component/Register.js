@@ -181,7 +181,7 @@ class Register extends Component {
 
       console.log(newUser);
 
-      /*  try {
+      try {
         let response = await axios.post(
           "/api/public/register/",
           {
@@ -209,7 +209,7 @@ class Register extends Component {
         this.setState({
           error: err.data,
         });
-      }*/
+      }
     }
   };
 
@@ -299,7 +299,7 @@ class Register extends Component {
                 error={error.password}
               />
               <TextPasswordField
-                id="register-form-password"
+                id="register-form-password2"
                 placeholder="Confirm Password"
                 label="Confirm Password"
                 icon={`far ${pass2 ? "fa-eye-slash" : "fa-eye"}`}
