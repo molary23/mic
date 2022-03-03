@@ -11,6 +11,10 @@ import {
   CLEAR_USERS_TRANSACTIONS_SEARCH,
   GET_USER_SEARCH_PAYMENTS,
   CLEAR_USERS_PAYMENTS_SEARCH,
+  GET_USER_SEARCH_WITHDRAWALS,
+  CLEAR_USERS_WITHDRAWALS_SEARCH,
+  GET_USER_SEARCH_BONUS,
+  CLEAR_USERS_BONUS_SEARCH,
 } from "./types";
 
 export const searchContent = (content, paginate) => async (dispatch) => {
@@ -27,6 +31,10 @@ export const searchContent = (content, paginate) => async (dispatch) => {
     type = GET_USER_SEARCH_TRANSACTIONS;
   } else if (content === "payments") {
     type = GET_USER_SEARCH_PAYMENTS;
+  } else if (content === "withdrawals") {
+    type = GET_USER_SEARCH_WITHDRAWALS;
+  } else if (content === "bonus") {
+    type = GET_USER_SEARCH_BONUS;
   }
   url += content;
   try {
@@ -53,6 +61,10 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_USERS_TRANSACTIONS_SEARCH };
   } else if (actionToClear === "payments") {
     return { type: CLEAR_USERS_PAYMENTS_SEARCH };
+  } else if (actionToClear === "withdrawals") {
+    return { type: CLEAR_USERS_WITHDRAWALS_SEARCH };
+  } else if (actionToClear === "bonus") {
+    return { type: CLEAR_USERS_BONUS_SEARCH };
   }
 };
 

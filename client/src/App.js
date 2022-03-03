@@ -122,7 +122,7 @@ function App() {
           />
           <Route
             exact
-            path="/user/bonus"
+            path="/user/bonuses"
             element={<PrivateRoute Component={Bonuses} />}
           />
           <Route

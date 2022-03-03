@@ -224,7 +224,8 @@ export class Subscriptions extends Component {
                 "package",
                 "duration",
                 "date",
-                "action",
+                "payment info",
+                "sub info",
               ]}
             >
               <TableBody

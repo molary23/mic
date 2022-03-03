@@ -5,8 +5,8 @@ function TableHead(props) {
 
   return (
     <div>
-      <div className="table-responsive ">
-        <table className="table table-striped table-hover table-bordered">
+      <div className="table-responsive">
+        <table className="">
           <thead>
             <tr>
               {head.map((head, i) => {

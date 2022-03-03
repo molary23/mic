@@ -12,13 +12,15 @@ Settings.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: DataTypes.STRING(1), // L for Light/Dark Mode
+    mode: {
+      type: DataTypes.ENUM("d", "n", "a", "i"), // D for day, N for night, A for auto, I for inherit from system
       allowNull: false,
     },
-    option: {
-      type: DataTypes.STRING(1), // D for day, N for night, A for auto, I for inherit from system
-      allowNull: false,
+    currencies: {
+      type: DataTypes.JSON,
+    },
+    providers: {
+      type: DataTypes.JSON,
     },
   },
   {

@@ -17,8 +17,8 @@ Bonus.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.TINYINT,
-      defaultValue: 0,
+      type: DataTypes.ENUM("a", "p", "r"), // approved, pending, rejected
+      defaultValue: "p",
     },
   },
   {

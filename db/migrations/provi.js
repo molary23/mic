@@ -1,25 +1,26 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "SuperViews";
-const view_name = "SuperViews";
+const auto_created_model_table_name = "ProviderViews";
+const view_name = "ProviderViews";
 
 const original_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus",
+  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.status AS userstatus",
   " FROM Users ",
   " LEFT JOIN Profiles ",
   " ON Users.id = Profiles.UserId ",
-  "WHERE Users.level = 3",
+  "WHERE Users.level = 2",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus",
+  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.status AS userstatus",
   " FROM Users ",
   " LEFT JOIN Profiles ",
   " ON Users.id = Profiles.UserId ",
-  "WHERE Users.level = 3",
+
+  "WHERE Users.level = 2",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

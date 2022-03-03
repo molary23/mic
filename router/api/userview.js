@@ -15,7 +15,8 @@ const express = require("express"),
   Premium = require("../../db/models/Premium"),
   Payment = require("../../db/models/Payment"),
   Subscription = require("../../db/models/Subscription"),
-  Settings = require("../../db/models/Settings"),
+  Bonus = require("../../db/models/Bonus"),
+  Withdrawal = require("../../db/models/Withdrawal"),
   // Bring in View
   SignalView = require("../../db/models/SignalView"),
   ReferralView = require("../../db/models/ReferralView"),
@@ -415,6 +416,7 @@ router.post(
       where,
       order: [["id", "desc"]],
       attributes: [
+        "id",
         "amount",
         "type",
         "plan",
@@ -643,4 +645,113 @@ router.post(
   }
 );
 
+/*
+@route GET api/user/withdrawals
+desc user View withdrawals
+@access private
+*/
+
+router.post(
+  "/withdrawals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    let limit = null,
+      offset = 0,
+      status = null;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.status) status = req.body.status;
+
+    let where = {};
+    if (status) {
+      where = {
+        [Op.and]: [{ status }, { UserId }],
+      };
+    } else {
+      where = {
+        UserId,
+      };
+    }
+    let result = [];
+    Withdrawal.findAndCountAll({
+      where,
+      order: [["id", "desc"]],
+      attributes: ["amount", "account", "status", "createdAt", "updatedAt"],
+      limit,
+      offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/user/bonus
+desc user View bonus
+@access private
+*/
+
+router.post(
+  "/bonus",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    let limit = null,
+      offset = 0,
+      status = null;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.status) status = req.body.status;
+
+    let where = {};
+    if (status) {
+      where = {
+        [Op.and]: [{ status }, { UserId }],
+      };
+    } else {
+      where = {
+        UserId,
+      };
+    }
+    let result = [];
+    Bonus.findAndCountAll({
+      where,
+      order: [["id", "desc"]],
+      attributes: [
+        "amount",
+        "status",
+        "createdAt",
+        "updatedAt",
+        "subscriptionid",
+      ],
+      limit,
+      offset,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 module.exports = router;

@@ -23,6 +23,8 @@ import {
   GET_ALL_ACCOUNTS,
   CLEAR_ANNOUNCEMENTS_ACTION,
   GET_ALL_ANNOUNCEMENTS,
+  GET_ALL_WITHDRAWALS,
+  CLEAR_WITHDRAWALS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -52,6 +54,8 @@ const initialState = {
   accCounts: 0,
   ann: [],
   annCount: 0,
+  withcount: 0,
+  withdrawals: [],
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -159,7 +163,15 @@ export default function adminReducer(state = initialState, action) {
       return {
         ...state,
         annCount: action.payload.shift(),
-        ann: [...state.accounts, ...action.payload],
+        ann: [...state.ann, ...action.payload],
+        loading: false,
+        fetching: true,
+      };
+    case GET_ALL_WITHDRAWALS:
+      return {
+        ...state,
+        withcount: action.payload.shift(),
+        withdrawals: [...state.withdrawals, ...action.payload],
         loading: false,
         fetching: true,
       };
@@ -198,6 +210,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ANNOUNCEMENTS_ACTION: {
       return { ...state, ann: [], annCount: 0, fetching: false };
+    }
+    case CLEAR_WITHDRAWALS_ACTION: {
+      return { ...state, withdrawals: [], withcount: 0, fetching: false };
     }
     default:
       return state;

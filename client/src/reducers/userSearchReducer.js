@@ -10,6 +10,10 @@ import {
   CLEAR_USERS_TRANSACTIONS_SEARCH,
   GET_USER_SEARCH_PAYMENTS,
   CLEAR_USERS_PAYMENTS_SEARCH,
+  GET_USER_SEARCH_WITHDRAWALS,
+  CLEAR_USERS_WITHDRAWALS_SEARCH,
+  GET_USER_SEARCH_BONUS,
+  CLEAR_USERS_BONUS_SEARCH,
 } from "../action/types";
 
 const initialState = {
@@ -25,6 +29,10 @@ const initialState = {
   transcount: 0,
   pay: [],
   paycount: 0,
+  withcount: 0,
+  withdrawals: [],
+  bonus: [],
+  bonuscount: 0,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -69,6 +77,22 @@ export default function userReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case GET_USER_SEARCH_WITHDRAWALS:
+      return {
+        ...state,
+        withcount: action.payload.shift(),
+        withdrawals: [...state.withdrawals, ...action.payload],
+        loading: false,
+        searching: true,
+      };
+    case GET_USER_SEARCH_BONUS:
+      return {
+        ...state,
+        bonuscount: action.payload.shift(),
+        bonus: [...state.bonus, ...action.payload],
+        loading: false,
+        searching: true,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -86,6 +110,12 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USERS_PAYMENTS_SEARCH: {
       return { ...state, pay: [], paycount: 0, searching: false };
+    }
+    case CLEAR_USERS_WITHDRAWALS_SEARCH: {
+      return { ...state, withdrawals: [], withcount: 0, searching: false };
+    }
+    case CLEAR_USERS_BONUS_SEARCH: {
+      return { ...state, bonus: [], bonuscount: 0, searching: false };
     }
     default:
       return state;

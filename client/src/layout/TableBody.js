@@ -64,19 +64,52 @@ function TableBody(props) {
               </div>
             )}
           </td>
+          <td>
+            <div className="action-buttons">
+              <Link
+                type="button"
+                className="btn btn-primary btn-sm"
+                title="View Subscription"
+                to={`/admin/subscription/:${item.id}`}
+              >
+                View
+              </Link>
+            </div>
+          </td>
         </tr>
       );
     });
   }
 
-  if (sender === "bonus") {
+  if (sender === "user-bonus") {
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
-          <td>{item.createdAt.toISOString()}</td>
-          <td>{item.updatedAt.toISOString()}</td>
+          <td>
+            {item.status === "a" && "approved"}
+            {item.status === "p" && "pending"}
+            {item.status === "r" && "rejected"}
+          </td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          <td>
+            <DateFormat date={item.updatedAt} />
+          </td>
+          <td>
+            <div className="action-buttons">
+              <Link
+                type="button"
+                className="btn btn-primary btn-sm"
+                title="View Subscription"
+                to={`/admin/subscription/:${item.subscriptionid}`}
+              >
+                View
+              </Link>
+            </div>
+          </td>
         </tr>
       );
     });
@@ -133,6 +166,35 @@ function TableBody(props) {
       );
     });
   }
+
+  if (sender === "user-withdrawals") {
+    tabeldata = tablebody.map((item, i) => {
+      return (
+        <tr key={i}>
+          <td>{i + 1}</td>
+          <td>{item.amount}</td>
+          <td>
+            {item.status === "p" && "pending"}
+            {item.status === "a" && "approved"}
+            {item.status === "r" && "rejected"}
+          </td>
+          <td>
+            {item.account.bank && item.account.bank}
+            {item.account.wallet && item.account.wallet}
+          </td>
+          <td>{item.account.type && item.account.type}</td>
+          <td>{item.account.account}</td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          <td>
+            <DateFormat date={item.updatedAt} />
+          </td>
+        </tr>
+      );
+    });
+  }
+
   if (sender === "withdrawals") {
     tabeldata = tablebody.map((item, i) => {
       return (
@@ -259,19 +321,30 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
+          <td>{item.fullname}</td>
           <td>
             <Link
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${i}`}
+              to={`/admin/user/:${item.UserId}`}
             >
-              {item.reference}
+              {item.username}
             </Link>
           </td>
           <td>{item.status}</td>
-          <td>{item.date.toISOString()}</td>
-          <td>{item.update.toISOString()}</td>
+          <td>
+            {item.account.bank && item.account.bank}
+            {item.account.wallet && item.account.wallet}
+          </td>
+          <td>{item.account.account}</td>
+          <td>{item.account.bank && item.account.type}</td>
+          <td>
+            <DateFormat date={item.createdAt} />
+          </td>
+          <td>
+            <DateFormat date={item.updatedAt} />
+          </td>
         </tr>
       );
     });

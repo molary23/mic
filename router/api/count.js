@@ -10,6 +10,7 @@ const express = require("express"),
   Currency = require("../../db/models/Currency"),
   Signal = require("../../db/models/Signal"),
   Announcement = require("../../db/models/Announcement"),
+  WithdrawalView = require("../../db/models/WithdrawalView"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
   TransactionView = require("../../db/models/TransactionView"),
   ProviderView = require("../../db/models/ProviderView"),
@@ -102,6 +103,7 @@ router.get(
       count.providers = await ProviderView.count();
       count.accounts = await AccountView.count();
       count.announcement = await Announcement.count();
+      count.withdrawals = await WithdrawalView.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);

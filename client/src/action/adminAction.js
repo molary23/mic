@@ -25,6 +25,8 @@ import {
   CLEAR_ACCOUNTS_ACTION,
   GET_ALL_ANNOUNCEMENTS,
   CLEAR_ANNOUNCEMENTS_ACTION,
+  GET_ALL_WITHDRAWALS,
+  CLEAR_WITHDRAWALS_ACTION,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -69,6 +71,9 @@ export const getContent = (content, paginate) => async (dispatch) => {
   } else if (content === "announcements") {
     url = `${url}announcements`;
     type = GET_ALL_ANNOUNCEMENTS;
+  } else if (content === "withdrawals") {
+    url = `${url}withdrawals`;
+    type = GET_ALL_WITHDRAWALS;
   }
   try {
     let response = await axios.post(url, paginate);
@@ -114,6 +119,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ACCOUNTS_ACTION };
   } else if (actionToClear === "announcements") {
     return { type: CLEAR_ANNOUNCEMENTS_ACTION };
+  } else if (actionToClear === "withdrawals") {
+    return { type: CLEAR_WITHDRAWALS_ACTION };
   }
 };
 

@@ -20,7 +20,7 @@ SuperView.init(
     fullname: {
       type: DataTypes.STRING(50),
     },
-    userstatus: {
+    status: {
       type: DataTypes.TINYINT,
     },
   },

@@ -23,6 +23,7 @@ const express = require("express"),
   Signal = require("../../db/models/Signal"),
   SignalView = require("../../db/models/SignalView"),
   PaymentView = require("../../db/models/PaymentView"),
+  WithdrawalView = require("../../db/models/WithdrawalView"),
   BonusView = require("../../db/models/BonusView"),
   UserView = require("../../db/models/UserView"),
   SuperView = require("../../db/models/SuperView"),
@@ -1103,7 +1104,16 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = { user: { [Op.substring]: searchArray[i] } };
+          newSearchObj = {
+            [Op.or]: [
+              {
+                fullname: { [Op.substring]: searchArray[i] },
+              },
+              {
+                username: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
           newSearchArray.push(newSearchObj);
         }
 
@@ -1149,21 +1159,36 @@ router.post(
         if (req.body.type && req.body.method === undefined) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              {
+                [Op.or]: [
+                  { fullname: { [Op.substring]: search } },
+                  { username: { [Op.substring]: search } },
+                ],
+              },
               { type: req.body.type },
             ],
           };
         } else if (req.body.type === undefined && req.body.method) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              {
+                [Op.or]: [
+                  { fullname: { [Op.substring]: search } },
+                  { username: { [Op.substring]: search } },
+                ],
+              },
               { method: req.body.method },
             ],
           };
         } else if (req.body.type && req.body.method) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              {
+                [Op.or]: [
+                  { fullname: { [Op.substring]: search } },
+                  { username: { [Op.substring]: search } },
+                ],
+              },
               {
                 [Op.and]: [
                   { type: req.body.type },
@@ -1174,7 +1199,10 @@ router.post(
           };
         } else {
           where = {
-            user: { [Op.substring]: search },
+            [Op.or]: [
+              { fullname: { [Op.substring]: search } },
+              { username: { [Op.substring]: search } },
+            ],
           };
         }
       }
@@ -1197,6 +1225,10 @@ router.post(
       attributes: [
         "transactionid",
         "amount",
+        "fullname",
+        "userId",
+        "username",
+        "transactiondate",
         [
           Sequelize.literal(
             `CASE WHEN type = 'c' THEN 'Credit' WHEN type = 'd' THEN 'Debit' END `
@@ -1209,9 +1241,6 @@ router.post(
           ),
           "method",
         ],
-        "user",
-        "userId",
-        "transactiondate",
       ],
       where,
       raw: true,
@@ -1746,4 +1775,125 @@ router.post(
   }
 );
 
+/*
+@route GET api/admin/withdrawals
+desc Admin View withdrawals
+@access private
+*/
+
+router.post(
+  "/withdrawals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let limit = null,
+      search = null,
+      status = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.status) status = req.body.status;
+
+    let where = {};
+    if (search) {
+      let searchArray = search.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              {
+                fullname: { [Op.substring]: searchArray[i] },
+              },
+              {
+                username: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (status) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { status },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: newSearchArray,
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (status) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.or]: [
+                  { fullname: { [Op.substring]: search } },
+                  { username: { [Op.substring]: search } },
+                ],
+              },
+              { status },
+            ],
+          };
+        } else {
+          where = {
+            [Op.or]: [
+              { fullname: { [Op.substring]: search } },
+              { username: { [Op.substring]: search } },
+            ],
+          };
+        }
+      }
+    } else {
+      if (status) {
+        where.status = status;
+      }
+    }
+
+    const query = {
+      order: [["withdrawalid", "DESC"]],
+      offset,
+      limit,
+      attributes: [
+        "fullname",
+        "username",
+        "UserId",
+        "createdAt",
+        "amount",
+        "account",
+        "updatedAt",
+        [
+          Sequelize.literal(
+            `CASE WHEN status = 'p' THEN 'pending' WHEN status = 'a' THEN 'approved' WHEN status = 'r' THEN 'rejected' END `
+          ),
+          "status",
+        ],
+      ],
+      where,
+      raw: true,
+    };
+    let result = [];
+    WithdrawalView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 module.exports = router;

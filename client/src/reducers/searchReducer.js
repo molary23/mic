@@ -23,6 +23,8 @@ import {
   CLEAR_SEARCH_ANNOUNCEMENTS_ACTION,
   GET_SEARCH_ANNOUNCEMENTS,
   CLEAR_SEARCH_USERS_ACTION,
+  GET_SEARCH_WITHDRAWALS,
+  CLEAR_SEARCH_WITHDRAWALS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -52,6 +54,8 @@ const initialState = {
   accCount: 0,
   ann: [],
   annCount: 0,
+  withcount: 0,
+  withdrawals: [],
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -166,6 +170,14 @@ export default function searchReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case GET_SEARCH_WITHDRAWALS:
+      return {
+        ...state,
+        withcount: action.payload.shift(),
+        withdrawals: [...state.withdrawals, ...action.payload],
+        loading: false,
+        searching: true,
+      };
     case CLEAR_SEARCH_SUBSCRIPTIONS_ACTION:
       return {
         ...state,
@@ -241,6 +253,13 @@ export default function searchReducer(state = initialState, action) {
         ...state,
         users: [],
         usersCount: 0,
+        searching: false,
+      };
+    case CLEAR_SEARCH_WITHDRAWALS_ACTION:
+      return {
+        ...state,
+        withdrawals: [],
+        withcount: 0,
         searching: false,
       };
     default:

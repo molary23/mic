@@ -20,6 +20,11 @@ Withdrawal.init(
       type: DataTypes.JSON(),
       allowNull: false,
     },
+    status: {
+      type: DataTypes.ENUM("p", "r", "a"), // Pending, Rejected, Approved
+      //allowNull: false,
+      defaultValue: "p",
+    },
   },
   {
     // don't forget to enable timestamps!

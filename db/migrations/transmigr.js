@@ -1,26 +1,29 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "ProviderViews";
-const view_name = "ProviderViews";
+const auto_created_model_table_name = "TransactionViews";
+const view_name = "TransactionViews";
 
 const original_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus",
-  " FROM Users ",
+  " Transactions.id AS transactionid, Transactions.amount, Transactions.type, Transactions.method,",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.username as username, Transactions.createdAt AS transactiondate, Profiles.UserId AS userId",
+  " FROM Transactions ",
   " LEFT JOIN Profiles ",
-  " ON Users.id = Profiles.UserId ",
-  "WHERE Users.level = 2",
+  " ON Transactions.UserId = Profiles.UserId ",
+  " LEFT JOIN Users ",
+  " ON Transactions.UserId = Users.id ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.active AS userstatus",
-  " FROM Users ",
+  " Transactions.id AS transactionid, Transactions.amount, Transactions.type, Transactions.method,",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.username as username, Transactions.createdAt AS transactiondate, Profiles.UserId AS userId",
+  " FROM Transactions ",
   " LEFT JOIN Profiles ",
-  " ON Users.id = Profiles.UserId ",
-
-  "WHERE Users.level = 2",
+  " ON Transactions.UserId = Profiles.UserId ",
+  " LEFT JOIN Users ",
+  " ON Transactions.UserId = Users.id ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

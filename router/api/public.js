@@ -344,7 +344,7 @@ router.post("/login", (req, res) => {
     where: {
       [Op.or]: [{ email: username }, { username: username }],
     },
-    include: [{ model: Settings, attributes: ["type", "option"] }],
+    include: [{ model: Settings, attributes: ["mode"] }],
   })
     .then((user) => {
       if (!user) {
@@ -359,7 +359,6 @@ router.post("/login", (req, res) => {
             level: user.level,
             active: user.active,
             mode: user.Settings[0],
-            option: user.Settings[0],
           };
           jwt.sign(
             payload,

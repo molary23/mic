@@ -10,6 +10,10 @@ import {
   CLEAR_USER_TRANSACTIONS_ACTION,
   GET_USER_PAYMENTS,
   CLEAR_USER_PAYMENTS_ACTION,
+  GET_USER_WITHDRAWALS,
+  CLEAR_USER_WITHDRAWALS_ACTION,
+  GET_USER_BONUS,
+  CLEAR_USER_BONUS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -25,6 +29,10 @@ const initialState = {
   transactions: [],
   pay: [],
   paycount: 0,
+  withcount: 0,
+  withdrawals: [],
+  bonus: [],
+  bonuscount: 0,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -69,6 +77,22 @@ export default function userReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case GET_USER_WITHDRAWALS:
+      return {
+        ...state,
+        withcount: action.payload.shift(),
+        withdrawals: [...state.withdrawals, ...action.payload],
+        loading: false,
+        fetching: true,
+      };
+    case GET_USER_BONUS:
+      return {
+        ...state,
+        bonuscount: action.payload.shift(),
+        bonus: [...state.bonus, ...action.payload],
+        loading: false,
+        fetching: true,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -86,6 +110,12 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_PAYMENTS_ACTION: {
       return { ...state, pay: [], paycount: 0, fetching: false };
+    }
+    case CLEAR_USER_WITHDRAWALS_ACTION: {
+      return { ...state, withdrawals: [], withcount: 0, fetching: false };
+    }
+    case CLEAR_USER_BONUS_ACTION: {
+      return { ...state, bonus: [], bonuscount: 0, fetching: false };
     }
     default:
       return state;

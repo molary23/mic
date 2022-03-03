@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Withdrawal extends Model {}
+class WithdrawalView extends Model {}
 
-Withdrawal.init(
+WithdrawalView.init(
   {
     // Model attributes are defined here
     withdrawalid: {
@@ -32,8 +32,11 @@ Withdrawal.init(
     createdAt: {
       type: DataTypes.DATE,
     },
-    updattedAt: {
+    updatedAt: {
       type: DataTypes.DATE,
+    },
+    status: {
+      type: DataTypes.STRING(1),
     },
   },
   {
@@ -47,8 +50,8 @@ Withdrawal.init(
     updatedAt: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Withdrawal", // We need to choose the model name
+    modelName: "WithdrawalView", // We need to choose the model name
   }
 );
 
-module.exports = Withdrawal;
+module.exports = WithdrawalView;

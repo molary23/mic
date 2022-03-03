@@ -21,7 +21,10 @@ TransactionView.init(
     method: {
       type: DataTypes.STRING(1),
     },
-    user: {
+    fullname: {
+      type: DataTypes.STRING(50),
+    },
+    username: {
       type: DataTypes.STRING(50),
     },
     transactiondate: {

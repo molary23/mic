@@ -11,6 +11,10 @@ import {
   CLEAR_USER_TRANSACTIONS_ACTION,
   GET_USER_PAYMENTS,
   CLEAR_USER_PAYMENTS_ACTION,
+  GET_USER_WITHDRAWALS,
+  CLEAR_USER_WITHDRAWALS_ACTION,
+  GET_USER_BONUS,
+  CLEAR_USER_BONUS_ACTION,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -27,6 +31,10 @@ export const getContent = (content, paginate) => async (dispatch) => {
     type = GET_USER_TRANSACTIONS;
   } else if (content === "payments") {
     type = GET_USER_PAYMENTS;
+  } else if (content === "withdrawals") {
+    type = GET_USER_WITHDRAWALS;
+  } else if (content === "bonus") {
+    type = GET_USER_BONUS;
   }
   url += content;
   try {
@@ -53,6 +61,10 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_TRANSACTIONS_ACTION };
   } else if (actionToClear === "payments") {
     return { type: CLEAR_USER_PAYMENTS_ACTION };
+  } else if (actionToClear === "withdrawals") {
+    return { type: CLEAR_USER_WITHDRAWALS_ACTION };
+  } else if (actionToClear === "bonus") {
+    return { type: CLEAR_USER_BONUS_ACTION };
   }
 };
 

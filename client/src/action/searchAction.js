@@ -25,6 +25,8 @@ import {
   CLEAR_SEARCH_ACCOUNTS_ACTION,
   GET_SEARCH_ANNOUNCEMENTS,
   CLEAR_SEARCH_ANNOUNCEMENTS_ACTION,
+  GET_SEARCH_WITHDRAWALS,
+  CLEAR_SEARCH_WITHDRAWALS_ACTION,
 } from "./types";
 
 export const searchContent = (content, searchData) => async (dispatch) => {
@@ -69,6 +71,9 @@ export const searchContent = (content, searchData) => async (dispatch) => {
   } else if (content === "announcements") {
     url = `${url}announcements`;
     type = GET_SEARCH_ANNOUNCEMENTS;
+  } else if (content === "withdrawals") {
+    url = `${url}withdrawals`;
+    type = GET_SEARCH_WITHDRAWALS;
   }
 
   try {
@@ -115,6 +120,8 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_SEARCH_ACCOUNTS_ACTION };
   } else if (actionToClear === "announcements") {
     return { type: CLEAR_SEARCH_ANNOUNCEMENTS_ACTION };
+  } else if (actionToClear === "withdrawals") {
+    return { type: CLEAR_SEARCH_WITHDRAWALS_ACTION };
   }
 };
 export const setLoading = () => {

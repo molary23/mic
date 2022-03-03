@@ -61,12 +61,13 @@ export const setSearchParams = ({
     window.history.pushState({}, "", url);
   }
 
-  let searchParams = window.location.search;
+  // let searchParams = window.location.search;
 
   if (selected === "search") {
     clearTimeout(typingTimer);
     typingTimer = setTimeout(() => {
-      if (searchParams !== "") {
+      loadFromParams({ limit, self, content });
+      /*   if (searchParams !== "") {
         let queryTerms = searchParams.split("?")[1];
         queryTerms = queryTerms.split("&");
         let terms = queryTerms.map((term) => term.split("="));
@@ -96,10 +97,11 @@ export const setSearchParams = ({
           startLoad: (prevState.startLoad = false),
         }));
         self.props.getContent(content, paginate);
-      }
+      }*/
     }, 5000);
   } else {
-    if (searchParams !== "") {
+    loadFromParams({ limit, self, content });
+    /* if (searchParams !== "") {
       let queryTerms = searchParams.split("?")[1];
       queryTerms = queryTerms.split("&");
       let terms = queryTerms.map((term) => term.split("="));
@@ -125,7 +127,38 @@ export const setSearchParams = ({
         startLoad: (prevState.startLoad = false),
       }));
       self.props.getContent(content, paginate);
-    }
+    }*/
+  }
+};
+
+export const loadFromParams = ({ limit, self, content }) => {
+  let searchParams = window.location.search;
+  if (searchParams !== "") {
+    let queryTerms = searchParams.split("?")[1];
+    queryTerms = queryTerms.split("&");
+    let terms = queryTerms.map((term) => term.split("="));
+    let params = Object.fromEntries(terms);
+    params.offset = 0;
+    params.limit = limit;
+    self.setState({
+      getLoad: true,
+    });
+
+    // Search Now
+    self.props.clearSearchActions(content);
+    self.props.searchContent(content, params);
+  } else {
+    const paginate = {
+      offset: 0,
+      limit: self.state.limit,
+    };
+    self.props.clearActions(content);
+    self.props.clearSearchActions(content);
+    self.setState((prevState) => ({
+      getLoad: (prevState.getLoad = true),
+      startLoad: (prevState.startLoad = false),
+    }));
+    self.props.getContent(content, paginate);
   }
 };
 
