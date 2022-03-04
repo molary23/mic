@@ -179,8 +179,6 @@ class Register extends Component {
         password: password,
       };
 
-      console.log(newUser);
-
       try {
         let response = await axios.post(
           "/api/public/register/",

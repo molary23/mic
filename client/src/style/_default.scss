@@ -190,10 +190,22 @@ span.input-group-text {
 }
 
 /* Modal */
-#myModal {
-  background: rgba($color: $bg-dark, $alpha: 0.5);
+.modal {
+  background: rgba($color: $bg-dark, $alpha: 0.7);
 }
 .modal-content {
   box-shadow: 1px 2px 3px $shadow;
   border: $border-light;
+}
+
+.modal :is(input, select, button) {
+  height: 40px !important;
+}
+
+.modal select {
+  margin-bottom: 15px;
+}
+
+.modal .form-floating > label {
+  padding-top: 10px;
 }

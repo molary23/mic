@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
-import { confirmCode } from "../action/confirmAction";
+import { confirmCode, clearErrors } from "../action/confirmAction";
 
 import isEmpty from "../validation/emptyChecker";
 
 import TextInputField from "../layout/TextInputField";
-
+import Modal from "../layout/Modal";
 import Box from "../layout/Box";
 
 export class Confirm extends Component {
@@ -17,17 +18,22 @@ export class Confirm extends Component {
     loading: false,
     error: {},
     navigate: false,
+    modal: false,
   };
+  componentDidMount() {
+    this.props.clearErrors();
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
 
-    if (nextProps.auth.isConfirmed && prevState.navigate === false) {
-      update.navigate = true;
+    if (nextProps.confirm.isConfirmed && prevState.modal === false) {
+      update.modal = true;
     }
 
-    if (nextProps.errors && Object.keys(prevState.error).length === 0) {
+    if (nextProps.errors) {
       update.error = nextProps.errors;
+      update.loading = false;
     }
 
     return update;
@@ -51,7 +57,7 @@ export class Confirm extends Component {
     } else if (isEmpty(code)) {
       this.setState({
         error: {
-          password: "Password Field can't be Empty",
+          code: "Code can't be Empty",
         },
       });
     } else {
@@ -64,42 +70,11 @@ export class Confirm extends Component {
       };
 
       this.props.confirmCode(usercode);
-
-      /*  try {
-        let response = await axios.post(
-          "/api/public/confirm/",
-          {
-            usercode,
-          },
-          {}
-        );
-        console.log(response);
-          if (response.data === 1) {
-          this.setState({
-            modal: true,
-            username: "",
-            email: "",
-            password: "",
-            password2: "",
-            referral: "",
-            phone: "",
-            error: {},
-            pass1: true,
-            pass2: true,
-          });
-        }
-      } catch (error) {
-        console.log(error.response);
-        let err = error.response;
-        this.setState({
-          error: err.data,
-        });
-      }*/
     }
   };
 
   render() {
-    const { username, code, error, loading } = this.state;
+    const { username, code, error, loading, modal } = this.state;
     //const { errors } = this.props;
     return (
       <div>
@@ -138,6 +113,18 @@ export class Confirm extends Component {
             </div>
           </form>
         </Box>
+        <div className="login-helper">
+          <p className="mb-1">
+            <Link to="/forgot">Need a new code?</Link>
+          </p>
+          <p className="mb-1">
+            New to MIC? <Link to="/register">Join</Link>
+          </p>
+          <p className="">
+            Take me back to <Link to="/">Login</Link>
+          </p>
+        </div>
+        {modal ? <Modal {...{ modal, sender: "confirm" }} /> : null}
       </div>
     );
   }
@@ -145,10 +132,12 @@ export class Confirm extends Component {
 
 Confirm.propTypes = {
   confirmCode: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  confirm: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   confirm: state.confirm,
-  error: state.error,
+  errors: state.errors,
 });
-export default connect(mapStateToProps, { confirmCode })(Confirm);
+export default connect(mapStateToProps, { confirmCode, clearErrors })(Confirm);

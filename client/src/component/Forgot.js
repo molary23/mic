@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 import TextInputField from "../layout/TextInputField";
@@ -44,7 +45,6 @@ export class Forgot extends Component {
           },
           {}
         );
-        console.log(response);
         if (response.data.update === 1) {
           this.setState({
             modal: true,
@@ -92,6 +92,14 @@ export class Forgot extends Component {
             </div>
           </form>
         </Box>
+        <div className="login-helper">
+          <p className="mb-1">
+            New to MIC? <Link to="/register">Join</Link>
+          </p>
+          <p className="">
+            Take me back to <Link to="/">Login</Link>
+          </p>
+        </div>
         {modal ? <Modal {...{ modal, sender: "forgot" }} /> : ""}
       </div>
     );

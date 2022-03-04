@@ -1,17 +1,13 @@
 const validator = require("validator"),
   isEmpty = require("./emptyChecker");
 
-module.exports = function validateResetInput(data) {
+module.exports = function validatePassInput(data) {
   let errors = {};
 
-  data.username = !isEmpty(data.username) ? data.username : "";
-  data.code = !isEmpty(data.code) ? data.code : "";
+  data.password = !isEmpty(data.password) ? data.password : "";
 
-  if (validator.isEmpty(data.username)) {
-    errors.username = "Username/Email Address Field can't be Empty";
-  }
-  if (validator.isEmpty(data.code)) {
-    errors.code = "Please enter the Password Reset Code sent to your Mail";
+  if (validator.isEmpty(data.password)) {
+    errors.password = "Password Field can't be Empty";
   }
   return {
     errors,

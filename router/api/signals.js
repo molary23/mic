@@ -149,8 +149,8 @@ router.post(
 );
 
 /*
-@route GET api/adminview/signals
-@desc Admin View signals
+@route GET api/signals/signals
+@desc Providers View signals
 @access private
 */
 
@@ -355,6 +355,33 @@ router.post(
         const { count, rows } = entries;
         result = [...[count], ...rows];
         res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/signals/currencies
+@desc Providers View Currencies
+@access private
+*/
+
+router.get(
+  "/currencies",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkPr(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    Currency.findAll({
+      where: {
+        status: "a",
+      },
+      attributes: ["id", "firstcurrency", "secondcurrency"],
+    })
+      .then((currency) => {
+        res.json(currency);
       })
       .catch((err) => res.status(404).json(err));
   }

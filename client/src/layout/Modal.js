@@ -39,6 +39,39 @@ function Modal(props) {
     );
     title = "Registration Successful!";
   }
+  if (sender === "confirm") {
+    text = (
+      <div>
+        <p>Your Password Reset Code has been confirmed. </p>
+        <p>
+          Click{" "}
+          <Link to="/reset" className="default-anchor">
+            {" "}
+            Here{" "}
+          </Link>{" "}
+          to change your password.
+        </p>
+      </div>
+    );
+    title = "Registration Successful!";
+  }
+
+  if (sender === "reset") {
+    text = (
+      <div>
+        <p>You have successfully reset your password. </p>
+        <p>
+          Click{" "}
+          <Link to="/" className="default-anchor">
+            {" "}
+            Here{" "}
+          </Link>{" "}
+          to Login.
+        </p>
+      </div>
+    );
+    title = "Registration Successful!";
+  }
   return (
     <div>
       <div

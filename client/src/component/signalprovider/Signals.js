@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/providerAction";
+import {
+  getContent,
+  clearActions,
+  getCurrency,
+} from "../../action/providerAction";
 import {
   searchContent,
   clearSearchActions,
@@ -19,6 +23,7 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import AddModal from "../../layout/AddModal";
 
 class Signals extends Component {
   state = {
@@ -46,6 +51,8 @@ class Signals extends Component {
     startLoad: false,
     getLoad: true,
     content: "signals",
+    modal: false,
+    purpose: "",
   };
 
   componentDidMount() {
@@ -59,6 +66,7 @@ class Signals extends Component {
       startLoad: true,
     });
     this.props.getContent(content, paginate);
+    this.props.getCurrency();
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
@@ -106,6 +114,19 @@ class Signals extends Component {
     console.log("first", value);
   };
 
+  openModal = () => {
+    this.setState({
+      modal: true,
+      purpose: "add new",
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
   render() {
     const {
       sender,
@@ -117,6 +138,8 @@ class Signals extends Component {
       signalcount,
       signalOpt,
       signaloption,
+      modal,
+      purpose,
     } = this.state;
 
     const { provider, providerSearch } = this.props;
@@ -167,7 +190,7 @@ class Signals extends Component {
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
-                <div className="col-md-2 mb-2">
+                <div className="col-md-3 mb-2">
                   <SearchInput
                     sender={sender}
                     placeholder="Search by Name, Email, Username"
@@ -196,13 +219,14 @@ class Signals extends Component {
                   />
                 </div>
 
-                <div className="col-md-2 mb-2">
-                  <button type="button" className="btn btn-sm add-new">
+                <div className="col-md-3 mb-2">
+                  <button
+                    type="button"
+                    className="btn btn-sm add-new"
+                    onClick={this.openModal}
+                  >
                     Add New <i className="fas fa-folder-plus" />
                   </button>
-                </div>
-
-                <div className="col-md-2 mb-2">
                   <button type="button" className="btn btn-sm download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
@@ -226,8 +250,8 @@ class Signals extends Component {
               head={[
                 "S/N",
                 "currency pair",
-                "currency flag",
-                "signal option",
+                "flag",
+                "option",
                 "status",
                 "take profit",
                 "stop loss",
@@ -244,6 +268,12 @@ class Signals extends Component {
                 onClick={this.clickHandler}
               />
             </TableHead>
+            {modal ? (
+              <AddModal
+                {...{ modal, sender, purpose }}
+                onClick={this.modalHandler}
+              />
+            ) : null}
           </div>
         )}
       </div>
@@ -267,4 +297,5 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
+  getCurrency,
 })(Signals);

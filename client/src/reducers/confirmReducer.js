@@ -2,10 +2,18 @@ import {
   USER_CONFIRM_PASSWORD_ACTION,
   CLEAR_USER_CONFIRM_PASSWORD_ACTION,
   ACTION_LOADING,
+  USER_RESET_PASSWORD_ACTION,
+  CLEAR_USER_RESET_PASSWORD_ACTION,
 } from "../action/types";
 import isEmpty from "../validation/emptyChecker";
 
-const initialState = { isConfirmed: false, UserId: {}, loading: false };
+const initialState = {
+  isConfirmed: false,
+  UserId: {},
+  loading: false,
+  reset: false,
+  resetDetails: {},
+};
 
 export default function confirmReducer(state = initialState, action) {
   switch (action.type) {
@@ -19,11 +27,23 @@ export default function confirmReducer(state = initialState, action) {
         UserId: action.payload,
         loading: false,
       };
+    case USER_RESET_PASSWORD_ACTION:
+      return {
+        ...state,
+        resetDetails: action.payload,
+        reset: true,
+      };
     case CLEAR_USER_CONFIRM_PASSWORD_ACTION:
       return {
         ...state,
         UserId: {},
-        searching: false,
+        isConfirmed: false,
+      };
+    case CLEAR_USER_RESET_PASSWORD_ACTION:
+      return {
+        ...state,
+        resetDetails: {},
+        reset: false,
       };
     default:
       return state;

@@ -60,7 +60,7 @@ class Login extends Component {
       update.move = true;
     }
 
-    if (nextProps.errors && Object.keys(prevState.error).length === 0) {
+    if (nextProps.errors) {
       update.error = nextProps.errors;
     }
 
@@ -176,7 +176,6 @@ class Login extends Component {
             </div>
           </form>
         </Box>
-        {/*</div>*/}
         <div className="login-helper">
           <p className="mb-1">
             New to MIC? <Link to="/register">Join</Link>

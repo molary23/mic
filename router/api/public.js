@@ -19,6 +19,7 @@ const express = require("express"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   validateLoginInput = require("../../validation/login"),
+  validateConfirmInput = require("../../validation/confirm"),
   validateResetInput = require("../../validation/reset"),
   validatePassInput = require("../../validation/password");
 
@@ -454,7 +455,7 @@ router.post("/forgot", (req, res) => {
 */
 
 router.post("/confirm", (req, res) => {
-  const { errors, isValid } = validateResetInput(req.body);
+  const { errors, isValid } = validateConfirmInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -492,7 +493,6 @@ router.post("/confirm", (req, res) => {
             "Your Password Reset Code has expired. Kindly request for a new one";
           return res.status(400).json(errors);
         } else {
-          // GET back here molary
           Pass.update(
             {
               confirm: "y",
@@ -505,8 +505,7 @@ router.post("/confirm", (req, res) => {
           )
             .then(() => {
               res.json({
-                message: "Password Reset Code confirmed!",
-                id: user.id,
+                UserId: user.id,
               });
             })
             .catch((err) => res.json(err));
@@ -514,6 +513,47 @@ router.post("/confirm", (req, res) => {
       })
       .catch((err) => res.json(err));
   });
+});
+
+/*
+@route POST api/public/reset/
+@desc User reset Password
+@access public
+*/
+
+router.post("/reset", (req, res) => {
+  const { errors, isValid } = validateResetInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  const { UserId, password } = req.body;
+  User.findByPk(UserId)
+    .then((user) => {
+      if (!user) {
+        errors.username = "User doesn't exist!";
+        return res.status(400).json(errors);
+      }
+
+      bcrypt.genSalt(10, (_err, salt) => {
+        bcrypt.hash(password, salt, (err, hash) => {
+          newPassword = hash;
+          User.update(
+            {
+              password: newPassword,
+            },
+            {
+              where: {
+                id: UserId,
+              },
+            }
+          ).then(() => {
+            res.json({ success: true });
+          });
+        });
+      });
+    })
+    .catch((err) => res.json(err));
 });
 
 module.exports = router;

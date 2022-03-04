@@ -1,8 +1,14 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { Navigate, Link } from "react-router-dom";
 
+import { resetPass } from "../action/confirmAction";
+
+import isEmpty from "../validation/emptyChecker";
 import TextPasswordField from "../layout/TextPasswordField";
-
 import Box from "../layout/Box";
+import Modal from "../layout/Modal";
 
 export class Reset extends Component {
   state = {
@@ -12,10 +18,102 @@ export class Reset extends Component {
     pass1: true,
     pass2: true,
     loading: false,
+    navigate: false,
+    modal: false,
+    UserId: this.props.confirm.UserId.UserId,
+  };
+
+  componentDidMount() {
+    if (!this.props.confirm.isConfirmed) {
+      this.setState({
+        navigate: true,
+      });
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (nextProps.confirm.reset && prevState.modal === false) {
+      update.modal = true;
+    }
+
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+      update.loading = false;
+    }
+
+    return update;
+  }
+
+  changeHandler = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  checkPassHandler = (caller) => {
+    if (caller === 1) {
+      this.setState({
+        pass1: !this.state.pass1,
+      });
+    } else {
+      this.setState({
+        pass2: !this.state.pass2,
+      });
+    }
+  };
+
+  submitHandler = async (e) => {
+    e.preventDefault();
+    const { password, password2, UserId } = this.state;
+    if (isEmpty(password)) {
+      this.setState({
+        error: {
+          password: "Password Field can't be Empty",
+        },
+      });
+    } else if (password.length < 8) {
+      this.setState({
+        error: {
+          password: "Password should be atleast 8 characters",
+        },
+      });
+    } else if (isEmpty(password2)) {
+      this.setState({
+        error: {
+          password2: "Confirm Password Field can't be Empty",
+        },
+      });
+    } else if (password !== password2) {
+      this.setState({
+        error: {
+          password: "Password mismatched!",
+        },
+      });
+    } else {
+      this.setState({
+        loading: true,
+      });
+      const pass = {
+        password: password,
+        UserId,
+      };
+      this.props.resetPass(pass);
+    }
   };
 
   render() {
-    const { password, password2, error, loading, pass1, pass2 } = this.state;
+    const {
+      password,
+      password2,
+      error,
+      loading,
+      pass1,
+      pass2,
+      navigate,
+      modal,
+    } = this.state;
     return (
       <div>
         <Box sender="Reset Password">
@@ -58,9 +156,31 @@ export class Reset extends Component {
             </div>
           </form>
         </Box>
+        <div className="login-helper">
+          <p className="mb-1">
+            New to MIC? <Link to="/register">Join</Link>
+          </p>
+          <p className="">
+            Take me back to <Link to="/">Login</Link>
+          </p>
+        </div>
+        {modal ? <Modal {...{ modal, sender: "reset" }} /> : ""}
+        {navigate && <Navigate to="/confirm" replace={true} />}
       </div>
     );
   }
 }
 
-export default Reset;
+Reset.propTypes = {
+  confirm: PropTypes.object.isRequired,
+  reset: PropTypes.object,
+  resetPass: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  confirm: state.confirm,
+  errors: state.errors,
+});
+export default connect(mapStateToProps, {
+  resetPass,
+})(Reset);
