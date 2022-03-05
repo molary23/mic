@@ -50,7 +50,7 @@ SignalView.init(
     provider: {
       type: DataTypes.STRING(30),
     },
-    userid: {
+    providerid: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },

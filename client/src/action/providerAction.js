@@ -6,6 +6,9 @@ import {
   CLEAR_PROVIDER_SIGNALS_ACTION,
   GET_ALL_CURRENCY_PAIR,
   CLEAR_GET_ALL_CURRENCY_PAIR,
+  ADD_NEW_SIGNAL,
+  GET_ERRORS,
+  CLEAR_ADD_NEW_SIGNAL,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
 function Select(props) {
-  const { sender, options, onChange, value, name } = props;
+  const { options, onChange, value, name, error } = props;
   let selectItems;
 
   selectItems = options.map((item, i) => {
@@ -13,14 +13,17 @@ function Select(props) {
   });
 
   return (
-    <select
-      className="form-select"
-      onChange={onChange}
-      value={value}
-      name={name}
-    >
-      {selectItems}
-    </select>
+    <div className="mb-3">
+      <select
+        className="form-select"
+        onChange={onChange}
+        value={value}
+        name={name}
+      >
+        {selectItems}
+      </select>
+      {error && <small className="text-muted">{error}</small>}
+    </div>
   );
 }
 

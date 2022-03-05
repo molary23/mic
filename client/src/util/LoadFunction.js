@@ -14,7 +14,6 @@ export const getMore = ({
         offset: prevState.offset + limit,
         getLoad: (prevState.getLoad = false),
       }));
-      console.log("first");
       if (searchParams !== "") {
         let queryTerms = searchParams.split("?")[1];
         queryTerms = queryTerms.split("&");

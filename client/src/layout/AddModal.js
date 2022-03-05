@@ -3,16 +3,21 @@ import TextInputField from "../layout/TextInputField";
 import Select from "../layout/Select";
 
 function AddModal(props) {
-  const { modal, sender, purpose } = props;
+  const { modal, sender, purpose, onSubmit } = props;
   const [open, setOpen] = useState(modal);
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const signalOpt = [
-    { value: "", option: "Select Signal Option" },
-    { value: "b", option: "Buy" },
-    { value: "s", option: "Sell" },
-  ];
+      { value: "", option: "Select Signal Option" },
+      { value: "b", option: "Buy" },
+      { value: "s", option: "Sell" },
+    ],
+    statusOpt = [
+      { value: "", option: "Select Signal Status" },
+      { value: "c", option: "Cancelled" },
+      { value: "f", option: "Filled" },
+    ];
   const closeModal = () => {
     setOpen(false);
     props.onClick(false);
@@ -25,13 +30,79 @@ function AddModal(props) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (inputs.addpair === "") {
+    if (!Object.keys(inputs).includes("addpair") || inputs.addpair === "") {
       setErrors({
-        addpair: "Currency Pair can't be empty",
+        addpair: "Currency Pair Field can't be empty",
       });
-      console.log("first to go on");
+    } else if (
+      !Object.keys(inputs).includes("addsignaloption") ||
+      inputs.addsignaloption === ""
+    ) {
+      setErrors({
+        addsignaloption: "Signal Option Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addsignalstatus") ||
+      inputs.addsignalstatus === ""
+    ) {
+      setErrors({
+        addsignalstatus: "Signal Status Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addtakeprofit") ||
+      inputs.addtakeprofit === ""
+    ) {
+      setErrors({
+        addtakeprofit: "Take Profit Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addstoploss") ||
+      inputs.addstoploss === ""
+    ) {
+      setErrors({
+        addstoploss: "Stop Loss Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addstartrange") ||
+      inputs.addstartrange === ""
+    ) {
+      setErrors({
+        addstartrange: "Start Range Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addendrange") ||
+      inputs.addendrange === ""
+    ) {
+      setErrors({
+        addendrange: "End Range Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addpip") ||
+      inputs.addpip === ""
+    ) {
+      setErrors({
+        addpip: "Pip Field can't be empty",
+      });
+    } else {
+      setLoading(true);
+      let takeprofit = inputs.addtakeprofit.split(",").map((element) => {
+        return parseFloat(element.trim());
+      });
+      let stoploss = inputs.addstoploss.split(",").map((element) => {
+        return parseFloat(element.trim());
+      });
+      const addSignal = {
+        currencypair: parseInt(inputs.addpair),
+        signaloption: inputs.addsignaloption,
+        takeprofit,
+        stoploss,
+        startrange: parseFloat(inputs.addstartrange),
+        endrange: parseFloat(inputs.addendrange),
+        pip: parseFloat(inputs.addpip),
+      };
+
+      props.onSubmit(addSignal);
     }
-    console.log(inputs);
   };
 
   let text, title;
@@ -59,7 +130,6 @@ function AddModal(props) {
         <div className="add-new-signal">
           <form className="add-new-signal-form" onSubmit={submitHandler}>
             <Select
-              sender={sender}
               options={optArray}
               onChange={changeHandler}
               name="addpair"
@@ -67,12 +137,18 @@ function AddModal(props) {
               error={errors.addpair}
             />
             <Select
-              sender={sender}
               options={signalOpt}
               onChange={changeHandler}
-              name="signaloption"
+              name="addsignaloption"
               value={inputs.addsignaloption || ""}
               error={errors.addsignaloption}
+            />
+            <Select
+              options={statusOpt}
+              onChange={changeHandler}
+              name="addsignalstatus"
+              value={inputs.addsignalstatus || ""}
+              error={errors.addsignalstatus}
             />
             <TextInputField
               id="add-new-takeprofit"
@@ -147,7 +223,7 @@ function AddModal(props) {
         className={`modal fade ${open ? "show d-block" : "d-none"}`}
         id="addModal"
       >
-        <div className="modal-dialog modal-lg modal-dialog-centered">
+        <div className="modal-dialog modal-md modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h4 className="modal-title">{title}</h4>

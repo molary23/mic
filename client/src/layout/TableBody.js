@@ -664,15 +664,17 @@ function TableBody(props) {
             <DateFormat date={item.createdAt} />
           </td>
 
-          <td>
-            <DateFormat date={item.updatedAt} />
-          </td>
+          {sender === "admin-signals" && (
+            <td>
+              <DateFormat date={item.updatedAt} />
+            </td>
+          )}
           {sender === "admin-signals" && (
             <td className="td-lower">
               <Link
                 type=""
                 className=""
-                title="View Admin"
+                title="View Provider"
                 to={`/admin/signal-provider/:${item.userid}`}
               >
                 {item.provider}
@@ -686,7 +688,7 @@ function TableBody(props) {
                 className="btn btn-info btn-sm"
                 data-id={item.signalid}
                 title="View Signal"
-                onClick={() => onClick(i)}
+                onClick={() => onClick(item)}
               >
                 <i className="far fa-eye" />
               </button>
@@ -695,7 +697,7 @@ function TableBody(props) {
                   type="button"
                   className="btn btn-success btn-sm"
                   data-id={item.signalid}
-                  title="View Signal"
+                  title="Edit Signal"
                   onClick={() => onClick(item.signalid)}
                 >
                   <i className="fas fa-edit" />

@@ -198,12 +198,8 @@ span.input-group-text {
   border: $border-light;
 }
 
-.modal :is(input, select, button) {
+.modal :is(input, select) {
   height: 40px !important;
-}
-
-.modal select {
-  margin-bottom: 15px;
 }
 
 .modal .form-floating > label {

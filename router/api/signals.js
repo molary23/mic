@@ -33,15 +33,16 @@ router.post(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    const { errors, isValid } = validateSignalInput(req.body);
+
+    /* const { errors, isValid } = validateSignalInput(req.body);
     if (!isValid) {
       return res.status(400).json(errors);
-    }
+    }*/
 
     const signalFields = {};
     signalFields.UserId = req.user.id;
     signalFields.signaloption = req.body.signaloption;
-    signalFields.CurrencyId = req.body.currency;
+    signalFields.CurrencyId = req.body.currencypair;
     if (req.body.takeprofit) signalFields.takeprofit = req.body.takeprofit;
     if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
     if (req.body.startrange) signalFields.startrange = req.body.startrange;
@@ -49,8 +50,8 @@ router.post(
     if (req.body.pip) signalFields.pip = req.body.pip;
 
     Signal.create(signalFields)
-      .then((signal) => {
-        res.json(signal);
+      .then(() => {
+        res.json(true);
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -329,7 +330,6 @@ router.post(
         "stoploss",
         "pip",
         "createdAt",
-        "updatedAt",
         "provider",
         "providerid",
         [

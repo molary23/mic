@@ -206,12 +206,8 @@ span.input-group-text {
   border: #fcfcfc;
 }
 
-.modal :is(input, select, button) {
+.modal :is(input, select) {
   height: 40px !important;
-}
-
-.modal select {
-  margin-bottom: 15px;
 }
 
 .modal .form-floating > label {
@@ -409,6 +405,7 @@ ul.dropdown-menu li a {
   -webkit-box-shadow: 1px 2px 3px #cecece;
           box-shadow: 1px 2px 3px #cecece;
   background: #fff none repeat scroll 0% 0%;
+  margin-bottom: 50px;
 }
 
 .dashboard-content .card h2 {
@@ -503,8 +500,7 @@ ul.dropdown-menu li a {
   margin-left: 5px;
 }
 
-.dashboard-content input.form-control select,
-.dashboard-content button {
+.dashboard-content input.form-control select {
   height: 40px;
 }
 
@@ -686,4 +682,14 @@ ul.dropdown-menu li a {
 }
 
 /* Add Signal Modal*/
+/* Toast */
+.toast {
+  position: fixed;
+  z-index: 9999;
+  bottom: 60px;
+  left: 210px;
+  width: 200px;
+  background: #022854;
+  color: #fff;
+}
 /*# sourceMappingURL=sub.css.map */

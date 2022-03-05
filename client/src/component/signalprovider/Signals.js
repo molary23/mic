@@ -7,6 +7,7 @@ import {
   clearActions,
   getCurrency,
 } from "../../action/providerAction";
+import { addSignal, clearNewSignal } from "../../action/updateAction";
 import {
   searchContent,
   clearSearchActions,
@@ -24,6 +25,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import AddModal from "../../layout/AddModal";
+import Toast from "../../layout/Toast";
 
 class Signals extends Component {
   state = {
@@ -53,6 +55,8 @@ class Signals extends Component {
     content: "signals",
     modal: false,
     purpose: "",
+    toast: false,
+    toasttext: "",
   };
 
   componentDidMount() {
@@ -75,6 +79,51 @@ class Signals extends Component {
     this.props.clearActions(this.state.content);
     this.props.clearSearchActions(this.state.content);
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+    }
+
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.update.signaladded !== this.props.update.signaladded) {
+      this.afterUpdate();
+    }
+  }
+
+  afterUpdate = () => {
+    const { limit, content, signalcount, offset } = this.state;
+    this.setState({
+      numOfPages: Math.ceil((signalcount + 1) / limit),
+      offset: 0,
+      modal: false,
+      toast: true,
+      toasttext: "Signal Added",
+    });
+    const paginate = {
+      limit,
+      offset,
+    };
+    this.props.clearNewSignal();
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState((prevState) => ({
+      offset: prevState.offset + limit,
+    }));
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
@@ -127,6 +176,10 @@ class Signals extends Component {
     });
   };
 
+  submitHandler = (addSignal) => {
+    this.props.addSignal(addSignal);
+  };
+
   render() {
     const {
       sender,
@@ -140,6 +193,9 @@ class Signals extends Component {
       signaloption,
       modal,
       purpose,
+      toast,
+      toasttext,
+      //  newsignal,
     } = this.state;
 
     const { provider, providerSearch } = this.props;
@@ -175,6 +231,12 @@ class Signals extends Component {
       getLoad,
       signalcount,
     });
+    /*  let joinsignal = {};
+    joinsignal = newsignal;
+    if (Object.keys(joinsignal).length > 0) {
+      //main.unshift(joinsignal);
+      main.splice(0, 0, joinsignal);
+    }*/
 
     return (
       <div>
@@ -209,7 +271,7 @@ class Signals extends Component {
                     value={status}
                   />
                 </div>
-                <div className="col-md-2 mb-2">
+                <div className="col-md-2">
                   <Select
                     sender={sender}
                     options={signalOpt}
@@ -219,7 +281,7 @@ class Signals extends Component {
                   />
                 </div>
 
-                <div className="col-md-3 mb-2">
+                <div className="col-md-3">
                   <button
                     type="button"
                     className="btn btn-sm add-new"
@@ -258,7 +320,6 @@ class Signals extends Component {
                 "range",
                 "pip",
                 "created at",
-                "updated at",
                 "action",
               ]}
             >
@@ -268,14 +329,16 @@ class Signals extends Component {
                 onClick={this.clickHandler}
               />
             </TableHead>
-            {modal ? (
-              <AddModal
-                {...{ modal, sender, purpose }}
-                onClick={this.modalHandler}
-              />
-            ) : null}
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, purpose }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }
@@ -289,6 +352,7 @@ Signals.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  update: state.update,
   provider: state.provider,
   providerSearch: state.providerSearch,
 });
@@ -298,4 +362,6 @@ export default connect(mapStateToProps, {
   searchContent,
   clearSearchActions,
   getCurrency,
+  addSignal,
+  clearNewSignal,
 })(Signals);

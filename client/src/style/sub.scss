@@ -179,7 +179,7 @@ ul.dropdown-menu {
     border: 1px solid $border-light;
     box-shadow: 1px 2px 3px $shadow;
     background: #fff none repeat scroll 0% 0%;
-
+    margin-bottom: 50px;
     h2 {
       margin-bottom: 0px;
     }
@@ -259,8 +259,7 @@ ul.dropdown-menu {
     color: rgba($color: $def-blue, $alpha: 0.8);
     margin-left: 5px;
   }
-  input.form-control select,
-  button {
+  input.form-control select {
     height: 40px;
   }
 }
@@ -425,3 +424,14 @@ ul.dropdown-menu {
 }
 
 /* Add Signal Modal*/
+
+/* Toast */
+.toast {
+  position: fixed;
+  z-index: 9999;
+  bottom: 60px;
+  left: 210px;
+  width: 200px;
+  background: $bg-dark;
+  color: #fff;
+}
