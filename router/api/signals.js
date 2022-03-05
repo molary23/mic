@@ -42,7 +42,10 @@ router.post(
     const signalFields = {};
     signalFields.UserId = req.user.id;
     signalFields.signaloption = req.body.signaloption;
-    signalFields.CurrencyId = req.body.currencypair;
+    signalFields.CurrencyId = req.body.pair;
+    if (req.body.pair) signalFields.CurrencyId = req.body.pair;
+    if (req.body.option) signalFields.signaloption = req.body.option;
+    if (req.body.status) signalFields.status = req.body.status;
     if (req.body.takeprofit) signalFields.takeprofit = req.body.takeprofit;
     if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
     if (req.body.startrange) signalFields.startrange = req.body.startrange;
@@ -114,7 +117,7 @@ router.post(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    const signalID = req.params.id,
+    const signalID = req.params.id.split(":")[1],
       userID = req.user.id;
     Signal.findOne({
       where: { id: signalID },
@@ -123,9 +126,8 @@ router.post(
       .then((signal) => {
         if (signal.UserId === userID) {
           const signalFields = {};
-          if (req.body.signaloption)
-            signalFields.signaloption = req.body.signaloption;
-          if (req.body.currency) signalFields.CurrencyId = req.body.currency;
+          if (req.body.option) signalFields.signaloption = req.body.option;
+          if (req.body.pair) signalFields.CurrencyId = req.body.pair;
           if (req.body.takeprofit)
             signalFields.takeprofit = req.body.takeprofit;
           if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
@@ -137,11 +139,11 @@ router.post(
 
           Signal.update(signalFields, { where: { id: signalID } })
             .then(() => {
-              res.json({ message: "Signal updated Successfully!" });
+              res.json(true);
             })
             .catch((err) => res.status(404).json(err));
         } else {
-          error.user = "You are not authorised to update this Signal.";
+          error.update = "You are not authorised to update this Signal.";
           res.status(400).json(error);
         }
       })
@@ -332,6 +334,7 @@ router.post(
         "createdAt",
         "provider",
         "providerid",
+        "CurrencyId",
         [
           Sequelize.literal(
             `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `

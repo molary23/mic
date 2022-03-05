@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Flag from "react-flagpack";
 
 function Signal(props) {
-  const { signal } = props;
+  const { signal, sender } = props;
 
   let result;
   if (signal.pip >= 1) {
@@ -106,19 +106,21 @@ function Signal(props) {
           </div>
         </div>
 
-        <div className="signal-pip">
-          <div className="signal-pip-title signal-title">Provider</div>
-          <div className="signal-pip-value signal-align-right">
-            <Link
-              type=""
-              className=""
-              title="View Admin"
-              to={`/admin/user/provider/:${signal.providerid}`}
-            >
-              {signal.provider}
-            </Link>
+        {sender !== "provider" && (
+          <div className="signal-provider">
+            <div className="signal-provider-title signal-title">Provider</div>
+            <div className="signal-provider-value signal-align-right">
+              <Link
+                type=""
+                className=""
+                title="View Admin"
+                to={`/admin/user/provider/:${signal.providerid}`}
+              >
+                {signal.provider}
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

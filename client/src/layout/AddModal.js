@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import TextInputField from "../layout/TextInputField";
 import Select from "../layout/Select";
+import Signal from "../layout/Signal";
+
+import { checkEmptyInput } from "../util/LoadFunction";
 
 function AddModal(props) {
-  const { modal, sender, purpose, onSubmit } = props;
+  const { modal, sender, purpose, onSubmit, modalsignaldetails, error } = props;
   const [open, setOpen] = useState(modal);
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
@@ -28,80 +31,66 @@ function AddModal(props) {
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
-  const submitHandler = (e) => {
+  const submitNewHandler = (e) => {
     e.preventDefault();
-    if (!Object.keys(inputs).includes("addpair") || inputs.addpair === "") {
-      setErrors({
-        addpair: "Currency Pair Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addsignaloption") ||
-      inputs.addsignaloption === ""
-    ) {
-      setErrors({
-        addsignaloption: "Signal Option Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addsignalstatus") ||
-      inputs.addsignalstatus === ""
-    ) {
-      setErrors({
-        addsignalstatus: "Signal Status Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addtakeprofit") ||
-      inputs.addtakeprofit === ""
-    ) {
-      setErrors({
-        addtakeprofit: "Take Profit Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addstoploss") ||
-      inputs.addstoploss === ""
-    ) {
-      setErrors({
-        addstoploss: "Stop Loss Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addstartrange") ||
-      inputs.addstartrange === ""
-    ) {
-      setErrors({
-        addstartrange: "Start Range Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addendrange") ||
-      inputs.addendrange === ""
-    ) {
-      setErrors({
-        addendrange: "End Range Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addpip") ||
-      inputs.addpip === ""
-    ) {
-      setErrors({
-        addpip: "Pip Field can't be empty",
-      });
-    } else {
-      setLoading(true);
-      let takeprofit = inputs.addtakeprofit.split(",").map((element) => {
-        return parseFloat(element.trim());
-      });
-      let stoploss = inputs.addstoploss.split(",").map((element) => {
-        return parseFloat(element.trim());
-      });
-      const addSignal = {
-        currencypair: parseInt(inputs.addpair),
-        signaloption: inputs.addsignaloption,
-        takeprofit,
-        stoploss,
-        startrange: parseFloat(inputs.addstartrange),
-        endrange: parseFloat(inputs.addendrange),
-        pip: parseFloat(inputs.addpip),
-      };
 
-      props.onSubmit(addSignal);
+    const signal = checkEmptyInput({
+      inputs,
+      setErrors,
+      setLoading,
+      pair: "addpair",
+      option: "addsignaloption",
+      status: "addsignalstatus",
+      takeprofit: "addtakeprofit",
+      stoploss: "addstoploss",
+      startrange: "addstartrange",
+      endrange: "addendrange",
+      pip: "addpip",
+    });
+
+    if (signal !== false) {
+      onSubmit(["new", signal]);
+    }
+  };
+
+  const submitEditHandler = (e) => {
+    inputs.editpair = inputs.editpair ?? modalsignaldetails.CurrencyId;
+    inputs.editsignaloption =
+      inputs.editsignaloption ??
+      modalsignaldetails.signaloption.toLowerCase() === "sell"
+        ? "s"
+        : "b";
+    inputs.editsignalstatus =
+      inputs.editsignalstatus ??
+      modalsignaldetails.status.toLowerCase() === "filled"
+        ? "f"
+        : "c";
+    inputs.edittakeprofit =
+      inputs.edittakeprofit ?? modalsignaldetails.takeprofit.toString();
+    inputs.editstoploss =
+      inputs.editstoploss ?? modalsignaldetails.stoploss.toString();
+    inputs.editstartrange =
+      inputs.editstartrange ?? modalsignaldetails.range.split("-")[0].trim();
+    inputs.editendrange =
+      inputs.editendrange ?? modalsignaldetails.range.split("-")[1].trim();
+    inputs.editpip = inputs.editpip ?? modalsignaldetails.pip.toString();
+    e.preventDefault();
+    const signal = checkEmptyInput({
+      inputs,
+      setErrors,
+      setLoading,
+      pair: "editpair",
+      option: "editsignaloption",
+      status: "editsignalstatus",
+      takeprofit: "edittakeprofit",
+      stoploss: "editstoploss",
+      startrange: "editstartrange",
+      endrange: "editendrange",
+      pip: "editpip",
+    });
+
+    if (signal !== false) {
+      onSubmit(["edit", signal, modalsignaldetails.signalid]);
     }
   };
 
@@ -124,11 +113,11 @@ function AddModal(props) {
       optArray.push(optObj);
     }
     optArray.unshift(defaultOpt);
-    if (purpose === "add new") {
+    if (purpose === "add-new") {
       title = "Add New Signal";
       text = (
         <div className="add-new-signal">
-          <form className="add-new-signal-form" onSubmit={submitHandler}>
+          <form className="add-new-signal-form" onSubmit={submitNewHandler}>
             <Select
               options={optArray}
               onChange={changeHandler}
@@ -201,6 +190,7 @@ function AddModal(props) {
               error={errors.addpip}
             />
             <div className="d-grid">
+              {error.add && <small className="text-muted">{error.add}</small>}
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
@@ -214,6 +204,123 @@ function AddModal(props) {
           </form>
         </div>
       );
+    } else if (purpose === "edit") {
+      title = "Edit Signal";
+      text = (
+        <div className="edit-new-signal">
+          <form className="edit-new-signal-form" onSubmit={submitEditHandler}>
+            <Select
+              options={optArray}
+              onChange={changeHandler}
+              name="editpair"
+              value={inputs.editpair || modalsignaldetails.CurrencyId}
+              error={errors.editpair}
+            />
+            <Select
+              options={signalOpt}
+              onChange={changeHandler}
+              name="editsignaloption"
+              value={
+                inputs.editsignaloption ||
+                modalsignaldetails.signaloption.toLowerCase() === "sell"
+                  ? "s"
+                  : "b"
+              }
+              error={errors.editsignaloption}
+            />
+            <Select
+              options={statusOpt}
+              onChange={changeHandler}
+              name="editsignalstatus"
+              value={
+                inputs.editsignalstatus ||
+                modalsignaldetails.status.toLowerCase() === "filled"
+                  ? "f"
+                  : "c"
+              }
+              error={errors.editsignalstatus}
+            />
+            <TextInputField
+              id="edit-new-takeprofit"
+              placeholder="Take Profit "
+              label="Take Profit *Separate multiple Take Profits with Comma (,)*"
+              type="text"
+              name="edittakeprofit"
+              value={
+                inputs.edittakeprofit ||
+                modalsignaldetails.takeprofit.toString()
+              }
+              onChange={changeHandler}
+              error={errors.edittakeprofit}
+            />
+            <TextInputField
+              id="edit-new-takeprofit"
+              placeholder="Stop Loss"
+              label="Stop Loss *Separate multiple Stop Loss with Comma (,)*"
+              type="text"
+              name="editstoploss"
+              value={
+                inputs.editstoploss || modalsignaldetails.stoploss.toString()
+              }
+              onChange={changeHandler}
+              error={errors.editstoploss}
+            />
+            <TextInputField
+              id="edit-new-takeprofit"
+              placeholder="Start Range"
+              label="Start Range"
+              type="text"
+              name="editstartrange"
+              value={
+                inputs.editstartrange ||
+                modalsignaldetails.range.split("-")[0].trim()
+              }
+              onChange={changeHandler}
+              error={errors.editstartrange}
+            />
+            <TextInputField
+              id="edit-new-takeprofit"
+              placeholder="End Range"
+              label="End Range"
+              type="text"
+              name="editendrange"
+              value={
+                inputs.editendrange ||
+                modalsignaldetails.range.split("-")[1].trim()
+              }
+              onChange={changeHandler}
+              error={errors.editendrange}
+            />
+            <TextInputField
+              id="edit-new-takeprofit"
+              placeholder="Profit/Loss, Pip"
+              label="Profit/Loss, Pip"
+              type="text"
+              name="editpip"
+              value={inputs.editpip || modalsignaldetails.pip.toString()}
+              onChange={changeHandler}
+              error={errors.editpip}
+            />
+            <div className="d-grid">
+              {error.update && (
+                <small className="text-muted">{error.update}</small>
+              )}
+              <button
+                type="submit"
+                className="btn default-btn btn-lg btn-block"
+              >
+                Edit Signal
+                {loading && (
+                  <span className="spinner-border spinner-border-sm ms-2"></span>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      );
+    } else if (purpose === "view") {
+      title = "View Signal";
+      text = <Signal signal={modalsignaldetails} sender={"provider"} />;
     }
   }
 

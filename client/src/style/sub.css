@@ -686,10 +686,7 @@ ul.dropdown-menu li a {
 .toast {
   position: fixed;
   z-index: 9999;
-  bottom: 60px;
-  left: 210px;
-  width: 200px;
+  margin-bottom: 60px;
   background: #022854;
-  color: #fff;
 }
 /*# sourceMappingURL=sub.css.map */

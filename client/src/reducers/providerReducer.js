@@ -6,6 +6,8 @@ import {
   CLEAR_GET_ALL_CURRENCY_PAIR,
   ADD_NEW_SIGNAL,
   CLEAR_ADD_NEW_SIGNAL,
+  EDIT_NEW_SIGNAL,
+  CLEAR_EDIT_NEW_SIGNAL,
 } from "../action/types";
 
 const initialState = {
@@ -15,6 +17,7 @@ const initialState = {
   signalcount: 0,
   currencies: [],
   signaladded: false,
+  signaledited: false,
 };
 
 export default function providerReducer(state = initialState, action) {
@@ -32,7 +35,26 @@ export default function providerReducer(state = initialState, action) {
         ...state,
         currencies: action.payload,
       };
-
+    case ADD_NEW_SIGNAL:
+      return {
+        ...state,
+        signaladded: action.payload,
+      };
+    case EDIT_NEW_SIGNAL:
+      return {
+        ...state,
+        signaledited: action.payload,
+      };
+    case CLEAR_ADD_NEW_SIGNAL:
+      return {
+        ...state,
+        signaladded: false,
+      };
+    case CLEAR_EDIT_NEW_SIGNAL:
+      return {
+        ...state,
+        signaledited: false,
+      };
     case CLEAR_PROVIDER_SIGNALS_ACTION: {
       return { ...state, signals: [], signalcount: 0, fetching: false };
     }

@@ -1,4 +1,4 @@
-import axios from "axios";
+/*import axios from "axios";
 
 import {
   ADD_NEW_SIGNAL,
@@ -30,3 +30,4 @@ export const clearNewSignal = () => {
 export const setLoading = () => {
   return { type: ACTION_LOADING };
 };
+*/

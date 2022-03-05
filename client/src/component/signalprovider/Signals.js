@@ -6,8 +6,11 @@ import {
   getContent,
   clearActions,
   getCurrency,
+  addSignal,
+  clearSignal,
+  editSignal,
 } from "../../action/providerAction";
-import { addSignal, clearNewSignal } from "../../action/updateAction";
+
 import {
   searchContent,
   clearSearchActions,
@@ -57,6 +60,8 @@ class Signals extends Component {
     purpose: "",
     toast: false,
     toasttext: "",
+    modalsignaldetails: [],
+    error: {},
   };
 
   componentDidMount() {
@@ -90,25 +95,36 @@ class Signals extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.update.signaladded !== this.props.update.signaladded) {
-      this.afterUpdate();
+    if (prevProps.provider.signaladded !== this.props.provider.signaladded) {
+      this.afterUpdate("added");
+    } else if (
+      prevProps.provider.signaledited !== this.props.provider.signaledited
+    ) {
+      this.afterUpdate("edited");
     }
   }
 
-  afterUpdate = () => {
-    const { limit, content, signalcount, offset } = this.state;
+  afterUpdate = (text) => {
+    const { limit, content, signalcount } = this.state;
+    if (text === "added") {
+      this.setState({
+        numOfPages: Math.ceil((signalcount + 1) / limit),
+      });
+      this.props.clearSignal("new");
+    } else {
+      this.props.clearSignal("edit");
+    }
     this.setState({
-      numOfPages: Math.ceil((signalcount + 1) / limit),
       offset: 0,
       modal: false,
       toast: true,
-      toasttext: "Signal Added",
+      toasttext: `Signal ${text} successfully`,
     });
     const paginate = {
       limit,
-      offset,
+      offset: 0,
     };
-    this.props.clearNewSignal();
+    this.props.clearSignal("new");
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
     this.props.getContent(content, paginate);
@@ -160,13 +176,17 @@ class Signals extends Component {
   };
 
   clickHandler = (value) => {
-    console.log("first", value);
+    this.setState({
+      modal: true,
+      purpose: value[0],
+      modalsignaldetails: value[1],
+    });
   };
 
   openModal = () => {
     this.setState({
       modal: true,
-      purpose: "add new",
+      purpose: "add-new",
     });
   };
 
@@ -176,8 +196,16 @@ class Signals extends Component {
     });
   };
 
-  submitHandler = (addSignal) => {
-    this.props.addSignal(addSignal);
+  submitHandler = (signalinfo) => {
+    let act = signalinfo[0],
+      signaldetail = signalinfo[1];
+    if (act === "new") {
+      this.props.addSignal(signaldetail);
+    } else if (act === "edit") {
+      //console.log(signaldetail, signalinfo[2]);
+      this.props.editSignal(signaldetail, signalinfo[2]);
+    }
+    // this.props.addSignal(addSignal);
   };
 
   render() {
@@ -195,6 +223,8 @@ class Signals extends Component {
       purpose,
       toast,
       toasttext,
+      modalsignaldetails,
+      error,
       //  newsignal,
     } = this.state;
 
@@ -333,7 +363,7 @@ class Signals extends Component {
         )}
         {modal ? (
           <AddModal
-            {...{ modal, sender, purpose }}
+            {...{ modal, sender, purpose, modalsignaldetails, error }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />
@@ -352,7 +382,6 @@ Signals.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  update: state.update,
   provider: state.provider,
   providerSearch: state.providerSearch,
 });
@@ -363,5 +392,6 @@ export default connect(mapStateToProps, {
   clearSearchActions,
   getCurrency,
   addSignal,
-  clearNewSignal,
+  clearSignal,
+  editSignal,
 })(Signals);

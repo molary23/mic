@@ -429,9 +429,6 @@ ul.dropdown-menu {
 .toast {
   position: fixed;
   z-index: 9999;
-  bottom: 60px;
-  left: 210px;
-  width: 200px;
+  margin-bottom: 60px;
   background: $bg-dark;
-  color: #fff;
 }

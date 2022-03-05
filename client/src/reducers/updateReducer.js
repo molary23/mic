@@ -1,4 +1,4 @@
-import { ADD_NEW_SIGNAL, CLEAR_ADD_NEW_SIGNAL } from "../action/types";
+/*import { ADD_NEW_SIGNAL, CLEAR_ADD_NEW_SIGNAL } from "../action/types";
 
 const initialState = {
   signaladded: false,
@@ -20,3 +20,4 @@ export default function updateReducer(state = initialState, action) {
       return state;
   }
 }
+*/
