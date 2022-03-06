@@ -305,12 +305,26 @@ ul.dropdown-menu li a {
 }
 
 .nav-item.dropdown {
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .nav-item.dropdown .nav-settings {
-  font-size: 25px;
-  color: #818181;
+  font-size: 20px;
+  color: rgba(102, 102, 102, 0.3);
+  margin-top: 10px;
+}
+
+.nav-item.dropdown .nav-name {
+  font-weight: 600px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  color: rgba(102, 102, 102, 0.7);
+}
+
+.nav-item.dropdown .vl {
+  border-left: 2px solid rgba(102, 102, 102, 0.3);
+  height: 30px;
+  position: absolute;
   margin-top: 5px;
 }
 
@@ -494,6 +508,20 @@ ul.dropdown-menu li a {
       align-self: start;
   -ms-grid-column-align: end;
       justify-self: end;
+}
+
+.dashboard-content .dash-card {
+  border-radius: 20px;
+  height: 200px;
+  -webkit-box-shadow: 1px 1px 5px #bebebe;
+          box-shadow: 1px 1px 5px #bebebe;
+  padding: 20px;
+}
+
+.dashboard-content .dash-bonus {
+  background: #fec4b0;
+  background: linear-gradient(142deg, #fec4b0 0%, #fe6aa4 40%, #f2468a 68%);
+  color: #fff;
 }
 
 .dashboard-content .box-icon i {

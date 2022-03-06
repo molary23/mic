@@ -67,6 +67,54 @@ export class Index extends Component {
           </div>
         ) : (
           <div className="container">
+            <div className="welcome-dashboard mb-5">
+              <h1>Hi, User Full Name/ Username, welcome to your Dashboard</h1>
+            </div>
+            <div className="dash-intro mb-5">
+              <div className="row">
+                <div className="col-md-5 col-xs-12">
+                  <div className="dash-basic dash-card">
+                    <div className="referral-details">
+                      <div className="referral-id-box card">
+                        <div className="referrral-id  ms-2  pt-1">
+                          <code>
+                            http://localhost:3000/referral/:{username}
+                          </code>
+                          <input
+                            type="hidden"
+                            ref={this.myRef}
+                            id="copy-code"
+                            value={`http://localhost:3000/referral/:${username}`}
+                            readOnly
+                          />
+                        </div>
+                        <div className="copy-referrral-id">
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={this.clickHandler}
+                          >
+                            <i className="far fa-copy" />
+                          </button>
+                        </div>
+                        <div className={`tiptool ${copy && "showTip"}`}>
+                          <span className="tooltiptext">
+                            Copied to Clipboard
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-1"></div>
+                <div className="col-md-6 col-xs-12">
+                  <div className="dash-bonus dash-card">
+                    <h4 className="mb-3">Bonus Index</h4>
+                    <h1 className="mb-3">$25009</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="row">
               <div className="col-md-6">
                 <div className="dashboard-intro card">

@@ -83,10 +83,23 @@ ul.dropdown-menu {
 }
 
 .nav-item.dropdown {
-  margin-right: 10px;
+  margin-right: 20px;
   .nav-settings {
-    font-size: 25px;
-    color: #818181;
+    font-size: 20px;
+    color: rgba(102, 102, 102, 0.3);
+    margin-top: 10px;
+  }
+
+  .nav-name {
+    font-weight: 600px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    color: rgba(102, 102, 102, 0.7);
+  }
+  .vl {
+    border-left: 2px solid rgba(102, 102, 102, 0.3);
+    height: 30px;
+    position: absolute;
     margin-top: 5px;
   }
 }
@@ -239,6 +252,25 @@ ul.dropdown-menu {
         justify-self: end;
       }
     }
+  }
+  .welcome-dashboard {
+  }
+  .dash-card {
+    border-radius: 20px;
+    height: 200px;
+    box-shadow: 1px 1px 5px rgb(190, 190, 190);
+    padding: 20px;
+  }
+
+  .dash-bonus {
+    background: rgb(254, 196, 176);
+    background: linear-gradient(
+      142deg,
+      rgba(254, 196, 176, 1) 0%,
+      rgba(254, 106, 164, 1) 40%,
+      rgba(242, 70, 138, 1) 68%
+    );
+    color: #fff;
   }
 
   .box-icon {

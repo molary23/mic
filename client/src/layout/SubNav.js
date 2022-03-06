@@ -59,6 +59,12 @@ export class SubNav extends Component {
                   <Dropdown />
                 </li>
                 <li className="nav-item dropdown">
+                  <p className="nav-name">Full Name of User</p>
+                </li>
+                <li className="nav-item dropdown">
+                  <span className="vl"></span>
+                </li>
+                <li className="nav-item dropdown">
                   <Link className="navbar-brand" to="/user/settings">
                     <i className="fas fa-cog nav-settings" />
                   </Link>
