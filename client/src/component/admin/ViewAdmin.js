@@ -3,7 +3,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/adminAction";
+import {
+  getContent,
+  clearActions,
+  addNewAdmin,
+  clearAdminAction,
+  updateAdmin,
+} from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
 import {
@@ -88,10 +94,16 @@ class ViewAdmin extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.admin.addcurrency !== this.props.admin.addcurrency &&
-      this.props.admin.addcurrency
+      prevProps.admin.addadmin !== this.props.admin.addadmin &&
+      this.props.admin.addadmin
     ) {
       this.afterUpdate("added");
+    }
+    if (
+      prevProps.admin.updateadmin !== this.props.admin.updateadmin &&
+      this.props.admin.updateadmin
+    ) {
+      this.afterUpdate("updated");
     }
   }
 
@@ -103,8 +115,9 @@ class ViewAdmin extends Component {
       });
       this.props.clearAdminAction("add-admin");
     } else {
-      this.props.clearAdminAction("delete-admin");
+      this.props.clearAdminAction("update-admin");
     }
+
     this.setState({
       offset: 0,
       modal: false,
@@ -178,7 +191,18 @@ class ViewAdmin extends Component {
 
   submitHandler = (value) => {
     if (value[0] === "add") {
-      this.props.addCurrency(value[1]);
+      this.props.addNewAdmin("super", value[1]);
+    }
+  };
+
+  clickhandler = (value) => {
+    let check = window.confirm(
+      `Are you sure you want to ${value[0]} this Admin?`
+    );
+    if (check) {
+      this.props.updateAdmin(value);
+    } else {
+      return false;
     }
   };
 
@@ -306,6 +330,7 @@ class ViewAdmin extends Component {
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickhandler}
               />
             </TableHead>
           </div>
@@ -326,8 +351,11 @@ class ViewAdmin extends Component {
 ViewAdmin.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  addNewAdmin: PropTypes.func,
+  clearAdminAction: PropTypes.func,
   loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
+  updateAdmin: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 
@@ -335,10 +363,14 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,
   getContent,
   searchContent,
   clearSearchActions,
+  addNewAdmin,
+  clearAdminAction,
+  updateAdmin,
 })(ViewAdmin);

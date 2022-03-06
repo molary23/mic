@@ -29,6 +29,12 @@ import {
   CLEAR_ADD_NEW_CURRENCY,
   DELETE_CURRENCY,
   CLEAR_DELETE_CURRENCY,
+  ADD_NEW_ADMIN,
+  CLEAR_ADD_NEW_ADMIN,
+  ADD_NEW_PROVIDER,
+  CLEAR_ADD_NEW_PROVIDER,
+  UPDATE_ADMIN,
+  CLEAR_UPDATE_ADMIN,
 } from "../action/types";
 
 const initialState = {
@@ -62,6 +68,9 @@ const initialState = {
   withdrawals: [],
   deletecurrency: false,
   addcurrency: false,
+  addadmin: false,
+  addprovider: false,
+  updateadmin: false,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -193,6 +202,24 @@ export default function adminReducer(state = initialState, action) {
         deletecurrency: action.payload,
         loading: false,
       };
+    case ADD_NEW_ADMIN:
+      return {
+        ...state,
+        addadmin: action.payload,
+        loading: false,
+      };
+    case ADD_NEW_PROVIDER:
+      return {
+        ...state,
+        addprovider: action.payload,
+        loading: false,
+      };
+    case UPDATE_ADMIN:
+      return {
+        ...state,
+        updateadmin: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -237,6 +264,15 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ADD_NEW_CURRENCY: {
       return { ...state, addcurrency: false };
+    }
+    case CLEAR_ADD_NEW_ADMIN: {
+      return { ...state, addadmin: false };
+    }
+    case CLEAR_ADD_NEW_PROVIDER: {
+      return { ...state, addprovider: false };
+    }
+    case CLEAR_UPDATE_ADMIN: {
+      return { ...state, updateadmin: false };
     }
     default:
       return state;

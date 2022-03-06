@@ -164,6 +164,7 @@ a.default-anchor:hover {
   color: #fff !important;
   font-weight: 600;
   border: none;
+  text-transform: capitalize;
 }
 
 .btn.default-btn:focus {
@@ -206,6 +207,10 @@ span.input-group-text {
 /* Modal */
 .modal {
   background: rgba(2, 40, 84, 0.7);
+}
+
+.modal-title {
+  text-transform: capitalize;
 }
 
 .modal-content {

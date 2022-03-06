@@ -145,7 +145,6 @@ class Login extends Component {
             <TextInputField
               id="login-form-email"
               placeholder="Email Address/Username"
-              label="Email Address/Username"
               type="text"
               name="username"
               value={username}

@@ -33,6 +33,12 @@ import {
   CLEAR_DELETE_CURRENCY,
   GET_ERRORS,
   CLEAR_ERRORS,
+  ADD_NEW_ADMIN,
+  CLEAR_ADD_NEW_ADMIN,
+  ADD_NEW_PROVIDER,
+  CLEAR_ADD_NEW_PROVIDER,
+  UPDATE_ADMIN,
+  CLEAR_UPDATE_ADMIN,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -177,4 +183,49 @@ export const clearErrors = () => {
 export const clearAdminAction = (info) => {
   if (info === "delete-currency") return { type: CLEAR_DELETE_CURRENCY };
   if (info === "add-currency") return { type: CLEAR_ADD_NEW_CURRENCY };
+  if (info === "add-admin") return { type: CLEAR_ADD_NEW_ADMIN };
+  if (info === "add-provider") return { type: CLEAR_ADD_NEW_PROVIDER };
+  if (info === "update-admin") return { type: CLEAR_UPDATE_ADMIN };
+};
+
+export const addNewAdmin = (level, data) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  let url = "/api/admin/add",
+    type;
+  if (level === "super") {
+    type = ADD_NEW_ADMIN;
+    data.level = 3;
+  } else if (level === "provider") {
+    type = ADD_NEW_PROVIDER;
+    data.level = 2;
+  }
+
+  try {
+    let response = await axios.post(url, data);
+    const result = await dispatch({
+      type,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const updateAdmin = (value) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post("/api/admin/update/", value);
+    const result = await dispatch({
+      type: UPDATE_ADMIN,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
 };

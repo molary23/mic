@@ -512,14 +512,25 @@ function TableBody(props) {
     });
   }
 
-  if (sender === "admin-admins") {
+  if (sender === "admin-admins" || sender === "admin-providers") {
+    let adm = sender.split("-")[1].replace(/s/g, "");
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.fullname}</td>
           <td className="td-lower">{item.email}</td>
-          <td className="td-lower">{item.username}</td>
+          <td className="td-lower">
+            <Link
+              type="button"
+              className=""
+              data-id={i}
+              title={`View ${adm}`}
+              to={`/admin/admin/:${item.userid}`}
+            >
+              {item.username}
+            </Link>
+          </td>
           <td>{item.phone}</td>
           <td>
             {item.status === "a" ? (
@@ -534,15 +545,29 @@ function TableBody(props) {
           </td>
           <td>
             <div className="action-buttons">
-              <Link
-                type="button"
-                className="btn btn-info btn-sm"
-                data-id={i}
-                title="View User"
-                to={`/admin/user/:${item.userid}`}
-              >
-                <i className="far fa-eye" />
-              </Link>
+              {item.status === "a" && (
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  data-id={item.id}
+                  title={`Deactivate ${adm}`}
+                  onClick={() => onClick(["delete", item.userid])}
+                >
+                  <i className="fas fa-ban" />
+                </button>
+              )}
+
+              {item.status === "i" && (
+                <button
+                  type="button"
+                  className="btn btn-success btn-sm"
+                  data-id={item.id}
+                  title={`Activate ${adm}`}
+                  onClick={() => onClick(["reactivate", item.userid])}
+                >
+                  <i className="fas fa-user-check" />
+                </button>
+              )}
             </div>
           </td>
         </tr>

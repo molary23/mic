@@ -72,7 +72,6 @@ export class Forgot extends Component {
             <TextInputField
               id="forgot-form-email"
               placeholder="Email Address/Username"
-              label="Email Address/Username"
               type="text"
               name="username"
               value={username}

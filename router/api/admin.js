@@ -33,10 +33,12 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
+
     const userField = {};
 
     if (req.body.email) userField.email = req.body.email;
     if (req.body.username) userField.username = req.body.username;
+    if (req.body.phone) userField.phone = req.body.phone;
     if (req.body.password) userField.password = req.body.password;
     if (req.body.level) userField.level = req.body.level;
 
@@ -57,8 +59,8 @@ router.post(
                     if (err) throw err;
                     userField.password = hash;
                     User.create(userField)
-                      .then((user) => {
-                        res.json(user);
+                      .then(() => {
+                        res.json(true);
                       })
                       .catch((err) => res.json(err));
                   });
@@ -73,20 +75,27 @@ router.post(
 );
 
 /*
-@route POST api/admin/delete/:id
-@desc Delete an Admin
+@route POST api/admin/update/:id
+@desc update an Admin
 @access private
 */
 
-router.delete(
-  "/delete/:id",
+router.post(
+  "/update",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { error, isLevel } = checkSuperAdmin(req.user.level);
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    const userId = req.params.id;
+    const [action, userId] = req.body;
+    let active;
+    if (action === "delete") {
+      active = "i";
+    } else if (action === "reactivate") {
+      active = "a";
+    }
+
     User.findByPk(userId).then((user) => {
       if (!user) {
         error.user = "User doesn't exist!";
@@ -95,9 +104,9 @@ router.delete(
         error.user = "You can't deactivate a User";
         res.status(400).json(error);
       } else {
-        User.update({ active: 0 }, { where: { id: userId } })
+        User.update({ status: active }, { where: { id: userId } })
           .then(() => {
-            res.json({ message: "Admin/SP deactivated" });
+            res.json(true);
           })
           .catch((err) => res.status(404).json(err));
       }

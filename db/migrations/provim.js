@@ -6,7 +6,7 @@ const view_name = "ProviderViews";
 
 const original_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.status AS userstatus",
+  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.status AS status",
   " FROM Users ",
   " LEFT JOIN Profiles ",
   " ON Users.id = Profiles.UserId ",
@@ -15,7 +15,7 @@ const original_query = [
 
 const new_query = [
   "SELECT ",
-  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.status AS userstatus",
+  " Users.id AS userid, Users.username, Users.email, CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.status AS status",
   " FROM Users ",
   " LEFT JOIN Profiles ",
   " ON Users.id = Profiles.UserId ",

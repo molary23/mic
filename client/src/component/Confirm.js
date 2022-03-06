@@ -83,7 +83,6 @@ export class Confirm extends Component {
             <TextInputField
               id="reset-form-email"
               placeholder="Email Address/Username"
-              label="Email Address/Username"
               type="text"
               name="username"
               value={username}
@@ -93,7 +92,6 @@ export class Confirm extends Component {
             <TextInputField
               id="reset-form-code"
               placeholder="Reset Code"
-              label="Reset Code"
               type="text"
               name="code"
               value={code}

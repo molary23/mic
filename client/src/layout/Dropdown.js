@@ -17,6 +17,7 @@ function Dropdown(props) {
   const logoutClick = (e) => {
     e.preventDefault();
     props.logoutUser();
+    // props.clearActions();
     props.clearCurrentProfile();
     navigate("/", { replace: true });
   };

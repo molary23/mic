@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const getMore = ({
   limit,
   numOfPages,
@@ -281,4 +283,38 @@ export const checkEmptyInput = ({
 
     return signal;
   }
+};
+
+export const checkHandler = (input, target, setIcon, setErrors) => {
+  let req = {},
+    page,
+    response;
+
+  clearTimeout(typingTimer);
+  if (input === "addadminemail") {
+    req = { email: target };
+    page = "email";
+  } else if (input === "addadminusername") {
+    req = { username: target };
+    page = "username";
+  }
+  typingTimer = setTimeout(() => {
+    setIcon({
+      [input]: true,
+    });
+    axios
+      .post(`/api/public/${page}/`, req, {})
+      .then((res) => {
+        response = res.data.text;
+        setErrors({
+          [input]: response,
+        });
+        setIcon({
+          [input]: false,
+        });
+      })
+      .catch((error) => {
+        error[input] = error.response;
+      });
+  }, 3000);
 };

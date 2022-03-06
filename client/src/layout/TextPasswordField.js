@@ -50,7 +50,6 @@ TextPasswordField.propTypes = {
   id: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,

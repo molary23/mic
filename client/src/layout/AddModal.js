@@ -7,7 +7,7 @@ import Flag from "react-flagpack";
 
 import { countrycodes } from "../util/countrycodes";
 
-import { checkEmptyInput } from "../util/LoadFunction";
+import { checkEmptyInput, checkHandler } from "../util/LoadFunction";
 
 function AddModal(props) {
   const { modal, sender, purpose, onSubmit, modalsignaldetails, error } = props;
@@ -15,9 +15,11 @@ function AddModal(props) {
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
   const [icon, setIcon] = useState({});
-  const [pass, setPass] = useState({});
-
+  const [pass1, setPass1] = useState(true);
+  const [pass2, setPass2] = useState(true);
   const [errors, setErrors] = useState({});
+  let pattern = new RegExp("^[a-zA-Z0-9._-]+$");
+
   const signalOpt = [
       { value: "", option: "Select Signal Option" },
       { value: "b", option: "Buy" },
@@ -33,13 +35,11 @@ function AddModal(props) {
     props.onClick(false);
   };
 
-  const checkPassHandler = (e) => {};
-
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setInputs((values) => ({ ...values, [name]: value }));
   };
-
+  // Submit Add Signal
   const submitNewHandler = (e) => {
     e.preventDefault();
 
@@ -58,10 +58,12 @@ function AddModal(props) {
     });
 
     if (signal !== false) {
+      setErrors({});
       onSubmit(["new", signal]);
     }
   };
 
+  // Submit Edit Signal
   const submitEditHandler = (e) => {
     inputs.editpair = inputs.editpair ?? modalsignaldetails.CurrencyId;
     inputs.editsignaloption =
@@ -99,10 +101,11 @@ function AddModal(props) {
     });
 
     if (signal !== false) {
+      setErrors({});
       onSubmit(["edit", signal, modalsignaldetails.signalid]);
     }
   };
-
+  // Submit Currency
   const submitCurrency = (e) => {
     e.preventDefault();
     if (
@@ -111,6 +114,10 @@ function AddModal(props) {
     ) {
       setErrors({
         addfirstcurrencyname: "First Currency Name Field can't be empty",
+      });
+    } else if (inputs.addfirstcurrencyname.length > 3) {
+      setErrors({
+        addfirstcurrencyname: "Currency Name can't be more than 3 characters",
       });
     } else if (
       !Object.keys(inputs).includes("addfirstcurrencycode") ||
@@ -124,7 +131,11 @@ function AddModal(props) {
       inputs.addsecondcurrencyname === ""
     ) {
       setErrors({
-        addsecondcurrencyname: "First Currency Name Field can't be empty",
+        addsecondcurrencyname: "Second Currency Name Field can't be empty",
+      });
+    } else if (inputs.addsecondcurrencyname.length > 3) {
+      setErrors({
+        addsecondcurrencyname: "Currency Name can't be more than 3 characters",
       });
     } else if (
       !Object.keys(inputs).includes("addsecondcurrencycode") ||
@@ -134,22 +145,119 @@ function AddModal(props) {
         addsecondcurrencycode: "Second Currency Code Field can't be empty",
       });
     } else {
+      setErrors({});
       const currency = {
         firstcurrencypair: JSON.stringify([
-          inputs.addfirstcurrencycode,
-          inputs.addfirstcurrencyname,
+          inputs.addfirstcurrencycode.toLowerCase(),
+          inputs.addfirstcurrencyname.toLowerCase(),
         ]),
         secondcurrencypair: JSON.stringify([
-          inputs.addsecondcurrencycode,
-          inputs.addsecondcurrencyname,
+          inputs.addsecondcurrencycode.toLowerCase(),
+          inputs.addsecondcurrencyname.toLowerCase(),
         ]),
       };
       onSubmit(["add", currency]);
     }
   };
 
+  // Submit Admin
   const submitAdmin = (e) => {
     e.preventDefault();
+    let tester = pattern.test(inputs.addadminusername);
+    if (
+      !Object.keys(inputs).includes("addadminemail") ||
+      inputs.addadminemail === ""
+    ) {
+      setErrors({
+        addadminemail: "Email Address Field can't be empty",
+      });
+    } else if (inputs.addadminemail.length > 50) {
+      setErrors({
+        addadminemail: "Email Address can't be more than 50 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addadminusername") ||
+      inputs.addadminusername === ""
+    ) {
+      setErrors({
+        addadminusername: "Username Field can't be empty",
+      });
+    } else if (!tester) {
+      setErrors({
+        addadminusername:
+          "Only contain Letters, Numbers and (.-_) characters allowed",
+      });
+    } else if (inputs.addadminusername.length > 30) {
+      setErrors({
+        addadminusername: "Username can't be more than 30 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addadminphone") ||
+      inputs.addadminphone === ""
+    ) {
+      setErrors({
+        addadminphone: "Phone Number Field can't be empty",
+      });
+    } else if (isNaN(inputs.addadminphone)) {
+      setErrors({
+        addadminphone: "Phone Number can only be a Number",
+      });
+    } else if (inputs.addadminphone.length > 20) {
+      setErrors({
+        addadminphone: "Phone Number can only be 20 digits",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addadminpassword") ||
+      inputs.addadminpassword === ""
+    ) {
+      setErrors({
+        addadminpassword: "Password Field can't be empty",
+      });
+    } else if (inputs.addadminpassword.length < 8) {
+      setErrors({
+        addadminpassword: "Password should be at least 8 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addadminpassword2") ||
+      inputs.addadminpassword2 === ""
+    ) {
+      setErrors({
+        addadminpassword2: "Confirm Password Field can't be empty",
+      });
+    } else if (inputs.addadminpassword2.length < 8) {
+      setErrors({
+        addadminpassword2: "Confirm Password should be at least 8 characters",
+      });
+    } else if (inputs.addadminpassword !== inputs.addadminpassword2) {
+      setErrors({
+        addadminpassword2: "Password Mismatched",
+      });
+    } else {
+      setErrors({});
+      const admin = {
+        email: inputs.addadminemail.toLowerCase(),
+        username: inputs.addadminusername.toLowerCase(),
+        phone: inputs.addadminphone,
+        password: inputs.addadminpassword,
+      };
+      onSubmit(["add", admin]);
+    }
+  };
+
+  const keyHandler = (e) => {
+    if (
+      e.target.name === "addadminusername" ||
+      e.target.name === "addadminemail"
+    ) {
+      checkHandler(e.target.name, e.target.value, setIcon, setErrors);
+    }
+  };
+  const checkPassHandler = (value) => {
+    if (value === 1) {
+      setPass1(!pass1);
+    } else if (value === 2) {
+      setPass2(!pass2);
+    }
   };
 
   let text, title;
@@ -455,37 +563,38 @@ function AddModal(props) {
         </div>
       </form>
     );
-  } else if (sender === "admin-admins") {
-    title = "Add Admin";
+  } else if (sender === "admin-admins" || sender === "admin-providers") {
+    let adm = sender.split("-")[1].replace(/s/g, "");
+    title = `Add ${adm}`;
     text = (
       <form className="add-admin-form" onSubmit={submitAdmin}>
         <TextPasswordField
-          id="register-form-email"
-          label="Email Address"
-          icon={`${icon.email ? "fas fa-circle-notch fa-spin" : ""}`}
+          id="add-admin-form-email"
+          placeholder="Email Address"
+          icon={`${icon.addadminemail ? "fas fa-circle-notch fa-spin" : ""}`}
           type="email"
-          name="email"
-          value={inputs.email}
-          onChange={this.changeHandler}
-          error={error.email}
-          onKeyUp={this.keyHandler}
+          name="addadminemail"
+          value={inputs.addadminemail || ""}
+          onChange={changeHandler}
+          error={errors.addadminemail || error.email}
+          onKeyUp={keyHandler}
         />
 
         <TextPasswordField
-          id="register-form-referral"
-          label="Username"
-          icon={`${icon.referral ? "fas fa-circle-notch fa-spin" : ""}`}
+          id="add-admin-form-referral"
+          placeholder="Username"
+          icon={`${icon.addadminusername ? "fas fa-circle-notch fa-spin" : ""}`}
           type="text"
-          name="username"
-          value={inputs.username || ""}
-          onChange={this.changeHandler}
-          error={error.username}
-          onKeyUp={this.keyHandler}
+          name="addadminusername"
+          value={inputs.addadminusername || ""}
+          onChange={changeHandler}
+          error={errors.addadminusername || error.username}
+          onKeyUp={keyHandler}
         />
 
         <TextInputField
-          id="add-new-admin-phone"
-          label="Phone Number"
+          id="add-admin-phone"
+          placeholder="Phone Number"
           type="tel"
           name="addadminphone"
           value={inputs.addadminphone || ""}
@@ -494,36 +603,32 @@ function AddModal(props) {
         />
 
         <TextPasswordField
-          id="register-form-password"
+          id="add-admin-form-password"
           placeholder="Password"
-          label="Password"
-          icon={`far ${pass.pass1 ? "fa-eye-slash" : "fa-eye"}`}
-          type={pass.pass1 ? "password" : "text"}
-          name="password"
-          value={inputs.password || ""}
-          onChange={this.changeHandler}
-          onClick={checkPassHandler(1)}
-          error={error.password}
+          icon={`far ${pass1 ? "fa-eye" : "fa-eye-slash"}`}
+          type={pass1 ? "password" : "text"}
+          name="addadminpassword"
+          value={inputs.addadminpassword || ""}
+          onChange={changeHandler}
+          onClick={() => checkPassHandler(1)}
+          error={errors.addadminpassword}
         />
         <TextPasswordField
-          id="register-form-password2"
+          id="add-admin-form-password2"
           placeholder="Confirm Password"
-          label="Confirm Password"
-          icon={`far ${pass.pass2 ? "fa-eye-slash" : "fa-eye"}`}
-          type={pass.pass2 ? "password" : "text"}
-          name="password2"
-          value={inputs.password2 || ""}
-          onChange={this.changeHandler}
-          onClick={checkPassHandler(2)}
-          error={error.password2}
+          icon={`far ${pass2 ? "fa-eye" : "fa-eye-slash"}`}
+          type={pass2 ? "password" : "text"}
+          name="addadminpassword2"
+          value={inputs.addadminpassword2 || ""}
+          onChange={changeHandler}
+          onClick={() => checkPassHandler(2)}
+          error={errors.addadminpassword2}
         />
 
         <div className="d-grid">
-          {error.currency && (
-            <small className="text-muted">{error.currency}</small>
-          )}
+          {error.admin && <small className="text-muted">{error.admin}</small>}
           <button type="submit" className="btn default-btn btn-lg btn-block">
-            Add Currency
+            Add {adm}
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
             )}

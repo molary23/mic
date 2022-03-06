@@ -3,50 +3,76 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/adminAction";
+import {
+  getContent,
+  clearActions,
+  addNewAdmin,
+  clearAdminAction,
+  updateAdmin,
+} from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  loadFromParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
+import AddModal from "../../layout/AddModal";
+import Toast from "../../layout/Toast";
+
+import Pagination from "../../util/Pagination";
 
 class ViewAdmin extends Component {
   state = {
-    sender: "admin-admins",
+    sender: "admin-providers",
     search: "",
     statusOpt: [
-      { value: "", option: "Filter by Package" },
-      { value: "1", option: "Active" },
-      { value: "2", option: "Inactive" },
+      { value: "", option: "Filter by Status" },
+      { value: "a", option: "Active" },
+      { value: "i", option: "Inactive" },
     ],
     status: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     isLoading: false,
-    doneTypingInterval: 5000,
     usercount: 9,
     upLoad: true,
-    admincount: JSON.parse(localStorage.getItem("counts")).providers,
+    providercount:
+      JSON.parse(localStorage.getItem("counts")).providers ??
+      this.props.auth.allCounts.providers,
     content: "providers",
+    modal: false,
+    toast: false,
+    toasttext: "",
+    error: {},
   };
 
   componentDidMount() {
-    const { limit, offset, admincount, content } = this.state;
+    const { limit, offset, providercount, content } = this.state;
+
+    let searchParams = window.location.search;
+
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    }
 
     const paginate = {
       limit,
       offset,
     };
     this.setState({
-      numOfPages: Math.ceil(admincount / limit),
+      numOfPages: Math.ceil(providercount / limit),
     });
 
     this.props.getContent(content, paginate);
@@ -60,6 +86,67 @@ class ViewAdmin extends Component {
     this.props.clearSearchActions(content);
     window.removeEventListener("scroll", this.loadMore);
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+    }
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.admin.addprovider !== this.props.admin.addprovider &&
+      this.props.admin.addprovider
+    ) {
+      this.afterUpdate("added");
+    }
+
+    if (
+      prevProps.admin.updateadmin !== this.props.admin.updateadmin &&
+      this.props.admin.updateadmin
+    ) {
+      this.afterUpdate("updated");
+    }
+  }
+
+  afterUpdate = (text) => {
+    const { limit, content, signalcount } = this.state;
+    if (text === "added") {
+      this.setState({
+        numOfPages: Math.ceil((signalcount + 1) / limit),
+      });
+      this.props.clearAdminAction("add-admin");
+    } else {
+      this.props.clearAdminAction("update-admin");
+    }
+
+    this.setState({
+      offset: 0,
+      modal: false,
+      toast: true,
+      toasttext: `Provider ${text} successfully`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState((prevState) => ({
+      offset: prevState.offset + limit,
+    }));
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
@@ -96,67 +183,82 @@ class ViewAdmin extends Component {
     });
   };
 
-  render() {
-    const { sender, admincount, isLoading, upLoad, search, statusOpt, status } =
-      this.state;
+  openModal = () => {
+    this.setState({
+      modal: true,
+    });
+  };
 
-    const { admin, searchTerms } = this.props;
-    const { loading, fetching } = admin;
-    const { searching } = searchTerms;
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
 
-    let load = upLoad,
-      loader = isLoading,
-      providers = [],
-      searchproviders,
-      showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = admincount;
-
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.prCount;
-      totalText = "Total SPs";
-      if (admin.providers === [] && loading) {
-        loader = true;
-        load = upLoad;
-      } else if (admin.providers.length > 0 && !loading) {
-        providers = admin.providers;
-        load = false;
-
-        loader = false;
-      } else if (admin.providers.length > 0 && loading) {
-        providers = admin.providers;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        providers = [];
-      }
+  submitHandler = (value) => {
+    if (value[0] === "add") {
+      this.props.addNewAdmin("provider", value[1]);
     }
+  };
 
-    if (!searching) {
-      showSearch = searching;
+  clickhandler = (value) => {
+    let check = window.confirm(
+      `Are you sure you want to ${value[0]} this Admin?`
+    );
+    if (check) {
+      this.props.updateAdmin(value);
     } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.prCount;
-      totalText = "Selected/Searched SPs";
-      if (searchTerms.providers === [] || searchTerms.providers.length <= 0) {
-        noRecord = true;
-        searchproviders = [];
-        loader = false;
-      } else if (searchTerms.providers.length > 0 && !searchTerms.loading) {
-        searchproviders = searchTerms.providers;
-        loader = false;
-      } else if (searchTerms.providers.length > 0 && searchTerms.loading) {
-        searchproviders = searchTerms.providers;
-        loader = true;
-      }
+      return false;
     }
+  };
+
+  render() {
+    const {
+      sender,
+      providercount,
+      startLoad,
+      getLoad,
+      search,
+      statusOpt,
+      status,
+      modal,
+      toast,
+      toasttext,
+      error,
+    } = this.state;
+
+    const { admin, searchTerms } = this.props,
+      { loading, fetching } = admin,
+      { searching } = searchTerms,
+      count = admin.prCount,
+      list = admin.providers,
+      searchcount = searchTerms.prCount,
+      searchlist = searchTerms.providers,
+      searchloading = searchTerms.loading;
+
+    const {
+      showSearch,
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      providercount,
+    });
 
     return (
       <div>
@@ -191,12 +293,16 @@ class ViewAdmin extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button
+                    type="button"
+                    className="btn add-btn"
+                    onClick={this.openModal}
+                  >
                     Add SP <i className="fas fa-user-plus" />
                   </button>
                 </div>
@@ -212,7 +318,9 @@ class ViewAdmin extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -221,17 +329,26 @@ class ViewAdmin extends Component {
                 "email",
                 "ussername",
                 "phone number",
-                "User Status ",
+                "status ",
                 "View",
               ]}
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? providers : searchproviders}
+                tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickhandler}
               />
             </TableHead>
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, error }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }
@@ -240,6 +357,10 @@ class ViewAdmin extends Component {
 ViewAdmin.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  renderArrange: PropTypes.func,
+  clearAdminAction: PropTypes.func,
+  addNewAdmin: PropTypes.func,
+  updateAdmin: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 
@@ -253,4 +374,7 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
+  addNewAdmin,
+  clearAdminAction,
+  updateAdmin,
 })(ViewAdmin);

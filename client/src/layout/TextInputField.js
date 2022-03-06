@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 function TextInputField(props) {
-  const { label, error, name, value, onChange, type, id } = props;
+  const { placeholder, error, name, value, onChange, type, id } = props;
   return (
     <div className="mb-3 mt-3">
       <div className="form-floating">
@@ -10,12 +10,12 @@ function TextInputField(props) {
           type={type}
           className="form-control form-control-lg"
           id={id}
-          placeholder={label}
+          placeholder={placeholder}
           name={name}
           value={value}
           onChange={onChange}
         />
-        <label htmlFor={id}>{label}</label>
+        <label htmlFor={id}>{placeholder}</label>
       </div>
       {error && <small className="text-muted">{error}</small>}
     </div>
@@ -24,13 +24,12 @@ function TextInputField(props) {
 
 TextInputField.defaultProps = {
   type: "text",
-
   value: "",
 };
 
 TextInputField.propTypes = {
   id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
