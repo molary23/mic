@@ -27,10 +27,17 @@ import {
   CLEAR_ANNOUNCEMENTS_ACTION,
   GET_ALL_WITHDRAWALS,
   CLEAR_WITHDRAWALS_ACTION,
+  ADD_NEW_CURRENCY,
+  CLEAR_ADD_NEW_CURRENCY,
+  DELETE_CURRENCY,
+  CLEAR_DELETE_CURRENCY,
+  GET_ERRORS,
+  CLEAR_ERRORS,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
+  dispatch(clearErrors());
   let url = "/api/adminview/",
     type;
   if (content === "currency") {
@@ -126,4 +133,48 @@ export const clearActions = (actionToClear) => {
 
 export const setLoading = () => {
   return { type: ACTION_LOADING };
+};
+
+export const deleteCurrency = (id) => async (dispatch) => {
+  let url = `/api/signals/currency/delete/:${id}`;
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post(url);
+    const result = await dispatch({
+      type: DELETE_CURRENCY,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const addCurrency = (currency) => async (dispatch) => {
+  let url = "/api/signals/currency/add/";
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post(url, currency);
+    const result = await dispatch({
+      type: ADD_NEW_CURRENCY,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+// Clear Errors
+export const clearErrors = () => {
+  return { type: CLEAR_ERRORS, payload: {} };
+};
+
+export const clearAdminAction = (info) => {
+  if (info === "delete-currency") return { type: CLEAR_DELETE_CURRENCY };
+  if (info === "add-currency") return { type: CLEAR_ADD_NEW_CURRENCY };
 };

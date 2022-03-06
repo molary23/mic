@@ -74,29 +74,42 @@ router.post(
       return res.status(400).json(error);
     }
 
-    if (req.body.currency === "" || req.body.currency === undefined) {
-      error.currency = "Currency Field can't be Empty";
+    if (
+      req.body.firstcurrencypair === "" ||
+      req.body.firstcurrencypair === undefined
+    ) {
+      error.currency = "First Currency Field can't be Empty";
+      return res.status(400).json(error);
+    } else if (
+      req.body.secondcurrencypair === "" ||
+      req.body.secondcurrencypair === undefined
+    ) {
+      error.currency = "Second Currency Field can't be Empty";
       return res.status(400).json(error);
     }
     const currencyFields = {};
-    currencyFields.currency = req.body.currency;
+    currencyFields.firstcurrency = req.body.firstcurrencypair;
+    currencyFields.secondcurrency = req.body.secondcurrencypair;
     currencyFields.UserId = req.user.id;
 
     Currency.findOne({
       where: {
-        currency: currencyFields.currency,
+        [Op.and]: [
+          { firstcurrency: currencyFields.firstcurrency },
+          { secondcurrency: currencyFields.secondcurrency },
+        ],
       },
     })
       .then((currency) => {
         if (currency) {
           error.currency = "Currency Combination exist!";
-          res.json(error);
+          res.status(400).json(error);
         } else {
           Currency.create(currencyFields)
-            .then((currency) => {
-              res.json(currency);
+            .then(() => {
+              res.json(true);
             })
-            .catch((err) => res.status(404).json(err));
+            .catch((err) => res.status(400).json(err));
         }
       })
       .catch((err) => res.status(404).json(err));
@@ -385,6 +398,38 @@ router.get(
     })
       .then((currency) => {
         res.json(currency);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/signals/currency/delete/:id
+@desc Admin Delete currency
+@access private
+*/
+
+router.post(
+  "/currency/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let id = req.params.id.split(":")[1];
+    id = parseInt(id);
+
+    Currency.update(
+      { status: "i" },
+      {
+        where: {
+          id,
+        },
+      }
+    )
+      .then(() => {
+        res.json(true);
       })
       .catch((err) => res.status(404).json(err));
   }

@@ -2,16 +2,29 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/adminAction";
+import {
+  getContent,
+  clearActions,
+  deleteCurrency,
+  clearAdminAction,
+  addCurrency,
+} from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  loadFromParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import AddModal from "../../layout/AddModal";
+import Toast from "../../layout/Toast";
 
 class Currency extends Component {
   state = {
@@ -29,15 +42,24 @@ class Currency extends Component {
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
-    startLoad: false,
     doneTypingInterval: 5000,
-    currencycount: JSON.parse(localStorage.getItem("counts")).currency,
+    currencycount:
+      JSON.parse(localStorage.getItem("counts")).currency ??
+      this.props.auth.allCounts.currency,
     getLoad: true,
+    startLoad: false,
     content: "currency",
+    modal: "",
+    error: {},
+    toast: false,
+    toasttext: "",
   };
 
   componentDidMount() {
     const { limit, offset, currencycount, content } = this.state;
+    let searchParams = window.location.search;
+    loadFromParams({ limit, self: this, content, searchParams });
+
     const paginate = {
       limit,
       offset,
@@ -56,6 +78,28 @@ class Currency extends Component {
     this.props.clearSearchActions(this.state.content);
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+    }
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.admin.addcurrency !== this.props.admin.addcurrency &&
+      this.props.admin.addcurrency
+    ) {
+      this.afterUpdate("added");
+    } else if (
+      prevProps.admin.deletecurrency !== this.props.admin.deletecurrency &&
+      this.props.admin.deletecurrency
+    ) {
+      this.afterUpdate("deleted");
+    }
+  }
+
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
     let searchParams = window.location.search,
@@ -70,6 +114,42 @@ class Currency extends Component {
       searchParams,
       self: this,
     });
+  };
+
+  afterUpdate = (text) => {
+    const { limit, content, signalcount } = this.state;
+    if (text === "added") {
+      this.setState({
+        numOfPages: Math.ceil((signalcount + 1) / limit),
+      });
+      this.props.clearAdminAction("add-currency");
+    } else {
+      this.props.clearAdminAction("delete-currency");
+    }
+    this.setState({
+      offset: 0,
+      modal: false,
+      toast: true,
+      toasttext: `Currency ${text} successfully`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState((prevState) => ({
+      offset: prevState.offset + limit,
+    }));
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
   };
 
   /*  loadMore = () => {
@@ -257,68 +337,86 @@ class Currency extends Component {
     }
   };*/
 
+  clickHandler = (value) => {
+    let check = window.confirm(
+      `Are you sure you want to delete ${
+        JSON.parse(value.firstcurrency.split(", "))[1] +
+        "/" +
+        JSON.parse(value.secondcurrency.split(", "))[1]
+      } pair?`
+    );
+    if (check) {
+      this.props.deleteCurrency(value["id"]);
+    } else {
+      return false;
+    }
+  };
+
+  openModal = () => {
+    this.setState({
+      modal: true,
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
+  submitHandler = (value) => {
+    if (value[0] === "add") {
+      this.props.addCurrency(value[1]);
+    }
+  };
+
   render() {
-    const { sender, status, statusOpt, startLoad, getLoad, search } =
-      this.state;
+    const {
+      sender,
+      status,
+      statusOpt,
+      startLoad,
+      getLoad,
+      search,
+      currencycount,
+      modal,
+      error,
+      toast,
+      toasttext,
+    } = this.state;
 
     const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
+    const { loading, fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.curCount,
+      list = admin.currency,
+      searchcount = searchTerms.curCount,
+      searchlist = searchTerms.currency,
+      searchloading = searchTerms.loading;
 
-    let load = startLoad,
-      loader = getLoad,
-      currency = [],
-      searchCurrency,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = 0;
-
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.curCount;
-      totalText = "Total Currencies";
-      if (admin.currency === [] && loading) {
-        loader = true;
-        load = false;
-      } else if (admin.currency.length > 0 && !loading) {
-        currency = admin.currency;
-        load = false;
-        loader = false;
-      } else if (admin.currency.length > 0 && loading) {
-        currency = admin.currency;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        currency = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.curCount;
-      totalText = "Selected/Searched Currencies";
-      if (searchTerms.currency === [] || searchTerms.currency.length <= 0) {
-        noRecord = true;
-        searchCurrency = [];
-        loader = false;
-      } else if (searchTerms.currency.length > 0 && !searchTerms.loading) {
-        searchCurrency = searchTerms.currency;
-        loader = false;
-      } else if (searchTerms.currency.length > 0 && searchTerms.loading) {
-        searchCurrency = searchTerms.currency;
-        loader = true;
-      }
-    }
-
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      currencycount,
+    });
     return (
       <div>
         {loader && <ProgressBar />}
@@ -355,17 +453,15 @@ class Currency extends Component {
                 <div className="col-md-2 mb-3">
                   <button
                     type="button"
-                    className="btn btn-outline-primary btn-sm"
+                    className="btn add-btn btn-sm"
+                    onClick={this.openModal}
                   >
                     Add New <i className="fas fa-folder-plus" />
                   </button>
                 </div>
 
                 <div className="col-md-2 mb-3">
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary btn-sm"
-                  >
+                  <button type="button" className="btn download-btn btn-sm">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
@@ -382,7 +478,9 @@ class Currency extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -398,19 +496,32 @@ class Currency extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? currency : searchCurrency}
+                tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, error }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }
 }
 
 Currency.propTypes = {
-  getContent: PropTypes.func,
-  searchContent: PropTypes.func,
+  getContent: PropTypes.func.isRequired,
+  searchContent: PropTypes.func.isRequired,
+  deleteCurrency: PropTypes.func.isRequired,
+  addCurrency: PropTypes.func.isRequired,
+  renderArrange: PropTypes.func,
+  loadFromParams: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 
@@ -418,10 +529,14 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,
   getContent,
   searchContent,
   clearSearchActions,
+  deleteCurrency,
+  clearAdminAction,
+  addCurrency,
 })(Currency);

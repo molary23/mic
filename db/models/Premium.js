@@ -13,8 +13,8 @@ Premium.init(
       primaryKey: true,
     },
     status: {
-      type: DataTypes.TINYINT, // New, Subscribed or Not
-      defaultValue: 0,
+      type: DataTypes.ENUM("a", "i", "n"), // New, Active or Not
+      defaultValue: "n",
     },
     startdate: {
       type: DataTypes.DATEONLY, // Start date of recent sub

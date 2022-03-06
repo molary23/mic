@@ -133,11 +133,11 @@ function TableBody(props) {
           <td>{item.phone}</td>
           <td>
             {item.status === 1 ? (
-              <span className="active-status">
+              <span className="active-status status-info">
                 <span>&bull;</span> Active
               </span>
             ) : (
-              <span className="inactive-status">
+              <span className="inactive-status status-info">
                 <span>&bull;</span> Inactive
               </span>
             )}
@@ -442,8 +442,34 @@ function TableBody(props) {
           <td className="td-lower">{item.email}</td>
           <td className="td-lower">{item.username}</td>
           <td>{item.phone}</td>
-          <td>{item.userstatus}</td>
-          <td>{item.premiumstatus}</td>
+          <td>
+            {item.userstatus === "a" ? (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            ) : (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+          </td>
+          <td>
+            {item.premiumstatus === "a" && (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.premiumstatus === "i" && (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.premiumstatus === "n" && (
+              <span className="new-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+          </td>
           <td>
             <div className="action-buttons">
               <Link
@@ -495,7 +521,17 @@ function TableBody(props) {
           <td className="td-lower">{item.email}</td>
           <td className="td-lower">{item.username}</td>
           <td>{item.phone}</td>
-          <td>{item.userstatus}</td>
+          <td>
+            {item.status === "a" ? (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            ) : (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+          </td>
           <td>
             <div className="action-buttons">
               <Link
@@ -569,7 +605,17 @@ function TableBody(props) {
               </>
             }
           </td>
-          <td>{item.status === 1 ? "active" : "inactive"}</td>
+          <td>
+            {item.status === "a" ? (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            ) : (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+          </td>
 
           <td>
             <DateFormat date={item.createdAt} />
@@ -595,7 +641,7 @@ function TableBody(props) {
                 className="btn btn-danger btn-sm"
                 data-id={item.id}
                 title="Delete Currency "
-                onClick={() => onClick(i)}
+                onClick={() => onClick(item)}
               >
                 <i className="fas fa-trash" />
               </button>

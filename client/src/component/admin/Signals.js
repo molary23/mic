@@ -5,13 +5,19 @@ import PropTypes from "prop-types";
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  renderArrange,
+  loadFromParams,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import AddModal from "../../layout/AddModal";
 
 class Signals extends Component {
   state = {
@@ -39,10 +45,15 @@ class Signals extends Component {
     startLoad: false,
     getLoad: true,
     content: "signals",
+    modal: false,
+    modalsignaldetails: [],
+    purpose: "",
   };
 
   componentDidMount() {
     const { limit, offset, signalcount, content } = this.state;
+
+    loadFromParams({ limit, self: this, content });
     const paginate = {
       limit,
       offset,
@@ -260,6 +271,20 @@ class Signals extends Component {
     }
   };*/
 
+  clickHandler = (value) => {
+    this.setState({
+      modal: true,
+      purpose: value[0],
+      modalsignaldetails: value[1],
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
   render() {
     const {
       sender,
@@ -271,65 +296,43 @@ class Signals extends Component {
       signalcount,
       signalOpt,
       signaloption,
+      modal,
+      modalsignaldetails,
+      purpose,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
+    const { loading, fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.signalCount,
+      list = admin.signals,
+      searchcount = searchTerms.signalCount,
+      searchlist = searchTerms.signals,
+      searchloading = searchTerms.loading;
 
-    let load = startLoad,
-      loader = getLoad,
-      signals = [],
-      searchsignals,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = signalcount;
-
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.signalCount;
-      totalText = "Total Signals";
-      if (admin.signals === [] && loading) {
-        loader = true;
-        load = false;
-      } else if (admin.signals.length > 0 && !loading) {
-        signals = admin.signals;
-        load = false;
-        loader = false;
-      } else if (admin.signals.length > 0 && loading) {
-        signals = admin.signals;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        signals = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.signalCount;
-      totalText = "Selected/Searched Signals";
-      if (searchTerms.signals === [] || searchTerms.signals.length <= 0) {
-        noRecord = true;
-        searchsignals = [];
-        loader = false;
-      } else if (searchTerms.signals.length > 0 && !searchTerms.loading) {
-        searchsignals = searchTerms.signals;
-        loader = false;
-      } else if (searchTerms.signals.length > 0 && searchTerms.loading) {
-        searchsignals = searchTerms.signals;
-        loader = true;
-      }
-    }
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      signalcount,
+    });
 
     return (
       <div>
@@ -375,10 +378,7 @@ class Signals extends Component {
                 </div>
 
                 <div className="col-md-2 mb-3">
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary btn-sm"
-                  >
+                  <button type="button" className="btn download-btn btn-sm">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
@@ -401,8 +401,8 @@ class Signals extends Component {
               head={[
                 "S/N",
                 "currency pair",
-                "currency flag",
-                "signal option",
+                "flag",
+                "option",
                 "status",
                 "take profit",
                 "stop loss",
@@ -416,19 +416,29 @@ class Signals extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? signals : searchsignals}
+                tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, purpose, modalsignaldetails }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
       </div>
     );
   }
 }
 
 Signals.propTypes = {
-  getContent: PropTypes.func,
-  searchContent: PropTypes.func,
+  getContent: PropTypes.func.isRequired,
+  searchContent: PropTypes.func.isRequired,
+  loadFromParams: PropTypes.func,
+  renderArrange: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 

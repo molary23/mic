@@ -124,8 +124,10 @@ export class Index extends Component {
                         <i className="far fa-copy" />
                       </button>
                     </div>
+                    <div className={`tiptool ${copy && "showTip"}`}>
+                      <span className="tooltiptext">Copied to Clipboard</span>
+                    </div>
                   </div>
-                  {copy && <p>Copied to Clipboard!</p>}
                 </div>
               </div>
               <div className="col-md-4">

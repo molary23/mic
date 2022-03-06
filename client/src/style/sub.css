@@ -135,12 +135,20 @@ table .td-shorter {
   font-size: 14px;
 }
 
+table .status-info {
+  font-size: 30px;
+}
+
 table .active-status span {
   color: #04c734;
 }
 
 table .inactive-status span {
   color: #dd1010;
+}
+
+table .new-status {
+  color: #06c2f7;
 }
 
 a.default-anchor {
@@ -688,5 +696,87 @@ ul.dropdown-menu li a {
   z-index: 9999;
   margin-bottom: 60px;
   background: #022854;
+}
+
+/* Tooltip */
+.tiptool {
+  position: relative;
+  display: inline-block;
+  top: 150%;
+}
+
+.tiptool .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  margin-left: -60px;
+  /* Fade in tooltip */
+  opacity: 0;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+
+.tiptool .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.showTip .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/*Settings*/
+/* Tab Panel */
+.tab-content {
+  min-height: 500px;
+  padding: 20px 0px;
+}
+
+.settings-details {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 10px 0px;
+  border-bottom: 1px dashed rgba(141, 191, 248, 0.5);
+}
+
+.first-account.card,
+.second-account.card {
+  padding: 20px;
+}
+
+.first-account.card h3,
+.second-account.card h3 {
+  font-size: clamp(1.5vw, 15px, 1.5vh);
+  font-weight: 400;
+  text-align: center;
+}
+
+.first-account.card button,
+.second-account.card button {
+  text-align: right;
 }
 /*# sourceMappingURL=sub.css.map */

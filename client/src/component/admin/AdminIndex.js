@@ -9,7 +9,8 @@ import ProgressBar from "../../layout/ProgressBar";
 
 export class Index extends Component {
   state = {
-    allCounts: JSON.parse(localStorage.getItem("counts")),
+    allCounts:
+      JSON.parse(localStorage.getItem("counts")) ?? this.props.auth.allCounts,
   };
   componentDidMount() {
     this.props.getUserProfile();
@@ -17,146 +18,128 @@ export class Index extends Component {
 
   render() {
     const { allCounts } = this.state;
-    const { profile, loading } = this.props;
-
-    let load = true,
-      loader = true,
-      user = {},
-      fullname = "";
-    if (profile.profile === null && loading) {
-      load = true;
-      loader = true;
-    } else if (profile.profile !== null && !loading) {
-      user = profile.profile;
-      //fullname = user.fullname;
-      loader = false;
-      load = false;
-    }
+    /*const { auth } = this.props;
+    const { allCounts } = auth.allCounts;
+    console.log(allCounts);*/
     return (
       <div>
-        {loader || load ? (
-          <div>
-            <ProgressBar loading={{ loader, load }} />
-          </div>
-        ) : (
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="dashboard-admin-intro card">
-                  <div className="container-fluid">
-                    <div className="dashboard-admin-welcome">
-                      <h3 className="mb-2">Welcome back Super Admin</h3>
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="dashboard-admin-intro card">
+                <div className="container-fluid">
+                  <div className="dashboard-admin-welcome">
+                    <h3 className="mb-2">Welcome back Super Admin</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-1"></div>
+            <div className="col-md-5"></div>
+            <div className="col-md-4 mb-3">
+              <div className="sub-box card">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="box-icon">
+                        <i className="fas fa-user-friends" />
+                      </div>
+                    </div>
+                    <div className="col-8">
+                      <h2>{allCounts.users}</h2>
+                      <p>Users</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-1"></div>
-              <div className="col-md-5"></div>
-              <div className="col-md-4 mb-3">
-                <div className="sub-box card">
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="box-icon">
-                          <i className="fas fa-user-friends" />
-                        </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="referrals-box card">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="box-icon">
+                        <i className="fas fa-user-tag" />
                       </div>
-                      <div className="col-8">
-                        <h2>{allCounts.users}</h2>
-                        <p>Users</p>
-                      </div>
+                    </div>
+                    <div className="col-8">
+                      <h2>{allCounts.providers}</h2>
+                      <p>Signal Providers</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
-                <div className="referrals-box card">
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="box-icon">
-                          <i className="fas fa-user-tag" />
-                        </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="bonus-box card">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="box-icon">
+                        <i className="fas fa-signal" />
                       </div>
-                      <div className="col-8">
-                        <h2>{allCounts.providers}</h2>
-                        <p>Signal Providers</p>
-                      </div>
+                    </div>
+                    <div className="col-8">
+                      <h2>{allCounts.signals}</h2>
+                      <p>Signals</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
-                <div className="bonus-box card">
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="box-icon">
-                          <i className="fas fa-signal" />
-                        </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="sub-box card">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="box-icon">
+                        <i className="fas fa-wallet" />
                       </div>
-                      <div className="col-8">
-                        <h2>{allCounts.signals}</h2>
-                        <p>Signals</p>
-                      </div>
+                    </div>
+                    <div className="col-8">
+                      <h2>{allCounts.bonus}</h2>
+                      <p>Pending Bonus</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
-                <div className="sub-box card">
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="box-icon">
-                          <i className="fas fa-wallet" />
-                        </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="referrals-box card">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="box-icon">
+                        <i className="fas fa-hand-holding-usd" />
                       </div>
-                      <div className="col-8">
-                        <h2>{allCounts.bonus}</h2>
-                        <p>Pending Bonus</p>
-                      </div>
+                    </div>
+                    <div className="col-8">
+                      <h2>20</h2>
+                      <p>Pending Payouts</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
-                <div className="referrals-box card">
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="box-icon">
-                          <i className="fas fa-hand-holding-usd" />
-                        </div>
-                      </div>
-                      <div className="col-8">
-                        <h2>20</h2>
-                        <p>Pending Payouts</p>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="bonus-box card">
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="box-icon">
+                        <i className="fas fa-money-bill-wave-alt" />
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="bonus-box card">
-                  <div className="container-fluid">
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="box-icon">
-                          <i className="fas fa-money-bill-wave-alt" />
-                        </div>
-                      </div>
-                      <div className="col-8">
-                        <h2>{allCounts.currency}</h2>
-                        <p>Currencies Pair</p>
-                      </div>
+                    <div className="col-8">
+                      <h2>{allCounts.currency}</h2>
+                      <p>Currencies Pair</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     );
   }

@@ -38,7 +38,14 @@ export default function authReducer(state = initialState, action) {
         user: action.payload,
       };
     case CLEAR_ALL_ACTIONS:
-      return { ...state, isAuthenticated: false, user: {}, allCounts: {} };
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: {},
+        allCounts: {},
+        providerCounts: {},
+        userCounts: {},
+      };
     default:
       return state;
   }

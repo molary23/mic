@@ -124,7 +124,6 @@ class Signals extends Component {
       limit,
       offset: 0,
     };
-    this.props.clearSignal("new");
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
     this.props.getContent(content, paginate);

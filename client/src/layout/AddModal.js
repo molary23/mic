@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import TextInputField from "../layout/TextInputField";
+import TextPasswordField from "./TextPasswordField";
 import Select from "../layout/Select";
 import Signal from "../layout/Signal";
+import Flag from "react-flagpack";
+
+import { countrycodes } from "../util/countrycodes";
 
 import { checkEmptyInput } from "../util/LoadFunction";
 
@@ -10,6 +14,9 @@ function AddModal(props) {
   const [open, setOpen] = useState(modal);
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
+  const [icon, setIcon] = useState({});
+  const [pass, setPass] = useState({});
+
   const [errors, setErrors] = useState({});
   const signalOpt = [
       { value: "", option: "Select Signal Option" },
@@ -25,6 +32,8 @@ function AddModal(props) {
     setOpen(false);
     props.onClick(false);
   };
+
+  const checkPassHandler = (e) => {};
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -92,6 +101,55 @@ function AddModal(props) {
     if (signal !== false) {
       onSubmit(["edit", signal, modalsignaldetails.signalid]);
     }
+  };
+
+  const submitCurrency = (e) => {
+    e.preventDefault();
+    if (
+      !Object.keys(inputs).includes("addfirstcurrencyname") ||
+      inputs.addfirstcurrencyname === ""
+    ) {
+      setErrors({
+        addfirstcurrencyname: "First Currency Name Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addfirstcurrencycode") ||
+      inputs.addfirstcurrencycode === ""
+    ) {
+      setErrors({
+        addfirstcurrencycode: "First Currency Code Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addsecondcurrencyname") ||
+      inputs.addsecondcurrencyname === ""
+    ) {
+      setErrors({
+        addsecondcurrencyname: "First Currency Name Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addsecondcurrencycode") ||
+      inputs.addsecondcurrencycode === ""
+    ) {
+      setErrors({
+        addsecondcurrencycode: "Second Currency Code Field can't be empty",
+      });
+    } else {
+      const currency = {
+        firstcurrencypair: JSON.stringify([
+          inputs.addfirstcurrencycode,
+          inputs.addfirstcurrencyname,
+        ]),
+        secondcurrencypair: JSON.stringify([
+          inputs.addsecondcurrencycode,
+          inputs.addsecondcurrencyname,
+        ]),
+      };
+      onSubmit(["add", currency]);
+    }
+  };
+
+  const submitAdmin = (e) => {
+    e.preventDefault();
   };
 
   let text, title;
@@ -322,6 +380,157 @@ function AddModal(props) {
       title = "View Signal";
       text = <Signal signal={modalsignaldetails} sender={"provider"} />;
     }
+  } else if (sender === "admin-signals") {
+    title = "View Signal";
+    text = <Signal signal={modalsignaldetails} sender={"admin"} />;
+  } else if (sender === "admin-currencies") {
+    title = "Add Currency";
+    text = (
+      <form className="add-currency-form" onSubmit={submitCurrency}>
+        <TextInputField
+          id="add-new-firstcurrency-name"
+          placeholder="First Currency Name"
+          label="First Currency Name"
+          type="text"
+          name="addfirstcurrencyname"
+          value={inputs.addfirstcurrencyname || ""}
+          onChange={changeHandler}
+          error={errors.addfirstcurrencyname}
+        />
+        <TextInputField
+          id="add-new-firstcurrency-code"
+          placeholder="First Currency Code "
+          label="First Currency Code"
+          type="text"
+          name="addfirstcurrencycode"
+          value={inputs.addfirstcurrencycode || ""}
+          onChange={changeHandler}
+          error={errors.addfirstcurrencycode}
+        />
+        {inputs.addfirstcurrencycode &&
+        inputs.addfirstcurrencycode.length > 1 &&
+        countrycodes.includes(inputs.addfirstcurrencycode.toUpperCase()) ? (
+          <small>
+            <Flag code={inputs.addfirstcurrencycode.toUpperCase()} size="M" />
+          </small>
+        ) : null}
+        <TextInputField
+          id="add-new-secondcurrency-name"
+          placeholder="Second Currency Name "
+          label="Second Currency Name"
+          type="text"
+          name="addsecondcurrencyname"
+          value={inputs.addsecondcurrencyname || ""}
+          onChange={changeHandler}
+          error={errors.addsecondcurrencyname}
+        />
+        <TextInputField
+          id="add-new-secondcurrency-code"
+          placeholder="Second Currency Code "
+          label="Second Currency Code"
+          type="text"
+          name="addsecondcurrencycode"
+          value={inputs.addsecondcurrencycode || ""}
+          onChange={changeHandler}
+          error={errors.addsecondcurrencycode}
+        />
+        {inputs.addsecondcurrencycode &&
+        inputs.addsecondcurrencycode.length > 1 &&
+        countrycodes.includes(inputs.addsecondcurrencycode.toUpperCase()) ? (
+          <small>
+            <Flag code={inputs.addsecondcurrencycode.toUpperCase()} size="M" />
+          </small>
+        ) : null}
+
+        <div className="d-grid">
+          {error.currency && (
+            <small className="text-muted">{error.currency}</small>
+          )}
+          <button type="submit" className="btn default-btn btn-lg btn-block">
+            Add Currency
+            {loading && (
+              <span className="spinner-border spinner-border-sm ms-2"></span>
+            )}
+          </button>
+        </div>
+      </form>
+    );
+  } else if (sender === "admin-admins") {
+    title = "Add Admin";
+    text = (
+      <form className="add-admin-form" onSubmit={submitAdmin}>
+        <TextPasswordField
+          id="register-form-email"
+          label="Email Address"
+          icon={`${icon.email ? "fas fa-circle-notch fa-spin" : ""}`}
+          type="email"
+          name="email"
+          value={inputs.email}
+          onChange={this.changeHandler}
+          error={error.email}
+          onKeyUp={this.keyHandler}
+        />
+
+        <TextPasswordField
+          id="register-form-referral"
+          label="Username"
+          icon={`${icon.referral ? "fas fa-circle-notch fa-spin" : ""}`}
+          type="text"
+          name="username"
+          value={inputs.username || ""}
+          onChange={this.changeHandler}
+          error={error.username}
+          onKeyUp={this.keyHandler}
+        />
+
+        <TextInputField
+          id="add-new-admin-phone"
+          label="Phone Number"
+          type="tel"
+          name="addadminphone"
+          value={inputs.addadminphone || ""}
+          onChange={changeHandler}
+          error={errors.addadminphone}
+        />
+
+        <TextPasswordField
+          id="register-form-password"
+          placeholder="Password"
+          label="Password"
+          icon={`far ${pass.pass1 ? "fa-eye-slash" : "fa-eye"}`}
+          type={pass.pass1 ? "password" : "text"}
+          name="password"
+          value={inputs.password || ""}
+          onChange={this.changeHandler}
+          onClick={checkPassHandler(1)}
+          error={error.password}
+        />
+        <TextPasswordField
+          id="register-form-password2"
+          placeholder="Confirm Password"
+          label="Confirm Password"
+          icon={`far ${pass.pass2 ? "fa-eye-slash" : "fa-eye"}`}
+          type={pass.pass2 ? "password" : "text"}
+          name="password2"
+          value={inputs.password2 || ""}
+          onChange={this.changeHandler}
+          onClick={checkPassHandler(2)}
+          error={error.password2}
+        />
+
+        <div className="d-grid">
+          {error.currency && (
+            <small className="text-muted">{error.currency}</small>
+          )}
+          <button type="submit" className="btn default-btn btn-lg btn-block">
+            Add Currency
+            {loading && (
+              <span className="spinner-border spinner-border-sm ms-2"></span>
+            )}
+          </button>
+        </div>
+      </form>
+    );
   }
 
   return (

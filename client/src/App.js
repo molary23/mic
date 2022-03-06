@@ -27,6 +27,7 @@ import Referrals from "./component/user/Referrals";
 import Pay from "./component/user/Pay";
 import Payments from "./component/user/Payments";
 import Withdrawals from "./component/user/Withdrawals";
+import Settings from "./component/user/Settings";
 
 import Index from "./component/user";
 import Subscriptions from "./component/user/Subscriptions";
@@ -152,6 +153,11 @@ function App() {
             path="/user/withdrawals"
             element={<PrivateRoute Component={Withdrawals} />}
           />
+          <Route
+            exact
+            path="/user/Settings"
+            element={<PrivateRoute Component={Settings} />}
+          />
         </Route>
 
         <Route
@@ -225,7 +231,7 @@ function App() {
           />
           <Route
             exact
-            path="/admin/viewadmins"
+            path="/admin/admins"
             element={<PrivateRoute Component={AdminViewAdmins} />}
           />
 

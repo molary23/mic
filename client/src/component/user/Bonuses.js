@@ -17,6 +17,7 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  // loadFromParams,
 } from "../../util/LoadFunction";
 
 export class Bonuses extends Component {
@@ -44,6 +45,9 @@ export class Bonuses extends Component {
 
   componentDidMount() {
     const { limit, offset, bonuscount, content } = this.state;
+
+    // loadFromParams({ limit, self: this, content });
+
     const paginate = {
       limit,
       offset,
@@ -93,6 +97,8 @@ export class Bonuses extends Component {
       self: this,
     });
   };
+
+  clickHandler = (value) => {};
 
   render() {
     const {
@@ -147,7 +153,7 @@ export class Bonuses extends Component {
         ) : (
           <div className="payments card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Payments</h1>
+              <h1>Bonus</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
@@ -192,6 +198,7 @@ export class Bonuses extends Component {
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>
@@ -204,9 +211,10 @@ export class Bonuses extends Component {
 Bonuses.propTypes = {
   getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func.isRequired,
+  // loadFromParams: PropTypes.func.isRequired,
   clearActions: PropTypes.func.isRequired,
   clearSearchActions: PropTypes.func.isRequired,
-  renderArrange: PropTypes.func,
+  renderArrange: PropTypes.func.isRequired,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
 };

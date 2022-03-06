@@ -432,3 +432,73 @@ ul.dropdown-menu {
   margin-bottom: 60px;
   background: $bg-dark;
 }
+
+/* Tooltip */
+.tiptool {
+  position: relative;
+  display: inline-block;
+  top: 150%;
+
+  .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #555 transparent;
+    }
+  }
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.showTip .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+/*Settings*/
+/* Tab Panel */
+.tab-content {
+  min-height: 500px;
+  padding: 20px 0px;
+}
+.settings-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 0px;
+  border-bottom: 1px dashed rgba($color: #8dbff8, $alpha: 0.5);
+}
+
+.first-account.card,
+.second-account.card {
+  padding: 20px;
+  h3 {
+    font-size: clamp(1.5vw, 15px, 1.5vh);
+    font-weight: 400;
+    text-align: center;
+  }
+  button {
+    text-align: right;
+  }
+}

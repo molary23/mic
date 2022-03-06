@@ -48,7 +48,7 @@ class Login extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
 
-    if (nextProps.auth.isAuthenticated && prevState.move === false) {
+    if (nextProps.auth.isAuthenticated) {
       update.level = nextProps.auth.user.level;
       if (nextProps.auth.user.level === 1) {
         update.viewer = "/user";
@@ -62,6 +62,7 @@ class Login extends Component {
 
     if (nextProps.errors) {
       update.error = nextProps.errors;
+      update.loading = false;
     }
 
     if (

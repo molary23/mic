@@ -255,7 +255,7 @@ class Register extends Component {
                 name="email"
                 value={email}
                 onChange={this.changeHandler}
-                onClick={() => this.checkPassHandler(1)}
+                //onClick={() => this.checkPassHandler(1)}
                 error={error.email}
                 onKeyUp={this.keyHandler}
               />

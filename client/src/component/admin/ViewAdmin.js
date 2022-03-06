@@ -6,40 +6,59 @@ import PropTypes from "prop-types";
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  loadFromParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
+import AddModal from "../../layout/AddModal";
+import Toast from "../../layout/Toast";
+
+import Pagination from "../../util/Pagination";
 
 class ViewAdmin extends Component {
   state = {
     sender: "admin-admins",
     search: "",
     statusOpt: [
-      { value: "", option: "Filter by Package" },
-      { value: "1", option: "Active" },
-      { value: "2", option: "Inactive" },
+      { value: "", option: "Filter by Status" },
+      { value: "a", option: "Active" },
+      { value: "i", option: "Inactive" },
     ],
     status: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     isLoading: false,
-    doneTypingInterval: 5000,
     upLoad: true,
-    admincount: JSON.parse(localStorage.getItem("counts")).admins,
+    admincount:
+      JSON.parse(localStorage.getItem("counts")).admins ??
+      this.props.auth.allCounts.admins,
     content: "admins",
+    modal: "",
+    error: {},
+    toast: false,
+    toasttext: "",
   };
 
   componentDidMount() {
     const { limit, offset, admincount, content } = this.state;
 
+    let searchParams = window.location.search;
+
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    }
     const paginate = {
       limit,
       offset,
@@ -59,6 +78,58 @@ class ViewAdmin extends Component {
     this.props.clearSearchActions(content);
     window.removeEventListener("scroll", this.loadMore);
   }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+    }
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.admin.addcurrency !== this.props.admin.addcurrency &&
+      this.props.admin.addcurrency
+    ) {
+      this.afterUpdate("added");
+    }
+  }
+
+  afterUpdate = (text) => {
+    const { limit, content, signalcount } = this.state;
+    if (text === "added") {
+      this.setState({
+        numOfPages: Math.ceil((signalcount + 1) / limit),
+      });
+      this.props.clearAdminAction("add-admin");
+    } else {
+      this.props.clearAdminAction("delete-admin");
+    }
+    this.setState({
+      offset: 0,
+      modal: false,
+      toast: true,
+      toasttext: `Admin ${text} successfully`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState((prevState) => ({
+      offset: prevState.offset + limit,
+    }));
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
@@ -89,75 +160,75 @@ class ViewAdmin extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
     });
   };
 
+  openModal = () => {
+    this.setState({
+      modal: true,
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
+  submitHandler = (value) => {
+    if (value[0] === "add") {
+      this.props.addCurrency(value[1]);
+    }
+  };
+
   render() {
-    const { sender, admincount, isLoading, upLoad, search, statusOpt, status } =
-      this.state;
+    const {
+      sender,
+      admincount,
+      startLoad,
+      getLoad,
+      search,
+      statusOpt,
+      status,
+      modal,
+      toast,
+      toasttext,
+      error,
+    } = this.state;
 
-    const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
-    const { searching } = searchTerms;
+    const { admin, searchTerms } = this.props,
+      { loading, fetching } = admin,
+      { searching } = searchTerms,
+      count = admin.adCount,
+      list = admin.admins,
+      searchcount = searchTerms.adCount,
+      searchlist = searchTerms.admins,
+      searchloading = searchTerms.loading;
 
-    console.log(admin.admins);
-
-    let load = upLoad,
-      loader = isLoading,
-      admins = [],
-      searchadmins,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = admincount;
-
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.adCount;
-      totalText = "Total Admins";
-      if (admin.admins === [] && loading) {
-        loader = true;
-        load = upLoad;
-      } else if (admin.admins.length > 0 && !loading) {
-        admins = admin.admins;
-        load = false;
-
-        loader = false;
-      } else if (admin.admins.length > 0 && loading) {
-        admins = admin.admins;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        admins = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.adCount;
-      totalText = "Selected/Searched Admins";
-      if (searchTerms.admins === [] || searchTerms.admins.length <= 0) {
-        noRecord = true;
-        searchadmins = [];
-        loader = false;
-      } else if (searchTerms.admins.length > 0 && !searchTerms.loading) {
-        searchadmins = searchTerms.admins;
-        loader = false;
-      } else if (searchTerms.admins.length > 0 && searchTerms.loading) {
-        searchadmins = searchTerms.admins;
-        loader = true;
-      }
-    }
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      admincount,
+    });
 
     return (
       <div>
@@ -192,12 +263,16 @@ class ViewAdmin extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button
+                    type="button"
+                    className="btn addd-btn"
+                    onClick={this.openModal}
+                  >
                     Add Admin <i className="fas fa-user-plus" />
                   </button>
                 </div>
@@ -213,7 +288,9 @@ class ViewAdmin extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -222,17 +299,25 @@ class ViewAdmin extends Component {
                 "email",
                 "ussername",
                 "phone number",
-                "User Status ",
+                "Status",
                 "View",
               ]}
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? admins : searchadmins}
+                tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, error }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }
@@ -241,6 +326,8 @@ class ViewAdmin extends Component {
 ViewAdmin.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  loadFromParams: PropTypes.func,
+  renderArrange: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 

@@ -48,9 +48,6 @@ function Dropdown(props) {
           <DropdownItem {...{ title: "profile", url: "/forgot" }} />
         </li>
         <li className="dropdown-item">
-          <DropdownItem {...{ title: "nothing", url: "/forgot" }} />
-        </li>
-        <li className="dropdown-item">
           <Link
             to="#"
             onMouseDown={logoutClick}

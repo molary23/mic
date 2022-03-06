@@ -6,7 +6,12 @@ import PropTypes from "prop-types";
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  loadFromParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
@@ -14,15 +19,15 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 
-let typingTimer;
 class Users extends Component {
   state = {
     sender: "admin-users",
     search: "",
     premiumstatusOpt: [
-      { value: "", option: "Filter by Package" },
-      { value: "1", option: "Active" },
-      { value: "2", option: "Inactive" },
+      { value: "", option: "Filter by Premium Status" },
+      { value: "a", option: "Active" },
+      { value: "i", option: "Inactive" },
+      { value: "n", option: "New" },
     ],
     premiumstatus: "",
     limit: 4,
@@ -31,7 +36,9 @@ class Users extends Component {
     iScrollPos: 10,
     currentPage: 2,
     url: new URL(window.location),
-    usercount: JSON.parse(localStorage.getItem("counts")).users,
+    usercount:
+      JSON.parse(localStorage.getItem("counts")).users ??
+      this.props.auth.allCounts.users,
     startLoad: false,
     getLoad: true,
     content: "users",
@@ -39,7 +46,8 @@ class Users extends Component {
 
   componentDidMount() {
     const { limit, offset, usercount, content } = this.state;
-
+    let searchParams = window.location.search;
+    loadFromParams({ limit, self: this, content, searchParams });
     const paginate = {
       limit,
       offset,
@@ -99,70 +107,44 @@ class Users extends Component {
       premiumstatus,
       premiumstatusOpt,
       usercount,
-      isLoading,
-      upLoad,
+      startLoad,
+      getLoad,
       search,
     } = this.state;
 
-    const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
-    const { searching } = searchTerms;
+    const { admin, searchTerms } = this.props,
+      { loading, fetching } = admin,
+      { searching } = searchTerms,
+      count = admin.usersCount,
+      list = admin.users,
+      searchcount = searchTerms.usersCount,
+      searchlist = searchTerms.users,
+      searchloading = searchTerms.loading;
 
-    let load = upLoad,
-      loader = isLoading,
-      users = [],
-      searchUsers,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = usercount;
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      usercount,
+    });
 
-    console.log(admin.users);
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.usersCount;
-      totalText = "Total Users";
-      if (admin.users === [] && loading) {
-        loader = true;
-        load = upLoad;
-      } else if (admin.users.length > 0 && !loading) {
-        users = admin.users;
-        load = false;
-
-        loader = false;
-      } else if (admin.users.length > 0 && loading) {
-        users = admin.users;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        users = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.subCount;
-      totalText = "Selected/Searched Users";
-      if (searchTerms.users === [] || searchTerms.users.length <= 0) {
-        noRecord = true;
-        searchUsers = [];
-        loader = false;
-      } else if (searchTerms.users.length > 0 && !searchTerms.loading) {
-        searchUsers = searchTerms.users;
-        loader = false;
-      } else if (searchTerms.users.length > 0 && searchTerms.loading) {
-        searchUsers = searchTerms.users;
-        loader = true;
-      }
-    }
     return (
       <div>
         {loader && <ProgressBar />}
@@ -186,7 +168,7 @@ class Users extends Component {
                     value={search}
                   />
                 </div>
-                <div className="col-md-2 mb-3">
+                <div className="col-md-3 mb-3">
                   <Select
                     sender={sender}
                     options={premiumstatusOpt}
@@ -197,16 +179,11 @@ class Users extends Component {
                 </div>
 
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
-                <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
-                    Add SP <i className="fas fa-user-plus" />
-                  </button>
-                </div>
-                <div className="col-md-3 mb-2">
+                <div className="col-md-4 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
                       {totalText}
@@ -234,7 +211,7 @@ class Users extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? users : searchUsers}
+                tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
           </div>
@@ -247,6 +224,8 @@ class Users extends Component {
 Users.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  loadFromParams: PropTypes.func,
+  renderArrange: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

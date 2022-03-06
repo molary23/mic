@@ -25,6 +25,10 @@ import {
   GET_ALL_ANNOUNCEMENTS,
   GET_ALL_WITHDRAWALS,
   CLEAR_WITHDRAWALS_ACTION,
+  ADD_NEW_CURRENCY,
+  CLEAR_ADD_NEW_CURRENCY,
+  DELETE_CURRENCY,
+  CLEAR_DELETE_CURRENCY,
 } from "../action/types";
 
 const initialState = {
@@ -56,6 +60,8 @@ const initialState = {
   annCount: 0,
   withcount: 0,
   withdrawals: [],
+  deletecurrency: false,
+  addcurrency: false,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -175,6 +181,18 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case ADD_NEW_CURRENCY:
+      return {
+        ...state,
+        addcurrency: action.payload,
+        loading: false,
+      };
+    case DELETE_CURRENCY:
+      return {
+        ...state,
+        deletecurrency: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -197,7 +215,7 @@ export default function adminReducer(state = initialState, action) {
       return { ...state, bonus: [], bonusCount: 0, fetching: false };
     }
     case CLEAR_ADMINS_ACTION: {
-      return { ...state, admin: [], adCount: 0, fetching: false };
+      return { ...state, admins: [], adCount: 0, fetching: false };
     }
     case CLEAR_PROVIDERS_ACTION: {
       return { ...state, providers: [], prCount: 0, fetching: false };
@@ -213,6 +231,12 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_WITHDRAWALS_ACTION: {
       return { ...state, withdrawals: [], withcount: 0, fetching: false };
+    }
+    case CLEAR_DELETE_CURRENCY: {
+      return { ...state, deletecurrency: false };
+    }
+    case CLEAR_ADD_NEW_CURRENCY: {
+      return { ...state, addcurrency: false };
     }
     default:
       return state;

@@ -15,7 +15,8 @@ function SideNav(props) {
 
   let display = props.act;
 
-  let viewer = "sp";
+  let viewer,
+    level = props.auth.user.level;
   if (props.auth.user.level === 3) {
     viewer = "admin";
   } else if (props.auth.user.level === 2) {
@@ -36,116 +37,122 @@ function SideNav(props) {
               Dashboard
             </Link>
 
-            {
-              //(props.auth.user.level === 1 || props.auth.user.level === 3) && (
+            {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/signals`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-signal" />
                 </span>
                 Signals
               </Link>
-              // )
-            }
+            )}
 
-            {
-              //props.auth.user.level > 2 && (
+            {level > 2 && (
               <Link to={`/${viewer}/currencies`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-money-bill-wave-alt" />
                 </span>
                 Currencies
               </Link>
-              //)
-            }
+            )}
 
-            {
-              //props.auth.user.level > 2 && (
+            {level > 2 && (
               <Link to={`/${viewer}/users`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-user-friends" />
                 </span>
                 Users
               </Link>
-              //)
-            }
+            )}
 
-            {
-              //props.auth.user.level > 2 && (
-              <Link to={`/${viewer}/viewadmins`}>
+            {level > 2 && (
+              <Link to={`/${viewer}/admins`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-user-tie" />
                 </span>
                 Admins
               </Link>
-              //)
-            }
+            )}
 
-            {
-              //props.auth.user.level > 2 && (
+            {level > 2 && (
               <Link to={`/${viewer}/signal-providers`}>
                 <span className="sidebar-icon">
                   <i className="fas fa-user-tag" />
                 </span>
                 Signal Providers
               </Link>
-              //)
-            }
+            )}
 
-            <Link to={`/${viewer}/subscriptions`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-id-card-alt" />
-              </span>
-              Subscriptions
-            </Link>
+            {(level === 1 || level === 3) && (
+              <Link to={`/${viewer}/subscriptions`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-id-card-alt" />
+                </span>
+                Subscriptions
+              </Link>
+            )}
 
-            <Link to={`/${viewer}/transactions`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-exchange-alt" />
-              </span>
-              Transactions
-            </Link>
+            {(level === 1 || level === 3) && (
+              <Link to={`/${viewer}/transactions`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-exchange-alt" />
+                </span>
+                Transactions
+              </Link>
+            )}
 
-            <Link to={`/${viewer}/referrals`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-users" />
-              </span>
-              Referrals
-            </Link>
+            {(level === 1 || level === 3) && (
+              <Link to={`/${viewer}/referrals`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-users" />
+                </span>
+                Referrals
+              </Link>
+            )}
 
-            <Link to={`/${viewer}/bonuses`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-wallet" />
-              </span>
-              Bonus
-            </Link>
+            {(level === 1 || level === 3) && (
+              <Link to={`/${viewer}/bonuses`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-wallet" />
+                </span>
+                Bonus
+              </Link>
+            )}
 
-            <Link to={`/${viewer}/accounts`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-file-invoice-dollar" />
-              </span>
-              Accounts
-            </Link>
+            {level === 3 && (
+              <Link to={`/${viewer}/accounts`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-file-invoice-dollar" />
+                </span>
+                Accounts
+              </Link>
+            )}
 
-            <Link to={`/${viewer}/payments`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-dollar-sign" />
-              </span>
-              Payments
-            </Link>
+            {(level === 1 || level === 3) && (
+              <Link to={`/${viewer}/payments`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-dollar-sign" />
+                </span>
+                Payments
+              </Link>
+            )}
 
-            <Link to={`/${viewer}/withdrawals`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-hand-holding-usd" />
-              </span>
-              Withdrawals
-            </Link>
+            {(level === 1 || level === 3) && (
+              <Link to={`/${viewer}/withdrawals`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-hand-holding-usd" />
+                </span>
+                Withdrawals
+              </Link>
+            )}
 
-            <Link to={`/${viewer}/announcements`}>
-              <span className="sidebar-icon">
-                <i className="fas fa-bullhorn" />
-              </span>
-              Announcements
-            </Link>
+            {level === 3 && (
+              <Link to={`/${viewer}/announcements`}>
+                <span className="sidebar-icon">
+                  <i className="fas fa-bullhorn" />
+                </span>
+                Announcements
+              </Link>
+            )}
           </div>
         )}
       </div>

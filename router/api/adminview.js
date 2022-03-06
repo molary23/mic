@@ -821,18 +821,8 @@ router.post(
         "username",
         "email",
         "fullname",
-        [
-          Sequelize.literal(
-            `CASE WHEN userstatus = 1 THEN 'Deactivated' WHEN userstatus = 2 THEN 'Active' END `
-          ),
-          "userstatus",
-        ],
-        [
-          Sequelize.literal(
-            `CASE WHEN premiumstatus = 0 THEN 'New  User' WHEN premiumstatus = 1 THEN 'Not Subscribed' WHEN premiumstatus = 2 THEN 'Active' END `
-          ),
-          "premiumstatus",
-        ],
+        "userstatus",
+        "premiumstatus",
       ],
       where,
       raw: true,
@@ -894,7 +884,7 @@ router.post(
               {
                 [Op.and]: newSearchArray,
               },
-              { userstatus: req.body.status },
+              { status: req.body.status },
             ],
           };
         } else {
@@ -907,7 +897,7 @@ router.post(
         if (req.body.status) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              { status: req.body.status },
               {
                 [Op.or]: [
                   { username: { [Op.substring]: search } },
@@ -929,7 +919,7 @@ router.post(
       }
     } else {
       if (req.body.status) {
-        where.userstatus = req.body.status;
+        where.status = req.body.status;
       }
     }
 
@@ -937,18 +927,7 @@ router.post(
       order: [["userid", "DESC"]],
       offset,
       limit,
-      attributes: [
-        "userid",
-        "username",
-        "email",
-        "fullname",
-        [
-          Sequelize.literal(
-            `CASE WHEN userstatus = 1 THEN 'Deactivated' WHEN userstatus = 2 THEN 'Active' END `
-          ),
-          "status",
-        ],
-      ],
+      attributes: ["userid", "username", "email", "fullname", "status"],
       where,
       raw: true,
     };

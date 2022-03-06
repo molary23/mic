@@ -5,9 +5,9 @@ import { connect } from "react-redux";
 import { getAllCounts } from "../action/authAction";
 
 function LoadCount(props) {
-  const { sender, level } = props;
+  const { sender, level, getAllCounts } = props;
   if (sender === "login") {
-    props.getAllCounts(level);
+    getAllCounts(level);
   }
 
   return <div></div>;

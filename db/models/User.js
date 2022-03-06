@@ -33,8 +33,8 @@ User.init(
       defaultValue: 1,
     },
     status: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
+      type: DataTypes.ENUM("a", "i"),
+      defaultValue: "a",
     },
   },
   {
