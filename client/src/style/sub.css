@@ -524,6 +524,14 @@ ul.dropdown-menu li a {
   color: #fff;
 }
 
+.dashboard-content .referrals-box {
+  border-radius: 10px;
+  height: 100px;
+  -webkit-box-shadow: 1px 1px 5px #bebebe;
+          box-shadow: 1px 1px 5px #bebebe;
+  padding: 20px;
+}
+
 .dashboard-content .box-icon i {
   width: 60px;
   height: 60px;

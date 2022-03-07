@@ -253,8 +253,7 @@ ul.dropdown-menu {
       }
     }
   }
-  .welcome-dashboard {
-  }
+
   .dash-card {
     border-radius: 20px;
     height: 200px;
@@ -271,6 +270,13 @@ ul.dropdown-menu {
       rgba(242, 70, 138, 1) 68%
     );
     color: #fff;
+  }
+
+  .referrals-box {
+    border-radius: 10px;
+    height: 100px;
+    box-shadow: 1px 1px 5px rgb(190, 190, 190);
+    padding: 20px;
   }
 
   .box-icon {

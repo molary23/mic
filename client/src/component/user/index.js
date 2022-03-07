@@ -115,6 +115,9 @@ export class Index extends Component {
                 </div>
               </div>
             </div>
+            <div className="dash-referrals-info">
+              <div className="referrals-box"></div>
+            </div>
             <div className="row">
               <div className="col-md-6">
                 <div className="dashboard-intro card">

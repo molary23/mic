@@ -129,15 +129,22 @@ router.post(
       return res.status(400).json(error);
     }
 
-    const id = req.body.bonusid;
+    const { action, id } = req.body;
+
+    let status;
+    if (action === "approve") {
+      status = "a";
+    } else if (action === "reject") {
+      status = "r";
+    }
+
     Promise.all([
-      Bonus.update({ status: 2 }, { where: { id: id } })
+      Bonus.update({ status }, { where: { id: id } })
         .then(() => {
           Bonus.findByPk(id, { attributes: ["amount", "UserId"] })
             .then((bonus) => {
               let amount = bonus.amount,
                 UserId = bonus.UserId;
-
               Transaction.create({
                 amount,
                 UserId,

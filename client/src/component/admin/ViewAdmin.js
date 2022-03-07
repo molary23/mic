@@ -51,7 +51,7 @@ class ViewAdmin extends Component {
       JSON.parse(localStorage.getItem("counts")).admins ??
       this.props.auth.allCounts.admins,
     content: "admins",
-    modal: "",
+    modal: false,
     error: {},
     toast: false,
     toasttext: "",
@@ -357,6 +357,7 @@ ViewAdmin.propTypes = {
   renderArrange: PropTypes.func,
   updateAdmin: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({

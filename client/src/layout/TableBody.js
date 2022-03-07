@@ -216,7 +216,23 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
-          <td>{item.status}</td>
+          <td>
+            {item.status === "p" && (
+              <span className="new-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "a" && (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "r" && (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+          </td>
           <td>{item.username}</td>
           <td>
             <DateFormat date={item.createdAt} />
@@ -234,25 +250,35 @@ function TableBody(props) {
               >
                 <i className="far fa-eye" />
               </Link>
-              <button
-                type="button"
-                className="btn btn-success btn-sm"
-                data-id={item.bonusid}
-                title="Approve Bonus"
-                onClick={() => onClick()}
-              >
-                <i className="fas fa-check" />
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger btn-sm"
-                data-id={item.bonusid}
-                title="Disapprove Bonus"
-                onClick={() => onClick()}
-              >
-                <i className="fas fa-ban" />
-              </button>
             </div>
+          </td>
+          <td>
+            {item.status === "p" && (
+              <div className="action-buttons">
+                <button
+                  type="button"
+                  className="btn btn-success btn-sm"
+                  data-id={item.bonusid}
+                  title="Approve Bonus"
+                  onClick={() =>
+                    onClick(["approve", item.bonusid, item.username])
+                  }
+                >
+                  <i className="fas fa-check" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  data-id={item.bonusid}
+                  title="Disapprove Bonus"
+                  onClick={() =>
+                    onClick(["reject", item.bonusid, item.username])
+                  }
+                >
+                  <i className="fas fa-ban" />
+                </button>
+              </div>
+            )}
           </td>
         </tr>
       );

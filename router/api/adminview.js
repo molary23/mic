@@ -430,12 +430,7 @@ router.post(
       attributes: [
         "bonusid",
         "amount",
-        [
-          Sequelize.literal(
-            `CASE WHEN status = 1 THEN 'Pending' WHEN status = 0 THEN 'Unapproved' WHEN status = 2 THEN 'Approved' END `
-          ),
-          "status",
-        ],
+        "status",
         "username",
         "createdAt",
         "updatedAt",

@@ -16,16 +16,20 @@ import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
+import AddModal from "../../layout/AddModal";
+import Toast from "../../layout/Toast";
+
+import Pagination from "../../util/Pagination";
 
 class Announcements extends Component {
   state = {
     sender: "admin-announcements",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     announcementcount: JSON.parse(localStorage.getItem("counts")).announcements,
     startLoad: false,
@@ -90,8 +94,17 @@ class Announcements extends Component {
   };
 
   render() {
-    const { sender, announcementcount, startLoad, getLoad, search } =
-      this.state;
+    const {
+      sender,
+      announcementcount,
+      startLoad,
+      getLoad,
+      search,
+      modal,
+      toast,
+      toasttext,
+      error,
+    } = this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading, fetching } = admin;
@@ -192,9 +205,18 @@ class Announcements extends Component {
                     value={search}
                   />
                 </div>
-                <div className="col-md-4 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                <div className="col-md-2 mb-3">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
+                  </button>
+                </div>
+                <div className="col-md-2 mb-3">
+                  <button
+                    type="button"
+                    className="btn addd-btn"
+                    onClick={this.openModal}
+                  >
+                    Create <i className="fas fa-bullhorn" />
                   </button>
                 </div>
                 <div className="col-md-4 mb-2">
@@ -209,7 +231,9 @@ class Announcements extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -229,6 +253,14 @@ class Announcements extends Component {
             </TableHead>
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, error }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }

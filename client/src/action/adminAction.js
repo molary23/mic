@@ -39,6 +39,8 @@ import {
   CLEAR_ADD_NEW_PROVIDER,
   UPDATE_ADMIN,
   CLEAR_UPDATE_ADMIN,
+  UPDATE_BONUS,
+  CLEAR_UPDATE_BONUS,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -186,6 +188,7 @@ export const clearAdminAction = (info) => {
   if (info === "add-admin") return { type: CLEAR_ADD_NEW_ADMIN };
   if (info === "add-provider") return { type: CLEAR_ADD_NEW_PROVIDER };
   if (info === "update-admin") return { type: CLEAR_UPDATE_ADMIN };
+  if (info === "update-bonus") return { type: CLEAR_UPDATE_BONUS };
 };
 
 export const addNewAdmin = (level, data) => async (dispatch) => {
@@ -221,6 +224,22 @@ export const updateAdmin = (value) => async (dispatch) => {
     let response = await axios.post("/api/admin/update/", value);
     const result = await dispatch({
       type: UPDATE_ADMIN,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const updateBonus = (value) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post("/api/admin/approve/bonus", value);
+    const result = await dispatch({
+      type: UPDATE_BONUS,
       payload: response.data,
     });
     return result;

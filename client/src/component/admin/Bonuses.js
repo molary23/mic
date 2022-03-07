@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/adminAction";
+import {
+  getContent,
+  clearActions,
+  clearAdminAction,
+  updateBonus,
+} from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
 import TableHead from "../../layout/TableHead";
@@ -10,8 +15,16 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import Toast from "../../layout/Toast";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  loadFromParams,
+  renderArrange,
+} from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 
 let typingTimer;
 export class Bonuses extends Component {
@@ -22,31 +35,39 @@ export class Bonuses extends Component {
       sender: "admin-bonus",
       statusOpt: [
         { value: "", option: "Filter by Status" },
-        { value: "1", option: "Pending" },
-        { value: "2", option: "Approved" },
-        { value: "0", option: "Disapprovd" },
+        { value: "p", option: "Pending" },
+        { value: "a", option: "Approved" },
+        { value: "r", option: "Disapprovd" },
       ],
       search: "",
       status: "",
-      limit: 4,
-      offset: 0,
-      numOfPages: 0,
-      iScrollPos: 10,
-      currentPage: 2,
+      limit: Pagination.limit,
+      offset: Pagination.offset,
+      numOfPages: Pagination.numberofpages,
+      iScrollPos: Pagination.scrollposition,
+      currentPage: Pagination.currentpage,
       url: new URL(window.location),
       isLoading: false,
       doneTypingInterval: 5000,
-      bonuscount: JSON.parse(localStorage.getItem("counts")).bonus,
+      bonuscount:
+        JSON.parse(localStorage.getItem("counts")).bonus ??
+        this.props.auth.allCounts.bonus,
       upLoad: true,
       content: "bonus",
+      modal: false,
+      error: {},
+      toast: false,
+      toasttext: "",
     };
-
-    //this.setSearchParams = setSearchParams.bind(this);
   }
 
   componentDidMount() {
     const { limit, offset, bonuscount, content } = this.state;
+    let searchParams = window.location.search;
 
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    }
     const paginate = {
       limit,
       offset,
@@ -64,6 +85,60 @@ export class Bonuses extends Component {
     this.props.clearSearchActions(this.state.content);
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+    }
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.admin.addadmin !== this.props.admin.addadmin &&
+      this.props.admin.addadmin
+    ) {
+      this.afterUpdate("added");
+    }
+    if (
+      prevProps.admin.updatebonus !== this.props.admin.updatebonus &&
+      this.props.admin.updatebonus
+    ) {
+      this.afterUpdate("updated");
+    }
+  }
+
+  afterUpdate = (text) => {
+    const { limit, content } = this.state;
+
+    this.props.clearAdminAction("update-bonus");
+
+    this.setState({
+      offset: 0,
+      modal: false,
+      toast: true,
+      toasttext: `Bonus ${text} successfully`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState((prevState) => ({
+      offset: prevState.offset + limit,
+    }));
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
+
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
     let searchParams = window.location.search,
@@ -78,6 +153,17 @@ export class Bonuses extends Component {
       searchParams,
       self: this,
     });
+  };
+
+  clickhandler = (value) => {
+    let check = window.confirm(
+      `Are you sure you want to ${value[0]} ${value[2].toUpperCase()}'s Bonus?`
+    );
+    if (check) {
+      this.props.updateBonus({ action: value[0], id: value[1] });
+    } else {
+      return false;
+    }
   };
   /*
   loadMore = () => {
@@ -199,65 +285,51 @@ export class Bonuses extends Component {
   };*/
 
   render() {
-    const { sender, status, statusOpt, isLoading, upLoad, search } = this.state;
+    const {
+      sender,
+      status,
+      statusOpt,
+      startLoad,
+      getLoad,
+      bonuscount,
+      search,
+      toast,
+      toasttext,
+      error,
+    } = this.state;
 
-    const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
-    const { searching } = searchTerms;
+    const { admin, searchTerms } = this.props,
+      { loading, fetching } = admin,
+      { searching } = searchTerms,
+      count = admin.bonusCount,
+      list = admin.bonus,
+      searchcount = searchTerms.bonusCount,
+      searchlist = searchTerms.bonus,
+      searchloading = searchTerms.loading;
 
-    let load = upLoad,
-      loader = isLoading,
-      bonus = [],
-      searchbonus,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = 0;
-
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.bonusCount;
-      totalText = "Total Bonus";
-      if (admin.bonus === [] && loading) {
-        loader = true;
-        load = upLoad;
-      } else if (admin.bonus.length > 0 && !loading) {
-        bonus = admin.bonus;
-        load = false;
-        loader = false;
-      } else if (admin.bonus.length > 0 && loading) {
-        bonus = admin.bonus;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        bonus = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.bonusCount;
-      totalText = "Selected/Searched Bonus";
-      if (searchTerms.bonus === [] || searchTerms.bonus.length <= 0) {
-        noRecord = true;
-        searchbonus = [];
-        loader = false;
-      } else if (searchTerms.bonus.length > 0 && !searchTerms.loading) {
-        searchbonus = searchTerms.bonus;
-        loader = false;
-      } else if (searchTerms.bonus.length > 0 && searchTerms.loading) {
-        searchbonus = searchTerms.bonus;
-        loader = true;
-      }
-    }
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      bonuscount,
+    });
 
     return (
       <div>
@@ -310,7 +382,9 @@ export class Bonuses extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -320,16 +394,19 @@ export class Bonuses extends Component {
                 "username",
                 "date created",
                 "date approved",
+                "view",
                 "action",
               ]}
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? bonus : searchbonus}
+                tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickhandler}
               />
             </TableHead>
           </div>
         )}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }
@@ -338,15 +415,25 @@ export class Bonuses extends Component {
 Bonuses.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  clearAdminAction: PropTypes.func,
+  loadFromParams: PropTypes.func,
+  renderArrange: PropTypes.func,
+  updateAdmin: PropTypes.func,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,
   getContent,
   searchContent,
   clearSearchActions,
+  clearAdminAction,
+  updateBonus,
 })(Bonuses);
