@@ -93,6 +93,7 @@ ul.dropdown-menu {
   .nav-name {
     font-weight: 600px;
     margin-top: 5px;
+    text-transform: capitalize;
     margin-bottom: 0px;
     color: rgba(102, 102, 102, 0.7);
   }
@@ -272,12 +273,32 @@ ul.dropdown-menu {
     color: #fff;
   }
 
+  .dash-basic {
+    background: rgb(36, 212, 254);
+    background: linear-gradient(
+      142deg,
+      rgba(36, 212, 254, 1) 0%,
+      rgb(22, 224, 235) 38%,
+      rgb(3, 162, 202) 73%
+    );
+    color: #fff;
+
+    .share-ref-social i {
+      margin-right: 15px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+  }
+  .dash-user-name {
+    text-transform: capitalize;
+  }
+  /*
   .referrals-box {
     border-radius: 10px;
     height: 100px;
     box-shadow: 1px 1px 5px rgb(190, 190, 190);
     padding: 20px;
-  }
+  }*/
 
   .box-icon {
     i {

@@ -356,7 +356,7 @@ router.post("/login", (req, res) => {
         if (isMatch) {
           const payload = {
             id: user.id,
-            email: user.email,
+            username: user.username,
             level: user.level,
             active: user.active,
             mode: user.Settings[0],

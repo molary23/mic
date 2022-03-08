@@ -18,6 +18,8 @@
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  color: #fff;
+  font-weight: 600;
 }
 
 /*
@@ -317,6 +319,7 @@ ul.dropdown-menu li a {
 .nav-item.dropdown .nav-name {
   font-weight: 600px;
   margin-top: 5px;
+  text-transform: capitalize;
   margin-bottom: 0px;
   color: rgba(102, 102, 102, 0.7);
 }
@@ -425,6 +428,13 @@ ul.dropdown-menu li a {
   padding: 25px;
   margin-top: 80px;
   padding-bottom: 80px;
+  /*
+  .referrals-box {
+    border-radius: 10px;
+    height: 100px;
+    box-shadow: 1px 1px 5px rgb(190, 190, 190);
+    padding: 20px;
+  }*/
 }
 
 .dashboard-content .card {
@@ -524,12 +534,20 @@ ul.dropdown-menu li a {
   color: #fff;
 }
 
-.dashboard-content .referrals-box {
-  border-radius: 10px;
-  height: 100px;
-  -webkit-box-shadow: 1px 1px 5px #bebebe;
-          box-shadow: 1px 1px 5px #bebebe;
-  padding: 20px;
+.dashboard-content .dash-basic {
+  background: #24d4fe;
+  background: linear-gradient(142deg, #24d4fe 0%, #16e0eb 38%, #03a2ca 73%);
+  color: #fff;
+}
+
+.dashboard-content .dash-basic .share-ref-social i {
+  margin-right: 15px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.dashboard-content .dash-user-name {
+  text-transform: capitalize;
 }
 
 .dashboard-content .box-icon i {

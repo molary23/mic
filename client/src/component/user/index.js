@@ -34,6 +34,8 @@ export class Index extends Component {
     }, 3000);
   };
 
+  shareHandler = () => {};
+
   render() {
     const { profile, loading } = this.props;
     const { copy } = this.state;
@@ -68,41 +70,33 @@ export class Index extends Component {
         ) : (
           <div className="container">
             <div className="welcome-dashboard mb-5">
-              <h1>Hi, User Full Name/ Username, welcome to your Dashboard</h1>
+              <h1>
+                Hi, <span className="dash-user-name">{username}</span>, welcome
+                to your Dashboard
+              </h1>
             </div>
             <div className="dash-intro mb-5">
               <div className="row">
                 <div className="col-md-5 col-xs-12">
                   <div className="dash-basic dash-card">
-                    <div className="referral-details">
-                      <div className="referral-id-box card">
-                        <div className="referrral-id  ms-2  pt-1">
-                          <code>
-                            http://localhost:3000/referral/:{username}
-                          </code>
-                          <input
-                            type="hidden"
-                            ref={this.myRef}
-                            id="copy-code"
-                            value={`http://localhost:3000/referral/:${username}`}
-                            readOnly
-                          />
-                        </div>
-                        <div className="copy-referrral-id">
-                          <button
-                            type="button"
-                            className="btn"
-                            onClick={this.clickHandler}
-                          >
-                            <i className="far fa-copy" />
-                          </button>
-                        </div>
-                        <div className={`tiptool ${copy && "showTip"}`}>
-                          <span className="tooltiptext">
-                            Copied to Clipboard
-                          </span>
-                        </div>
-                      </div>
+                    <h4 className="mb-2">Referrals </h4>
+                    <h1 className="mb-2">22</h1>
+                    <code>http://localhost:3000/referral/:{username}</code>
+                    <p className="mb-1">Invite More</p>
+                    <div className="share-ref-social">
+                      <i
+                        className="fab fa-facebook-square"
+                        title="Share on Facebook"
+                      />
+                      <i
+                        className="fab fa-twitter-square"
+                        title="Share on Twitter"
+                      />
+                      <i
+                        className="fab fa-linkedin"
+                        title="Share on Linkedin"
+                      />
+                      <i className="far fa-copy" title="Copy Link" />
                     </div>
                   </div>
                 </div>
@@ -111,6 +105,7 @@ export class Index extends Component {
                   <div className="dash-bonus dash-card">
                     <h4 className="mb-3">Bonus Index</h4>
                     <h1 className="mb-3">$25009</h1>
+                    <p>Estimated earning</p>
                   </div>
                 </div>
               </div>

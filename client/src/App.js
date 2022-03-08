@@ -29,7 +29,7 @@ import Payments from "./component/user/Payments";
 import Withdrawals from "./component/user/Withdrawals";
 import Settings from "./component/user/Settings";
 
-import Index from "./component/user";
+import Index from "./component/user/Index";
 import Subscriptions from "./component/user/Subscriptions";
 
 //Admin

@@ -26,6 +26,8 @@ export class SubNav extends Component {
   };
 
   render() {
+    const { auth } = this.props;
+    console.log(auth);
     return (
       <div>
         <nav className="navbar navbar-expand-sm bg-light navbar-light dash-top-nav fixed-top">
@@ -59,7 +61,7 @@ export class SubNav extends Component {
                   <Dropdown />
                 </li>
                 <li className="nav-item dropdown">
-                  <p className="nav-name">Full Name of User</p>
+                  <p className="nav-name">{auth.user.username}</p>
                 </li>
                 <li className="nav-item dropdown">
                   <span className="vl"></span>
