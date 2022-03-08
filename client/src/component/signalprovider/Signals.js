@@ -95,10 +95,14 @@ class Signals extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.provider.signaladded !== this.props.provider.signaladded) {
+    if (
+      prevProps.provider.signaladded !== this.props.provider.signaladded &&
+      this.props.provider.signaladded
+    ) {
       this.afterUpdate("added");
     } else if (
-      prevProps.provider.signaledited !== this.props.provider.signaledited
+      prevProps.provider.signaledited !== this.props.provider.signaledited &&
+      this.props.provider.signaledited
     ) {
       this.afterUpdate("edited");
     }
@@ -224,7 +228,6 @@ class Signals extends Component {
       toasttext,
       modalsignaldetails,
       error,
-      //  newsignal,
     } = this.state;
 
     const { provider, providerSearch } = this.props;
@@ -335,7 +338,9 @@ class Signals extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[

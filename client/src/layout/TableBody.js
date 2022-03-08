@@ -623,6 +623,28 @@ function TableBody(props) {
               </Link>
             </div>
           </td>
+          <td>
+            <div className="action-buttons">
+              <button
+                type="button"
+                className="btn btn-info btn-sm"
+                data-id={item.bonusid}
+                title="Edit Announcement"
+                onClick={() => onClick(["edit", item])}
+              >
+                <i className="fas fa-edit" />
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger btn-sm"
+                data-id={item.bonusid}
+                title="Delete Announcement"
+                onClick={() => onClick(["delete", item.id])}
+              >
+                <i className="fas fa-trash" />
+              </button>
+            </div>
+          </td>
         </tr>
       );
     });

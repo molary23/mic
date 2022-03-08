@@ -8,6 +8,7 @@ const express = require("express"),
   Subscription = require("../../db/models/Subscription"),
   Bonus = require("../../db/models/Bonus"),
   Transaction = require("../../db/models/Transaction"),
+  Announcement = require("../../db/models/Announcement"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
@@ -259,6 +260,95 @@ router.post(
             return res.json({ message: "Payment(s) updated!" });
           })
           .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route DELETE api/admin/delete/announcement/:id
+@desc Admin delete announcement
+@access private
+*/
+
+router.delete(
+  "/delete/announcement/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let id = req.params.id.split(":")[1];
+    id = JSON.parse(id);
+    Announcement.destroy({ where: { id } })
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/add/announcement
+@desc Admin add announcement
+@access private
+*/
+
+router.post(
+  "/add/announcement",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    const annField = {};
+    if (req.body.title) annField.title = req.body.title;
+    if (req.body.link) annField.link = req.body.link;
+    if (req.body.summary) annField.summary = req.body.summary;
+    if (req.body.startdate) annField.startdate = req.body.startdate;
+    if (req.body.enddate) annField.enddate = req.body.enddate;
+    annField.UserId = req.user.id;
+    Announcement.create(annField)
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/edit/announcement/:id
+@desc Admin edit announcement
+@access private
+*/
+
+router.post(
+  "/edit/announcement/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let id = req.params.id.split(":")[1];
+    id = parseInt(id);
+    const annField = {};
+    if (req.body.title) annField.title = req.body.title;
+    if (req.body.link) annField.link = req.body.link;
+    if (req.body.summary) annField.summary = req.body.summary;
+    if (req.body.startdate) annField.startdate = req.body.startdate;
+    if (req.body.enddate) annField.enddate = req.body.enddate;
+
+    Announcement.update(annField, {
+      where: {
+        id,
+      },
+    })
+      .then(() => {
+        res.json(true);
       })
       .catch((err) => res.status(404).json(err));
   }

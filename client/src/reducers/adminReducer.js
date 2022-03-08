@@ -37,6 +37,12 @@ import {
   CLEAR_UPDATE_ADMIN,
   CLEAR_UPDATE_BONUS,
   UPDATE_BONUS,
+  DELETE_ANNOUNCEMENT,
+  CLEAR_DELETE_ANNOUNCEMENT,
+  ADD_ANNOUNCEMENT,
+  CLEAR_ADD_ANNOUNCEMENT,
+  EDIT_ANNOUNCEMENT,
+  CLEAR_EDIT_ANNOUNCEMENT,
 } from "../action/types";
 
 const initialState = {
@@ -74,6 +80,9 @@ const initialState = {
   addprovider: false,
   updateadmin: false,
   updatebonus: false,
+  deleteann: false,
+  editann: false,
+  addann: false,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -229,6 +238,24 @@ export default function adminReducer(state = initialState, action) {
         updatebonus: action.payload,
         loading: false,
       };
+    case DELETE_ANNOUNCEMENT:
+      return {
+        ...state,
+        deleteann: action.payload,
+        loading: false,
+      };
+    case ADD_ANNOUNCEMENT:
+      return {
+        ...state,
+        addann: action.payload,
+        loading: false,
+      };
+    case EDIT_ANNOUNCEMENT:
+      return {
+        ...state,
+        editann: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -285,6 +312,15 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_UPDATE_BONUS: {
       return { ...state, updatebonus: false };
+    }
+    case CLEAR_DELETE_ANNOUNCEMENT: {
+      return { ...state, deleteann: false };
+    }
+    case CLEAR_ADD_ANNOUNCEMENT: {
+      return { ...state, addann: false };
+    }
+    case CLEAR_EDIT_ANNOUNCEMENT: {
+      return { ...state, editann: false };
     }
     default:
       return state;

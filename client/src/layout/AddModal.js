@@ -4,13 +4,23 @@ import TextPasswordField from "./TextPasswordField";
 import Select from "../layout/Select";
 import Signal from "../layout/Signal";
 import Flag from "react-flagpack";
+import TextAreaField from "../layout/TextAreaField";
 
 import { countrycodes } from "../util/countrycodes";
 
 import { checkEmptyInput, checkHandler } from "../util/LoadFunction";
 
 function AddModal(props) {
-  const { modal, sender, purpose, onSubmit, modalsignaldetails, error } = props;
+  const {
+    modal,
+    sender,
+    purpose,
+    onSubmit,
+    modalsignaldetails,
+    error,
+    modalAnnDetails,
+  } = props;
+
   const [open, setOpen] = useState(modal);
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(false);
@@ -244,6 +254,159 @@ function AddModal(props) {
     }
   };
 
+  const submitNewAnnhandler = (e) => {
+    e.preventDefault();
+    if (
+      !Object.keys(inputs).includes("addanntitle") ||
+      inputs.addanntitle === ""
+    ) {
+      setErrors({
+        addanntitle: "Announcement Title Field can't be empty",
+      });
+    } else if (inputs.addanntitle.length > 50) {
+      setErrors({
+        addanntitle: "Announcement Title can't be more than 50 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addannlink") ||
+      inputs.addannlink === ""
+    ) {
+      setErrors({
+        addannlink: "Announcement Link can't be empty",
+      });
+    } else if (inputs.addannlink.length > 100) {
+      setErrors({
+        addannlink: "Announcement Title can't be more than 30 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addannstartdate") ||
+      inputs.addannstartdate === ""
+    ) {
+      setErrors({
+        addannstartdate: "Announcement Start Date Field can't be empty",
+      });
+    } else if (inputs.addannstartdate.length > 10) {
+      setErrors({
+        addannstartdate:
+          "Announcement Start Date can't be more than 10 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addannenddate") ||
+      inputs.addannenddate === ""
+    ) {
+      setErrors({
+        addannenddate: "Announcement End Date can't be empty",
+      });
+    } else if (inputs.addannenddate.length > 10) {
+      setErrors({
+        addannstartdate:
+          "Announcement End Date can't be more than 10 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("addannsummary") ||
+      inputs.addannsummary === ""
+    ) {
+      setErrors({
+        addannsummary: "Announcement Summary Field can't be empty",
+      });
+    } else if (inputs.addannsummary.length > 255) {
+      setErrors({
+        addannsummary: "Announcement Summary can't be more than 255 characters",
+      });
+    } else {
+      setErrors({});
+      const ann = {
+        title: inputs.addanntitle.toLowerCase(),
+        link: inputs.addannlink.toLowerCase(),
+        summary: inputs.addannsummary.toLowerCase(),
+        startdate: inputs.addannstartdate,
+        enddate: inputs.addannenddate,
+      };
+      onSubmit(["new", ann]);
+    }
+  };
+
+  const submitEditAnnhandler = (e) => {
+    e.preventDefault();
+    inputs.editanntitle =
+      inputs.editanntitle ?? modalAnnDetails.title.toString();
+    inputs.editannlink = inputs.editannlink ?? modalAnnDetails.link.toString();
+    inputs.editannstartdate =
+      inputs.editannstartdate ?? modalAnnDetails.startdate;
+    inputs.editannenddate = inputs.editannenddate ?? modalAnnDetails.enddate;
+    inputs.editannsummary =
+      inputs.editannsummary ?? modalAnnDetails.summary.toString();
+    if (
+      !Object.keys(inputs).includes("editanntitle") ||
+      inputs.editanntitle === ""
+    ) {
+      setErrors({
+        editanntitle: "Announcement Title Field can't be empty",
+      });
+    } else if (inputs.editanntitle.length > 50) {
+      setErrors({
+        editanntitle: "Announcement Title can't be more than 50 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("editannlink") ||
+      inputs.editannlink === ""
+    ) {
+      setErrors({
+        editannlink: "Announcement Link can't be empty",
+      });
+    } else if (inputs.editannlink.length > 100) {
+      setErrors({
+        editannlink: "Announcement Title can't be more than 30 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("editannstartdate") ||
+      inputs.editannstartdate === ""
+    ) {
+      setErrors({
+        editannstartdate: "Announcement Start Date Field can't be empty",
+      });
+    } else if (inputs.editannstartdate.length > 10) {
+      setErrors({
+        editannstartdate:
+          "Announcement Start Date can't be more than 10 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("editannenddate") ||
+      inputs.editannenddate === ""
+    ) {
+      setErrors({
+        editannenddate: "Announcement End Date can't be empty",
+      });
+    } else if (inputs.editannenddate.length > 10) {
+      setErrors({
+        editannstartdate:
+          "Announcement End Date can't be more than 10 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("editannsummary") ||
+      inputs.editannsummary === ""
+    ) {
+      setErrors({
+        editannsummary: "Announcement Summary Field can't be empty",
+      });
+    } else if (inputs.editannsummary.length > 255) {
+      setErrors({
+        editannsummary:
+          "Announcement Summary can't be more than 255 characters",
+      });
+    } else {
+      setErrors({});
+      const ann = {
+        title: inputs.editanntitle.toLowerCase(),
+        link: inputs.editannlink.toLowerCase(),
+        summary: inputs.editannsummary.toLowerCase(),
+        startdate: inputs.editannstartdate,
+        enddate: inputs.editannenddate,
+      };
+      onSubmit(["edit", ann, modalAnnDetails.id]);
+    }
+  };
+
   const keyHandler = (e) => {
     if (
       e.target.name === "addadminusername" ||
@@ -373,8 +536,8 @@ function AddModal(props) {
     } else if (purpose === "edit") {
       title = "Edit Signal";
       text = (
-        <div className="edit-new-signal">
-          <form className="edit-new-signal-form" onSubmit={submitEditHandler}>
+        <div className="edit-signal">
+          <form className="edit-signal-form" onSubmit={submitEditHandler}>
             <Select
               options={optArray}
               onChange={changeHandler}
@@ -636,6 +799,128 @@ function AddModal(props) {
         </div>
       </form>
     );
+  } else if (sender === "admin-announcements") {
+    if (purpose === "add") {
+      title = "Add Announcements";
+      text = (
+        <form className="add-new-ann-form" onSubmit={submitNewAnnhandler}>
+          <TextInputField
+            id="add-new-ann-title"
+            placeholder="Announcement Title"
+            type="text"
+            name="addanntitle"
+            value={inputs.addanntitle || ""}
+            onChange={changeHandler}
+            error={errors.addanntitle}
+          />
+          <TextInputField
+            id="add-new-ann-link"
+            placeholder="Announcement link"
+            type="url"
+            name="addannlink"
+            value={inputs.addannlink || ""}
+            onChange={changeHandler}
+            error={errors.addannlink}
+          />
+          <TextInputField
+            id="add-new-ann-startdate"
+            placeholder="Announcement Start Date"
+            type="date"
+            name="addannstartdate"
+            value={inputs.addannstartdate || ""}
+            onChange={changeHandler}
+            error={errors.addannstartdate}
+          />
+          <TextInputField
+            id="add-new-ann-enddate"
+            placeholder="Announcement End Date"
+            type="date"
+            name="addannenddate"
+            value={inputs.addannenddate || ""}
+            onChange={changeHandler}
+            error={errors.addannenddate}
+          />
+          <TextAreaField
+            id="add-new-ann-summary"
+            placeholder="Announcement Summary"
+            type="url"
+            name="addannsummary"
+            value={inputs.addannsummary || ""}
+            onChange={changeHandler}
+            error={errors.addannsummary}
+          />
+          <div className="d-grid">
+            {error.admin && <small className="text-muted">{error.admin}</small>}
+            <button type="submit" className="btn default-btn btn-lg btn-block">
+              Add Announcement
+              {loading && (
+                <span className="spinner-border spinner-border-sm ms-2"></span>
+              )}
+            </button>
+          </div>
+        </form>
+      );
+    } else {
+      title = "Edit Announcements";
+      text = (
+        <form className="edit-ann-form" onSubmit={submitEditAnnhandler}>
+          <TextInputField
+            id="edit-ann-title"
+            placeholder="Announcement Title"
+            type="text"
+            name="editanntitle"
+            value={inputs.editanntitle || modalAnnDetails.title}
+            onChange={changeHandler}
+            error={errors.editanntitle}
+          />
+          <TextInputField
+            id="edit-ann-link"
+            placeholder="Announcement link"
+            type="url"
+            name="editannlink"
+            value={inputs.editannlink || modalAnnDetails.link}
+            onChange={changeHandler}
+            error={errors.editannlink}
+          />
+          <TextInputField
+            id="edit-ann-startdate"
+            placeholder="Announcement Start Date"
+            type="date"
+            name="editstartdate"
+            value={inputs.editstartdate || modalAnnDetails.startdate}
+            onChange={changeHandler}
+            error={errors.editstartdate}
+          />
+          <TextInputField
+            id="edit-ann-enddate"
+            placeholder="Announcement End Date"
+            type="date"
+            name="editenddate"
+            value={inputs.editannstartdate || modalAnnDetails.startdate}
+            onChange={changeHandler}
+            error={errors.editannstartdate}
+          />
+          <TextAreaField
+            id="edit-ann-summary"
+            placeholder="Announcement Summary"
+            type="url"
+            name="editannsummary"
+            value={inputs.editannsummary || modalAnnDetails.summary}
+            onChange={changeHandler}
+            error={errors.editannsummary}
+          />
+          <div className="d-grid">
+            {error.admin && <small className="text-muted">{error.admin}</small>}
+            <button type="submit" className="btn default-btn btn-lg btn-block">
+              Edit Announcement
+              {loading && (
+                <span className="spinner-border spinner-border-sm ms-2"></span>
+              )}
+            </button>
+          </div>
+        </form>
+      );
+    }
   }
 
   return (

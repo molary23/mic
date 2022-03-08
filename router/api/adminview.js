@@ -1,5 +1,3 @@
-const Announcement = require("../../db/models/Announcement");
-
 const express = require("express"),
   router = express.Router(),
   Sequelize = require("sequelize"),
@@ -16,6 +14,7 @@ const express = require("express"),
   Referral = require("../../db/models/Referral"),
   Profile = require("../../db/models/Profile"),
   User = require("../../db/models/User"),
+  Announcement = require("../../db/models/Announcement"),
   ReferralView = require("../../db/models/ReferralView"),
   Transaction = require("../../db/models/Transaction"),
   TransactionView = require("../../db/models/TransactionView"),
@@ -1729,6 +1728,7 @@ router.post(
     let result = [];
 
     Announcement.findAndCountAll({
+      order: [["id", "desc"]],
       limit,
       offset,
       include: [

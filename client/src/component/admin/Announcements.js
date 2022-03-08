@@ -3,13 +3,21 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/adminAction";
+import {
+  getContent,
+  clearActions,
+  deleteAnn,
+  clearAdminAction,
+  addAnn,
+  editAnn,
+} from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
 import {
   getMore,
   setSearchParams,
   renderArrange,
+  loadFromParams,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -35,10 +43,20 @@ class Announcements extends Component {
     startLoad: false,
     getLoad: true,
     content: "announcements",
+    modal: false,
+    error: {},
+    toast: false,
+    toasttext: "",
+    purpose: "",
+    modalAnnDetails: [],
   };
 
   componentDidMount() {
     const { limit, offset, announcementcount, content } = this.state;
+    let searchParams = window.location.search;
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    }
 
     const paginate = {
       limit,
@@ -60,6 +78,66 @@ class Announcements extends Component {
     window.removeEventListener("scroll", this.loadMore);
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.admin.addann !== this.props.admin.addann &&
+      this.props.admin.addann
+    ) {
+      this.afterUpdate("added");
+    }
+    if (
+      prevProps.admin.deleteann !== this.props.admin.deleteann &&
+      this.props.admin.deleteann
+    ) {
+      this.afterUpdate("deleted");
+    }
+
+    if (
+      prevProps.admin.editann !== this.props.admin.editann &&
+      this.props.admin.editann
+    ) {
+      this.afterUpdate("edited");
+    }
+  }
+
+  afterUpdate = (text) => {
+    const { limit, content, signalcount } = this.state;
+    if (text === "added") {
+      this.setState({
+        numOfPages: Math.ceil((signalcount + 1) / limit),
+      });
+      this.props.clearAdminAction("add-ann");
+    } else if (text === "edited") {
+      this.props.clearAdminAction("edit-ann");
+    } else {
+      this.props.clearAdminAction("delete-ann");
+    }
+    this.setState({
+      offset: 0,
+      modal: false,
+      toast: true,
+      toasttext: `Announcement ${text} successfully`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState((prevState) => ({
+      offset: prevState.offset + limit,
+    }));
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
+
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
     let searchParams = window.location.search,
@@ -73,6 +151,38 @@ class Announcements extends Component {
       winScroll,
       searchParams,
       self: this,
+    });
+  };
+
+  clickHandler = (value) => {
+    if (value[0] === "edit") {
+      this.setState({
+        modal: true,
+        purpose: value[0],
+        modalAnnDetails: value[1],
+      });
+    } else if (value[0] === "delete") {
+      let check = window.confirm(
+        `Are you sure you want to delete this Announcement?`
+      );
+      if (check) {
+        this.props.deleteAnn(value[1]);
+      } else {
+        return false;
+      }
+    }
+  };
+
+  openModal = () => {
+    this.setState({
+      modal: true,
+      purpose: "add",
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
     });
   };
 
@@ -93,6 +203,18 @@ class Announcements extends Component {
     });
   };
 
+  submitHandler = (anninfo) => {
+    console.log(anninfo);
+    let act = anninfo[0],
+      anndetail = anninfo[1];
+    if (act === "new") {
+      this.props.addAnn(anndetail);
+    } else if (act === "edit") {
+      console.log(anninfo);
+      this.props.editAnn([anndetail, anninfo[2]]);
+    }
+  };
+
   render() {
     const {
       sender,
@@ -104,6 +226,8 @@ class Announcements extends Component {
       toast,
       toasttext,
       error,
+      modalAnnDetails,
+      purpose,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -139,49 +263,6 @@ class Announcements extends Component {
       announcementcount,
     });
 
-    /*  if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.annCount;
-      totalText = "";
-      if (admin.ann === [] && loading) {
-        loader = true;
-        load = false;
-      } else if (admin.ann.length > 0 && !loading) {
-        ann = admin.ann;
-        load = false;
-
-        loader = false;
-      } else if (admin.ann.length > 0 && loading) {
-        ann = admin.ann;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        ann = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.annCount;
-      totalText = "Selected/Searched";
-      if (searchTerms.ann === [] || searchTerms.ann.length <= 0) {
-        noRecord = true;
-        searchann = [];
-        loader = false;
-      } else if (searchTerms.ann.length > 0 && !searchTerms.loading) {
-        searchann = searchTerms.ann;
-        loader = false;
-      } else if (searchTerms.ann.length > 0 && searchTerms.loading) {
-        searchann = searchTerms.ann;
-        loader = true;
-      }
-    }*/
     return (
       <div>
         {loader && <ProgressBar />}
@@ -244,18 +325,20 @@ class Announcements extends Component {
                 "start date",
                 "end date",
                 "created by",
+                "action",
               ]}
             >
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>
         )}
         {modal ? (
           <AddModal
-            {...{ modal, sender, error }}
+            {...{ modal, sender, error, modalAnnDetails, purpose }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />
@@ -271,9 +354,14 @@ Announcements.propTypes = {
   searchContent: PropTypes.func.isRequired,
   clearActions: PropTypes.func.isRequired,
   clearSearchActions: PropTypes.func.isRequired,
-  renderArrange: PropTypes.func.isRequired,
-  getMore: PropTypes.func.isRequired,
-  setSearchParams: PropTypes.func.isRequired,
+  renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  loadFromParams: PropTypes.func,
+  deleteAnn: PropTypes.func,
+  clearAdminAction: PropTypes.func,
+  addAnn: PropTypes.func,
+  editAnn: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -286,4 +374,8 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
+  deleteAnn,
+  clearAdminAction,
+  addAnn,
+  editAnn,
 })(Announcements);

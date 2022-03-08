@@ -41,6 +41,12 @@ import {
   CLEAR_UPDATE_ADMIN,
   UPDATE_BONUS,
   CLEAR_UPDATE_BONUS,
+  DELETE_ANNOUNCEMENT,
+  CLEAR_DELETE_ANNOUNCEMENT,
+  ADD_ANNOUNCEMENT,
+  CLEAR_ADD_ANNOUNCEMENT,
+  EDIT_ANNOUNCEMENT,
+  CLEAR_EDIT_ANNOUNCEMENT,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -189,6 +195,9 @@ export const clearAdminAction = (info) => {
   if (info === "add-provider") return { type: CLEAR_ADD_NEW_PROVIDER };
   if (info === "update-admin") return { type: CLEAR_UPDATE_ADMIN };
   if (info === "update-bonus") return { type: CLEAR_UPDATE_BONUS };
+  if (info === "delete-ann") return { type: CLEAR_DELETE_ANNOUNCEMENT };
+  if (info === "add-ann") return { type: CLEAR_ADD_ANNOUNCEMENT };
+  if (info === "edit-ann") return { type: CLEAR_EDIT_ANNOUNCEMENT };
 };
 
 export const addNewAdmin = (level, data) => async (dispatch) => {
@@ -240,6 +249,59 @@ export const updateBonus = (value) => async (dispatch) => {
     let response = await axios.post("/api/admin/approve/bonus", value);
     const result = await dispatch({
       type: UPDATE_BONUS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const deleteAnn = (value) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.delete(
+      `/api/admin/delete/announcement/:${value}`
+    );
+    const result = await dispatch({
+      type: DELETE_ANNOUNCEMENT,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const addAnn = (value) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post("/api/admin/add/announcement", value);
+    const result = await dispatch({
+      type: ADD_ANNOUNCEMENT,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const editAnn = (value) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post(
+      `/api/admin/edit/announcement/:${value[1]}`,
+      value[0]
+    );
+    const result = await dispatch({
+      type: EDIT_ANNOUNCEMENT,
       payload: response.data,
     });
     return result;
