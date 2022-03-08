@@ -1,6 +1,6 @@
 #ignore dev files
 /db_dev.js
+db_prod.js
 /keys_dev.js
-/config.json
 /dbcon.js
 *.js

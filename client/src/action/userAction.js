@@ -15,6 +15,8 @@ import {
   CLEAR_USER_WITHDRAWALS_ACTION,
   GET_USER_BONUS,
   CLEAR_USER_BONUS_ACTION,
+  GET_PREMIUM_STATUS,
+  CLEAR_GET_PREMIUM_STATUS,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -65,9 +67,27 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_WITHDRAWALS_ACTION };
   } else if (actionToClear === "bonus") {
     return { type: CLEAR_USER_BONUS_ACTION };
+  } else if (actionToClear === "premium") {
+    return { type: CLEAR_GET_PREMIUM_STATUS };
   }
 };
 
 export const setLoading = () => {
   return { type: ACTION_LOADING };
+};
+
+export const getPremium = () => async (dispatch) => {
+  dispatch(clearActions("premium"));
+  try {
+    let response = await axios.get("/api/userview/premium");
+    localStorage.setItem("premium", JSON.stringify(response.data));
+    const result = await dispatch({
+      type: GET_PREMIUM_STATUS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ GET_PREMIUM_STATUS, payload: [] });
+  }
 };

@@ -18,7 +18,7 @@
     margin: auto;
 
     img {
-      width: 30px;
+      width: 50%;
       margin: auto;
     }
 
@@ -83,13 +83,23 @@ ul.dropdown-menu {
 }
 
 .nav-item.dropdown {
-  margin-right: 20px;
+  margin-right: 5px;
   .nav-settings {
     font-size: 20px;
     color: rgba(102, 102, 102, 0.3);
-    margin-top: 10px;
+    margin: 10px 10px 0px 20px;
   }
 
+  .nav-user-image {
+    width: 30px;
+    margin: 0px 10px 0px 0px;
+  }
+  .nav-sub-icon {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #3794fd;
+    margin: 10px 20px 0px 0px;
+  }
   .nav-name {
     font-weight: 600px;
     margin-top: 5px;
@@ -198,68 +208,35 @@ ul.dropdown-menu {
       margin-bottom: 0px;
     }
   }
-  .referrals-box,
-  .sub-box,
-  .bonus-box {
-    width: 100%;
-    height: 100px;
-    padding: 20px 10px;
-  }
 
-  .referral-id-box {
-    height: 50px;
-    width: 100%;
-    margin-bottom: 50px;
-  }
-
-  .dashboard-intro {
-    margin-bottom: 20px;
-    height: 150px;
-    padding: 20px 40px;
-    background: rgba($color: #f3bb4a, $alpha: 0.2);
-
-    h3 {
-      color: rgba($color: #f7a707, $alpha: 1);
-      font-size: 25px;
-    }
-    p {
-      text-align: justify;
-      text-justify: inter-word;
-    }
-
-    .days-left-section {
-      display: flex;
-      justify-content: flex-end;
-      align-content: flex-end;
-    }
-  }
-  .referral-details {
-    p {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-    .referral-id-box {
-      display: grid;
-      grid-template-columns: 85% 10%;
-      grid-column-gap: 5%;
-
-      .referrral-id {
-        justify-self: center;
-        align-self: center;
-      }
-
-      .copy-referrral-id {
-        align-self: start;
-        justify-self: end;
-      }
-    }
+  .dashboard-item {
+    margin-bottom: 100px;
   }
 
   .dash-card {
     border-radius: 20px;
-    height: 200px;
     box-shadow: 1px 1px 5px rgb(190, 190, 190);
+  }
+
+  .dash-info-card {
+    height: 120px;
+    padding: 10px 20px;
+  }
+
+  .ann-card {
+    height: 400px;
     padding: 20px;
+
+    .ann-title {
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .ann-content {
+      min-height: 300px;
+    }
+    .ann-link {
+      text-align: right;
+    }
   }
 
   .dash-bonus {
@@ -271,6 +248,8 @@ ul.dropdown-menu {
       rgba(242, 70, 138, 1) 68%
     );
     color: #fff;
+    height: 200px;
+    padding: 20px;
   }
 
   .dash-basic {
@@ -282,7 +261,8 @@ ul.dropdown-menu {
       rgb(3, 162, 202) 73%
     );
     color: #fff;
-
+    height: 200px;
+    padding: 20px;
     .share-ref-social i {
       margin-right: 15px;
       cursor: pointer;
@@ -291,6 +271,46 @@ ul.dropdown-menu {
   }
   .dash-user-name {
     text-transform: capitalize;
+  }
+
+  .premium-active {
+    background: rgb(46, 186, 97);
+    background: linear-gradient(
+        125deg,
+        rgba(46, 186, 97, 1) 34%,
+        rgba(42, 198, 113, 1) 63%,
+        rgba(12, 147, 68, 1) 95%
+      )
+      no-repeat;
+    color: #fff;
+  }
+
+  .dash-balance {
+    background: rgb(255, 176, 76);
+    background: linear-gradient(
+        125deg,
+        rgba(255, 176, 76, 1) 34%,
+        rgba(241, 187, 106, 1) 63%,
+        rgba(199, 140, 51, 1) 95%
+      )
+      no-repeat;
+    color: #fff;
+  }
+  .dash-transaction {
+    background: rgb(146, 88, 249);
+    background: linear-gradient(
+        125deg,
+        rgba(146, 88, 249, 1) 34%,
+        rgba(121, 70, 222, 1) 63%,
+        rgba(83, 20, 194, 1) 95%
+      )
+      no-repeat;
+    color: #fff;
+  }
+
+  .pay-now-btn .btn {
+    border-radius: 25px;
+    float: right;
   }
   /*
   .referrals-box {
@@ -496,7 +516,8 @@ ul.dropdown-menu {
 .tiptool {
   position: relative;
   display: inline-block;
-  top: 150%;
+  top: 5%;
+  right: 20%;
 
   .tooltiptext {
     visibility: hidden;

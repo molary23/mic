@@ -754,4 +754,32 @@ router.post(
       .catch((err) => res.status(404).json(err));
   }
 );
+
+/*
+@route GET api/userview/premium
+@desc User View premium
+@access private
+*/
+
+router.get(
+  "/premium",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const UserId = req.user.id;
+    Premium.findOne({
+      where: {
+        UserId,
+      },
+      attributes: ["startdate", "enddate", "status", "UserId", "subid"],
+    })
+      .then((premium) => {
+        res.json(premium);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 module.exports = router;

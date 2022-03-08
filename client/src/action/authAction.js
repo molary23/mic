@@ -7,6 +7,7 @@ import {
   SET_PROVIDER_COUNTS,
   SET_USER_COUNTS,
 } from "./types";
+import { getPremium, clearActions } from "./userAction";
 
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -55,6 +56,7 @@ export const getAllCounts = (level) => async (dispatch) => {
     lsName = "providerCounts";
     type = SET_PROVIDER_COUNTS;
   } else if (level === 1) {
+    dispatch(getPremium());
     url = `${url}user/all/`;
     lsName = "userCounts";
     type = SET_USER_COUNTS;
@@ -81,11 +83,12 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("currencies");
   localStorage.removeItem("currency");
   localStorage.removeItem("userCounts");
+  localStorage.removeItem("premium");
 
   //Remove Auth Header  for future requests
   setAuthToken(false);
   // Set current user to {}  which will set isAuthenticated to false
-
+  dispatch(clearActions("premium"));
   dispatch(setCurrentUser({}));
   dispatch({
     type: CLEAR_ALL_ACTIONS,

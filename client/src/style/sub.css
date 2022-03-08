@@ -203,7 +203,7 @@ span.input-group-text {
 }
 
 .nav-logo {
-  width: 30px;
+  width: 15%;
 }
 
 /* Modal */
@@ -243,7 +243,7 @@ span.input-group-text {
 }
 
 .home-page .home-box img {
-  width: 30px;
+  width: 50%;
   margin: auto;
 }
 
@@ -307,13 +307,25 @@ ul.dropdown-menu li a {
 }
 
 .nav-item.dropdown {
-  margin-right: 20px;
+  margin-right: 5px;
 }
 
 .nav-item.dropdown .nav-settings {
   font-size: 20px;
   color: rgba(102, 102, 102, 0.3);
+  margin: 10px 10px 0px 20px;
+}
+
+.nav-item.dropdown .nav-user-image {
+  width: 30px;
+  margin: 0px 10px 0px 0px;
+}
+
+.nav-item.dropdown .nav-sub-icon {
   margin-top: 10px;
+  font-size: 12px;
+  color: #3794fd;
+  margin: 10px 20px 0px 0px;
 }
 
 .nav-item.dropdown .nav-name {
@@ -449,95 +461,53 @@ ul.dropdown-menu li a {
   margin-bottom: 0px;
 }
 
-.dashboard-content .referrals-box,
-.dashboard-content .sub-box,
-.dashboard-content .bonus-box {
-  width: 100%;
-  height: 100px;
-  padding: 20px 10px;
-}
-
-.dashboard-content .referral-id-box {
-  height: 50px;
-  width: 100%;
-  margin-bottom: 50px;
-}
-
-.dashboard-content .dashboard-intro {
-  margin-bottom: 20px;
-  height: 150px;
-  padding: 20px 40px;
-  background: rgba(243, 187, 74, 0.2);
-}
-
-.dashboard-content .dashboard-intro h3 {
-  color: #f7a707;
-  font-size: 25px;
-}
-
-.dashboard-content .dashboard-intro p {
-  text-align: justify;
-  text-justify: inter-word;
-}
-
-.dashboard-content .dashboard-intro .days-left-section {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
-  -ms-flex-line-pack: end;
-      align-content: flex-end;
-}
-
-.dashboard-content .referral-details p {
-  text-align: center;
-  margin-bottom: 5px;
-}
-
-.dashboard-content .referral-details .referral-id-box {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 85% 10%;
-      grid-template-columns: 85% 10%;
-  grid-column-gap: 5%;
-}
-
-.dashboard-content .referral-details .referral-id-box .referrral-id {
-  -ms-grid-column-align: center;
-      justify-self: center;
-  -ms-flex-item-align: center;
-      -ms-grid-row-align: center;
-      align-self: center;
-}
-
-.dashboard-content .referral-details .referral-id-box .copy-referrral-id {
-  -ms-flex-item-align: start;
-      -ms-grid-row-align: start;
-      align-self: start;
-  -ms-grid-column-align: end;
-      justify-self: end;
+.dashboard-content .dashboard-item {
+  margin-bottom: 100px;
 }
 
 .dashboard-content .dash-card {
   border-radius: 20px;
-  height: 200px;
   -webkit-box-shadow: 1px 1px 5px #bebebe;
           box-shadow: 1px 1px 5px #bebebe;
+}
+
+.dashboard-content .dash-info-card {
+  height: 120px;
+  padding: 10px 20px;
+}
+
+.dashboard-content .ann-card {
+  height: 400px;
   padding: 20px;
+}
+
+.dashboard-content .ann-card .ann-title {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.dashboard-content .ann-card .ann-content {
+  min-height: 300px;
+}
+
+.dashboard-content .ann-card .ann-link {
+  text-align: right;
 }
 
 .dashboard-content .dash-bonus {
   background: #fec4b0;
   background: linear-gradient(142deg, #fec4b0 0%, #fe6aa4 40%, #f2468a 68%);
   color: #fff;
+  height: 200px;
+  padding: 20px;
 }
 
 .dashboard-content .dash-basic {
   background: #24d4fe;
   background: linear-gradient(142deg, #24d4fe 0%, #16e0eb 38%, #03a2ca 73%);
   color: #fff;
+  height: 200px;
+  padding: 20px;
 }
 
 .dashboard-content .dash-basic .share-ref-social i {
@@ -548,6 +518,29 @@ ul.dropdown-menu li a {
 
 .dashboard-content .dash-user-name {
   text-transform: capitalize;
+}
+
+.dashboard-content .premium-active {
+  background: #2eba61;
+  background: linear-gradient(125deg, #2eba61 34%, #2ac671 63%, #0c9344 95%) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .dash-balance {
+  background: #ffb04c;
+  background: linear-gradient(125deg, #ffb04c 34%, #f1bb6a 63%, #c78c33 95%) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .dash-transaction {
+  background: #9258f9;
+  background: linear-gradient(125deg, #9258f9 34%, #7946de 63%, #5314c2 95%) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .pay-now-btn .btn {
+  border-radius: 25px;
+  float: right;
 }
 
 .dashboard-content .box-icon i {
@@ -761,7 +754,8 @@ ul.dropdown-menu li a {
 .tiptool {
   position: relative;
   display: inline-block;
-  top: 150%;
+  top: 5%;
+  right: 20%;
 }
 
 .tiptool .tooltiptext {

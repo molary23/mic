@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import jwtDecode from "jwt-decode";
 
 import { getUserProfile } from "../action/profileAction";
 import logo from "../asset/images/logo.png";
@@ -11,6 +12,10 @@ import Dropdown from "./Dropdown";
 export class SubNav extends Component {
   state = {
     close: true,
+    premiuminfo:
+      JSON.parse(localStorage.getItem("premium")) ?? this.props.user.premium,
+    userinfo:
+      this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
   };
 
   openNav = () => {
@@ -26,8 +31,9 @@ export class SubNav extends Component {
   };
 
   render() {
-    const { auth } = this.props;
-    console.log(auth);
+    const { premiuminfo, userinfo } = this.state;
+    const { auth, user } = this.props;
+
     return (
       <div>
         <nav className="navbar navbar-expand-sm bg-light navbar-light dash-top-nav fixed-top">
@@ -41,27 +47,27 @@ export class SubNav extends Component {
               <img
                 src={logo}
                 alt="MIC Earn Business Logo"
-                style={{ width: "30px" }}
-                className="rounded-pill"
+                className="nav-logo"
               />
             </Link>
-            <span className="navbar-text">MIC Earn Business</span>
 
             <div className="collapse navbar-collapse" id="sideNavBar">
               <ul className="navbar-nav ms-auto">
-                {/* <li className="nav-item">
-                  <img
-                    src={logo}
-                    alt="MIC Earn Business Logo"
-                    style={{ width: "30px" }}
-                    className="rounded-pill"
-                  />
-    </li>*/}
                 <li className="nav-item dropdown">
-                  <Dropdown />
+                  <Dropdown
+                    avatar={userinfo.avatar}
+                    username={userinfo.username}
+                  />
                 </li>
                 <li className="nav-item dropdown">
-                  <p className="nav-name">{auth.user.username}</p>
+                  <p className="nav-name">{userinfo.username}&nbsp;</p>
+                </li>
+                <li className="nav-item dropdown">
+                  <p className="nav-sub-icon">
+                    {premiuminfo.status === "n" && (
+                      <i className="fas fa-check-circle" />
+                    )}
+                  </p>
                 </li>
                 <li className="nav-item dropdown">
                   <span className="vl"></span>
@@ -82,11 +88,13 @@ export class SubNav extends Component {
 SubNav.propTypes = {
   getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  user: state.user,
   profile: state.profile,
 });
 

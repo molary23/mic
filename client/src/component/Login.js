@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loginuser, getAllCounts } from "../action/authAction";
+import { loginuser, getAllCounts, clearErrors } from "../action/authAction";
 
 import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "../layout/TextPasswordField";
@@ -25,6 +25,7 @@ class Login extends Component {
   };
 
   componentDidMount() {
+    this.props.clearErrors();
     if (this.props.auth.isAuthenticated) {
       if (this.props.auth.user.level === 1) {
         this.setState({
@@ -195,10 +196,15 @@ Login.propTypes = {
   getAllCounts: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   errors: state.errors,
 });
-export default connect(mapStateToProps, { loginuser, getAllCounts })(Login);
+export default connect(mapStateToProps, {
+  loginuser,
+  getAllCounts,
+  clearErrors,
+})(Login);

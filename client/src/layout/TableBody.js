@@ -132,13 +132,20 @@ function TableBody(props) {
           </td>
           <td>{item.phone}</td>
           <td>
-            {item.status === 1 ? (
+            {item.status === "a" && (
               <span className="active-status status-info">
                 <span>&bull;</span> Active
               </span>
-            ) : (
+            )}
+
+            {item.status === "i" && (
               <span className="inactive-status status-info">
                 <span>&bull;</span> Inactive
+              </span>
+            )}
+            {item.status === "n" && (
+              <span className="new-status status-info">
+                <span>&bull;</span> New
               </span>
             )}
           </td>

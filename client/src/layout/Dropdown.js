@@ -11,6 +11,8 @@ import logo from "../asset/images/logo.png";
 import DropdownItem from "./DropdownItem";
 
 function Dropdown(props) {
+  const { avatar, username } = props;
+
   let navigate = useNavigate();
   const [display, setDisplay] = useState(false);
 
@@ -36,12 +38,14 @@ function Dropdown(props) {
           setDisplay(false);
         }}
       >
-        <img
-          src={logo}
-          alt="MIC Earn Business Logo"
-          style={{ width: "30px" }}
-          className="rounded-pill"
-        />
+        <div className=" nav-user-image">
+          <img
+            src={avatar}
+            alt={`${username} avatar`}
+            style={{ width: "30px" }}
+            className="rounded-pill"
+          />
+        </div>
       </Link>
 
       <ul className={`dropdown-menu ${display ? "show" : ""}`}>

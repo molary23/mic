@@ -53,7 +53,9 @@ class Signals extends Component {
   componentDidMount() {
     const { limit, offset, signalcount, content } = this.state;
 
-    loadFromParams({ limit, self: this, content });
+    let searchParams = window.location.search;
+    loadFromParams({ limit, self: this, content, searchParams });
+
     const paginate = {
       limit,
       offset,

@@ -434,9 +434,9 @@ function AddModal(props) {
       optObj = {
         value: currencies[i].id,
         option: `${
-          JSON.parse(currencies[i].firstcurrency.split(", "))[1] +
+          JSON.parse(currencies[i].firstcurrency.split(", "))[1].toUpperCase() +
           "/" +
-          JSON.parse(currencies[i].secondcurrency.split(", "))[1]
+          JSON.parse(currencies[i].secondcurrency.split(", "))[1].toUpperCase()
         }`,
       };
       optArray.push(optObj);
@@ -470,8 +470,7 @@ function AddModal(props) {
             />
             <TextInputField
               id="add-new-takeprofit"
-              placeholder="Take Profit "
-              label="Take Profit *Separate multiple Take Profits with Comma (,)*"
+              placeholder="Take Profit *Separate multiple Take Profits with Comma (,)*"
               type="text"
               name="addtakeprofit"
               value={inputs.addtakeprofit || ""}
@@ -480,8 +479,7 @@ function AddModal(props) {
             />
             <TextInputField
               id="add-new-takeprofit"
-              placeholder="Stop Loss"
-              label="Stop Loss *Separate multiple Stop Loss with Comma (,)*"
+              placeholder="Stop Loss *Separate multiple Stop Loss with Comma (,)*"
               type="text"
               name="addstoploss"
               value={inputs.addstoploss || ""}

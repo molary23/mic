@@ -10,6 +10,7 @@ const express = require("express"),
   keys = require("../../config/keys"),
   User = require("../../db/models/User"),
   Profile = require("../../db/models/Profile"),
+  Premium = require("../../db/models/Premium"),
   // Bring in View
   UserView = require("../../db/models/UserView"),
   ProviderView = require("../../db/models/ProviderView"),

@@ -73,7 +73,7 @@ function Signal(props) {
             return (
               <div className="signal-sold-at" key={i}>
                 <div className="signal-sold-title signal-title">
-                  Take Profit
+                  Take Profit {i + 1}
                 </div>
                 <div className="signal-sold-value signal-align-right">{tp}</div>
               </div>
@@ -89,7 +89,7 @@ function Signal(props) {
             return (
               <div className="signal-bought-at" key={i}>
                 <div className="signal-bought-title signal-title">
-                  Stop Loss
+                  Stop Loss {i + 1}
                 </div>
                 <div className="signal-bought-value signal-align-right">
                   {sl}
