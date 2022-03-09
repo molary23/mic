@@ -44,9 +44,9 @@ export class Withdrawals extends Component {
   componentDidMount() {
     const { limit, offset, withcount, content } = this.state;
 
-    //let searchParams = window.location.search;
+    let searchParams = window.location.search;
 
-    loadFromParams({ limit, self: this, content });
+    loadFromParams({ limit, self: this, content, searchParams });
 
     const paginate = {
       limit,

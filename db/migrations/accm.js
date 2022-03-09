@@ -6,22 +6,26 @@ const view_name = "AccountViews";
 
 const original_query = [
   "SELECT ",
-  " Accounts.id AS accountid, Accounts.type, Accounts.account, Users.id AS userid, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
-  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt ",
+  " Accounts.id AS accountid, Accounts.accountnumber, Users.id AS UserId, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
+  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt, Wallets.wallet as wallet ",
   " FROM Accounts ",
   " INNER JOIN Users ",
   " ON Accounts.UserId = Users.id ",
+  " LEFT JOIN Wallets ",
+  " ON Accounts.WalletId = Wallets.id ",
   " INNER JOIN Profiles ",
   " ON Accounts.UserId = Profiles.UserId ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Accounts.id AS accountid, Accounts.type, Accounts.account, Users.id AS UserId, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
-  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt ",
+  " Accounts.id AS accountid, Accounts.accountnumber, Users.id AS UserId, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
+  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt, Wallets.wallet as wallet ",
   " FROM Accounts ",
   " INNER JOIN Users ",
   " ON Accounts.UserId = Users.id ",
+  " LEFT JOIN Wallets ",
+  " ON Accounts.WalletId = Wallets.id ",
   " INNER JOIN Profiles ",
   " ON Accounts.UserId = Profiles.UserId ",
 ].join("");

@@ -310,7 +310,8 @@ ul.dropdown-menu li a {
   margin-right: 5px;
 }
 
-.nav-item.dropdown .nav-settings {
+.nav-item.dropdown .nav-settings,
+.nav-item.dropdown .nav-notify {
   font-size: 20px;
   color: rgba(102, 102, 102, 0.3);
   margin: 10px 10px 0px 20px;
@@ -477,7 +478,7 @@ ul.dropdown-menu li a {
 }
 
 .dashboard-content .ann-card {
-  height: 400px;
+  height: 300px;
   padding: 20px;
 }
 
@@ -487,7 +488,7 @@ ul.dropdown-menu li a {
 }
 
 .dashboard-content .ann-card .ann-content {
-  min-height: 300px;
+  min-height: 200px;
 }
 
 .dashboard-content .ann-card .ann-link {
@@ -526,6 +527,12 @@ ul.dropdown-menu li a {
   color: #fff;
 }
 
+.dashboard-content .premium-inactive {
+  background: #f45691;
+  background: linear-gradient(125deg, #f45691 34%, #d62869 63%, #dd0556 95%) no-repeat;
+  color: #fff;
+}
+
 .dashboard-content .dash-balance {
   background: #ffb04c;
   background: linear-gradient(125deg, #ffb04c 34%, #f1bb6a 63%, #c78c33 95%) no-repeat;
@@ -536,6 +543,17 @@ ul.dropdown-menu li a {
   background: #9258f9;
   background: linear-gradient(125deg, #9258f9 34%, #7946de 63%, #5314c2 95%) no-repeat;
   color: #fff;
+}
+
+.dashboard-content .dash-sub {
+  background: #f44fb5;
+  background: linear-gradient(125deg, #f44fb5 34%, #cd3697 63%, #b10870 95%) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash {
+  height: 120px;
+  padding: 20px;
 }
 
 .dashboard-content .pay-now-btn .btn {
@@ -816,20 +834,47 @@ ul.dropdown-menu li a {
   border-bottom: 1px dashed rgba(141, 191, 248, 0.5);
 }
 
-.first-account.card,
-.second-account.card {
+.first-account.card {
   padding: 20px;
 }
 
-.first-account.card h3,
-.second-account.card h3 {
+.first-account.card h3 {
   font-size: clamp(1.5vw, 15px, 1.5vh);
   font-weight: 400;
   text-align: center;
 }
 
-.first-account.card button,
-.second-account.card button {
+.first-account.card button {
   text-align: right;
+}
+
+.settings-form-card {
+  width: 50%;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.settings-form-notify {
+  height: 200px;
+}
+
+.settings-form-password {
+  height: 400px;
+}
+
+.settings-info {
+  text-transform: uppercase;
+}
+
+.add-new-account {
+  text-align: right;
+}
+
+.account-details {
+  padding: 10px;
+}
+
+.account-details h4 {
+  text-align: center;
 }
 /*# sourceMappingURL=sub.css.map */

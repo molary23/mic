@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
 import { getUserProfile } from "../../action/profileAction";
+import { getUserDetails } from "../../action/userAction";
 import ProgressBar from "../../layout/ProgressBar";
 import AnnCard from "../../layout/AnnCard";
 
@@ -17,7 +18,7 @@ export class Index extends Component {
     this.state = {
       copy: false,
       premiuminfo:
-        JSON.parse(localStorage.getItem("premium")) ?? this.props.user.premium,
+        this.props.user.premium ?? JSON.parse(localStorage.getItem("premium")),
       userinfo:
         this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
       daysleft: 0,
@@ -33,7 +34,7 @@ export class Index extends Component {
     this.setState({
       daysleft: Math.floor((expDate - curDate) / (24 * 3600)),
     });
-
+    this.props.getUserDetails();
     // console.log(premiuminfo.enddate);
   }
 
@@ -99,19 +100,20 @@ export class Index extends Component {
   };
 
   render() {
-    const { premiuminfo, userinfo, daysleft } = this.state;
-    const { profile, loading, user } = this.props;
-    const { copy } = this.state;
+    const { copy, userinfo, daysleft } = this.state;
+    const { loading, user } = this.props;
+
     let load = true,
       username = userinfo.username,
-      userprofile;
+      userdetails;
     if (
-      (profile.profile === null || Object.keys(profile.profile).length <= 0) &&
+      (user.userdetails === null ||
+        Object.keys(user.userdetails).length <= 0) &&
       loading
     ) {
       load = true;
-    } else if (profile.profile !== null && !loading) {
-      userprofile = profile.profile;
+    } else if (user.userdetails !== null && !loading) {
+      userdetails = user.userdetails;
       load = false;
     }
     return (
@@ -136,10 +138,12 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div
                     className={`dash-premium dash-info-card dash-card ${
-                      daysleft > 1 && "premium-active"
+                      daysleft >= 1 ? "premium-active" : "premium-inactive"
                     }`}
                   >
-                    <p className="mb-1">Active</p>
+                    <p className="mb-1">
+                      {daysleft >= 1 ? "Active" : "Inactive"}
+                    </p>
                     <h4 className="mb-1">{daysleft}</h4>
                     <div className="row">
                       <div className="col-6">
@@ -158,7 +162,9 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div className="dash-info-card dash-card dash-balance">
                     <p className="mb-1">Balance</p>
-                    <h4 className="mb-1">$28</h4>
+                    <h4 className="mb-1">
+                      ${(userdetails.credit - userdetails.debit).toFixed(2)}
+                    </h4>
                     <div className="row">
                       <div className="col-6">
                         <p className="mb-1"></p>
@@ -176,7 +182,7 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div className="dash-info-card dash-card dash-transaction">
                     <p className="mb-1">Transactions</p>
-                    <h4 className="mb-1">$28</h4>
+                    <h4 className="mb-1">${userdetails.transactions}</h4>
                     <div className="row">
                       <div className="col-6">
                         <p className="mb-1"></p>
@@ -195,10 +201,24 @@ export class Index extends Component {
                   </div>
                 </div>
                 <div className="col-md-3 col-xs-12">
-                  <div className="dash-info-card dash-card">
-                    <p className="mb-1">Balance</p>
-                    <h4 className="mb-1">$28</h4>
-                    <p>left</p>
+                  <div className="dash-info-card dash-card dash-sub">
+                    <p className="mb-1">Subscriptions</p>
+                    <h4 className="mb-1">{userdetails.sub}</h4>
+                    <div className="row">
+                      <div className="col-6">
+                        <p className="mb-1"></p>
+                      </div>
+                      <div className="col-6">
+                        <span className="pay-now-btn">
+                          <Link
+                            className="btn btn-sm btn-light"
+                            to="/user/subscriptions"
+                          >
+                            View
+                          </Link>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -208,7 +228,7 @@ export class Index extends Component {
                 <div className="col-md-5 col-xs-12">
                   <div className="dash-basic dash-card">
                     <h4 className="mb-2">Referrals </h4>
-                    <h1 className="mb-2">22</h1>
+                    <h1 className="mb-2">{userdetails.referral}</h1>
                     <code>http://localhost:3000/referral/:{username}</code>
                     <div className={`tiptool ${copy && "showTip"}`}>
                       <span className="tooltiptext">Copied to Clipboard</span>
@@ -254,7 +274,7 @@ export class Index extends Component {
                 <div className="col-md-6 col-xs-12">
                   <div className="dash-bonus dash-card">
                     <h4 className="mb-3">Bonus Index</h4>
-                    <h1 className="mb-3">$25009</h1>
+                    <h1 className="mb-3">${userdetails.bonus}</h1>
                     <p>Estimated earning</p>
                   </div>
                 </div>
@@ -262,13 +282,7 @@ export class Index extends Component {
             </div>
 
             <div className="row">
-              <AnnCard
-                details={[
-                  { title: "titel 1", content: "content1", url: "url1" },
-                  { title: "titel 2", content: "content1222", url: "url122" },
-                  { title: "titel 122", content: "content122", url: "url122" },
-                ]}
-              />
+              <AnnCard details={userdetails.ann} />
             </div>
           </div>
         )}
@@ -280,6 +294,7 @@ Index.propTypes = {
   getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
+  getUserDetails: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -287,4 +302,6 @@ const mapStateToProps = (state) => ({
   user: state.user,
   profile: state.profile,
 });
-export default connect(mapStateToProps, { getUserProfile })(Index);
+export default connect(mapStateToProps, { getUserProfile, getUserDetails })(
+  Index
+);

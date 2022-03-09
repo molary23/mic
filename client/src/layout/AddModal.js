@@ -921,6 +921,49 @@ function AddModal(props) {
     }
   }
 
+  if (sender === "user-settings") {
+    if (purpose === "account") {
+      title = "Add/Modify Account";
+      const walletOpt = [
+        {
+          value: "",
+          option: "Select Wallet",
+        },
+      ];
+      const submitAccountHandler = (e) => {};
+      text = (
+        <form className="account-form" onSubmit={submitAccountHandler}>
+          <Select
+            options={walletOpt}
+            onChange={changeHandler}
+            name="wallet"
+            value={inputs.wallet || ""}
+            error={error.wallet}
+          />
+
+          <TextInputField
+            id="account-form-account-number"
+            placeholder="Account Number"
+            label="Account Number"
+            type="text"
+            name="accountnumber"
+            value={inputs.accountnumber || ""}
+            onChange={changeHandler}
+            error={error.accountnumber}
+          />
+          <div className="d-grid">
+            <button type="submit" className="btn default-btn btn-lg btn-block">
+              Add Account
+              {loading && (
+                <span className="spinner-border spinner-border-sm ms-2"></span>
+              )}
+            </button>
+          </div>
+        </form>
+      );
+    }
+  }
+
   return (
     <div>
       <div

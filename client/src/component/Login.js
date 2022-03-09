@@ -61,7 +61,7 @@ class Login extends Component {
       update.move = true;
     }
 
-    if (nextProps.errors) {
+    if (nextProps.errors && Object.keys(prevState.error).length <= 0) {
       update.error = nextProps.errors;
       update.loading = false;
     }
@@ -109,6 +109,7 @@ class Login extends Component {
     } else {
       this.setState({
         loading: true,
+        error: {},
       });
       const user = {
         username,
@@ -131,7 +132,6 @@ class Login extends Component {
       move,
       level,
     } = this.state;
-    //const { errors } = this.props;
 
     return (
       <div className="">

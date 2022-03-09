@@ -13,7 +13,9 @@ const Account = require("../db/models/Account"),
   Settings = require("../db/models/Settings"),
   Transaction = require("../db/models/Transaction"),
   Announcement = require("../db/models/Announcement"),
-  Withdrawal = require("../db/models/Withdrawal");
+  Withdrawal = require("../db/models/Withdrawal"),
+  Forum = require("../db/models/Forum"),
+  Wallet = require("../db/models/Wallet");
 
 // Define Relationsship between tables
 User.hasOne(Profile, {
@@ -159,6 +161,33 @@ User.hasMany(Withdrawal, {
   },
 });
 Withdrawal.belongsTo(User);
+
+User.hasMany(Forum, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Forum.belongsTo(User);
+
+Wallet.hasMany(Account, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Account.belongsTo(Wallet);
+
+User.hasMany(Wallet, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Wallet.belongsTo(User);
 
 User.hasOne(Premium, {
   onDelete: "RESTRICT",

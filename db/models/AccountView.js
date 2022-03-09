@@ -12,12 +12,8 @@ AccountView.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: DataTypes.ENUM("b", "c"),
-      allowNull: false,
-    },
-    account: {
-      type: DataTypes.JSON(),
+    accountnumber: {
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     userid: {
@@ -34,6 +30,10 @@ AccountView.init(
     },
     updatedAt: {
       type: DataTypes.DATE,
+    },
+    wallet: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
     },
   },
   {

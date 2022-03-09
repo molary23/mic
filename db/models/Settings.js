@@ -14,7 +14,7 @@ Settings.init(
     },
     mode: {
       type: DataTypes.ENUM("d", "n", "a", "i"), // D for day, N for night, A for auto, I for inherit from system
-      allowNull: false,
+      defaultValue: "d",
     },
     currencies: {
       type: DataTypes.JSON,
@@ -22,7 +22,12 @@ Settings.init(
     providers: {
       type: DataTypes.JSON,
     },
+    email: {
+      type: DataTypes.ENUM("y", "n"),
+      defaultValue: "y",
+    },
   },
+
   {
     // don't forget to enable timestamps!
     timestamps: true,

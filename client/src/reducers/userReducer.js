@@ -16,6 +16,8 @@ import {
   CLEAR_USER_BONUS_ACTION,
   GET_PREMIUM_STATUS,
   CLEAR_GET_PREMIUM_STATUS,
+  GET_DASHBOARD_DETAILS,
+  CLEAR_GET_DASHBOARD_DETAILS,
 } from "../action/types";
 
 const initialState = {
@@ -35,7 +37,8 @@ const initialState = {
   withdrawals: [],
   bonus: [],
   bonuscount: 0,
-  premium: [],
+  premium: null,
+  userdetails: null,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -101,6 +104,12 @@ export default function userReducer(state = initialState, action) {
         ...state,
         premium: action.payload,
       };
+    case GET_DASHBOARD_DETAILS:
+      return {
+        ...state,
+        userdetails: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -127,6 +136,9 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_GET_PREMIUM_STATUS: {
       return { ...state, premium: [] };
+    }
+    case CLEAR_GET_DASHBOARD_DETAILS: {
+      return { ...state, userdetails: null };
     }
     default:
       return state;

@@ -1,3 +1,5 @@
+const Announcement = require("../../db/models/Announcement");
+
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -780,6 +782,105 @@ router.get(
         res.json(premium);
       })
       .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/userview/details
+@desc User View details
+@access private
+*/
+
+router.get(
+  "/details",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const UserId = req.user.id;
+    const details = {};
+    return Promise.all([
+      Transaction.sum("amount", {
+        where: {
+          type: "c",
+          UserId,
+        },
+      })
+        .then((credit) => {
+          details.credit = credit;
+          Transaction.sum("amount", {
+            where: {
+              type: "d",
+              UserId,
+            },
+          })
+            .then((debit) => {
+              details.debit = debit;
+              Transaction.count({
+                where: {
+                  UserId,
+                },
+              })
+                .then((transactions) => {
+                  details.transactions = transactions;
+                  Bonus.sum("amount", {
+                    where: {
+                      status: "a",
+                      UserId,
+                    },
+                  })
+                    .then((bonus) => {
+                      details.bonus = bonus;
+                      Referral.count({
+                        where: {
+                          referral: UserId,
+                        },
+                      })
+                        .then((referral) => {
+                          details.referral = referral;
+                          Subscription.count({
+                            where: {
+                              UserId,
+                              status: "a",
+                            },
+                          })
+                            .then((sub) => {
+                              details.sub = sub;
+
+                              Announcement.findAll({
+                                limit: 3,
+                                where: {
+                                  enddate: {
+                                    [Op.gt]: new Date().toISOString(),
+                                  },
+                                },
+                              })
+                                .then((ann) => {
+                                  details.ann = ann;
+                                  return res.json(details);
+                                })
+                                .catch((err) =>
+                                  res.status(404).json(`ann ${err.response}`)
+                                );
+                            })
+                            .catch((err) =>
+                              res.status(404).json(`s ${err.response}`)
+                            );
+                        })
+                        .catch((err) =>
+                          res.status(404).json(`f ${err.response}`)
+                        );
+                    })
+                    .catch((err) => res.status(404).json(`b ${err.response}`));
+                })
+                .catch((err) => res.status(404).json(`count ${err.response}`));
+            })
+            .catch((err) => res.status(404).json(`d ${err.response}`));
+        })
+        .catch((err) => res.status(404).json(`c ${err.response}`)),
+    ]);
   }
 );
 module.exports = router;

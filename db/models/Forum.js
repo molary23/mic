@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Account extends Model {}
+class Forum extends Model {}
 
-Account.init(
+Forum.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,9 +12,26 @@ Account.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    accountnumber: {
-      type: DataTypes.STRING(50),
+    title: {
+      type: DataTypes.STRING(100),
       allowNull: false,
+    },
+    ticket: {
+      type: DataTypes.STRING(20),
+    },
+    text: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.ENUM("o", "r"), // Original or Reply
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM("o", "c"), // Open or Close
+    },
+    response: {
+      type: DataTypes.INTEGER.UNSIGNED,
     },
   },
   {
@@ -28,8 +45,8 @@ Account.init(
     updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Account", // We need to choose the model name
+    modelName: "Forum", // We need to choose the model name
   }
 );
 
-module.exports = Account;
+module.exports = Forum;

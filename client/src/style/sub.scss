@@ -84,7 +84,8 @@ ul.dropdown-menu {
 
 .nav-item.dropdown {
   margin-right: 5px;
-  .nav-settings {
+  .nav-settings,
+  .nav-notify {
     font-size: 20px;
     color: rgba(102, 102, 102, 0.3);
     margin: 10px 10px 0px 20px;
@@ -224,7 +225,7 @@ ul.dropdown-menu {
   }
 
   .ann-card {
-    height: 400px;
+    height: 300px;
     padding: 20px;
 
     .ann-title {
@@ -232,7 +233,7 @@ ul.dropdown-menu {
       text-transform: uppercase;
     }
     .ann-content {
-      min-height: 300px;
+      min-height: 200px;
     }
     .ann-link {
       text-align: right;
@@ -285,6 +286,18 @@ ul.dropdown-menu {
     color: #fff;
   }
 
+  .premium-inactive {
+    background: rgb(244, 86, 145);
+    background: linear-gradient(
+        125deg,
+        rgba(244, 86, 145, 1) 34%,
+        rgba(214, 40, 105, 1) 63%,
+        rgba(221, 5, 86, 1) 95%
+      )
+      no-repeat;
+    color: #fff;
+  }
+
   .dash-balance {
     background: rgb(255, 176, 76);
     background: linear-gradient(
@@ -306,6 +319,23 @@ ul.dropdown-menu {
       )
       no-repeat;
     color: #fff;
+  }
+
+  .dash-sub {
+    background: rgb(244, 79, 181);
+    background: linear-gradient(
+        125deg,
+        rgba(244, 79, 181, 1) 34%,
+        rgba(205, 54, 151, 1) 63%,
+        rgba(177, 8, 112, 1) 95%
+      )
+      no-repeat;
+    color: #fff;
+  }
+
+  .admin-dash {
+    height: 120px;
+    padding: 20px;
   }
 
   .pay-now-btn .btn {
@@ -570,8 +600,7 @@ ul.dropdown-menu {
   border-bottom: 1px dashed rgba($color: #8dbff8, $alpha: 0.5);
 }
 
-.first-account.card,
-.second-account.card {
+.first-account.card {
   padding: 20px;
   h3 {
     font-size: clamp(1.5vw, 15px, 1.5vh);
@@ -580,5 +609,32 @@ ul.dropdown-menu {
   }
   button {
     text-align: right;
+  }
+}
+.settings-form-card {
+  width: 50%;
+  margin: 50px auto;
+  padding: 20px;
+}
+.settings-form-notify {
+  height: 200px;
+}
+.settings-form-password {
+  height: 400px;
+}
+
+.settings-info {
+  text-transform: uppercase;
+}
+
+.add-new-account {
+  text-align: right;
+}
+
+.account-details {
+  padding: 10px;
+
+  h4 {
+    text-align: center;
   }
 }

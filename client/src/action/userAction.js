@@ -17,10 +17,14 @@ import {
   CLEAR_USER_BONUS_ACTION,
   GET_PREMIUM_STATUS,
   CLEAR_GET_PREMIUM_STATUS,
+  GET_DASHBOARD_DETAILS,
+  CLEAR_GET_DASHBOARD_DETAILS,
+  CLEAR_ERRORS,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
+  dispatch(clearErrors());
   let url = "/api/userview/",
     type;
   if (content === "signals") {
@@ -69,6 +73,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_BONUS_ACTION };
   } else if (actionToClear === "premium") {
     return { type: CLEAR_GET_PREMIUM_STATUS };
+  } else if (actionToClear === "user-details") {
+    return { type: CLEAR_GET_DASHBOARD_DETAILS };
   }
 };
 
@@ -90,4 +96,26 @@ export const getPremium = () => async (dispatch) => {
     console.log(error.response.data);
     dispatch({ GET_PREMIUM_STATUS, payload: [] });
   }
+};
+
+export const getUserDetails = () => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("user-details"));
+  try {
+    let response = await axios.get("/api/userview/details");
+    const result = await dispatch({
+      type: GET_DASHBOARD_DETAILS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ GET_DASHBOARD_DETAILS, payload: [] });
+  }
+};
+
+// Clear Errors
+export const clearErrors = () => {
+  return { type: CLEAR_ERRORS, payload: {} };
 };

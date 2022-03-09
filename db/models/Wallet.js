@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Account extends Model {}
+class Wallet extends Model {}
 
-Account.init(
+Wallet.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,8 +12,8 @@ Account.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    accountnumber: {
-      type: DataTypes.STRING(50),
+    Wallet: {
+      type: DataTypes.STRING(10),
       allowNull: false,
     },
   },
@@ -25,11 +25,11 @@ Account.init(
     createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: true,
+    updatedAt: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Account", // We need to choose the model name
+    modelName: "Wallet", // We need to choose the model name
   }
 );
 
-module.exports = Account;
+module.exports = Wallet;

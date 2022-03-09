@@ -32,7 +32,7 @@ export class SubNav extends Component {
 
   render() {
     const { premiuminfo, userinfo } = this.state;
-    const { auth, user } = this.props;
+    const { auth } = this.props;
 
     return (
       <div>
@@ -69,6 +69,18 @@ export class SubNav extends Component {
                     )}
                   </p>
                 </li>
+                {(auth.user.level === 3 || auth.user.level === 1) && (
+                  <li className="nav-item dropdown">
+                    <span className="vl"></span>
+                  </li>
+                )}
+                {(auth.user.level === 3 || auth.user.level === 1) && (
+                  <li className="nav-item dropdown">
+                    <Link className="navbar-brand" to="/user/contact">
+                      <i className="far fa-bell nav-notify" />
+                    </Link>
+                  </li>
+                )}
                 <li className="nav-item dropdown">
                   <span className="vl"></span>
                 </li>

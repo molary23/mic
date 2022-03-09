@@ -29,7 +29,7 @@ const express = require("express"),
 @route GET api/count/:table
 @desc Admin Count rows in specified tables
 @access private
-*/
+
 
 router.get(
   "/table/:table",
@@ -72,7 +72,7 @@ router.get(
     }
   }
 );
-
+*/
 /*
 @route GET api/count/admin/all
 @desc Admin Count rows in specified tables

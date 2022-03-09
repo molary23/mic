@@ -36,8 +36,8 @@ Subscription.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.TINYINT, // Duration in days
-      defaultValue: 1,
+      type: DataTypes.ENUM("a", "p", "r"), // Approved, Pending or Rejected
+      defaultValue: "a",
     },
   },
   {
