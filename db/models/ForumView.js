@@ -1,9 +1,9 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class Settings extends Model {}
+class ForumView extends Model {}
 
-Settings.init(
+ForumView.init(
   {
     // Model attributes are defined here
     id: {
@@ -12,22 +12,24 @@ Settings.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    mode: {
-      type: DataTypes.ENUM("d", "n", "a", "i"), // D for day, N for night, A for auto, I for inherit from system
-      defaultValue: "d",
+    title: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
     },
-    currencies: {
-      type: DataTypes.JSON,
+    ticket: {
+      type: DataTypes.STRING(20),
     },
-    providers: {
-      type: DataTypes.JSON,
+    text: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
-    notify: {
-      type: DataTypes.ENUM("y", "n"),
-      defaultValue: "y",
+    status: {
+      type: DataTypes.ENUM("o", "c"), // Open or Close
+    },
+    replycount: {
+      type: DataTypes.INTEGER.UNSIGNED,
     },
   },
-
   {
     // don't forget to enable timestamps!
     timestamps: true,
@@ -39,8 +41,8 @@ Settings.init(
     updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "Settings", // We need to choose the model name
+    modelName: "ForumView", // We need to choose the model name
   }
 );
-
-module.exports = Settings;
+AccountView.sync = () => Promise.resolve();
+module.exports = ForumView;

@@ -20,6 +20,17 @@ import {
   GET_DASHBOARD_DETAILS,
   CLEAR_GET_DASHBOARD_DETAILS,
   CLEAR_ERRORS,
+  GET_USER_SETTINGS,
+  CLEAR_GET_USER_SETTINGS,
+  USER_GET_CURRENCY,
+  CLEAR_USER_GET_CURRENCY,
+  USER_GET_PROVIDERS,
+  CLEAR_USER_GET_PROVIDERS,
+  GET_ERRORS,
+  USER_SET_CURRENCY,
+  CLEAR_USER_SET_CURRENCY,
+  USER_SET_PROVIDERS,
+  CLEAR_USER_SET_PROVIDERS,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -75,6 +86,12 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_GET_PREMIUM_STATUS };
   } else if (actionToClear === "user-details") {
     return { type: CLEAR_GET_DASHBOARD_DETAILS };
+  } else if (actionToClear === "user-settings") {
+    return { type: CLEAR_GET_USER_SETTINGS };
+  } else if (actionToClear === "user-currency") {
+    return { type: CLEAR_USER_GET_CURRENCY };
+  } else if (actionToClear === "user-provider") {
+    return { type: CLEAR_USER_GET_PROVIDERS };
   }
 };
 
@@ -94,7 +111,7 @@ export const getPremium = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ GET_PREMIUM_STATUS, payload: [] });
+    dispatch({ type: GET_PREMIUM_STATUS, payload: [] });
   }
 };
 
@@ -111,11 +128,90 @@ export const getUserDetails = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ GET_DASHBOARD_DETAILS, payload: [] });
+    dispatch({ type: GET_DASHBOARD_DETAILS, payload: [] });
   }
 };
 
 // Clear Errors
 export const clearErrors = () => {
   return { type: CLEAR_ERRORS, payload: {} };
+};
+
+export const getUserSettings = () => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("user-settings"));
+  try {
+    let response = await axios.get("/api/users/settings");
+    const result = await dispatch({
+      type: GET_USER_SETTINGS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_USER_SETTINGS, payload: [] });
+  }
+};
+
+export const getList = (list) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  let type;
+  if (list === "currency") {
+    dispatch(clearActions("user-currency"));
+    type = USER_GET_CURRENCY;
+  } else if (list === "provider") {
+    dispatch(clearActions("user-provider"));
+    type = USER_GET_PROVIDERS;
+  }
+
+  try {
+    let response = await axios.get(`/api/userview/list/:${list}`);
+    const result = await dispatch({
+      type,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type, payload: [] });
+  }
+};
+
+export const saveSettings = (settings, data) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  let type,
+    url = "/api/users/settings/";
+  if (settings === "currency") {
+    dispatch(clearSettings("currency"));
+    type = USER_SET_CURRENCY;
+    url = `${url}currency`;
+  } else if (settings === "provider") {
+    dispatch(clearSettings("provider"));
+    type = USER_SET_PROVIDERS;
+    url = `${url}provider`;
+  }
+
+  try {
+    let response = await axios.post(url, data);
+    const result = await dispatch({
+      type,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const clearSettings = (settings) => {
+  if (settings === "currency") {
+    return { type: CLEAR_USER_SET_CURRENCY };
+  }
+  if (settings === "provider") {
+    return { type: CLEAR_USER_SET_PROVIDERS };
+  }
 };

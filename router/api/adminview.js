@@ -377,7 +377,7 @@ router.post(
     let where = {};
     if (req.body.search) {
       const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
+      let searchArray = searchTerms.split("+");
 
       if (searchArray.length > 1) {
         let newSearchArray = [],
@@ -856,7 +856,7 @@ router.post(
     let where = {};
     if (req.body.search) {
       const searchTerms = req.body.search;
-      let searchArray = searchTerms.split(" ");
+      let searchArray = searchTerms.split("+");
 
       if (searchArray.length > 1) {
         let newSearchArray = [],

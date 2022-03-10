@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import Box from "./Box";
 
 function Notification(props) {
-  const { onSubmit, sender, load } = props;
-  const [notify, setNotify] = useState(false);
+  const { onSubmit, sender, load, alert } = props;
+
   const [loading, setLoading] = useState(false);
+
+  let beep = false;
+  if (alert === "y") {
+    beep = true;
+  }
+  const [notify, setNotify] = useState(beep);
+
   const submitHandler = (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log(notify);
     onSubmit(notify);
     setLoading(load);
   };
@@ -28,7 +36,7 @@ function Notification(props) {
             id="emailSwitch"
             name="notify"
             value={notify}
-            checked={notify}
+            defaultChecked={notify}
             onChange={changeHandler}
           />
           <label className="form-check-label" htmlFor="mySwitch">

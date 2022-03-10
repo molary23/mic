@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 
 function DisplayForm(props) {
-  const { onSubmit } = props;
+  const { onSubmit, display } = props;
   const [mode, setMode] = useState("");
-
   const [errors, setErrors] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -29,6 +28,7 @@ function DisplayForm(props) {
             id="radio1"
             name="display"
             value="d"
+            defaultChecked={display === "d" && true}
             onChange={changeHandler}
           />
 
@@ -43,6 +43,7 @@ function DisplayForm(props) {
             id="radio2"
             name="display"
             value="n"
+            defaultChecked={display === "n" && true}
             onChange={changeHandler}
           />
 
@@ -57,6 +58,7 @@ function DisplayForm(props) {
             className="form-check-input"
             name="display"
             value="a"
+            defaultChecked={display === "a" && true}
             onChange={changeHandler}
           />
 
@@ -71,6 +73,7 @@ function DisplayForm(props) {
             className="form-check-input"
             name="display"
             value="s"
+            defaultChecked={display === "s" && true}
             onChange={changeHandler}
           />
 

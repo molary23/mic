@@ -1,53 +1,56 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
-function SignalForm(props) {
-  const { onSubmit, providerList, load } = props;
+function CurrencyForm(props) {
+  const { onSubmit, currencyList } = props;
   const [loading, setLoading] = useState(false);
-  const [provider, setProvider] = useState([]);
-  const [errors, setErrors] = useState([]);
-  let providers = [];
+  const [currency, setCurrency] = useState([]);
+
+  let currencies = [];
+
   const submitHandler = (e) => {
     e.preventDefault();
     setLoading(true);
-    let prId = provider.map((item) => {
+    let curId = currency.map((item) => {
       return item.split("-")[0];
     });
-
-    if (prId === undefined || prId.length === 0) {
-      setErrors("Kindly select a Provider.");
-    } else {
-      console.log(prId);
-      onSubmit(prId);
-      setLoading(load);
-    }
+    onSubmit(curId);
   };
+
   const changeHandler = (e) => {
-    setErrors("");
     let selected = e.target.options.selectedIndex,
       dataId = e.target.options[selected].getAttribute("data"),
       display = `${dataId}-${e.target.value}`;
-    if (provider.includes(display)) {
-      providers = provider.filter((elm) => elm !== display);
-      setProvider(providers);
+    if (currency.includes(display)) {
+      currencies = currency.filter((elm) => elm !== display);
+      setCurrency(currencies);
     } else {
-      providers.push(display);
-      setProvider([...provider, ...providers]);
+      currencies.push(display);
+      setCurrency([...currency, ...currencies]);
     }
   };
 
   const clickHandler = (value) => {
-    providers = provider.filter((elm) => elm !== value);
-    setProvider(providers);
+    currencies = currency.filter((elm) => elm !== value);
+    setCurrency(currencies);
   };
 
   let options = {},
-    optArray = [{ value: "", option: "Select New Provider(s)", data: 0 }];
+    optArray = [{ value: "", option: "Select New Currency(ies)", data: 0 }];
 
-  for (let i = 0; i < providerList.length; i++) {
+  for (let i = 0; i < currencyList.length; i++) {
     options = {
-      value: providerList[i].username.toUpperCase(),
-      option: providerList[i].username.toUpperCase(),
-      data: providerList[i].userid,
+      value: `${JSON.parse(
+        currencyList[i].firstcurrency.split(", ")
+      )[1].toUpperCase()}/${JSON.parse(
+        currencyList[i].secondcurrency.split(", ")
+      )[1].toUpperCase()}`,
+      option: `${JSON.parse(
+        currencyList[i].firstcurrency.split(", ")
+      )[1].toUpperCase()}/${JSON.parse(
+        currencyList[i].secondcurrency.split(", ")
+      )[1].toUpperCase()}`,
+      data: currencyList[i].id,
     };
 
     optArray.push(options);
@@ -56,13 +59,13 @@ function SignalForm(props) {
   return (
     <div className="settings-form-signal dash-card ">
       <div className="page-title mb-2 mt-1">
-        <h4>Add Provider</h4>
+        <h4>Add Currency</h4>
       </div>
-      <form className="select-providers-form" onSubmit={submitHandler}>
+      <form className="select-currency-form" onSubmit={submitHandler}>
         <select
           className="form-select form-select-lg mb-3"
           onChange={changeHandler}
-          name="provider"
+          name="currency"
         >
           {optArray.map((item, i) => {
             return (
@@ -73,10 +76,9 @@ function SignalForm(props) {
           })}
           ;
         </select>
-        {errors && <small className="text-muted">{errors}</small>}
-        <div className="selectedProviders">
+        <div className="selectedCurrencies">
           <ul className="list-group list-group-horizontal mb-3">
-            {provider.map((item, i) => {
+            {currency.map((item, i) => {
               return (
                 <li
                   className="list-group-item d-flex justify-content-between align-items-center"
@@ -97,7 +99,7 @@ function SignalForm(props) {
         </div>
         <div className="d-grid">
           <button type="submit" className="btn default-btn btn-lg btn-block">
-            Add Providers
+            Add Currency
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
             )}
@@ -108,4 +110,6 @@ function SignalForm(props) {
   );
 }
 
-export default SignalForm;
+CurrencyForm.propTypes = {};
+
+export default CurrencyForm;

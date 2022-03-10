@@ -23,15 +23,8 @@ Forum.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    type: {
-      type: DataTypes.ENUM("o", "r"), // Original or Reply
-      allowNull: false,
-    },
     status: {
       type: DataTypes.ENUM("o", "c"), // Open or Close
-    },
-    response: {
-      type: DataTypes.INTEGER.UNSIGNED,
     },
   },
   {

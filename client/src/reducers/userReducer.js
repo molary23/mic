@@ -18,6 +18,16 @@ import {
   CLEAR_GET_PREMIUM_STATUS,
   GET_DASHBOARD_DETAILS,
   CLEAR_GET_DASHBOARD_DETAILS,
+  GET_USER_SETTINGS,
+  CLEAR_GET_USER_SETTINGS,
+  USER_GET_CURRENCY,
+  CLEAR_USER_GET_CURRENCY,
+  USER_GET_PROVIDERS,
+  CLEAR_USER_GET_PROVIDERS,
+  USER_SET_CURRENCY,
+  CLEAR_USER_SET_CURRENCY,
+  USER_SET_PROVIDERS,
+  CLEAR_USER_SET_PROVIDERS,
 } from "../action/types";
 
 const initialState = {
@@ -39,6 +49,11 @@ const initialState = {
   bonuscount: 0,
   premium: null,
   userdetails: null,
+  usersettings: null,
+  usercurrencies: [],
+  userproviders: [],
+  setcurrency: false,
+  setprovider: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -110,6 +125,36 @@ export default function userReducer(state = initialState, action) {
         userdetails: action.payload,
         loading: false,
       };
+    case GET_USER_SETTINGS:
+      return {
+        ...state,
+        usersettings: action.payload,
+        loading: false,
+      };
+    case USER_GET_CURRENCY:
+      return {
+        ...state,
+        usercurrencies: action.payload,
+        loading: false,
+      };
+    case USER_GET_PROVIDERS:
+      return {
+        ...state,
+        userproviders: action.payload,
+        loading: false,
+      };
+    case USER_SET_PROVIDERS:
+      return {
+        ...state,
+        setprovider: action.payload,
+        loading: false,
+      };
+    case USER_SET_CURRENCY:
+      return {
+        ...state,
+        setcurrency: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -139,6 +184,21 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_GET_DASHBOARD_DETAILS: {
       return { ...state, userdetails: null };
+    }
+    case CLEAR_GET_USER_SETTINGS: {
+      return { ...state, usersettings: null };
+    }
+    case CLEAR_USER_GET_CURRENCY: {
+      return { ...state, usercurrencies: null };
+    }
+    case CLEAR_USER_GET_PROVIDERS: {
+      return { ...state, userproviders: null };
+    }
+    case CLEAR_USER_SET_PROVIDERS: {
+      return { ...state, setprovider: false };
+    }
+    case CLEAR_USER_SET_CURRENCY: {
+      return { ...state, setcurrency: false };
     }
     default:
       return state;

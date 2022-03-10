@@ -11,14 +11,18 @@ const express = require("express"),
   User = require("../../db/models/User"),
   Profile = require("../../db/models/Profile"),
   Premium = require("../../db/models/Premium"),
+  Settings = require("../../db/models/Settings"),
+  Currency = require("../../db/models/Currency"),
+  AccountView = require("../../db/models/AccountView"),
   // Bring in View
   UserView = require("../../db/models/UserView"),
   ProviderView = require("../../db/models/ProviderView"),
   SuperView = require("../../db/models/SuperView"),
   //Bring in the Validation
-
   validateEmailInput = require("../../validation/email"),
-  validatePassInput = require("../../validation/password");
+  validatePassInput = require("../../validation/password"),
+  //Check level
+  checkUser = require("../../validation/checkUser");
 
 /*
 @route /api/user/reset/password
@@ -165,7 +169,7 @@ router.get(
 );
 
 /*
-@route GET api/user/checkpass
+@route POST api/user/checkpass
 @desc User view Details
 @access private
 */
@@ -196,4 +200,176 @@ router.post(
   }
 );
 
+/*
+@route GET api/user/settings
+@desc User view settings
+@access private
+*/
+
+router.get(
+  "/settings",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserId = req.user.id;
+    let info = {};
+    Settings.findOne({
+      where: { UserId },
+      attributes: ["mode", "currencies", "providers", "notify"],
+    })
+      .then((settings) => {
+        info.settings = settings;
+        AccountView.findAll({
+          where: { UserId },
+          attributes: ["accountnumber", "wallet"],
+        })
+          .then((accounts) => {
+            info.accounts = accounts;
+            Profile.findOne({
+              where: { UserId },
+              attributes: ["firstname", "lastname"],
+            })
+              .then((profile) => {
+                info.profile = profile;
+                return res.json(info);
+              })
+              .catch((err) => res.status(404).json(err));
+          })
+          .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/settings/providers
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/provider",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id;
+
+    if (req.body) {
+      providers = req.body;
+    }
+
+    Settings.findOne({ where: { UserId: id }, attributes: ["providers"] })
+      .then((prList) => {
+        providers = [...providers, ...prList.providers];
+        providers = [...new Set(providers)];
+        Settings.update({ providers }, { where: { UserId: id } })
+          .then(() => {
+            res.json(true);
+          })
+          .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/settings/currencies
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/currencies",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id;
+
+    if (req.body.currencies) {
+      currencies = req.body.currencies;
+    }
+    let firstcurrency = currencies.split("/")[0],
+      secondcurrency = currencies.split("/")[1];
+
+    Currency.findAll({
+      where: {
+        [Op.and]: [
+          { firstcurrency: { [Op.substring]: firstcurrency } },
+          { secondcurrency: { [Op.substring]: secondcurrency } },
+        ],
+      },
+      attributes: ["id"],
+    })
+      .then((currencies) => {
+        let curList = currencies;
+        Settings.update({ currencies: curList }, { where: { UserId: id } })
+          .then(() => {
+            res.json(true);
+          })
+          .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/settings/mode
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/mode",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id;
+
+    if (req.body.mode) {
+      mode = req.body.mode;
+    }
+
+    Settings.update({ mode }, { where: { UserId: id } })
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/settings/notify
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/notify",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id;
+
+    if (req.body.notify) {
+      notify = req.body.notify;
+    }
+
+    Settings.update({ notify }, { where: { UserId: id } })
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 module.exports = router;

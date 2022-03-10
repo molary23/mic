@@ -14,7 +14,7 @@ function AccountCol(props) {
           </div>
           <div className="settings-details">
             <div className="settings-title">Account Number</div>
-            <div className="settings-info"> {item.account} </div>
+            <div className="settings-info"> {item.accountnumber} </div>
           </div>
         </div>
       </div>

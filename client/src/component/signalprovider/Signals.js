@@ -9,6 +9,7 @@ import {
   addSignal,
   clearSignal,
   editSignal,
+  clearCurrency,
 } from "../../action/providerAction";
 
 import {
@@ -83,6 +84,7 @@ class Signals extends Component {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(this.state.content);
     this.props.clearSearchActions(this.state.content);
+    this.props.clearCurrency();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -382,6 +384,7 @@ Signals.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  clearCurrency: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -398,4 +401,5 @@ export default connect(mapStateToProps, {
   addSignal,
   clearSignal,
   editSignal,
+  clearCurrency,
 })(Signals);

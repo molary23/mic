@@ -156,7 +156,7 @@ class Login extends Component {
               id="login-form-password"
               placeholder="Password"
               label="Password"
-              icon={`far ${pass ? "fa-eye-slash" : "fa-eye"}`}
+              icon={`far ${pass ? "fa-eye" : "fa-eye-slash"}`}
               type={pass ? "password" : "text"}
               name="password"
               value={password}

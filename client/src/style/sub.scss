@@ -616,6 +616,10 @@ ul.dropdown-menu {
   margin: 50px auto;
   padding: 20px;
 }
+.settings-form-signal {
+  padding: 20px;
+}
+
 .settings-form-notify {
   height: 200px;
 }
@@ -637,4 +641,15 @@ ul.dropdown-menu {
   h4 {
     text-align: center;
   }
+}
+
+ul.list-group.list-group-horizontal {
+  max-width: 400px;
+  overflow-y: auto;
+}
+
+.remove-selected-item {
+  color: tomato;
+  cursor: pointer;
+  margin-left: 10px;
 }

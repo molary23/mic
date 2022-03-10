@@ -1,5 +1,3 @@
-const Announcement = require("../../db/models/Announcement");
-
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -19,6 +17,9 @@ const express = require("express"),
   Subscription = require("../../db/models/Subscription"),
   Bonus = require("../../db/models/Bonus"),
   Withdrawal = require("../../db/models/Withdrawal"),
+  Announcement = require("../../db/models/Announcement"),
+  ProviderView = require("../../db/models/ProviderView"),
+  Currency = require("../../db/models/Currency"),
   // Bring in View
   SignalView = require("../../db/models/SignalView"),
   ReferralView = require("../../db/models/ReferralView"),
@@ -883,4 +884,43 @@ router.get(
     ]);
   }
 );
+
+/*
+@route GET api/userview/currency
+@desc User View currency
+@access private
+*/
+
+router.get(
+  "/list/:table",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let table = req.params.table.split(":")[1],
+      view,
+      attributes;
+    if (table === "currency") {
+      view = Currency;
+      attributes = ["id", "firstcurrency", "secondcurrency"];
+    } else if (table === "provider") {
+      view = ProviderView;
+      attributes = ["userid", "username"];
+    }
+
+    const UserId = req.user.id;
+    view
+      .findAll({
+        attributes,
+      })
+      .then((view) => {
+        res.json(view);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
 module.exports = router;

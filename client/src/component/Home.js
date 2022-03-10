@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import logo from "../asset/images/logo.png";
+import logo from "../asset/images/mic-logo.png";
 
 function Home() {
   return (

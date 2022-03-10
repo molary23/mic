@@ -6,7 +6,7 @@ class AccountView extends Model {}
 AccountView.init(
   {
     // Model attributes are defined here
-    id: {
+    accountid: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,
