@@ -85,8 +85,11 @@ class Settings extends Component {
     this.setState({
       loading: true,
     });
-    //console.log(value);
-    this.props.saveSettings("currency", value);
+    if (value[0] === "selected") {
+      this.props.saveSettings("currency", value[1]);
+    } else if (value[0] === "all") {
+      this.props.saveSettings("reset-currency", value[1]);
+    }
   };
 
   submitAccountHandler = (value) => {
@@ -95,6 +98,13 @@ class Settings extends Component {
     });
     //console.log(value);
     this.props.saveSettings("account", value);
+  };
+
+  submitPassHandler = (value) => {
+    this.setState({
+      loading: true,
+    });
+    this.props.saveSettings("password", value);
   };
 
   openModal = () => {
@@ -114,8 +124,11 @@ class Settings extends Component {
     this.setState({
       loading: true,
     });
-    //console.log(value);
-    this.props.saveSettings("provider", value);
+    if (value[0] === "selected") {
+      this.props.saveSettings("provider", value[1]);
+    } else if (value[0] === "all") {
+      this.props.saveSettings("reset-provider", value[1]);
+    }
   };
 
   submitListHandler = (value) => {
@@ -260,7 +273,7 @@ class Settings extends Component {
                     id="password-settings"
                   >
                     <PasswordForm
-                      onSubmit={this.submitHandler}
+                      onSubmit={this.submitPassHandler}
                       sender={sender}
                       load={loading}
                     />

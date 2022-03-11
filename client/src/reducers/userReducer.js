@@ -42,6 +42,8 @@ import {
   CLEAR_USER_GET_WALLET,
   USER_UPDATE_ACCOUNT,
   CLEAR_USER_UPDATE_ACCOUNT,
+  USER_UPDATE_PASSWORD,
+  CLEAR_USER_UPDATE_PASSWORD,
 } from "../action/types";
 
 const initialState = {
@@ -73,6 +75,7 @@ const initialState = {
   setprofile: false,
   userwallet: [],
   setaccount: false,
+  setpass: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -216,6 +219,12 @@ export default function userReducer(state = initialState, action) {
         setaccount: action.payload,
         loading: false,
       };
+    case USER_UPDATE_PASSWORD:
+      return {
+        ...state,
+        setpass: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -278,6 +287,9 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_UPDATE_ACCOUNT: {
       return { ...state, setaccount: false };
+    }
+    case CLEAR_USER_UPDATE_PASSWORD: {
+      return { ...state, setpass: false };
     }
     case CLEAR_USER_GET_WALLET: {
       return { ...state, userwallet: [] };

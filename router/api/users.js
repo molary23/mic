@@ -1,3 +1,5 @@
+const Account = require("../../db/models/Account");
+
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -52,11 +54,10 @@ router.post("/reset/password", (req, res) => {
 */
 
 router.post(
-  "/profile",
+  "/settings/profile",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const message = {},
-      profileFields = {},
+    const profileFields = {},
       UserId = req.user.id;
 
     if (req.body.firstname) profileFields.firstname = req.body.firstname;
@@ -72,8 +73,7 @@ router.post(
       }
     )
       .then(() => {
-        message.update = "Profile updated!";
-        res.json(message);
+        res.json(true);
       })
       .catch((err) => res.json(err));
   }
@@ -212,36 +212,150 @@ router.get(
   (req, res) => {
     const UserId = req.user.id;
     let info = {};
-    Settings.findOne({
-      where: { UserId },
-      attributes: ["mode", "currencies", "providers", "notify"],
-    })
-      .then((settings) => {
-        info.settings = settings;
-        AccountView.findAll({
-          where: { UserId },
-          attributes: ["accountnumber", "wallet"],
-        })
-          .then((accounts) => {
-            info.accounts = accounts;
-            Profile.findOne({
-              where: { UserId },
-              attributes: ["firstname", "lastname"],
-            })
-              .then((profile) => {
-                info.profile = profile;
-                return res.json(info);
-              })
-              .catch((err) => res.status(404).json(err));
-          })
-          .catch((err) => res.status(404).json(err));
+    return Promise.all([
+      Settings.findOne({
+        where: { UserId },
+        attributes: ["mode", "currencies", "providers", "notify"],
       })
-      .catch((err) => res.status(404).json(err));
+        .then((settings) => {
+          info.settings = settings;
+          AccountView.findAll({
+            where: { UserId },
+            attributes: ["accountnumber", "wallet"],
+          })
+            .then((accounts) => {
+              info.accounts = accounts;
+              Profile.findOne({
+                where: { UserId },
+                attributes: ["firstname", "lastname"],
+              })
+                .then((profile) => {
+                  info.profile = profile;
+                  if (
+                    info.settings.providers !== null &&
+                    info.settings.currencies !== null
+                  ) {
+                    ProviderView.findAll({
+                      where: {
+                        [Op.and]: [
+                          { status: "a" },
+                          { userid: settings.providers },
+                        ],
+                      },
+                      attributes: ["username", "userid"],
+                    })
+                      .then((provider) => {
+                        info.providers = provider;
+                        Currency.findAll({
+                          where: {
+                            [Op.and]: [
+                              { status: "a" },
+                              { id: settings.currencies },
+                            ],
+                          },
+                          attributes: ["firstcurrency", "secondcurrency", "id"],
+                        })
+                          .then((currency) => {
+                            info.currencies = currency;
+                            return res.json(info);
+                          })
+                          .catch((err) => res.status(404).json(err));
+                      })
+                      .catch((err) => res.status(404).json(err));
+                  } else if (
+                    info.settings.providers === null &&
+                    info.settings.currencies === null
+                  ) {
+                    ProviderView.findAll({
+                      where: {
+                        status: "a",
+                      },
+                      attributes: ["username", "userid"],
+                    })
+                      .then((provider) => {
+                        info.providers = provider;
+                        Currency.findAll({
+                          where: {
+                            status: "a",
+                          },
+                          attributes: ["firstcurrency", "secondcurrency", "id"],
+                        })
+                          .then((currency) => {
+                            info.currencies = currency;
+                            return res.json(info);
+                          })
+                          .catch((err) => res.status(404).json(err));
+                      })
+                      .catch((err) => res.status(404).json(err));
+                  } else if (
+                    info.settings.providers === null &&
+                    info.settings.currencies !== null
+                  ) {
+                    ProviderView.findAll({
+                      where: {
+                        status: "a",
+                      },
+                      attributes: ["username", "userid"],
+                    })
+                      .then((provider) => {
+                        info.providers = provider;
+                        Currency.findAll({
+                          where: {
+                            [Op.and]: [
+                              { status: "a" },
+                              { id: settings.currencies },
+                            ],
+                          },
+                          attributes: ["firstcurrency", "secondcurrency", "id"],
+                        })
+                          .then((currency) => {
+                            info.currencies = currency;
+                            return res.json(info);
+                          })
+                          .catch((err) => res.status(404).json(err));
+                      })
+                      .catch((err) => res.status(404).json(err));
+                  } else if (
+                    info.settings.providers !== null &&
+                    info.settings.currencies === null
+                  ) {
+                    ProviderView.findAll({
+                      where: {
+                        [Op.and]: [
+                          { status: "a" },
+                          { userid: settings.providers },
+                        ],
+                      },
+                      attributes: ["username", "userid"],
+                    })
+                      .then((provider) => {
+                        info.providers = provider;
+                        Currency.findAll({
+                          where: {
+                            status: "a",
+                          },
+                          attributes: ["firstcurrency", "secondcurrency", "id"],
+                        })
+                          .then((currency) => {
+                            info.currencies = currency;
+                            return res.json(info);
+                          })
+                          .catch((err) => res.status(404).json(err));
+                      })
+                      .catch((err) => res.status(404).json(err));
+                  }
+                })
+                .catch((err) => res.status(404).json(err));
+            })
+            .catch((err) => res.status(404).json(err));
+        })
+        .catch((err) => res.status(404).json(err)),
+    ]);
   }
 );
 
 /*
-@route POST api/user/settings/providers
+@route POST api/user/settings/provider
 @desc User post settings 
 @access private
 */
@@ -255,14 +369,16 @@ router.post(
       return res.status(400).json(error);
     }
     const id = req.user.id;
-
+    let providers;
     if (req.body) {
       providers = req.body;
     }
 
     Settings.findOne({ where: { UserId: id }, attributes: ["providers"] })
       .then((prList) => {
-        providers = [...providers, ...prList.providers];
+        if (prList.providers !== null) {
+          providers = [...providers, ...prList.providers];
+        }
         providers = [...new Set(providers)];
         Settings.update({ providers }, { where: { UserId: id } })
           .then(() => {
@@ -275,13 +391,13 @@ router.post(
 );
 
 /*
-@route POST api/user/settings/currencies
-@desc User post settings 
+@route POST api/user/settings/reset/provider
+@desc User reset provider settings 
 @access private
 */
 
 router.post(
-  "/settings/currencies",
+  "/settings/reset/provider",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { error, isLevel } = checkUser(req.user.level);
@@ -289,29 +405,85 @@ router.post(
       return res.status(400).json(error);
     }
     const id = req.user.id;
-
-    if (req.body.currencies) {
-      currencies = req.body.currencies;
+    let providers;
+    if (req.body) {
+      providers = req.body;
     }
-    let firstcurrency = currencies.split("/")[0],
-      secondcurrency = currencies.split("/")[1];
 
-    Currency.findAll({
-      where: {
-        [Op.and]: [
-          { firstcurrency: { [Op.substring]: firstcurrency } },
-          { secondcurrency: { [Op.substring]: secondcurrency } },
-        ],
-      },
-      attributes: ["id"],
-    })
-      .then((currencies) => {
-        let curList = currencies;
-        Settings.update({ currencies: curList }, { where: { UserId: id } })
+    if (providers.length <= 0) {
+      providers = null;
+    }
+    Settings.update({ providers }, { where: { UserId: id } })
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/settings/currency
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/currency",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id;
+    let currencies;
+    if (req.body) {
+      currencies = req.body;
+    }
+
+    Settings.findOne({ where: { UserId: id }, attributes: ["currencies"] })
+      .then((curList) => {
+        if (curList.currencies !== null) {
+          currencies = [...currencies, ...curList.currencies];
+        }
+        currencies = [...new Set(currencies)];
+        Settings.update({ currencies }, { where: { UserId: id } })
           .then(() => {
             res.json(true);
           })
           .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/settings/reset/currency
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/reset/currency",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id;
+    let currencies;
+    if (req.body) {
+      currencies = req.body;
+    }
+
+    if (currencies.length <= 0) {
+      currencies = null;
+    }
+
+    Settings.update({ currencies }, { where: { UserId: id } })
+      .then(() => {
+        res.json(true);
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -332,7 +504,7 @@ router.post(
       return res.status(400).json(error);
     }
     const id = req.user.id;
-
+    let mode;
     if (req.body.mode) {
       mode = req.body.mode;
     }
@@ -360,8 +532,8 @@ router.post(
       return res.status(400).json(error);
     }
     const id = req.user.id;
-
-    if (req.body.notify) {
+    let notify;
+    if (req.body) {
       notify = req.body.notify;
     }
 
@@ -372,4 +544,111 @@ router.post(
       .catch((err) => res.status(404).json(err));
   }
 );
+
+/*
+@route POST api/user/settings/account
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/account",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id;
+    let account;
+    if (req.body) {
+      account = req.body;
+    }
+
+    Account.findOrCreate({
+      where: {
+        [Op.and]: [
+          {
+            WalletId: account.walletid,
+          },
+          {
+            UserId: id,
+          },
+        ],
+      },
+      defaults: {
+        WalletId: account.walletid,
+        accountnumber: account.accountnumber,
+        UserId: id,
+      },
+    })
+      .then(([found, created]) => {
+        if (created) {
+          res.json(true);
+        } else {
+          Account.update(
+            {
+              accountnumber: account.accountnumber,
+            },
+            {
+              where: {
+                [Op.and]: [{ UserId: id }, { WalletId: account.walletid }],
+              },
+            }
+          ).then(() => {
+            res.json(true);
+          });
+        }
+      })
+      .catch((err) => res.json(err));
+  }
+);
+
+/*
+@route POST api/user/settings/notify
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/pass",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const id = req.user.id,
+      errors = {};
+    let pass;
+    if (req.body) {
+      pass = req.body;
+    }
+
+    User.findByPk(id, { attributes: ["password"] })
+      .then((user) => {
+        bcrypt.compare(pass.old, user.password).then((isMatch) => {
+          if (isMatch) {
+            User.update(
+              { password: pass.new },
+              {
+                where: {
+                  id,
+                },
+              }
+            )
+              .then(() => {
+                res.json(true);
+              })
+              .catch((err) => res.json(err));
+          } else {
+            errors.password = "Incorrect Old Password";
+            return res.status(400).json(errors);
+          }
+        });
+      })
+      .catch((err) => res.json(err));
+  }
+);
+
 module.exports = router;

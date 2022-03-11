@@ -17,7 +17,7 @@ function SignalForm(props) {
       setErrors("Kindly select a Provider.");
     } else {
       console.log(prId);
-      onSubmit(prId);
+      onSubmit(["selected", prId]);
       setLoading(load);
     }
   };
@@ -38,6 +38,18 @@ function SignalForm(props) {
   const clickHandler = (value) => {
     providers = provider.filter((elm) => elm !== value);
     setProvider(providers);
+  };
+
+  const submitAllHandler = (e) => {
+    e.preventDefault();
+    let check = window.confirm(
+      "Are you sure you want to add all Currency Pair?"
+    );
+    if (!check) {
+      return false;
+    } else {
+      onSubmit(["all", []]);
+    }
   };
 
   let options = {},
@@ -112,6 +124,7 @@ function SignalForm(props) {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                onClick={submitAllHandler}
               >
                 Add All
                 {loading && (

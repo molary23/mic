@@ -1,3 +1,5 @@
+const Wallet = require("../../db/models/Wallet");
+
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -909,11 +911,13 @@ router.get(
     } else if (table === "provider") {
       view = ProviderView;
       attributes = ["userid", "username"];
+    } else if (table === "wallet") {
+      view = Wallet;
+      attributes = ["wallet", "id"];
     }
-
-    const UserId = req.user.id;
     view
       .findAll({
+        where: { status: "a" },
         attributes,
       })
       .then((view) => {

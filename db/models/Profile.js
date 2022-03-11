@@ -13,10 +13,10 @@ Profile.init(
       primaryKey: true,
     },
     firstname: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(25),
     },
     lastname: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(25),
     },
     avatar: {
       type: DataTypes.STRING,

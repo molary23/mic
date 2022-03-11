@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import TextPasswordField from "./TextPasswordField";
-import Select from "./Select";
 
 function PasswordForm(props) {
+  const { onSubmit } = props;
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState({});
   const [pass1, setPass1] = useState(true);
@@ -21,7 +21,54 @@ function PasswordForm(props) {
     }
   };
 
-  const submitHandler = (e) => {};
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (
+      !Object.keys(inputs).includes("oldpassword") ||
+      inputs.oldpassword === ""
+    ) {
+      setErrors({
+        oldpassword: "Old Password Field can't be empty",
+      });
+    } else if (
+      !Object.keys(inputs).includes("newpassword") ||
+      inputs.newpassword === ""
+    ) {
+      setErrors({
+        newpassword: "New Password Field can't be empty",
+      });
+    } else if (inputs.newpassword.length < 8) {
+      setErrors({
+        newpassword: "New Password should be at least 8 characters",
+      });
+    } else if (
+      !Object.keys(inputs).includes("newpassword2") ||
+      inputs.newpassword2 === ""
+    ) {
+      setErrors({
+        newpassword2: "Confirm New Password Field can't be empty",
+      });
+    } else if (inputs.newpassword2.length < 8) {
+      setErrors({
+        newpassword2: "Confirm New Password should be at least 8 characters",
+      });
+    } else if (inputs.newpassword !== inputs.newpassword2) {
+      setErrors({
+        newpassword2: "Password Mismatched",
+      });
+    } else if (inputs.oldpassword === inputs.newpassword) {
+      setErrors({
+        newpassword: "You can't change your Password to your Old Password",
+      });
+    } else {
+      setLoading(true);
+      const pass = {
+        old: inputs.oldpassword,
+        new: inputs.newpassword,
+      };
+      onSubmit(pass);
+    }
+  };
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setInputs((values) => ({ ...values, [name]: value }));
@@ -48,11 +95,11 @@ function PasswordForm(props) {
           placeholder="New Password"
           icon={`far ${pass2 ? "fa-eye" : "fa-eye-slash"}`}
           type={pass2 ? "password" : "text"}
-          name="newpasswordd"
-          value={inputs.newpasswordd || ""}
+          name="newpassword"
+          value={inputs.newpassword || ""}
           onChange={changeHandler}
           onClick={() => checkPassHandler(2)}
-          error={errors.newpasswordd}
+          error={errors.newpassword}
         />
         <TextPasswordField
           id="add-admin-form-password"

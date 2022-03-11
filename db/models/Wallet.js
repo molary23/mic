@@ -16,6 +16,10 @@ Wallet.init(
       type: DataTypes.STRING(10),
       allowNull: false,
     },
+    status: {
+      type: DataTypes.ENUM("a", "i"),
+      defaultValue: "a",
+    },
   },
   {
     // don't forget to enable timestamps!

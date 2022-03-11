@@ -19,8 +19,20 @@ function CurrencyForm(props) {
     if (curId === undefined || curId.length === 0) {
       setErrors("Kindly select a Currency Pair.");
     } else {
-      onSubmit(curId);
+      onSubmit(["selected", curId]);
       setLoading(load);
+    }
+  };
+
+  const submitAllHandler = (e) => {
+    e.preventDefault();
+    let check = window.confirm(
+      "Are you sure you want to add all Currency Pair?"
+    );
+    if (!check) {
+      return false;
+    } else {
+      onSubmit(["all", []]);
     }
   };
 
@@ -106,12 +118,32 @@ function CurrencyForm(props) {
           </ul>
         </div>
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
-            Add Currency
-            {loading && (
-              <span className="spinner-border spinner-border-sm ms-2"></span>
-            )}
-          </button>
+          <div className="row">
+            <div className="col-6">
+              {" "}
+              <button
+                type="submit"
+                className="btn default-btn btn-lg btn-block"
+              >
+                Add Currency
+                {loading && (
+                  <span className="spinner-border spinner-border-sm ms-2"></span>
+                )}
+              </button>
+            </div>
+            <div className="col-6">
+              <button
+                type="submit"
+                className="btn default-btn btn-lg btn-block"
+                onClick={submitAllHandler}
+              >
+                Add All
+                {loading && (
+                  <span className="spinner-border spinner-border-sm ms-2"></span>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

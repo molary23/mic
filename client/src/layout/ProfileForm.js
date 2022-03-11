@@ -1,16 +1,14 @@
 import React, { useState } from "react";
+import { ImHangouts } from "react-icons/im";
 import TextInputField from "./TextInputField";
 function ProfileForm(props) {
   const { onSubmit, userinfo } = props;
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [inputs, setInputs] = useState({});
 
   const submitHandler = (e) => {
     e.preventDefault();
-    inputs.lastname = inputs.lastname ?? userinfo.lastname;
-    inputs.firstname = inputs.firstname ?? userinfo.firstname;
-    if (!Object.keys(inputs).includes("lastname") || inputs.lastname === "") {
+    if (inputs.lastname === "") {
       setErrors({
         lastname: "Last Name Field can't be empty",
       });
@@ -18,10 +16,7 @@ function ProfileForm(props) {
       setErrors({
         lastname: "Last Name can't be more than 25 characters",
       });
-    } else if (
-      !Object.keys(inputs).includes("firstname") ||
-      inputs.firstname === ""
-    ) {
+    } else if (inputs.firstname === "") {
       setErrors({
         firstname: "First Name Field can't be empty",
       });
@@ -39,9 +34,14 @@ function ProfileForm(props) {
       onSubmit(user);
     }
   };
-  const changeHandler = (e) => {
-    const { name, value } = e.target;
-    setInputs((values) => ({ ...values, [name]: value }));
+
+  const [inputs, setInputs] = useState({
+    lastname: userinfo.lastname,
+    firstname: userinfo.firstname,
+  });
+
+  const changeEditHandler = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
   return (
@@ -52,8 +52,8 @@ function ProfileForm(props) {
           placeholder="Last Name"
           type="text"
           name="lastname"
-          value={inputs.lastname || userinfo.lastname}
-          onChange={changeHandler}
+          value={inputs.lastname}
+          onChange={changeEditHandler}
           error={errors.lastname}
         />
         <TextInputField
@@ -61,8 +61,8 @@ function ProfileForm(props) {
           placeholder="First Name"
           type="text"
           name="firstname"
-          value={inputs.firstname || userinfo.firstname}
-          onChange={changeHandler}
+          value={inputs.firstname}
+          onChange={changeEditHandler}
           error={errors.firstname}
         />
         <div className="d-grid">

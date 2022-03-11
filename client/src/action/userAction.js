@@ -45,6 +45,8 @@ import {
   CLEAR_USER_GET_WALLET,
   USER_UPDATE_ACCOUNT,
   CLEAR_USER_UPDATE_ACCOUNT,
+  USER_UPDATE_PASSWORD,
+  CLEAR_USER_UPDATE_PASSWORD,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -200,7 +202,7 @@ export const getList = (list) => async (dispatch) => {
 
 export const saveSettings = (settings, data) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //dispatch(setLoading());
   let type,
     url = "/api/users/settings/";
   if (settings === "currency") {
@@ -222,19 +224,23 @@ export const saveSettings = (settings, data) => async (dispatch) => {
   } else if (settings === "notify") {
     dispatch(clearSettings("notify"));
     type = USER_UPDATE_NOTIFY;
-    url = `${url}/notify`;
+    url = `${url}notify`;
   } else if (settings === "mode") {
     dispatch(clearSettings("mode"));
     type = USER_UPDATE_MODE;
-    url = `${url}/mode`;
+    url = `${url}mode`;
   } else if (settings === "profile") {
     dispatch(clearSettings("profile"));
     type = USER_UPDATE_PROFILE;
-    url = `${url}/profile`;
+    url = `${url}profile`;
   } else if (settings === "account") {
     dispatch(clearSettings("account"));
     type = USER_UPDATE_ACCOUNT;
-    url = `${url}/account`;
+    url = `${url}account`;
+  } else if (settings === "password") {
+    dispatch(clearSettings("password"));
+    type = USER_UPDATE_PASSWORD;
+    url = `${url}pass`;
   }
   try {
     let response = await axios.post(url, data);
@@ -276,5 +282,8 @@ export const clearSettings = (settings) => {
   }
   if (settings === "account") {
     return { type: CLEAR_USER_UPDATE_ACCOUNT };
+  }
+  if (settings === "password") {
+    return { type: CLEAR_USER_UPDATE_PASSWORD };
   }
 };
