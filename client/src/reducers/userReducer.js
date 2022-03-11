@@ -28,6 +28,20 @@ import {
   CLEAR_USER_SET_CURRENCY,
   USER_SET_PROVIDERS,
   CLEAR_USER_SET_PROVIDERS,
+  USER_UPDATE_CURRENCY,
+  CLEAR_USER_UPDATE_CURRENCY,
+  USER_UPDATE_PROVIDERS,
+  CLEAR_USER_UPDATE_PROVIDERS,
+  USER_UPDATE_NOTIFY,
+  CLEAR_USER_UPDATE_NOTIFY,
+  USER_UPDATE_MODE,
+  CLEAR_USER_UPDATE_MODE,
+  USER_UPDATE_PROFILE,
+  CLEAR_USER_UPDATE_PROFILE,
+  USER_GET_WALLET,
+  CLEAR_USER_GET_WALLET,
+  USER_UPDATE_ACCOUNT,
+  CLEAR_USER_UPDATE_ACCOUNT,
 } from "../action/types";
 
 const initialState = {
@@ -54,6 +68,11 @@ const initialState = {
   userproviders: [],
   setcurrency: false,
   setprovider: false,
+  setnotify: false,
+  setmode: false,
+  setprofile: false,
+  userwallet: [],
+  setaccount: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -155,6 +174,48 @@ export default function userReducer(state = initialState, action) {
         setcurrency: action.payload,
         loading: false,
       };
+    case USER_UPDATE_PROVIDERS:
+      return {
+        ...state,
+        setprovider: action.payload,
+        loading: false,
+      };
+    case USER_UPDATE_CURRENCY:
+      return {
+        ...state,
+        setcurrency: action.payload,
+        loading: false,
+      };
+    case USER_UPDATE_NOTIFY:
+      return {
+        ...state,
+        setnotify: action.payload,
+        loading: false,
+      };
+    case USER_UPDATE_MODE:
+      return {
+        ...state,
+        setmode: action.payload,
+        loading: false,
+      };
+    case USER_UPDATE_PROFILE:
+      return {
+        ...state,
+        setprofile: action.payload,
+        loading: false,
+      };
+    case USER_GET_WALLET:
+      return {
+        ...state,
+        userwallet: action.payload,
+        loading: false,
+      };
+    case USER_UPDATE_ACCOUNT:
+      return {
+        ...state,
+        setaccount: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -199,6 +260,27 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_SET_CURRENCY: {
       return { ...state, setcurrency: false };
+    }
+    case CLEAR_USER_UPDATE_PROVIDERS: {
+      return { ...state, setprovider: false };
+    }
+    case CLEAR_USER_UPDATE_CURRENCY: {
+      return { ...state, setcurrency: false };
+    }
+    case CLEAR_USER_UPDATE_NOTIFY: {
+      return { ...state, setnotify: false };
+    }
+    case CLEAR_USER_UPDATE_MODE: {
+      return { ...state, setmode: false };
+    }
+    case CLEAR_USER_UPDATE_PROFILE: {
+      return { ...state, setprofile: false };
+    }
+    case CLEAR_USER_UPDATE_ACCOUNT: {
+      return { ...state, setaccount: false };
+    }
+    case CLEAR_USER_GET_WALLET: {
+      return { ...state, userwallet: [] };
     }
     default:
       return state;

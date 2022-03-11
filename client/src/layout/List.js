@@ -1,65 +1,54 @@
 import React, { useState } from "react";
 import { ImUndo } from "react-icons/im";
-
-function SelectList(props) {
+function List(props) {
   const { list, onSubmit, load } = props;
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState("");
   const [items, setItems] = useState(list);
-
   let listItem, displayList;
+  const clickHandler = (value) => {
+    setItems(items.filter((provider) => provider.id !== value));
+  };
+  const submitProviderHandler = () => {
+    let itemsId = items.map((item) => item.id);
+    if (items.length === list.length) {
+      setErrors("You have not removed any Provider form the list.");
+    } else if (itemsId.length <= 0 || itemsId === undefined) {
+      setErrors("You can't submit an empty Provider list.");
+    } else {
+      setErrors("");
+      setLoading(true);
+      onSubmit(["reset-provider", itemsId]);
+      setLoading(load);
+    }
+  };
   const resetHandler = () => {
     setItems(list);
   };
 
-  const clickHandler = (value) => {
-    setItems(items.filter((currency) => currency.id !== value));
-  };
-
   if (list === null) {
     listItem = (
-      <p>You are currently receiving Signals about all our Currency Pairs</p>
+      <p>You are currently receiving Signals from all our Providers</p>
     );
   } else {
-    const submitCurrencyHandler = () => {
-      let itemsId = items.map((item) => item.id);
-      if (items.length === list.length) {
-        setErrors("You have not removed any Currency Pair form the list.");
-      } else if (itemsId.length <= 0 || itemsId === undefined) {
-        setErrors("You can't submit an empty Currency Pair list.");
-      } else {
-        setErrors("");
-        setLoading(true);
-        onSubmit(["reset-currency", itemsId]);
-        setLoading(load);
-      }
-    };
-
     displayList = items.map((item, i) => {
       return (
         <li
           className="list-group-item d-flex justify-content-between align-items-center"
           key={i}
         >
-          {`${JSON.parse(
-            item.firstcurrency.split(", ")
-          )[1].toUpperCase()}/${JSON.parse(
-            item.secondcurrency.split(", ")
-          )[1].toUpperCase()}`}
+          {item.username}
           <span className="remove-selected-item">
             <i
               className="fas fa-times"
-              title={`Remove ${JSON.parse(
-                item.firstcurrency.split(", ")
-              )[1].toUpperCase()}/${JSON.parse(
-                item.secondcurrency.split(", ")
-              )[1].toUpperCase()}`}
+              title={`Remove ${item.username.toUpperCase()}`}
               onClick={() => clickHandler(item.id)}
             />
           </span>
         </li>
       );
     });
+
     listItem = (
       <div className="currency-list">
         <h4 className="mb-3">List of Currencies you are subscribed to</h4>
@@ -72,7 +61,7 @@ function SelectList(props) {
                 <button
                   type="submit"
                   className="btn default-btn btn-lg btn-block"
-                  onClick={submitCurrencyHandler}
+                  onClick={submitProviderHandler}
                 >
                   Update List
                   {loading && (
@@ -98,4 +87,5 @@ function SelectList(props) {
 
   return <div>{listItem}</div>;
 }
-export default SelectList;
+
+export default List;

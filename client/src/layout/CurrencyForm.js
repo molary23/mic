@@ -2,19 +2,26 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 function CurrencyForm(props) {
-  const { onSubmit, currencyList } = props;
+  const { onSubmit, currencyList, load } = props;
   const [loading, setLoading] = useState(false);
   const [currency, setCurrency] = useState([]);
-
+  const [errors, setErrors] = useState("");
   let currencies = [];
 
   const submitHandler = (e) => {
     e.preventDefault();
     setLoading(true);
     let curId = currency.map((item) => {
-      return item.split("-")[0];
+      return parseInt(item.split("-")[0]);
     });
     onSubmit(curId);
+
+    if (curId === undefined || curId.length === 0) {
+      setErrors("Kindly select a Currency Pair.");
+    } else {
+      onSubmit(curId);
+      setLoading(load);
+    }
   };
 
   const changeHandler = (e) => {
@@ -76,6 +83,7 @@ function CurrencyForm(props) {
           })}
           ;
         </select>
+        {errors && <small className="text-muted">{errors}</small>}
         <div className="selectedCurrencies">
           <ul className="list-group list-group-horizontal mb-3">
             {currency.map((item, i) => {

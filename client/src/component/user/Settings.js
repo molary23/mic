@@ -3,6 +3,16 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import {
+  RiLockPasswordLine,
+  RiCurrencyLine,
+  RiShieldUserLine,
+} from "react-icons/ri";
+import { CgProfile } from "react-icons/cg";
+import { AiOutlineMoneyCollect } from "react-icons/ai";
+import { BiAdjust } from "react-icons/bi";
+import { HiOutlineBell } from "react-icons/hi";
+
+import {
   getUserSettings,
   getList,
   clearActions,
@@ -20,6 +30,7 @@ import Toast from "../../layout/Toast";
 import ProfileForm from "../../layout/ProfileForm";
 import ProgressBar from "../../layout/ProgressBar";
 import SelectList from "../../layout/SelectList";
+import List from "../../layout/List";
 import CurrencyForm from "../../layout/CurrencyForm";
 import Spinner from "../../layout/Spinner";
 
@@ -27,7 +38,7 @@ class Settings extends Component {
   state = {
     active: 0,
     sender: "user-settings",
-    loading: null,
+    loading: false,
     modal: false,
     error: {},
     toast: false,
@@ -39,6 +50,7 @@ class Settings extends Component {
     this.props.getUserSettings();
     this.props.getList("currency");
     this.props.getList("provider");
+    this.props.getList("wallet");
   }
   componentWillUnmount() {
     this.props.clearActions("user-settings");
@@ -53,19 +65,37 @@ class Settings extends Component {
   };
 
   submitNotifyHandler = (value) => {
-    console.log(value);
-    this.setState({
-      loading: false,
-    });
+    this.props.saveSettings("notify", { notify: value });
   };
 
   submitDisplayHandler = (value) => {
-    console.log(value);
     this.setState({
-      loading: false,
+      loading: true,
     });
+    this.props.saveSettings("mode", { mode: value });
   };
-  submitProfileHandler = (value) => {};
+  submitProfileHandler = (value) => {
+    this.setState({
+      loading: true,
+    });
+    this.props.saveSettings("profile", value);
+  };
+
+  submitCurrencyHandler = (value) => {
+    this.setState({
+      loading: true,
+    });
+    //console.log(value);
+    this.props.saveSettings("currency", value);
+  };
+
+  submitAccountHandler = (value) => {
+    this.setState({
+      loading: true,
+    });
+    //console.log(value);
+    this.props.saveSettings("account", value);
+  };
 
   openModal = () => {
     this.setState({
@@ -82,13 +112,14 @@ class Settings extends Component {
 
   submitProviderHandler = (value) => {
     this.setState({
-      //   loading: true,
+      loading: true,
     });
     //console.log(value);
     this.props.saveSettings("provider", value);
-    this.setState({
-      // loading: false,
-    });
+  };
+
+  submitListHandler = (value) => {
+    this.props.saveSettings(value[0], value[1]);
   };
 
   render() {
@@ -99,12 +130,11 @@ class Settings extends Component {
     let load = false,
       loader = false,
       settings = null,
-      providers = null,
       profile = null,
-      currencies = null,
       accounts = null,
       providerList = null,
       currencyList = null,
+      walletList = null,
       notify = null,
       mode = null;
 
@@ -117,12 +147,11 @@ class Settings extends Component {
       settings = user.usersettings;
       notify = settings.settings.notify;
       mode = settings.settings.mode;
-      providers = settings.settings.providers;
-      currencies = settings.settings.currencies;
       accounts = settings.accounts;
       profile = settings.profile;
       currencyList = user.usercurrencies;
       providerList = user.userproviders;
+      walletList = user.userwallet;
     }
 
     return (
@@ -147,7 +176,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(0)}
                         >
-                          <i className="fas fa-id-card-alt" /> Profile
+                          <CgProfile /> Profile
                         </button>
                       </li>
                       <li className="nav-item">
@@ -157,7 +186,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(1)}
                         >
-                          <i className="fas fa-shield-alt" /> Password
+                          <RiLockPasswordLine /> Password
                         </button>
                       </li>
                       <li className="nav-item">
@@ -167,7 +196,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(2)}
                         >
-                          <i className="fas fa-user-tag" /> Providers
+                          <RiShieldUserLine /> Providers
                         </button>
                       </li>
                       <li className="nav-item">
@@ -177,7 +206,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(3)}
                         >
-                          <i className="fas fa-money-bill-wave-alt" /> Currency
+                          <RiCurrencyLine /> Currency
                         </button>
                       </li>
                       <li className="nav-item">
@@ -187,7 +216,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(4)}
                         >
-                          <i className="far fa-bell" /> Notification
+                          <HiOutlineBell /> Notification
                         </button>
                       </li>
                       <li className="nav-item">
@@ -197,7 +226,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(5)}
                         >
-                          <i className="fas fa-file-invoice-dollar" /> Account
+                          <AiOutlineMoneyCollect /> Account
                         </button>
                       </li>
                       <li className="nav-item">
@@ -208,7 +237,7 @@ class Settings extends Component {
                           onClick={() => this.moveActive(6)}
                         >
                           {" "}
-                          <i className="fas fa-adjust" />
+                          <BiAdjust />
                         </button>
                       </li>
                     </ul>
@@ -233,6 +262,7 @@ class Settings extends Component {
                     <PasswordForm
                       onSubmit={this.submitHandler}
                       sender={sender}
+                      load={loading}
                     />
                   </div>
                   <div
@@ -242,38 +272,18 @@ class Settings extends Component {
                     <div className="container-fluid">
                       <div className="row">
                         <div className="col-md-5 col-xs-12">
-                          <div className="provider-list">
-                            <h4 className="mb-3">
-                              List of Providers you subscribed to
-                            </h4>
-                            <ul className="list-group mb-3">
-                              <SelectList
-                                list={providers}
-                                sender={"provider"}
-                                providerList={providerList}
-                              />
-                            </ul>
-                            {providers !== null && (
-                              <div className="d-grid">
-                                <button
-                                  type="submit"
-                                  className="btn default-btn btn-lg btn-block"
-                                >
-                                  Update List
-                                  {loading && (
-                                    <span className="spinner-border spinner-border-sm ms-2"></span>
-                                  )}
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <List
+                            list={settings.providers}
+                            sender={"provider"}
+                            onSubmit={this.submitListHandler}
+                            load={loading}
+                          />
                         </div>
                         <div className="col-md-2"></div>
                         <div className="col-md-5 col-xs-12">
                           {providerList !== null && (
                             <SignalForm
                               onSubmit={this.submitProviderHandler}
-                              sender={sender}
                               providerList={providerList}
                               load={loading}
                             />
@@ -289,30 +299,11 @@ class Settings extends Component {
                     <div className="container-fluid">
                       <div className="row">
                         <div className="col-md-5 col-xs-12">
-                          <div className="provider-list">
-                            <h4 className="mb-3">
-                              List of Currencies you subscribed to
-                            </h4>
-                            <ul className="list-group mb-3">
-                              <SelectList
-                                list={currencies}
-                                sender={"currency"}
-                              />
-                            </ul>
-                            {currencies !== null && (
-                              <div className="d-grid">
-                                <button
-                                  type="submit"
-                                  className="btn default-btn btn-lg btn-block"
-                                >
-                                  Update List
-                                  {loading && (
-                                    <span className="spinner-border spinner-border-sm ms-2"></span>
-                                  )}
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <SelectList
+                            list={settings.currencies}
+                            onSubmit={this.submitListHandler}
+                            load={loading}
+                          />
                         </div>
                         <div className="col-md-2"></div>
                         <div className="col-md-5 col-xs-12">
@@ -334,7 +325,7 @@ class Settings extends Component {
                     {notify !== null && (
                       <Notification
                         onSubmit={this.submitNotifyHandler}
-                        sender={sender}
+                        sender={"currency"}
                         load={loading}
                         alert={notify}
                       />
@@ -370,6 +361,7 @@ class Settings extends Component {
                         onSubmit={this.submitDisplayHandler}
                         sender={sender}
                         display={mode}
+                        load={loading}
                       />
                     )}
                   </div>
@@ -381,8 +373,9 @@ class Settings extends Component {
         {modal ? (
           <AddModal
             {...{ modal, sender, error, purpose }}
+            walletList={walletList !== null && walletList}
             onClick={this.modalHandler}
-            onSubmit={this.submitHandler}
+            onSubmit={this.submitAccountHandler}
           />
         ) : null}
         {toast && <Toast text={toasttext} />}

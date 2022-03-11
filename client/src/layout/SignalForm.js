@@ -4,13 +4,13 @@ function SignalForm(props) {
   const { onSubmit, providerList, load } = props;
   const [loading, setLoading] = useState(false);
   const [provider, setProvider] = useState([]);
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState("");
   let providers = [];
   const submitHandler = (e) => {
     e.preventDefault();
     setLoading(true);
     let prId = provider.map((item) => {
-      return item.split("-")[0];
+      return parseInt(item.split("-")[0]);
     });
 
     if (prId === undefined || prId.length === 0) {
@@ -96,12 +96,30 @@ function SignalForm(props) {
           </ul>
         </div>
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
-            Add Providers
-            {loading && (
-              <span className="spinner-border spinner-border-sm ms-2"></span>
-            )}
-          </button>
+          <div className="row">
+            <div className="col-6">
+              <button
+                type="submit"
+                className="btn default-btn btn-lg btn-block"
+              >
+                Add Selected
+                {loading && (
+                  <span className="spinner-border spinner-border-sm ms-2"></span>
+                )}
+              </button>
+            </div>
+            <div className="col-6">
+              <button
+                type="submit"
+                className="btn default-btn btn-lg btn-block"
+              >
+                Add All
+                {loading && (
+                  <span className="spinner-border spinner-border-sm ms-2"></span>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

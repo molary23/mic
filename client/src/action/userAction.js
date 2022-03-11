@@ -31,6 +31,20 @@ import {
   CLEAR_USER_SET_CURRENCY,
   USER_SET_PROVIDERS,
   CLEAR_USER_SET_PROVIDERS,
+  USER_UPDATE_CURRENCY,
+  CLEAR_USER_UPDATE_CURRENCY,
+  USER_UPDATE_PROVIDERS,
+  CLEAR_USER_UPDATE_PROVIDERS,
+  USER_UPDATE_NOTIFY,
+  CLEAR_USER_UPDATE_NOTIFY,
+  USER_UPDATE_MODE,
+  CLEAR_USER_UPDATE_MODE,
+  USER_UPDATE_PROFILE,
+  CLEAR_USER_UPDATE_PROFILE,
+  USER_GET_WALLET,
+  CLEAR_USER_GET_WALLET,
+  USER_UPDATE_ACCOUNT,
+  CLEAR_USER_UPDATE_ACCOUNT,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -92,6 +106,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_GET_CURRENCY };
   } else if (actionToClear === "user-provider") {
     return { type: CLEAR_USER_GET_PROVIDERS };
+  } else if (actionToClear === "wallet") {
+    return { type: CLEAR_USER_GET_WALLET };
   }
 };
 
@@ -164,6 +180,9 @@ export const getList = (list) => async (dispatch) => {
   } else if (list === "provider") {
     dispatch(clearActions("user-provider"));
     type = USER_GET_PROVIDERS;
+  } else if (list === "wallet") {
+    dispatch(clearActions("wallet"));
+    type = USER_GET_WALLET;
   }
 
   try {
@@ -192,8 +211,31 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     dispatch(clearSettings("provider"));
     type = USER_SET_PROVIDERS;
     url = `${url}provider`;
+  } else if (settings === "reset-provider") {
+    dispatch(clearSettings("reset-provider"));
+    type = USER_UPDATE_PROVIDERS;
+    url = `${url}reset/provider`;
+  } else if (settings === "reset-currency") {
+    dispatch(clearSettings("reset-currency"));
+    type = USER_UPDATE_CURRENCY;
+    url = `${url}reset/currency`;
+  } else if (settings === "notify") {
+    dispatch(clearSettings("notify"));
+    type = USER_UPDATE_NOTIFY;
+    url = `${url}/notify`;
+  } else if (settings === "mode") {
+    dispatch(clearSettings("mode"));
+    type = USER_UPDATE_MODE;
+    url = `${url}/mode`;
+  } else if (settings === "profile") {
+    dispatch(clearSettings("profile"));
+    type = USER_UPDATE_PROFILE;
+    url = `${url}/profile`;
+  } else if (settings === "account") {
+    dispatch(clearSettings("account"));
+    type = USER_UPDATE_ACCOUNT;
+    url = `${url}/account`;
   }
-
   try {
     let response = await axios.post(url, data);
     const result = await dispatch({
@@ -213,5 +255,26 @@ export const clearSettings = (settings) => {
   }
   if (settings === "provider") {
     return { type: CLEAR_USER_SET_PROVIDERS };
+  }
+  if (settings === "reset-provider") {
+    return { type: CLEAR_USER_UPDATE_PROVIDERS };
+  }
+  if (settings === "reset-currency") {
+    return { type: CLEAR_USER_UPDATE_CURRENCY };
+  }
+  if (settings === "notify") {
+    return { type: CLEAR_USER_UPDATE_NOTIFY };
+  }
+  if (settings === "mode") {
+    return { type: CLEAR_USER_UPDATE_MODE };
+  }
+  if (settings === "profile") {
+    return { type: CLEAR_USER_UPDATE_PROFILE };
+  }
+  if (settings === "wallet") {
+    return { type: CLEAR_USER_GET_WALLET };
+  }
+  if (settings === "account") {
+    return { type: CLEAR_USER_UPDATE_ACCOUNT };
   }
 };

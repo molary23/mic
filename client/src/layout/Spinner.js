@@ -1,7 +1,6 @@
 import React from "react";
 
 function Spinner() {
-  console.log("first");
   return (
     <div>
       <div className="loader">

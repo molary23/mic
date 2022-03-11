@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import Box from "./Box";
 
 function Notification(props) {
-  const { onSubmit, sender, load, alert } = props;
+  const { onSubmit, load, alert } = props;
 
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState("");
 
   let beep = false;
   if (alert === "y") {
@@ -15,9 +16,19 @@ function Notification(props) {
   const submitHandler = (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log(notify);
-    onSubmit(notify);
-    setLoading(load);
+    if ((notify && alert === "y") || (!notify && alert === "n")) {
+      setErrors("You have not made any changes to your Notification Status");
+    } else {
+      setErrors("");
+      let buzz;
+      if (notify) {
+        buzz = "y";
+      } else {
+        buzz = "n";
+      }
+      onSubmit(buzz);
+      setLoading(load);
+    }
   };
   const changeHandler = (e) => {
     setNotify(!notify);
@@ -43,7 +54,8 @@ function Notification(props) {
             Email Notification
           </label>
         </div>
-        <div className="d-grid">
+        {errors && <small className="text-muted">{errors}</small>}
+        <div className="d-grid mt-3">
           <button type="submit" className="btn default-btn btn-lg btn-block">
             Change
             {loading && (

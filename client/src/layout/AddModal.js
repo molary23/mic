@@ -19,6 +19,7 @@ function AddModal(props) {
     modalsignaldetails,
     error,
     modalAnnDetails,
+    walletList,
   } = props;
 
   const [open, setOpen] = useState(modal);
@@ -48,363 +49,6 @@ function AddModal(props) {
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setInputs((values) => ({ ...values, [name]: value }));
-  };
-  // Submit Add Signal
-  const submitNewHandler = (e) => {
-    e.preventDefault();
-
-    const signal = checkEmptyInput({
-      inputs,
-      setErrors,
-      setLoading,
-      pair: "addpair",
-      option: "addsignaloption",
-      status: "addsignalstatus",
-      takeprofit: "addtakeprofit",
-      stoploss: "addstoploss",
-      startrange: "addstartrange",
-      endrange: "addendrange",
-      pip: "addpip",
-    });
-
-    if (signal !== false) {
-      setErrors({});
-      onSubmit(["new", signal]);
-    }
-  };
-
-  // Submit Edit Signal
-  const submitEditHandler = (e) => {
-    inputs.editpair = inputs.editpair ?? modalsignaldetails.CurrencyId;
-    inputs.editsignaloption =
-      inputs.editsignaloption ??
-      modalsignaldetails.signaloption.toLowerCase() === "sell"
-        ? "s"
-        : "b";
-    inputs.editsignalstatus =
-      inputs.editsignalstatus ??
-      modalsignaldetails.status.toLowerCase() === "filled"
-        ? "f"
-        : "c";
-    inputs.edittakeprofit =
-      inputs.edittakeprofit ?? modalsignaldetails.takeprofit.toString();
-    inputs.editstoploss =
-      inputs.editstoploss ?? modalsignaldetails.stoploss.toString();
-    inputs.editstartrange =
-      inputs.editstartrange ?? modalsignaldetails.range.split("-")[0].trim();
-    inputs.editendrange =
-      inputs.editendrange ?? modalsignaldetails.range.split("-")[1].trim();
-    inputs.editpip = inputs.editpip ?? modalsignaldetails.pip.toString();
-    e.preventDefault();
-    const signal = checkEmptyInput({
-      inputs,
-      setErrors,
-      setLoading,
-      pair: "editpair",
-      option: "editsignaloption",
-      status: "editsignalstatus",
-      takeprofit: "edittakeprofit",
-      stoploss: "editstoploss",
-      startrange: "editstartrange",
-      endrange: "editendrange",
-      pip: "editpip",
-    });
-
-    if (signal !== false) {
-      setErrors({});
-      onSubmit(["edit", signal, modalsignaldetails.signalid]);
-    }
-  };
-  // Submit Currency
-  const submitCurrency = (e) => {
-    e.preventDefault();
-    if (
-      !Object.keys(inputs).includes("addfirstcurrencyname") ||
-      inputs.addfirstcurrencyname === ""
-    ) {
-      setErrors({
-        addfirstcurrencyname: "First Currency Name Field can't be empty",
-      });
-    } else if (inputs.addfirstcurrencyname.length > 3) {
-      setErrors({
-        addfirstcurrencyname: "Currency Name can't be more than 3 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addfirstcurrencycode") ||
-      inputs.addfirstcurrencycode === ""
-    ) {
-      setErrors({
-        addfirstcurrencycode: "First Currency Code Field can't be empty",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addsecondcurrencyname") ||
-      inputs.addsecondcurrencyname === ""
-    ) {
-      setErrors({
-        addsecondcurrencyname: "Second Currency Name Field can't be empty",
-      });
-    } else if (inputs.addsecondcurrencyname.length > 3) {
-      setErrors({
-        addsecondcurrencyname: "Currency Name can't be more than 3 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addsecondcurrencycode") ||
-      inputs.addsecondcurrencycode === ""
-    ) {
-      setErrors({
-        addsecondcurrencycode: "Second Currency Code Field can't be empty",
-      });
-    } else {
-      setErrors({});
-      const currency = {
-        firstcurrencypair: JSON.stringify([
-          inputs.addfirstcurrencycode.toLowerCase(),
-          inputs.addfirstcurrencyname.toLowerCase(),
-        ]),
-        secondcurrencypair: JSON.stringify([
-          inputs.addsecondcurrencycode.toLowerCase(),
-          inputs.addsecondcurrencyname.toLowerCase(),
-        ]),
-      };
-      onSubmit(["add", currency]);
-    }
-  };
-
-  // Submit Admin
-  const submitAdmin = (e) => {
-    e.preventDefault();
-    let tester = pattern.test(inputs.addadminusername);
-    if (
-      !Object.keys(inputs).includes("addadminemail") ||
-      inputs.addadminemail === ""
-    ) {
-      setErrors({
-        addadminemail: "Email Address Field can't be empty",
-      });
-    } else if (inputs.addadminemail.length > 50) {
-      setErrors({
-        addadminemail: "Email Address can't be more than 50 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addadminusername") ||
-      inputs.addadminusername === ""
-    ) {
-      setErrors({
-        addadminusername: "Username Field can't be empty",
-      });
-    } else if (!tester) {
-      setErrors({
-        addadminusername:
-          "Only contain Letters, Numbers and (.-_) characters allowed",
-      });
-    } else if (inputs.addadminusername.length > 30) {
-      setErrors({
-        addadminusername: "Username can't be more than 30 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addadminphone") ||
-      inputs.addadminphone === ""
-    ) {
-      setErrors({
-        addadminphone: "Phone Number Field can't be empty",
-      });
-    } else if (isNaN(inputs.addadminphone)) {
-      setErrors({
-        addadminphone: "Phone Number can only be a Number",
-      });
-    } else if (inputs.addadminphone.length > 20) {
-      setErrors({
-        addadminphone: "Phone Number can only be 20 digits",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addadminpassword") ||
-      inputs.addadminpassword === ""
-    ) {
-      setErrors({
-        addadminpassword: "Password Field can't be empty",
-      });
-    } else if (inputs.addadminpassword.length < 8) {
-      setErrors({
-        addadminpassword: "Password should be at least 8 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addadminpassword2") ||
-      inputs.addadminpassword2 === ""
-    ) {
-      setErrors({
-        addadminpassword2: "Confirm Password Field can't be empty",
-      });
-    } else if (inputs.addadminpassword2.length < 8) {
-      setErrors({
-        addadminpassword2: "Confirm Password should be at least 8 characters",
-      });
-    } else if (inputs.addadminpassword !== inputs.addadminpassword2) {
-      setErrors({
-        addadminpassword2: "Password Mismatched",
-      });
-    } else {
-      setErrors({});
-      const admin = {
-        email: inputs.addadminemail.toLowerCase(),
-        username: inputs.addadminusername.toLowerCase(),
-        phone: inputs.addadminphone,
-        password: inputs.addadminpassword,
-      };
-      onSubmit(["add", admin]);
-    }
-  };
-
-  const submitNewAnnhandler = (e) => {
-    e.preventDefault();
-    if (
-      !Object.keys(inputs).includes("addanntitle") ||
-      inputs.addanntitle === ""
-    ) {
-      setErrors({
-        addanntitle: "Announcement Title Field can't be empty",
-      });
-    } else if (inputs.addanntitle.length > 50) {
-      setErrors({
-        addanntitle: "Announcement Title can't be more than 50 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addannlink") ||
-      inputs.addannlink === ""
-    ) {
-      setErrors({
-        addannlink: "Announcement Link can't be empty",
-      });
-    } else if (inputs.addannlink.length > 100) {
-      setErrors({
-        addannlink: "Announcement Title can't be more than 30 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addannstartdate") ||
-      inputs.addannstartdate === ""
-    ) {
-      setErrors({
-        addannstartdate: "Announcement Start Date Field can't be empty",
-      });
-    } else if (inputs.addannstartdate.length > 10) {
-      setErrors({
-        addannstartdate:
-          "Announcement Start Date can't be more than 10 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addannenddate") ||
-      inputs.addannenddate === ""
-    ) {
-      setErrors({
-        addannenddate: "Announcement End Date can't be empty",
-      });
-    } else if (inputs.addannenddate.length > 10) {
-      setErrors({
-        addannstartdate:
-          "Announcement End Date can't be more than 10 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("addannsummary") ||
-      inputs.addannsummary === ""
-    ) {
-      setErrors({
-        addannsummary: "Announcement Summary Field can't be empty",
-      });
-    } else if (inputs.addannsummary.length > 255) {
-      setErrors({
-        addannsummary: "Announcement Summary can't be more than 255 characters",
-      });
-    } else {
-      setErrors({});
-      const ann = {
-        title: inputs.addanntitle.toLowerCase(),
-        link: inputs.addannlink.toLowerCase(),
-        summary: inputs.addannsummary.toLowerCase(),
-        startdate: inputs.addannstartdate,
-        enddate: inputs.addannenddate,
-      };
-      onSubmit(["new", ann]);
-    }
-  };
-
-  const submitEditAnnhandler = (e) => {
-    e.preventDefault();
-    inputs.editanntitle =
-      inputs.editanntitle ?? modalAnnDetails.title.toString();
-    inputs.editannlink = inputs.editannlink ?? modalAnnDetails.link.toString();
-    inputs.editannstartdate =
-      inputs.editannstartdate ?? modalAnnDetails.startdate;
-    inputs.editannenddate = inputs.editannenddate ?? modalAnnDetails.enddate;
-    inputs.editannsummary =
-      inputs.editannsummary ?? modalAnnDetails.summary.toString();
-    if (
-      !Object.keys(inputs).includes("editanntitle") ||
-      inputs.editanntitle === ""
-    ) {
-      setErrors({
-        editanntitle: "Announcement Title Field can't be empty",
-      });
-    } else if (inputs.editanntitle.length > 50) {
-      setErrors({
-        editanntitle: "Announcement Title can't be more than 50 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("editannlink") ||
-      inputs.editannlink === ""
-    ) {
-      setErrors({
-        editannlink: "Announcement Link can't be empty",
-      });
-    } else if (inputs.editannlink.length > 100) {
-      setErrors({
-        editannlink: "Announcement Title can't be more than 30 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("editannstartdate") ||
-      inputs.editannstartdate === ""
-    ) {
-      setErrors({
-        editannstartdate: "Announcement Start Date Field can't be empty",
-      });
-    } else if (inputs.editannstartdate.length > 10) {
-      setErrors({
-        editannstartdate:
-          "Announcement Start Date can't be more than 10 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("editannenddate") ||
-      inputs.editannenddate === ""
-    ) {
-      setErrors({
-        editannenddate: "Announcement End Date can't be empty",
-      });
-    } else if (inputs.editannenddate.length > 10) {
-      setErrors({
-        editannstartdate:
-          "Announcement End Date can't be more than 10 characters",
-      });
-    } else if (
-      !Object.keys(inputs).includes("editannsummary") ||
-      inputs.editannsummary === ""
-    ) {
-      setErrors({
-        editannsummary: "Announcement Summary Field can't be empty",
-      });
-    } else if (inputs.editannsummary.length > 255) {
-      setErrors({
-        editannsummary:
-          "Announcement Summary can't be more than 255 characters",
-      });
-    } else {
-      setErrors({});
-      const ann = {
-        title: inputs.editanntitle.toLowerCase(),
-        link: inputs.editannlink.toLowerCase(),
-        summary: inputs.editannsummary.toLowerCase(),
-        startdate: inputs.editannstartdate,
-        enddate: inputs.editannenddate,
-      };
-      onSubmit(["edit", ann, modalAnnDetails.id]);
-    }
   };
 
   const keyHandler = (e) => {
@@ -443,6 +87,29 @@ function AddModal(props) {
     }
     optArray.unshift(defaultOpt);
     if (purpose === "add-new") {
+      // Submit Add Signal
+      const submitNewHandler = (e) => {
+        e.preventDefault();
+
+        const signal = checkEmptyInput({
+          inputs,
+          setErrors,
+          setLoading,
+          pair: "addpair",
+          option: "addsignaloption",
+          status: "addsignalstatus",
+          takeprofit: "addtakeprofit",
+          stoploss: "addstoploss",
+          startrange: "addstartrange",
+          endrange: "addendrange",
+          pip: "addpip",
+        });
+
+        if (signal !== false) {
+          setErrors({});
+          onSubmit(["new", signal]);
+        }
+      };
       title = "Add New Signal";
       text = (
         <div className="add-new-signal">
@@ -532,6 +199,49 @@ function AddModal(props) {
         </div>
       );
     } else if (purpose === "edit") {
+      // Submit Edit Signal
+      const submitEditHandler = (e) => {
+        inputs.editpair = inputs.editpair ?? modalsignaldetails.CurrencyId;
+        inputs.editsignaloption =
+          inputs.editsignaloption ??
+          modalsignaldetails.signaloption.toLowerCase() === "sell"
+            ? "s"
+            : "b";
+        inputs.editsignalstatus =
+          inputs.editsignalstatus ??
+          modalsignaldetails.status.toLowerCase() === "filled"
+            ? "f"
+            : "c";
+        inputs.edittakeprofit =
+          inputs.edittakeprofit ?? modalsignaldetails.takeprofit.toString();
+        inputs.editstoploss =
+          inputs.editstoploss ?? modalsignaldetails.stoploss.toString();
+        inputs.editstartrange =
+          inputs.editstartrange ??
+          modalsignaldetails.range.split("-")[0].trim();
+        inputs.editendrange =
+          inputs.editendrange ?? modalsignaldetails.range.split("-")[1].trim();
+        inputs.editpip = inputs.editpip ?? modalsignaldetails.pip.toString();
+        e.preventDefault();
+        const signal = checkEmptyInput({
+          inputs,
+          setErrors,
+          setLoading,
+          pair: "editpair",
+          option: "editsignaloption",
+          status: "editsignalstatus",
+          takeprofit: "edittakeprofit",
+          stoploss: "editstoploss",
+          startrange: "editstartrange",
+          endrange: "editendrange",
+          pip: "editpip",
+        });
+
+        if (signal !== false) {
+          setErrors({});
+          onSubmit(["edit", signal, modalsignaldetails.signalid]);
+        }
+      };
       title = "Edit Signal";
       text = (
         <div className="edit-signal">
@@ -653,6 +363,62 @@ function AddModal(props) {
     title = "View Signal";
     text = <Signal signal={modalsignaldetails} sender={"admin"} />;
   } else if (sender === "admin-currencies") {
+    // Submit Currency
+    const submitCurrency = (e) => {
+      e.preventDefault();
+      if (
+        !Object.keys(inputs).includes("addfirstcurrencyname") ||
+        inputs.addfirstcurrencyname === ""
+      ) {
+        setErrors({
+          addfirstcurrencyname: "First Currency Name Field can't be empty",
+        });
+      } else if (inputs.addfirstcurrencyname.length > 3) {
+        setErrors({
+          addfirstcurrencyname: "Currency Name can't be more than 3 characters",
+        });
+      } else if (
+        !Object.keys(inputs).includes("addfirstcurrencycode") ||
+        inputs.addfirstcurrencycode === ""
+      ) {
+        setErrors({
+          addfirstcurrencycode: "First Currency Code Field can't be empty",
+        });
+      } else if (
+        !Object.keys(inputs).includes("addsecondcurrencyname") ||
+        inputs.addsecondcurrencyname === ""
+      ) {
+        setErrors({
+          addsecondcurrencyname: "Second Currency Name Field can't be empty",
+        });
+      } else if (inputs.addsecondcurrencyname.length > 3) {
+        setErrors({
+          addsecondcurrencyname:
+            "Currency Name can't be more than 3 characters",
+        });
+      } else if (
+        !Object.keys(inputs).includes("addsecondcurrencycode") ||
+        inputs.addsecondcurrencycode === ""
+      ) {
+        setErrors({
+          addsecondcurrencycode: "Second Currency Code Field can't be empty",
+        });
+      } else {
+        setErrors({});
+        const currency = {
+          firstcurrencypair: JSON.stringify([
+            inputs.addfirstcurrencycode.toLowerCase(),
+            inputs.addfirstcurrencyname.toLowerCase(),
+          ]),
+          secondcurrencypair: JSON.stringify([
+            inputs.addsecondcurrencycode.toLowerCase(),
+            inputs.addsecondcurrencyname.toLowerCase(),
+          ]),
+        };
+        onSubmit(["add", currency]);
+      }
+    };
+
     title = "Add Currency";
     text = (
       <form className="add-currency-form" onSubmit={submitCurrency}>
@@ -725,6 +491,89 @@ function AddModal(props) {
       </form>
     );
   } else if (sender === "admin-admins" || sender === "admin-providers") {
+    // Submit Admin
+    const submitAdmin = (e) => {
+      e.preventDefault();
+      let tester = pattern.test(inputs.addadminusername);
+      if (
+        !Object.keys(inputs).includes("addadminemail") ||
+        inputs.addadminemail === ""
+      ) {
+        setErrors({
+          addadminemail: "Email Address Field can't be empty",
+        });
+      } else if (inputs.addadminemail.length > 50) {
+        setErrors({
+          addadminemail: "Email Address can't be more than 50 characters",
+        });
+      } else if (
+        !Object.keys(inputs).includes("addadminusername") ||
+        inputs.addadminusername === ""
+      ) {
+        setErrors({
+          addadminusername: "Username Field can't be empty",
+        });
+      } else if (!tester) {
+        setErrors({
+          addadminusername:
+            "Only contain Letters, Numbers and (.-_) characters allowed",
+        });
+      } else if (inputs.addadminusername.length > 30) {
+        setErrors({
+          addadminusername: "Username can't be more than 30 characters",
+        });
+      } else if (
+        !Object.keys(inputs).includes("addadminphone") ||
+        inputs.addadminphone === ""
+      ) {
+        setErrors({
+          addadminphone: "Phone Number Field can't be empty",
+        });
+      } else if (isNaN(inputs.addadminphone)) {
+        setErrors({
+          addadminphone: "Phone Number can only be a Number",
+        });
+      } else if (inputs.addadminphone.length > 20) {
+        setErrors({
+          addadminphone: "Phone Number can only be 20 digits",
+        });
+      } else if (
+        !Object.keys(inputs).includes("addadminpassword") ||
+        inputs.addadminpassword === ""
+      ) {
+        setErrors({
+          addadminpassword: "Password Field can't be empty",
+        });
+      } else if (inputs.addadminpassword.length < 8) {
+        setErrors({
+          addadminpassword: "Password should be at least 8 characters",
+        });
+      } else if (
+        !Object.keys(inputs).includes("addadminpassword2") ||
+        inputs.addadminpassword2 === ""
+      ) {
+        setErrors({
+          addadminpassword2: "Confirm Password Field can't be empty",
+        });
+      } else if (inputs.addadminpassword2.length < 8) {
+        setErrors({
+          addadminpassword2: "Confirm Password should be at least 8 characters",
+        });
+      } else if (inputs.addadminpassword !== inputs.addadminpassword2) {
+        setErrors({
+          addadminpassword2: "Password Mismatched",
+        });
+      } else {
+        setErrors({});
+        const admin = {
+          email: inputs.addadminemail.toLowerCase(),
+          username: inputs.addadminusername.toLowerCase(),
+          phone: inputs.addadminphone,
+          password: inputs.addadminpassword,
+        };
+        onSubmit(["add", admin]);
+      }
+    };
     let adm = sender.split("-")[1].replace(/s/g, "");
     title = `Add ${adm}`;
     text = (
@@ -799,6 +648,78 @@ function AddModal(props) {
     );
   } else if (sender === "admin-announcements") {
     if (purpose === "add") {
+      const submitNewAnnhandler = (e) => {
+        e.preventDefault();
+        if (
+          !Object.keys(inputs).includes("addanntitle") ||
+          inputs.addanntitle === ""
+        ) {
+          setErrors({
+            addanntitle: "Announcement Title Field can't be empty",
+          });
+        } else if (inputs.addanntitle.length > 50) {
+          setErrors({
+            addanntitle: "Announcement Title can't be more than 50 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addannlink") ||
+          inputs.addannlink === ""
+        ) {
+          setErrors({
+            addannlink: "Announcement Link can't be empty",
+          });
+        } else if (inputs.addannlink.length > 100) {
+          setErrors({
+            addannlink: "Announcement Title can't be more than 30 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addannstartdate") ||
+          inputs.addannstartdate === ""
+        ) {
+          setErrors({
+            addannstartdate: "Announcement Start Date Field can't be empty",
+          });
+        } else if (inputs.addannstartdate.length > 10) {
+          setErrors({
+            addannstartdate:
+              "Announcement Start Date can't be more than 10 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addannenddate") ||
+          inputs.addannenddate === ""
+        ) {
+          setErrors({
+            addannenddate: "Announcement End Date can't be empty",
+          });
+        } else if (inputs.addannenddate.length > 10) {
+          setErrors({
+            addannstartdate:
+              "Announcement End Date can't be more than 10 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addannsummary") ||
+          inputs.addannsummary === ""
+        ) {
+          setErrors({
+            addannsummary: "Announcement Summary Field can't be empty",
+          });
+        } else if (inputs.addannsummary.length > 255) {
+          setErrors({
+            addannsummary:
+              "Announcement Summary can't be more than 255 characters",
+          });
+        } else {
+          setErrors({});
+          const ann = {
+            title: inputs.addanntitle.toLowerCase(),
+            link: inputs.addannlink.toLowerCase(),
+            summary: inputs.addannsummary.toLowerCase(),
+            startdate: inputs.addannstartdate,
+            enddate: inputs.addannenddate,
+          };
+          onSubmit(["new", ann]);
+        }
+      };
       title = "Add Announcements";
       text = (
         <form className="add-new-ann-form" onSubmit={submitNewAnnhandler}>
@@ -859,6 +780,89 @@ function AddModal(props) {
         </form>
       );
     } else {
+      const submitEditAnnhandler = (e) => {
+        e.preventDefault();
+        inputs.editanntitle =
+          inputs.editanntitle ?? modalAnnDetails.title.toString();
+        inputs.editannlink =
+          inputs.editannlink ?? modalAnnDetails.link.toString();
+        inputs.editannstartdate =
+          inputs.editannstartdate ?? modalAnnDetails.startdate;
+        inputs.editannenddate =
+          inputs.editannenddate ?? modalAnnDetails.enddate;
+        inputs.editannsummary =
+          inputs.editannsummary ?? modalAnnDetails.summary.toString();
+        if (
+          !Object.keys(inputs).includes("editanntitle") ||
+          inputs.editanntitle === ""
+        ) {
+          setErrors({
+            editanntitle: "Announcement Title Field can't be empty",
+          });
+        } else if (inputs.editanntitle.length > 50) {
+          setErrors({
+            editanntitle: "Announcement Title can't be more than 50 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("editannlink") ||
+          inputs.editannlink === ""
+        ) {
+          setErrors({
+            editannlink: "Announcement Link can't be empty",
+          });
+        } else if (inputs.editannlink.length > 100) {
+          setErrors({
+            editannlink: "Announcement Title can't be more than 30 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("editannstartdate") ||
+          inputs.editannstartdate === ""
+        ) {
+          setErrors({
+            editannstartdate: "Announcement Start Date Field can't be empty",
+          });
+        } else if (inputs.editannstartdate.length > 10) {
+          setErrors({
+            editannstartdate:
+              "Announcement Start Date can't be more than 10 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("editannenddate") ||
+          inputs.editannenddate === ""
+        ) {
+          setErrors({
+            editannenddate: "Announcement End Date can't be empty",
+          });
+        } else if (inputs.editannenddate.length > 10) {
+          setErrors({
+            editannstartdate:
+              "Announcement End Date can't be more than 10 characters",
+          });
+        } else if (
+          !Object.keys(inputs).includes("editannsummary") ||
+          inputs.editannsummary === ""
+        ) {
+          setErrors({
+            editannsummary: "Announcement Summary Field can't be empty",
+          });
+        } else if (inputs.editannsummary.length > 255) {
+          setErrors({
+            editannsummary:
+              "Announcement Summary can't be more than 255 characters",
+          });
+        } else {
+          setErrors({});
+          const ann = {
+            title: inputs.editanntitle.toLowerCase(),
+            link: inputs.editannlink.toLowerCase(),
+            summary: inputs.editannsummary.toLowerCase(),
+            startdate: inputs.editannstartdate,
+            enddate: inputs.editannenddate,
+          };
+          onSubmit(["edit", ann, modalAnnDetails.id]);
+        }
+      };
+
       title = "Edit Announcements";
       text = (
         <form className="edit-ann-form" onSubmit={submitEditAnnhandler}>
@@ -923,22 +927,55 @@ function AddModal(props) {
 
   if (sender === "user-settings") {
     if (purpose === "account") {
+      let optObj = {},
+        defaultOpt = { value: "", option: "Select Wallet" },
+        optArray = [];
+      for (let i = 0; i < walletList.length; i++) {
+        optObj = {
+          value: walletList[i].id,
+          option: walletList[i].wallet,
+        };
+        optArray.push(optObj);
+      }
+      optArray.unshift(defaultOpt);
+
       title = "Add/Modify Account";
-      const walletOpt = [
-        {
-          value: "",
-          option: "Select Wallet",
-        },
-      ];
-      const submitAccountHandler = (e) => {};
+
+      const submitAccountHandler = (e) => {
+        e.preventDefault();
+        if (!Object.keys(inputs).includes("wallet") || inputs.wallet === "") {
+          setErrors({
+            wallet: "Wallet Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("accountnumber") ||
+          inputs.accountnumber === ""
+        ) {
+          setErrors({
+            accountnumber: "Account Number Field can't be empty",
+          });
+        } else if (inputs.accountnumber.length > 50) {
+          setErrors({
+            accountnumber: "Account Number can't be more than 50 characters",
+          });
+        } else {
+          setErrors({});
+          setLoading(true);
+          const account = {
+            walletid: parseInt(inputs.wallet),
+            accountnumber: inputs.accountnumber.toLowerCase(),
+          };
+          onSubmit(account);
+        }
+      };
       text = (
         <form className="account-form" onSubmit={submitAccountHandler}>
           <Select
-            options={walletOpt}
+            options={optArray}
             onChange={changeHandler}
             name="wallet"
             value={inputs.wallet || ""}
-            error={error.wallet}
+            error={errors.wallet}
           />
 
           <TextInputField
@@ -949,7 +986,7 @@ function AddModal(props) {
             name="accountnumber"
             value={inputs.accountnumber || ""}
             onChange={changeHandler}
-            error={error.accountnumber}
+            error={errors.accountnumber}
           />
           <div className="d-grid">
             <button type="submit" className="btn default-btn btn-lg btn-block">

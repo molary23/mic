@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 
 function DisplayForm(props) {
-  const { onSubmit, display } = props;
+  const { onSubmit, display, load } = props;
   const [mode, setMode] = useState("");
   const [errors, setErrors] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    setLoading(true);
-    onSubmit(mode);
+    if (display === mode) {
+      setErrors("You have not made any new changes");
+    } else {
+      setLoading(true);
+      onSubmit(mode);
+      setLoading(load);
+    }
   };
   const changeHandler = (e) => {
     setMode(e.target.value);
@@ -18,7 +22,7 @@ function DisplayForm(props) {
   return (
     <div className="settings-form-dark-mode dash-card settings-form-card">
       <div className="page-title mb-2 mt-1">
-        <h4>Add/Modify Account</h4>
+        <h4>Change Display Mode</h4>
       </div>
       <form className="change-display-form" onSubmit={submitHandler}>
         <div className="form-check mb-2">
@@ -72,17 +76,17 @@ function DisplayForm(props) {
             id="radio4"
             className="form-check-input"
             name="display"
-            value="s"
-            defaultChecked={display === "s" && true}
+            value="i"
+            defaultChecked={display === "i" && true}
             onChange={changeHandler}
           />
 
           <label className="form-check-label" htmlFor="radio4">
-            System Preference
+            Inherit from System
           </label>
         </div>
         {errors && <small>{errors}</small>}
-        <div className="d-grid">
+        <div className="d-grid mt-2">
           <button type="submit" className="btn default-btn btn-lg btn-block">
             Change Display Mode
             {loading && (

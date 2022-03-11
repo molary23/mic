@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import jwtDecode from "jwt-decode";
 
+import { HiBadgeCheck } from "react-icons/hi";
+
 import { getUserProfile } from "../action/profileAction";
 import logo from "../asset/images/logo.png";
 
@@ -63,11 +65,9 @@ export class SubNav extends Component {
                   <p className="nav-name">{userinfo.username}&nbsp;</p>
                 </li>
                 <li className="nav-item dropdown">
-                  <p className="nav-sub-icon">
-                    {premiuminfo.status === "n" && (
-                      <i className="fas fa-check-circle" />
-                    )}
-                  </p>
+                  <span className="nav-sub-icon">
+                    {premiuminfo.status === "n" && <HiBadgeCheck />}
+                  </span>
                 </li>
                 {(auth.user.level === 3 || auth.user.level === 1) && (
                   <li className="nav-item dropdown">

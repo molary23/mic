@@ -1,7 +1,7 @@
 import React from "react";
 
 function Select(props) {
-  const { options, onChange, value, name, error, bigssize } = props;
+  const { options, onChange, value, name, error } = props;
   let selectItems;
 
   selectItems = options.map((item, i) => {
@@ -15,7 +15,7 @@ function Select(props) {
   return (
     <div className="mb-3">
       <select
-        className={`form-select ${bigssize}`}
+        className="form-select"
         onChange={onChange}
         value={value}
         name={name}
