@@ -6,7 +6,7 @@ const view_name = "WithdrawalViews";
 
 const original_query = [
   "SELECT ",
-  " Withdrawals.id AS withdrawalid, Withdrawals.amount, Withdrawals.account, Users.id AS userid, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
+  " Withdrawals.id AS withdrawalid, Withdrawals.amount, (SELECT wallet FROM Wallets WHERE id = Withdrawals.walletid) AS wallet, Withdrawals.accountnumber, Users.id AS userid, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
   "Users.username, Withdrawals.createdAt AS createdAt, Withdrawals.updatedAt AS updatedAt, Withdrawals.status AS status ",
   " FROM Withdrawals ",
   " INNER JOIN Users ",
@@ -17,7 +17,7 @@ const original_query = [
 
 const new_query = [
   "SELECT ",
-  " Withdrawals.id AS withdrawalid, Withdrawals.amount, Withdrawals.account, Users.id AS UserId, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
+  " Withdrawals.id AS withdrawalid, Withdrawals.amount, (SELECT wallet FROM Wallets WHERE id = Withdrawals.walletid) AS wallet, Withdrawals.accountnumber, Users.id AS userid, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
   "Users.username, Withdrawals.createdAt AS createdAt, Withdrawals.updatedAt AS updatedAt, Withdrawals.status AS status ",
   " FROM Withdrawals ",
   " INNER JOIN Users ",

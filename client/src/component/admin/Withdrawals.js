@@ -155,7 +155,7 @@ export class Withdrawals extends Component {
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Subscriptions</h1>
+              <h1>Withdrawals</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
@@ -203,12 +203,12 @@ export class Withdrawals extends Component {
                 "amount",
                 "Fullname",
                 "username",
-                "type",
-                "bank/wallet",
+                "status",
+                "wallet",
                 "account",
-                "type",
                 "request date",
                 "response date",
+                "action",
               ]}
             >
               <TableBody

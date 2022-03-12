@@ -48,7 +48,6 @@ export class Bonuses extends Component {
       currentPage: Pagination.currentpage,
       url: new URL(window.location),
       isLoading: false,
-      doneTypingInterval: 5000,
       bonuscount:
         JSON.parse(localStorage.getItem("counts")).bonus ??
         this.props.auth.allCounts.bonus,

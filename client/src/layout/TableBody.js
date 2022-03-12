@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { RiRefreshLine } from "react-icons/ri";
-import { AiOutlineEdit, AiOutlineFolderView } from "react-icons/ai";
+import { AiOutlineEdit } from "react-icons/ai";
+import { FaRegEye } from "react-icons/fa";
+import { ImCancelCircle } from "react-icons/im";
+import { FiCheckCircle } from "react-icons/fi";
 
 import Flag from "react-flagpack";
 
@@ -205,7 +208,7 @@ function TableBody(props) {
     });
   }
 
-  if (sender === "withdrawals") {
+  /* if (sender === "withdrawals") {
     tabeldata = tablebody.map((item, i) => {
       return (
         <tr key={i}>
@@ -218,7 +221,7 @@ function TableBody(props) {
         </tr>
       );
     });
-  }
+  }*/
 
   if (sender === "admin-bonus") {
     tabeldata = tablebody.map((item, i) => {
@@ -258,7 +261,7 @@ function TableBody(props) {
                 title="View Bonus"
                 to={`/admin/bonus/:${item.bonusid}`}
               >
-                <AiOutlineFolderView />
+                <FaRegEye />
               </Link>
             </div>
           </td>
@@ -274,7 +277,7 @@ function TableBody(props) {
                     onClick(["approve", item.bonusid, item.username])
                   }
                 >
-                  <i className="fas fa-check" />
+                  <FiCheckCircle />
                 </button>
                 <button
                   type="button"
@@ -315,6 +318,67 @@ function TableBody(props) {
           <td>{item.type}</td>
           <td>
             <DateFormat date={item.transactiondate}></DateFormat>
+          </td>
+        </tr>
+      );
+    });
+  }
+
+  if (sender === "admin-wallets") {
+    tabeldata = tablebody.map((item, i) => {
+      return (
+        <tr key={i}>
+          <td>{i + 1}</td>
+          <td>{item.wallet}</td>
+          <td>
+            {item.status === "a" && (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "i" && (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+          </td>
+
+          <td>
+            <Link
+              className=""
+              data-id={i}
+              title="View Details"
+              to={`/admin/user/:${item.userId}`}
+            >
+              {item.User.username}
+            </Link>
+          </td>
+
+          <td>
+            <DateFormat date={item.createdAt}></DateFormat>
+          </td>
+          <td>
+            <div className="action-buttons">
+              {item.status !== "a" ? (
+                <button
+                  type="button"
+                  className="btn btn-success btn-sm"
+                  title="Activate Wallet"
+                  onClick={() => onClick(["reactivate", item.id])}
+                >
+                  <FiCheckCircle />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  title="Deactivate Wallet"
+                  onClick={() => onClick(["deactivate", item.id])}
+                >
+                  <ImCancelCircle />
+                </button>
+              )}
+            </div>
           </td>
         </tr>
       );
@@ -368,18 +432,58 @@ function TableBody(props) {
               {item.username}
             </Link>
           </td>
-          <td>{item.status}</td>
           <td>
-            {item.account.bank && item.account.bank}
-            {item.account.wallet && item.account.wallet}
+            {item.status === "a" && (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "r" && (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "p" && (
+              <span className="new-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
           </td>
-          <td>{item.account.account}</td>
-          <td>{item.account.bank && item.account.type}</td>
+          <td>{item.wallet}</td>
+          <td>{item.accountnumber}</td>
           <td>
             <DateFormat date={item.createdAt} />
           </td>
           <td>
             <DateFormat date={item.updatedAt} />
+          </td>
+          <td>
+            {item.status === "p" && (
+              <div className="action-buttons">
+                <button
+                  type="button"
+                  className="btn btn-success btn-sm"
+                  data-id={item.bonusid}
+                  title="Approve Bonus"
+                  onClick={() =>
+                    onClick(["approve", item.bonusid, item.username])
+                  }
+                >
+                  <FiCheckCircle />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  data-id={item.bonusid}
+                  title="Disapprove Bonus"
+                  onClick={() =>
+                    onClick(["reject", item.bonusid, item.username])
+                  }
+                >
+                  <ImCancelCircle />
+                </button>
+              </div>
+            )}
           </td>
         </tr>
       );
@@ -431,7 +535,7 @@ function TableBody(props) {
                 title="Cancel Payment"
                 onClick={() => onClick(i)}
               >
-                <i className="fas fa-ban" />
+                <ImCancelCircle />
               </button>
             </div>
           </td>
@@ -515,7 +619,7 @@ function TableBody(props) {
                 title="View User"
                 to={`/admin/user/:${item.userid}`}
               >
-                <AiOutlineFolderView />
+                <FaRegEye />
               </Link>
             </div>
           </td>
@@ -531,12 +635,8 @@ function TableBody(props) {
           <td>{i + 1}</td>
           <td>{item.fullname}</td>
           <td className="td-lower">{item.username}</td>
-          <td>{item.type}</td>
-          <td>
-            {item.type === "bank" ? item.account.bank : item.account.wallet}
-          </td>
-          <td>{item.account.account}</td>
-          <td>{item.type === "bank" ? item.account.type : null}</td>
+          <td>{item.wallet}</td>
+          <td>{item.accountnumber}</td>
           <td>
             <DateFormat date={item.createdAt} />
           </td>
@@ -831,7 +931,7 @@ function TableBody(props) {
                 title="View Signal"
                 onClick={() => onClick([...["view"], ...[item]])}
               >
-                <AiOutlineFolderView />
+                <FaRegEye />
               </button>
               {sender === "provider-signals" && (
                 <button

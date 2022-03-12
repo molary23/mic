@@ -12,7 +12,7 @@ const express = require("express"),
   Bonus = require("../../db/models/Bonus"),
   Currency = require("../../db/models/Currency"),
   Referral = require("../../db/models/Referral"),
-  Profile = require("../../db/models/Profile"),
+  Wallet = require("../../db/models/Wallet"),
   User = require("../../db/models/User"),
   Announcement = require("../../db/models/Announcement"),
   ReferralView = require("../../db/models/ReferralView"),
@@ -1607,6 +1607,12 @@ router.post(
               {
                 fullname: { [Op.substring]: searchArray[i] },
               },
+              {
+                wallet: { [Op.substring]: searchArray[i] },
+              },
+              {
+                accountnumber: { [Op.substring]: searchArray[i] },
+              },
             ],
           };
 
@@ -1622,6 +1628,8 @@ router.post(
           [Op.or]: [
             { fullname: { [Op.substring]: search } },
             { username: { [Op.substring]: search } },
+            { wallet: { [Op.substring]: search } },
+            { accountnumber: { [Op.substring]: search } },
           ],
         };
       }
@@ -1635,15 +1643,10 @@ router.post(
         "UserId",
         "username",
         "fullname",
-        "account",
+        "accountnumber",
+        "wallet",
         "createdAt",
         "updatedAt",
-        [
-          Sequelize.literal(
-            `CASE WHEN type = 'b' THEN 'bank' WHEN type = 'c' THEN 'crypto-wallet' END `
-          ),
-          "type",
-        ],
       ],
       where,
       raw: true,
@@ -1790,6 +1793,12 @@ router.post(
               {
                 username: { [Op.substring]: searchArray[i] },
               },
+              {
+                wallet: { [Op.substring]: searchArray[i] },
+              },
+              {
+                accountnumber: { [Op.substring]: searchArray[i] },
+              },
             ],
           };
           newSearchArray.push(newSearchObj);
@@ -1818,6 +1827,8 @@ router.post(
                 [Op.or]: [
                   { fullname: { [Op.substring]: search } },
                   { username: { [Op.substring]: search } },
+                  { wallet: { [Op.substring]: search } },
+                  { accountnumber: { [Op.substring]: search } },
                 ],
               },
               { status },
@@ -1828,6 +1839,8 @@ router.post(
             [Op.or]: [
               { fullname: { [Op.substring]: search } },
               { username: { [Op.substring]: search } },
+              { wallet: { [Op.substring]: search } },
+              { accountnumber: { [Op.substring]: search } },
             ],
           };
         }
@@ -1848,20 +1861,125 @@ router.post(
         "UserId",
         "createdAt",
         "amount",
-        "account",
+        "accountnumber",
+        "wallet",
         "updatedAt",
-        [
-          Sequelize.literal(
-            `CASE WHEN status = 'p' THEN 'pending' WHEN status = 'a' THEN 'approved' WHEN status = 'r' THEN 'rejected' END `
-          ),
-          "status",
-        ],
+        "status",
       ],
       where,
       raw: true,
     };
     let result = [];
     WithdrawalView.findAndCountAll(query)
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/admin/wallets
+desc Admin View wallets
+@access private
+*/
+
+router.post(
+  "/wallets",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let limit = null,
+      search = null,
+      status = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.status) status = req.body.status;
+
+    let where = {};
+    if (search) {
+      let searchArray = search.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              {
+                wallet: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (status) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.and]: newSearchArray,
+              },
+              { status },
+            ],
+          };
+        } else {
+          where = {
+            [Op.and]: newSearchArray,
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (status) {
+          where = {
+            [Op.and]: [
+              {
+                [Op.or]: [{ wallet: { [Op.substring]: search } }],
+              },
+              { status },
+            ],
+          };
+        } else {
+          where = {
+            [Op.or]: [{ wallet: { [Op.substring]: search } }],
+          };
+        }
+      }
+    } else {
+      if (status) {
+        where.status = status;
+      }
+    }
+
+    /* const query = {
+      order: [["withdrawalid", "DESC"]],
+      offset,
+      limit,
+      attributes: [
+        "wallet",
+        "status",
+        "date created",
+        "created by",
+      ],
+      where,
+      raw: true,
+    };*/
+    let result = [];
+    Wallet.findAndCountAll({
+      where,
+      order: [["id", "DESC"]],
+      attributes: ["id", "wallet", "status", "createdAt", "UserId"],
+      include: [{ model: User, attributes: ["username"] }],
+    })
       .then((entries) => {
         const { count, rows } = entries;
         result = [...[count], ...rows];

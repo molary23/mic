@@ -10,6 +10,7 @@ const express = require("express"),
   Currency = require("../../db/models/Currency"),
   Signal = require("../../db/models/Signal"),
   Announcement = require("../../db/models/Announcement"),
+  Wallet = require("../../db/models/Wallet"),
   WithdrawalView = require("../../db/models/WithdrawalView"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
   TransactionView = require("../../db/models/TransactionView"),
@@ -104,6 +105,7 @@ router.get(
       count.accounts = await AccountView.count();
       count.announcement = await Announcement.count();
       count.withdrawals = await WithdrawalView.count();
+      count.wallet = await Wallet.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);
@@ -153,6 +155,7 @@ router.get(
       count.subscriptions = await Subscription.count({ where: { UserId } });
       count.bonus = await Bonus.count({ where: { UserId } });
       count.referrals = await Referral.count({ where: { referral: UserId } });
+
       count.signals = await SignalView.count({
         distinct: true,
         col: "CurrencyId",

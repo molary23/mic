@@ -16,10 +16,15 @@ Withdrawal.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    account: {
-      type: DataTypes.JSON(),
+    walletid: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
+    accountnumber: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+
     status: {
       type: DataTypes.ENUM("p", "r", "a"), // Pending, Rejected, Approved
       //allowNull: false,

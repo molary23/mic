@@ -108,7 +108,7 @@ table {
 }
 
 table th {
-  padding: 20px 15px;
+  padding: 10px 5px;
   text-align: center;
   font-weight: 500;
   font-size: 13px;
@@ -116,7 +116,7 @@ table th {
 }
 
 table td {
-  padding: 15px;
+  padding: 10px;
   text-align: center;
   vertical-align: middle;
   font-weight: 300;
@@ -126,7 +126,13 @@ table td {
 }
 
 table tbody > tr:hover {
-  background: rgba(212, 212, 212, 0.2);
+  background: rgba(224, 224, 224, 0.2);
+  -webkit-box-shadow: 1px 2px 3px #cecece;
+          box-shadow: 1px 2px 3px #cecece;
+}
+
+table .btn {
+  margin-bottom: 5px;
 }
 
 table .td-lower {
@@ -208,7 +214,7 @@ span.input-group-text {
 
 /* Modal */
 .modal {
-  background: rgba(2, 40, 84, 0.7);
+  background: rgba(49, 66, 151, 0.7);
 }
 
 .modal-title {
@@ -236,7 +242,7 @@ svg {
 .home-page {
   min-height: 700px;
   background: #023064;
-  background: radial-gradient(circle, #023064 0%, #031f3f 35%, #022854 100%) no-repeat;
+  background: radial-gradient(circle, #023064 0%, #031f3f 35%, #314297 100%) no-repeat;
   padding-top: 50px;
 }
 
@@ -351,7 +357,7 @@ span.nav-sub-icon svg {
   /* Stay on top */
   top: 0;
   left: 0;
-  background: #022854;
+  background: #314297;
   overflow-x: hidden;
   /* Disable horizontal scroll */
   padding-top: 60px;
@@ -366,14 +372,14 @@ span.nav-sub-icon svg {
   padding: 5px 8px 5px 25px;
   text-decoration: none;
   font-size: 15px;
-  color: #818181;
+  color: #fcfcfc;
   display: block;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
 
 .sidebar a:hover {
-  color: #f1f1f1;
+  color: #818181;
 }
 
 .sidebar .close-side-nav {
@@ -405,7 +411,7 @@ span.nav-sub-icon svg {
 }
 
 .toggle-btn .move-close-btn:hover {
-  color: #022854;
+  color: #314297;
 }
 
 .toggle-btn {
@@ -437,13 +443,6 @@ span.nav-sub-icon svg {
   padding: 25px;
   margin-top: 80px;
   padding-bottom: 80px;
-  /*
-  .referrals-box {
-    border-radius: 10px;
-    height: 100px;
-    box-shadow: 1px 1px 5px rgb(190, 190, 190);
-    padding: 20px;
-  }*/
 }
 
 .dashboard-content .card {
@@ -630,7 +629,7 @@ span.nav-sub-icon svg {
 }
 
 .dash-full {
-  margin-left: 50px;
+  margin-left: 0px;
 }
 
 /* Signal */
@@ -812,7 +811,7 @@ span.nav-sub-icon svg {
   position: fixed;
   z-index: 9999;
   margin-bottom: 60px;
-  background: #022854;
+  background: #314297;
 }
 
 /* Tooltip */

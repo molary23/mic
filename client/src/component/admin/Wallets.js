@@ -5,11 +5,17 @@ import PropTypes from "prop-types";
 import {
   getContent,
   clearActions,
-  updateCurrency,
   clearAdminAction,
-  addCurrency,
+  //updateBonus,
 } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
+
+import TableHead from "../../layout/TableHead";
+import TableBody from "../../layout/TableBody";
+import ProgressBar from "../../layout/ProgressBar";
+import Select from "../../layout/Select";
+import SearchInput from "../../layout/SearchInput";
+import Toast from "../../layout/Toast";
 
 import {
   getMore,
@@ -18,57 +24,53 @@ import {
   renderArrange,
 } from "../../util/LoadFunction";
 
-import TableHead from "../../layout/TableHead";
-import TableBody from "../../layout/TableBody";
-import ProgressBar from "../../layout/ProgressBar";
-import Select from "../../layout/Select";
-import SearchInput from "../../layout/SearchInput";
-import AddModal from "../../layout/AddModal";
-import Toast from "../../layout/Toast";
-
 import Pagination from "../../util/Pagination";
 
-class Currency extends Component {
-  state = {
-    sender: "admin-currencies",
-    statusOpt: [
-      { value: "", option: "Filter by Status" },
-      { value: "a", option: "Active" },
-      { value: "i", option: "Inactive" },
-    ],
-    search: "",
-    status: "",
-    limit: Pagination.limit,
-    offset: Pagination.offset,
-    numOfPages: Pagination.numberofpages,
-    iScrollPos: Pagination.scrollposition,
-    currentPage: Pagination.currentpage,
-    url: new URL(window.location),
-    doneTypingInterval: 5000,
-    currencycount:
-      JSON.parse(localStorage.getItem("counts")).currency ??
-      this.props.auth.allCounts.currency,
-    getLoad: true,
-    startLoad: false,
-    content: "currency",
-    modal: "",
-    error: {},
-    toast: false,
-    toasttext: "",
-  };
+export class Wallets extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      sender: "admin-wallets",
+      statusOpt: [
+        { value: "", option: "Filter by Status" },
+        { value: "a", option: "Active" },
+        { value: "i", option: "Inactive" },
+      ],
+      search: "",
+      status: "",
+      limit: Pagination.limit,
+      offset: Pagination.offset,
+      numOfPages: Pagination.numberofpages,
+      iScrollPos: Pagination.scrollposition,
+      currentPage: Pagination.currentpage,
+      url: new URL(window.location),
+      walletcount:
+        JSON.parse(localStorage.getItem("counts")).wallets ??
+        this.props.auth.allCounts.wallets,
+      startLoad: false,
+      getLoad: true,
+      content: "wallets",
+      modal: false,
+      error: {},
+      toast: false,
+      toasttext: "",
+    };
+  }
 
   componentDidMount() {
-    const { limit, offset, currencycount, content } = this.state;
+    const { limit, offset, walletcount, content } = this.state;
     let searchParams = window.location.search;
-    loadFromParams({ limit, self: this, content, searchParams });
 
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    }
     const paginate = {
       limit,
       offset,
     };
     this.setState({
-      numOfPages: Math.ceil(currencycount / limit),
-      startLoad: true,
+      numOfPages: Math.ceil(walletcount / limit),
     });
     this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
@@ -90,49 +92,29 @@ class Currency extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.admin.addcurrency !== this.props.admin.addcurrency &&
-      this.props.admin.addcurrency
+      prevProps.admin.addadmin !== this.props.admin.addadmin &&
+      this.props.admin.addadmin
     ) {
       this.afterUpdate("added");
-    } else if (
-      prevProps.admin.updatecurrency !== this.props.admin.updatecurrency &&
-      this.props.admin.updatecurrency
+    }
+    if (
+      prevProps.admin.updatebonus !== this.props.admin.updatebonus &&
+      this.props.admin.updatebonus
     ) {
       this.afterUpdate("updated");
     }
   }
 
-  loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
-      limit,
-      numOfPages,
-      iScrollPos,
-      currentPage,
-      content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
-  };
-
   afterUpdate = (text) => {
-    const { limit, content, signalcount } = this.state;
-    if (text === "added") {
-      this.setState({
-        numOfPages: Math.ceil((signalcount + 1) / limit),
-      });
-      this.props.clearAdminAction("add-currency");
-    } else {
-      this.props.clearAdminAction("delete-currency");
-    }
+    const { limit, content } = this.state;
+
+    this.props.clearAdminAction("update-bonus");
+
     this.setState({
       offset: 0,
       modal: false,
       toast: true,
-      toasttext: `Currency ${text} successfully`,
+      toasttext: `Wallet ${text} successfully`,
     });
     const paginate = {
       limit,
@@ -154,12 +136,40 @@ class Currency extends Component {
     }, 3000);
   };
 
+  loadMore = () => {
+    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
+  };
+
+  clickhandler = (value) => {
+    let check = window.confirm(
+      `Are you sure you want to ${value[0]} ${value[2].toUpperCase()}'s Wallet?`
+    );
+    if (check) {
+      //  this.props.updateBonus({ action: value[0], id: value[1] });
+    } else {
+      return false;
+    }
+  };
+
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, currentPage, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
     });
+
     setSearchParams({
       selected: e.target.name,
       valueOfSelected: e.target.value,
@@ -167,47 +177,8 @@ class Currency extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
     });
-
-    //  this.setSearchParams(e.target.name, e.target.value);
-  };
-
-  clickHandler = (value) => {
-    let action = value[0],
-      cur = value[1];
-
-    let check = window.confirm(
-      `Are you sure you want to ${action} ${
-        JSON.parse(cur.firstcurrency.split(", "))[1].toUpperCase() +
-        "/" +
-        JSON.parse(cur.secondcurrency.split(", "))[1].toUpperCase()
-      } pair?`
-    );
-    if (check) {
-      this.props.updateCurrency(action, cur["id"]);
-    } else {
-      return false;
-    }
-  };
-
-  openModal = () => {
-    this.setState({
-      modal: true,
-    });
-  };
-
-  modalHandler = (close) => {
-    this.setState({
-      modal: close,
-    });
-  };
-
-  submitHandler = (value) => {
-    if (value[0] === "add") {
-      this.props.addCurrency(value[1]);
-    }
   };
 
   render() {
@@ -217,21 +188,20 @@ class Currency extends Component {
       statusOpt,
       startLoad,
       getLoad,
+      walletcount,
       search,
-      currencycount,
-      modal,
-      error,
       toast,
       toasttext,
+      error,
     } = this.state;
 
-    const { admin, searchTerms } = this.props;
-    const { loading, fetching } = admin;
-    const { searching } = searchTerms;
-    const count = admin.curCount,
-      list = admin.currency,
-      searchcount = searchTerms.curCount,
-      searchlist = searchTerms.currency,
+    const { admin, searchTerms } = this.props,
+      { loading, fetching } = admin,
+      { searching } = searchTerms,
+      count = admin.walletcount,
+      list = admin.wallets,
+      searchcount = searchTerms.walletcount,
+      searchlist = searchTerms.wallets,
       searchloading = searchTerms.loading;
 
     const {
@@ -255,8 +225,9 @@ class Currency extends Component {
       searchloading,
       startLoad,
       getLoad,
-      currencycount,
+      walletcount,
     });
+
     return (
       <div>
         {loader && <ProgressBar />}
@@ -265,23 +236,22 @@ class Currency extends Component {
             <i className="fas fa-circle-notch fa-2x fa-spin" />
           </div>
         ) : (
-          <div className="transactions card holder-card ">
+          <div className="bonus card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Currencies</h1>
+              <h1>Bonus</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
                 <div className="col-md-3 mb-2">
                   <SearchInput
                     sender={sender}
-                    placeholder="Search by Name, Email, Username"
+                    placeholder="Search by Username"
                     onChange={this.changeHandler}
-                    onKeyUp={this.keyHandler}
                     name="search"
                     value={search}
                   />
                 </div>
-                <div className="col-md-2 mb-3">
+                <div className="col-md-3 mb-3">
                   <Select
                     sender={sender}
                     options={statusOpt}
@@ -290,18 +260,9 @@ class Currency extends Component {
                     value={status}
                   />
                 </div>
-                <div className="col-md-2 mb-3">
-                  <button
-                    type="button"
-                    className="btn add-btn btn-sm"
-                    onClick={this.openModal}
-                  >
-                    Add New <i className="fas fa-folder-plus" />
-                  </button>
-                </div>
 
-                <div className="col-md-2 mb-3">
-                  <button type="button" className="btn download-btn btn-sm">
+                <div className="col-md-3 mb-3">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
@@ -325,44 +286,36 @@ class Currency extends Component {
               sender={sender}
               head={[
                 "S/N",
-                "currency pair",
-                "currency flags",
+                "wallet",
                 "status",
-                "created at",
-                "updated at",
                 "created by",
+                "date created",
                 "action",
               ]}
             >
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
-                onClick={this.clickHandler}
+                onClick={this.clickhandler}
               />
             </TableHead>
           </div>
         )}
-        {modal ? (
-          <AddModal
-            {...{ modal, sender, error }}
-            onClick={this.modalHandler}
-            onSubmit={this.submitHandler}
-          />
-        ) : null}
         {toast && <Toast text={toasttext} />}
       </div>
     );
   }
 }
 
-Currency.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
-  updateCurrency: PropTypes.func.isRequired,
-  addCurrency: PropTypes.func.isRequired,
-  renderArrange: PropTypes.func,
+Wallets.propTypes = {
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearAdminAction: PropTypes.func,
   loadFromParams: PropTypes.func,
+  renderArrange: PropTypes.func,
+  updateAdmin: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -376,7 +329,6 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
-  updateCurrency,
   clearAdminAction,
-  addCurrency,
-})(Currency);
+  //updateBonus,
+})(Wallets);

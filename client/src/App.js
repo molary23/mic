@@ -54,7 +54,7 @@ import AdminAccounts from "./component/admin/Accounts";
 import AdminAnnouncements from "./component/admin/Announcements";
 import AdminSettings from "./component/admin/Settings";
 import AdminForum from "./component/admin/Forum";
-import AdminWallet from "./component/admin/Wallet";
+import AdminWallets from "./component/admin/Wallets";
 
 // Signal Provider
 import ProviderDashboard from "./component/signalprovider/Dashboard";
@@ -250,8 +250,8 @@ function App() {
           />
           <Route
             exact
-            path="/admin/wallet"
-            element={<PrivateRoute Component={AdminWallet} />}
+            path="/admin/wallets"
+            element={<PrivateRoute Component={AdminWallets} />}
           />
           <Route
             exact

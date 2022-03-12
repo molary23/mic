@@ -16,8 +16,11 @@ WithdrawalView.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    account: {
-      type: DataTypes.JSON(),
+    wallet: {
+      type: DataTypes.STRING(10),
+    },
+    accountnumber: {
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     userid: {
@@ -26,9 +29,11 @@ WithdrawalView.init(
     fullname: {
       type: DataTypes.STRING(50),
     },
+
     username: {
       type: DataTypes.STRING(30),
     },
+
     createdAt: {
       type: DataTypes.DATE,
     },

@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { RiFileExcel2Line } from "react-icons/ri";
+
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
@@ -163,15 +165,15 @@ class Accounts extends Component {
                 <div className="col-md-4 mb-2">
                   <SearchInput
                     sender={sender}
-                    placeholder="Search by Name, Email, Username"
+                    placeholder="Search by Name, Username, Wallet and Account Number"
                     onChange={this.changeHandler}
                     name="search"
                     value={search}
                   />
                 </div>
                 <div className="col-md-4 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
-                    Download <i className="far fa-file-excel" />
+                  <button type="button" className="btn download-btn">
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-4 mb-2">
@@ -193,10 +195,10 @@ class Accounts extends Component {
                 "S/N",
                 "Fullname",
                 "ussername",
-                "category",
-                "bank/wallet",
+                "wallet",
                 "account number",
-                "account type",
+                "added",
+                "changed",
               ]}
             >
               <TableBody

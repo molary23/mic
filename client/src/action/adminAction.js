@@ -55,6 +55,8 @@ import {
   CLEAR_ADMIN_UPDATE_PROFILE,
   ADMIN_UPDATE_PASSWORD,
   CLEAR_ADMIN_UPDATE_PASSWORD,
+  GET_ALL_WALLETS,
+  CLEAR_WALLETS_ACTION,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -103,6 +105,9 @@ export const getContent = (content, paginate) => async (dispatch) => {
   } else if (content === "withdrawals") {
     url = `${url}withdrawals`;
     type = GET_ALL_WITHDRAWALS;
+  } else if (content === "wallets") {
+    url = `${url}wallets`;
+    type = GET_ALL_WALLETS;
   }
   try {
     let response = await axios.post(url, paginate);
@@ -152,6 +157,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_WITHDRAWALS_ACTION };
   } else if (actionToClear === "admin-settings") {
     return { type: CLEAR_GET_ADMIN_SETTINGS };
+  } else if (actionToClear === "wallets") {
+    return { type: CLEAR_WALLETS_ACTION };
   }
 };
 

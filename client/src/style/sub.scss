@@ -128,12 +128,12 @@ span.nav-sub-icon {
     padding: 5px 8px 5px 25px;
     text-decoration: none;
     font-size: 15px;
-    color: #818181;
+    color: #fcfcfc;
     display: block;
     transition: 0.3s;
 
     &:hover {
-      color: #f1f1f1;
+      color: #818181;
     }
   }
 
@@ -394,13 +394,6 @@ span.nav-sub-icon {
     border-radius: 25px;
     float: right;
   }
-  /*
-  .referrals-box {
-    border-radius: 10px;
-    height: 100px;
-    box-shadow: 1px 1px 5px rgb(190, 190, 190);
-    padding: 20px;
-  }*/
 
   .box-icon svg {
     font-size: 30px;
@@ -417,7 +410,7 @@ span.nav-sub-icon {
 }
 
 .dash-full {
-  margin-left: 50px;
+  margin-left: 0px;
 }
 
 /* Signal */

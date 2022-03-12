@@ -51,6 +51,8 @@ import {
   CLEAR_ADMIN_UPDATE_PROFILE,
   ADMIN_UPDATE_PASSWORD,
   CLEAR_ADMIN_UPDATE_PASSWORD,
+  GET_ALL_WALLETS,
+  CLEAR_WALLETS_ACTION,
 } from "../action/types";
 
 const initialState = {
@@ -64,6 +66,8 @@ const initialState = {
   usersCount: 0,
   curCount: 0,
   currency: [],
+  wallets: [],
+  walletcount: 0,
   pay: [],
   payCount: 0,
   referrals: [],
@@ -211,6 +215,14 @@ export default function adminReducer(state = initialState, action) {
         ...state,
         withcount: action.payload.shift(),
         withdrawals: [...state.withdrawals, ...action.payload],
+        loading: false,
+        fetching: true,
+      };
+    case GET_ALL_WALLETS:
+      return {
+        ...state,
+        walletcount: action.payload.shift(),
+        wallets: [...state.wallets, ...action.payload],
         loading: false,
         fetching: true,
       };
