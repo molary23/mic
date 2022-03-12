@@ -220,11 +220,6 @@ export const checkEmptyInput = ({
       [option]: "Signal Option Field can't be empty",
     });
     return false;
-  } else if (!Object.keys(inputs).includes(status) || inputs[status] === "") {
-    setErrors({
-      [status]: "Signal Status Field can't be empty",
-    });
-    return false;
   } else if (
     !Object.keys(inputs).includes(takeprofit) ||
     inputs[takeprofit] === ""

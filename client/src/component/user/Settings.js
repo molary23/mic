@@ -56,7 +56,107 @@ class Settings extends Component {
     this.props.clearActions("user-settings");
     this.props.clearActions("user-currency");
     this.props.clearActions("user-provider");
+    this.props.clearActions("user-wallet");
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+    }
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.user.setpass !== this.props.user.setpass &&
+      this.props.user.setpass
+    ) {
+      this.afterUpdate("pass");
+    }
+    if (
+      prevProps.user.setcurrency !== this.props.user.setcurrency &&
+      this.props.user.setcurrency
+    ) {
+      this.afterUpdate("currency");
+    }
+    if (
+      prevProps.user.setprovider !== this.props.user.setprovider &&
+      this.props.user.setprovider
+    ) {
+      this.afterUpdate("provider");
+    }
+    if (
+      prevProps.user.setnotify !== this.props.user.setnotify &&
+      this.props.user.setnotify
+    ) {
+      this.afterUpdate("notify");
+    }
+    if (
+      prevProps.user.setmode !== this.props.user.setmode &&
+      this.props.user.setmode
+    ) {
+      this.afterUpdate("display");
+    }
+    if (
+      prevProps.user.setprofile !== this.props.user.setprofile &&
+      this.props.user.setprofile
+    ) {
+      this.afterUpdate("profile");
+    }
+    if (
+      prevProps.user.setaccount !== this.props.user.setaccount &&
+      this.props.user.setaccount
+    ) {
+      this.afterUpdate("account");
+    }
+  }
+
+  afterUpdate = (text) => {
+    // this.props.clearActions("user-settings");
+    this.props.getUserSettings();
+    let words;
+    if (text === "pass") {
+      words = "Your Password has been changed successfully";
+      this.moveActive(1);
+    }
+    if (text === "profile") {
+      words = "Your Profile has been updated successfully";
+      this.moveActive(0);
+    }
+    if (text === "account") {
+      words = "Your Account details has been updated";
+      this.moveActive(4);
+    }
+    if (text === "provider") {
+      words = "Your Provider options has been updated";
+      this.moveActive(2);
+    }
+    if (text === "currency") {
+      words = "Your Currency options has been updated";
+      this.moveActive(3);
+    }
+    if (text === "notify") {
+      words = "Your Notification options has been updated";
+      this.moveActive(4);
+    }
+    if (text === "display") {
+      words = "Your Display Mode has been updated";
+      this.moveActive(6);
+    }
+    this.setState({
+      offset: 0,
+      toast: true,
+      toasttext: words,
+      loading: false,
+    });
+
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+      });
+    }, 3000);
+  };
 
   moveActive = (nextTab) => {
     this.setState({
@@ -65,6 +165,9 @@ class Settings extends Component {
   };
 
   submitNotifyHandler = (value) => {
+    this.setState({
+      loading: true,
+    });
     this.props.saveSettings("notify", { notify: value });
   };
 
@@ -132,6 +235,9 @@ class Settings extends Component {
   };
 
   submitListHandler = (value) => {
+    this.setState({
+      loading: true,
+    });
     this.props.saveSettings(value[0], value[1]);
   };
 
@@ -263,10 +369,12 @@ class Settings extends Component {
                     className={`tab-pane ${active === 0 ? "active" : ""} `}
                     id="profile-settings"
                   >
-                    <ProfileForm
-                      onSubmit={this.submitProfileHandler}
-                      userinfo={profile}
-                    />
+                    {profile !== null && (
+                      <ProfileForm
+                        onSubmit={this.submitProfileHandler}
+                        userinfo={profile}
+                      />
+                    )}
                   </div>
                   <div
                     className={`tab-pane ${active === 1 ? "active" : ""} `}
@@ -276,6 +384,7 @@ class Settings extends Component {
                       onSubmit={this.submitPassHandler}
                       sender={sender}
                       load={loading}
+                      error={error}
                     />
                   </div>
                   <div
@@ -403,12 +512,15 @@ Settings.propTypes = {
   clearActions: PropTypes.func,
   clearSettings: PropTypes.func,
   saveSettings: PropTypes.func,
+  auth: PropTypes.object,
+  user: PropTypes.object,
+  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
-  profile: state.profile,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   getUserSettings,

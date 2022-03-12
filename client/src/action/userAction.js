@@ -108,7 +108,7 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_GET_CURRENCY };
   } else if (actionToClear === "user-provider") {
     return { type: CLEAR_USER_GET_PROVIDERS };
-  } else if (actionToClear === "wallet") {
+  } else if (actionToClear === "user-wallet") {
     return { type: CLEAR_USER_GET_WALLET };
   }
 };
@@ -183,7 +183,7 @@ export const getList = (list) => async (dispatch) => {
     dispatch(clearActions("user-provider"));
     type = USER_GET_PROVIDERS;
   } else if (list === "wallet") {
-    dispatch(clearActions("wallet"));
+    dispatch(clearActions("user-wallet"));
     type = USER_GET_WALLET;
   }
 

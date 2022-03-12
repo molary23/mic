@@ -8,6 +8,14 @@ import {
   CLEAR_ADD_NEW_SIGNAL,
   EDIT_NEW_SIGNAL,
   CLEAR_EDIT_NEW_SIGNAL,
+  PROVIDER_UPDATE_MODE,
+  CLEAR_PROVIDER_UPDATE_MODE,
+  PROVIDER_UPDATE_PROFILE,
+  PROVIDER_UPDATE_PASSWORD,
+  CLEAR_PROVIDER_UPDATE_PROFILE,
+  CLEAR_PROVIDER_UPDATE_PASSWORD,
+  GET_PROVIDER_SETTINGS,
+  CLEAR_GET_PROVIDER_SETTINGS,
 } from "../action/types";
 
 const initialState = {
@@ -18,6 +26,10 @@ const initialState = {
   currencies: [],
   signaladded: false,
   signaledited: false,
+  providersettings: null,
+  setmode: false,
+  setprofile: false,
+  setpass: false,
 };
 
 export default function providerReducer(state = initialState, action) {
@@ -55,6 +67,31 @@ export default function providerReducer(state = initialState, action) {
         ...state,
         signaledited: false,
       };
+    case GET_PROVIDER_SETTINGS:
+      return {
+        ...state,
+        providersettings: action.payload,
+        loading: false,
+      };
+    case PROVIDER_UPDATE_MODE:
+      return {
+        ...state,
+        setmode: action.payload,
+        loading: false,
+      };
+    case PROVIDER_UPDATE_PROFILE:
+      return {
+        ...state,
+        setprofile: action.payload,
+        loading: false,
+      };
+
+    case PROVIDER_UPDATE_PASSWORD:
+      return {
+        ...state,
+        setpass: action.payload,
+        loading: false,
+      };
     case CLEAR_PROVIDER_SIGNALS_ACTION: {
       return { ...state, signals: [], signalcount: 0, fetching: false };
     }
@@ -63,6 +100,18 @@ export default function providerReducer(state = initialState, action) {
     }
     case ACTION_LOADING: {
       return { ...state, loading: true };
+    }
+    case CLEAR_GET_PROVIDER_SETTINGS: {
+      return { ...state, providersettings: null };
+    }
+    case CLEAR_PROVIDER_UPDATE_MODE: {
+      return { ...state, setmode: false };
+    }
+    case CLEAR_PROVIDER_UPDATE_PROFILE: {
+      return { ...state, setprofile: false };
+    }
+    case CLEAR_PROVIDER_UPDATE_PASSWORD: {
+      return { ...state, setpass: false };
     }
     default:
       return state;

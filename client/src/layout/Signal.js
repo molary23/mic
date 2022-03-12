@@ -2,16 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Flag from "react-flagpack";
 
+import { IoIosTrendingUp, IoIosTrendingDown } from "react-icons/io";
+
+import { MdOutlineTrendingFlat } from "react-icons/md";
+
 function Signal(props) {
   const { signal, sender } = props;
 
   let result;
   if (signal.pip >= 1) {
-    result = "fas fa-level-up-alt";
+    result = <IoIosTrendingUp />;
   } else if (signal.pip === 0) {
-    result = "fas fa-level-down-alt";
+    result = <IoIosTrendingDown />;
   } else if (signal.pip < 0) {
-    result = "fas fa-level-down-alt";
+    result = <MdOutlineTrendingFlat />;
   }
   return (
     <div className="signal-content card">
@@ -41,9 +45,7 @@ function Signal(props) {
                 "/" +
                 JSON.parse(signal.secondcurrency.split(", "))[1]}
             </div>
-            <div className="currency-return signal-align-right">
-              <i className={result} />
-            </div>
+            <div className="currency-return signal-align-right">{result}</div>
           </div>
         </div>
         <div className="signal-about">

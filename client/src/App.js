@@ -28,6 +28,7 @@ import Pay from "./component/user/Pay";
 import Payments from "./component/user/Payments";
 import Withdrawals from "./component/user/Withdrawals";
 import Settings from "./component/user/Settings";
+import Forum from "./component/user/Forum";
 
 import Index from "./component/user/Index";
 import Subscriptions from "./component/user/Subscriptions";
@@ -51,10 +52,14 @@ import AdminViewAdmins from "./component/admin/ViewAdmin";
 import AdminSignals from "./component/admin/Signals";
 import AdminAccounts from "./component/admin/Accounts";
 import AdminAnnouncements from "./component/admin/Announcements";
+import AdminSettings from "./component/admin/Settings";
+import AdminForum from "./component/admin/Forum";
+import AdminWallet from "./component/admin/Wallet";
 
 // Signal Provider
 import ProviderDashboard from "./component/signalprovider/Dashboard";
 import ProviderSignals from "./component/signalprovider/Signals";
+import ProviderSettings from "./component/signalprovider/Settings";
 
 /*
 import axios from "axios";
@@ -106,6 +111,10 @@ function App() {
             path="/sp/"
             element={<PrivateRoute Component={ProviderSignals} />}
           />
+          <Route
+            path="/sp/settings"
+            element={<PrivateRoute Component={ProviderSettings} />}
+          />
         </Route>
         <Route path="/user" element={<PrivateRoute Component={Dashboard} />}>
           <Route
@@ -155,8 +164,13 @@ function App() {
           />
           <Route
             exact
-            path="/user/Settings"
+            path="/user/settings"
             element={<PrivateRoute Component={Settings} />}
+          />
+          <Route
+            exact
+            path="/user/forums"
+            element={<PrivateRoute Component={Forum} />}
           />
         </Route>
 
@@ -234,7 +248,21 @@ function App() {
             path="/admin/admins"
             element={<PrivateRoute Component={AdminViewAdmins} />}
           />
-
+          <Route
+            exact
+            path="/admin/wallet"
+            element={<PrivateRoute Component={AdminWallet} />}
+          />
+          <Route
+            exact
+            path="/admin/settings"
+            element={<PrivateRoute Component={AdminSettings} />}
+          />
+          <Route
+            exact
+            path="/admin/forums"
+            element={<PrivateRoute Component={AdminForum} />}
+          />
           <Route
             exact
             path="/admin/user/:userId"

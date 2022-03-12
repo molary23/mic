@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { RiRefreshLine } from "react-icons/ri";
+import { AiOutlineEdit, AiOutlineFolderView } from "react-icons/ai";
 
 import Flag from "react-flagpack";
 
@@ -255,7 +258,7 @@ function TableBody(props) {
                 title="View Bonus"
                 to={`/admin/bonus/:${item.bonusid}`}
               >
-                <i className="far fa-eye" />
+                <AiOutlineFolderView />
               </Link>
             </div>
           </td>
@@ -512,7 +515,7 @@ function TableBody(props) {
                 title="View User"
                 to={`/admin/user/:${item.userid}`}
               >
-                <i className="far fa-eye" />
+                <AiOutlineFolderView />
               </Link>
             </div>
           </td>
@@ -586,7 +589,7 @@ function TableBody(props) {
                   title={`Deactivate ${adm}`}
                   onClick={() => onClick(["delete", item.userid])}
                 >
-                  <i className="fas fa-ban" />
+                  <MdOutlineDeleteForever />
                 </button>
               )}
 
@@ -598,7 +601,7 @@ function TableBody(props) {
                   title={`Activate ${adm}`}
                   onClick={() => onClick(["reactivate", item.userid])}
                 >
-                  <i className="fas fa-user-check" />
+                  <RiRefreshLine />
                 </button>
               )}
             </div>
@@ -639,7 +642,7 @@ function TableBody(props) {
                 title="Edit Announcement"
                 onClick={() => onClick(["edit", item])}
               >
-                <i className="fas fa-edit" />
+                <AiOutlineEdit />
               </button>
               <button
                 type="button"
@@ -648,7 +651,7 @@ function TableBody(props) {
                 title="Delete Announcement"
                 onClick={() => onClick(["delete", item.id])}
               >
-                <i className="fas fa-trash" />
+                <MdOutlineDeleteForever />
               </button>
             </div>
           </td>
@@ -663,9 +666,9 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>
-            {JSON.parse(item.firstcurrency.split(", "))[1] +
+            {JSON.parse(item.firstcurrency.split(", "))[1].toUpperCase() +
               "/" +
-              JSON.parse(item.secondcurrency.split(", "))[1]}
+              JSON.parse(item.secondcurrency.split(", "))[1].toUpperCase()}
           </td>
           <td>
             {
@@ -716,15 +719,27 @@ function TableBody(props) {
           </td>
           <td>
             <div className="action-buttons">
-              <button
-                type="button"
-                className="btn btn-danger btn-sm"
-                data-id={item.id}
-                title="Delete Currency "
-                onClick={() => onClick(item)}
-              >
-                <i className="fas fa-trash" />
-              </button>
+              {item.status === "a" ? (
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  data-id={item.id}
+                  title="Delete Currency "
+                  onClick={() => onClick(["delete", item])}
+                >
+                  <MdOutlineDeleteForever />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-info btn-sm"
+                  data-id={item.id}
+                  title="Reactivate Currency "
+                  onClick={() => onClick(["activate", item])}
+                >
+                  <RiRefreshLine />
+                </button>
+              )}
             </div>
           </td>
         </tr>
@@ -816,7 +831,7 @@ function TableBody(props) {
                 title="View Signal"
                 onClick={() => onClick([...["view"], ...[item]])}
               >
-                <i className="far fa-eye" />
+                <AiOutlineFolderView />
               </button>
               {sender === "provider-signals" && (
                 <button
@@ -826,7 +841,7 @@ function TableBody(props) {
                   title="Edit Signal"
                   onClick={() => onClick([...["edit"], ...[item]])}
                 >
-                  <i className="fas fa-edit" />
+                  <AiOutlineEdit />
                 </button>
               )}
             </div>

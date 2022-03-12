@@ -16,6 +16,7 @@ const Account = require("../db/models/Account"),
   Withdrawal = require("../db/models/Withdrawal"),
   Forum = require("../db/models/Forum"),
   Wallet = require("../db/models/Wallet"),
+  Preference = require("../db/models/Preference"),
   ForumReply = require("../db/models/ForumReply");
 
 // Define Relationsship between tables
@@ -207,6 +208,15 @@ User.hasMany(Wallet, {
   },
 });
 Wallet.belongsTo(User);
+
+User.hasMany(Preference, {
+  onDelete: "RESTRICT",
+  hooks: true,
+  foreignKey: {
+    allowNull: false,
+  },
+});
+Preference.belongsTo(User);
 
 User.hasOne(Premium, {
   onDelete: "RESTRICT",

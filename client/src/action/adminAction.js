@@ -29,8 +29,8 @@ import {
   CLEAR_WITHDRAWALS_ACTION,
   ADD_NEW_CURRENCY,
   CLEAR_ADD_NEW_CURRENCY,
-  DELETE_CURRENCY,
-  CLEAR_DELETE_CURRENCY,
+  UPDATE_CURRENCY,
+  CLEAR_UPDATE_CURRENCY,
   GET_ERRORS,
   CLEAR_ERRORS,
   ADD_NEW_ADMIN,
@@ -47,6 +47,14 @@ import {
   CLEAR_ADD_ANNOUNCEMENT,
   EDIT_ANNOUNCEMENT,
   CLEAR_EDIT_ANNOUNCEMENT,
+  GET_ADMIN_SETTINGS,
+  CLEAR_GET_ADMIN_SETTINGS,
+  ADMIN_UPDATE_MODE,
+  CLEAR_ADMIN_UPDATE_MODE,
+  ADMIN_UPDATE_PROFILE,
+  CLEAR_ADMIN_UPDATE_PROFILE,
+  ADMIN_UPDATE_PASSWORD,
+  CLEAR_ADMIN_UPDATE_PASSWORD,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -142,6 +150,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ANNOUNCEMENTS_ACTION };
   } else if (actionToClear === "withdrawals") {
     return { type: CLEAR_WITHDRAWALS_ACTION };
+  } else if (actionToClear === "admin-settings") {
+    return { type: CLEAR_GET_ADMIN_SETTINGS };
   }
 };
 
@@ -149,14 +159,14 @@ export const setLoading = () => {
   return { type: ACTION_LOADING };
 };
 
-export const deleteCurrency = (id) => async (dispatch) => {
-  let url = `/api/signals/currency/delete/:${id}`;
+export const updateCurrency = (action, id) => async (dispatch) => {
+  let url = `/api/signals/currency/update/:${action}/:${id}`;
   dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post(url);
     const result = await dispatch({
-      type: DELETE_CURRENCY,
+      type: UPDATE_CURRENCY,
       payload: response.data,
     });
     return result;
@@ -189,7 +199,7 @@ export const clearErrors = () => {
 };
 
 export const clearAdminAction = (info) => {
-  if (info === "delete-currency") return { type: CLEAR_DELETE_CURRENCY };
+  if (info === "delete-currency") return { type: CLEAR_UPDATE_CURRENCY };
   if (info === "add-currency") return { type: CLEAR_ADD_NEW_CURRENCY };
   if (info === "add-admin") return { type: CLEAR_ADD_NEW_ADMIN };
   if (info === "add-provider") return { type: CLEAR_ADD_NEW_PROVIDER };
@@ -308,5 +318,65 @@ export const editAnn = (value) => async (dispatch) => {
   } catch (error) {
     console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const getAdminSettings = () => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("admin-settings"));
+  try {
+    let response = await axios.get("/api/admin/settings");
+    const result = await dispatch({
+      type: GET_ADMIN_SETTINGS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ADMIN_SETTINGS, payload: [] });
+  }
+};
+
+export const saveSettings = (settings, data) => async (dispatch) => {
+  dispatch(clearErrors());
+  //dispatch(setLoading());
+  let type,
+    url = "/api/admin/settings/";
+  if (settings === "mode") {
+    dispatch(clearSettings("mode"));
+    type = ADMIN_UPDATE_MODE;
+    url = `${url}mode`;
+  } else if (settings === "profile") {
+    dispatch(clearSettings("profile"));
+    type = ADMIN_UPDATE_PROFILE;
+    url = `${url}profile`;
+  } else if (settings === "password") {
+    dispatch(clearSettings("password"));
+    type = ADMIN_UPDATE_PASSWORD;
+    url = `${url}pass`;
+  }
+  try {
+    let response = await axios.post(url, data);
+    const result = await dispatch({
+      type,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const clearSettings = (settings) => {
+  if (settings === "mode") {
+    return { type: CLEAR_ADMIN_UPDATE_MODE };
+  }
+  if (settings === "profile") {
+    return { type: CLEAR_ADMIN_UPDATE_PROFILE };
+  }
+  if (settings === "password") {
+    return { type: CLEAR_ADMIN_UPDATE_PASSWORD };
   }
 };

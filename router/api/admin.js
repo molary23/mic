@@ -9,6 +9,8 @@ const express = require("express"),
   Bonus = require("../../db/models/Bonus"),
   Transaction = require("../../db/models/Transaction"),
   Announcement = require("../../db/models/Announcement"),
+  Settings = require("../../db/models/Settings"),
+  Profile = require("../../db/models/Profile"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
@@ -60,8 +62,13 @@ router.post(
                     if (err) throw err;
                     userField.password = hash;
                     User.create(userField)
-                      .then(() => {
-                        res.json(true);
+                      .then((user) => {
+                        let UserId = user.id;
+                        Settings.create(UserId)
+                          .then(() => {
+                            return res.json(true);
+                          })
+                          .catch((err) => res.json(err));
                       })
                       .catch((err) => res.json(err));
                   });
@@ -351,6 +358,144 @@ router.post(
         res.json(true);
       })
       .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/admin/settings
+@desc admin view settings
+@access private
+*/
+
+router.get(
+  "/settings",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const UserId = req.user.id;
+    let info = {};
+    return Promise.all([
+      Settings.findOne({
+        where: { UserId },
+        attributes: ["mode"],
+      })
+        .then((settings) => {
+          info.settings = settings;
+          Profile.findOne({
+            where: { UserId },
+            attributes: ["firstname", "lastname"],
+          })
+            .then((profile) => {
+              info.profile = profile;
+              return res.json(info);
+            })
+            .catch((err) => res.status(404).json(err));
+        })
+        .catch((err) => res.status(404).json(err)),
+    ]);
+  }
+);
+
+/*
+@route POST api/admin/settings/mode
+@desc User post settings 
+@access private
+*/
+
+router.post(
+  "/settings/mode",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const id = req.user.id;
+    let mode;
+    if (req.body.mode) {
+      mode = req.body.mode;
+    }
+
+    Settings.update({ mode }, { where: { UserId: id } })
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/settings/pass
+@desc User post passs 
+@access private
+*/
+
+router.post(
+  "/settings/pass",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const id = req.user.id,
+      errors = {};
+    let pass;
+    if (req.body) {
+      pass = req.body;
+    }
+
+    User.findByPk(id, { attributes: ["password"] })
+      .then((user) => {
+        bcrypt.compare(pass.old, user.password).then((isMatch) => {
+          if (isMatch) {
+            bcrypt.genSalt(10, (_err, salt) => {
+              bcrypt.hash(pass.new, salt, (err, hash) => {
+                let newPassword = hash;
+                User.update(
+                  { password: newPassword },
+                  {
+                    where: {
+                      id,
+                    },
+                  }
+                )
+                  .then(() => {
+                    res.json(true);
+                  })
+                  .catch((err) => res.json(err));
+              });
+            });
+          } else {
+            errors.password = "Incorrect Old Password";
+            return res.status(400).json(errors);
+          }
+        });
+      })
+      .catch((err) => res.json(err));
+  }
+);
+
+/*
+@route /api/admin/profile/
+@desc User update profile
+@access PRIVATE
+*/
+
+router.post(
+  "/settings/profile",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const profileFields = {},
+      UserId = req.user.id;
+
+    if (req.body.firstname) profileFields.firstname = req.body.firstname;
+    if (req.body.lastname) profileFields.lastname = req.body.lastname;
+
+    Profile.update(
+      {
+        firstname: profileFields.firstname,
+        lastname: profileFields.lastname,
+      },
+      {
+        where: { UserId },
+      }
+    )
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.json(err));
   }
 );
 

@@ -1,4 +1,5 @@
 const Account = require("../../db/models/Account");
+const Preference = require("../../db/models/Preference");
 
 const express = require("express"),
   router = express.Router(),
@@ -129,7 +130,7 @@ router.post(
         } else {
           User.update({ email }, { where: { id } })
             .then(() => {
-              res.json({ message: "Password changed Successfully!" });
+              res.json({ message: "Email Address changed successfully" });
             })
             .catch((err) => res.status(404).json(err));
         }
@@ -210,140 +211,167 @@ router.get(
   "/settings",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
     const UserId = req.user.id;
     let info = {};
     return Promise.all([
       Settings.findOne({
         where: { UserId },
-        attributes: ["mode", "currencies", "providers", "notify"],
+        attributes: ["mode"],
       })
         .then((settings) => {
-          info.settings = settings;
-          AccountView.findAll({
+          Preference.findOne({
             where: { UserId },
-            attributes: ["accountnumber", "wallet"],
+            attributes: ["currencies", "providers", "notify"],
           })
-            .then((accounts) => {
-              info.accounts = accounts;
-              Profile.findOne({
+            .then((preference) => {
+              info.preference = preference;
+              AccountView.findAll({
                 where: { UserId },
-                attributes: ["firstname", "lastname"],
+                attributes: ["accountnumber", "wallet"],
               })
-                .then((profile) => {
-                  info.profile = profile;
-                  if (
-                    info.settings.providers !== null &&
-                    info.settings.currencies !== null
-                  ) {
-                    ProviderView.findAll({
-                      where: {
-                        [Op.and]: [
-                          { status: "a" },
-                          { userid: settings.providers },
-                        ],
-                      },
-                      attributes: ["username", "userid"],
-                    })
-                      .then((provider) => {
-                        info.providers = provider;
-                        Currency.findAll({
+                .then((accounts) => {
+                  info.accounts = accounts;
+                  Profile.findOne({
+                    where: { UserId },
+                    attributes: ["firstname", "lastname"],
+                  })
+                    .then((profile) => {
+                      info.profile = profile;
+                      if (
+                        info.preference.providers !== null &&
+                        info.preference.currencies !== null
+                      ) {
+                        ProviderView.findAll({
                           where: {
                             [Op.and]: [
                               { status: "a" },
-                              { id: settings.currencies },
+                              { userid: preference.providers },
                             ],
                           },
-                          attributes: ["firstcurrency", "secondcurrency", "id"],
+                          attributes: ["username", "userid"],
                         })
-                          .then((currency) => {
-                            info.currencies = currency;
-                            return res.json(info);
+                          .then((provider) => {
+                            info.providers = provider;
+                            Currency.findAll({
+                              where: {
+                                [Op.and]: [
+                                  { status: "a" },
+                                  { id: preference.currencies },
+                                ],
+                              },
+                              attributes: [
+                                "firstcurrency",
+                                "secondcurrency",
+                                "id",
+                              ],
+                            })
+                              .then((currency) => {
+                                info.currencies = currency;
+                                return res.json(info);
+                              })
+                              .catch((err) => res.status(404).json(err));
                           })
                           .catch((err) => res.status(404).json(err));
-                      })
-                      .catch((err) => res.status(404).json(err));
-                  } else if (
-                    info.settings.providers === null &&
-                    info.settings.currencies === null
-                  ) {
-                    ProviderView.findAll({
-                      where: {
-                        status: "a",
-                      },
-                      attributes: ["username", "userid"],
-                    })
-                      .then((provider) => {
-                        info.providers = provider;
-                        Currency.findAll({
+                      } else if (
+                        info.preference.providers === null &&
+                        info.preference.currencies === null
+                      ) {
+                        ProviderView.findAll({
                           where: {
                             status: "a",
                           },
-                          attributes: ["firstcurrency", "secondcurrency", "id"],
+                          attributes: ["username", "userid"],
                         })
-                          .then((currency) => {
-                            info.currencies = currency;
-                            return res.json(info);
+                          .then((provider) => {
+                            info.providers = provider;
+                            Currency.findAll({
+                              where: {
+                                status: "a",
+                              },
+                              attributes: [
+                                "firstcurrency",
+                                "secondcurrency",
+                                "id",
+                              ],
+                            })
+                              .then((currency) => {
+                                info.currencies = currency;
+                                return res.json(info);
+                              })
+                              .catch((err) => res.status(404).json(err));
                           })
                           .catch((err) => res.status(404).json(err));
-                      })
-                      .catch((err) => res.status(404).json(err));
-                  } else if (
-                    info.settings.providers === null &&
-                    info.settings.currencies !== null
-                  ) {
-                    ProviderView.findAll({
-                      where: {
-                        status: "a",
-                      },
-                      attributes: ["username", "userid"],
-                    })
-                      .then((provider) => {
-                        info.providers = provider;
-                        Currency.findAll({
+                      } else if (
+                        info.preference.providers === null &&
+                        info.preference.currencies !== null
+                      ) {
+                        ProviderView.findAll({
+                          where: {
+                            status: "a",
+                          },
+                          attributes: ["username", "userid"],
+                        })
+                          .then((provider) => {
+                            info.providers = provider;
+                            Currency.findAll({
+                              where: {
+                                [Op.and]: [
+                                  { status: "a" },
+                                  { id: preference.currencies },
+                                ],
+                              },
+                              attributes: [
+                                "firstcurrency",
+                                "secondcurrency",
+                                "id",
+                              ],
+                            })
+                              .then((currency) => {
+                                info.currencies = currency;
+                                return res.json(info);
+                              })
+                              .catch((err) => res.status(404).json(err));
+                          })
+                          .catch((err) => res.status(404).json(err));
+                      } else if (
+                        info.preference.providers !== null &&
+                        info.preference.currencies === null
+                      ) {
+                        ProviderView.findAll({
                           where: {
                             [Op.and]: [
                               { status: "a" },
-                              { id: settings.currencies },
+                              { userid: preference.providers },
                             ],
                           },
-                          attributes: ["firstcurrency", "secondcurrency", "id"],
+                          attributes: ["username", "userid"],
                         })
-                          .then((currency) => {
-                            info.currencies = currency;
-                            return res.json(info);
+                          .then((provider) => {
+                            info.providers = provider;
+                            Currency.findAll({
+                              where: {
+                                status: "a",
+                              },
+                              attributes: [
+                                "firstcurrency",
+                                "secondcurrency",
+                                "id",
+                              ],
+                            })
+                              .then((currency) => {
+                                info.currencies = currency;
+                                return res.json(info);
+                              })
+                              .catch((err) => res.status(404).json(err));
                           })
                           .catch((err) => res.status(404).json(err));
-                      })
-                      .catch((err) => res.status(404).json(err));
-                  } else if (
-                    info.settings.providers !== null &&
-                    info.settings.currencies === null
-                  ) {
-                    ProviderView.findAll({
-                      where: {
-                        [Op.and]: [
-                          { status: "a" },
-                          { userid: settings.providers },
-                        ],
-                      },
-                      attributes: ["username", "userid"],
+                      }
                     })
-                      .then((provider) => {
-                        info.providers = provider;
-                        Currency.findAll({
-                          where: {
-                            status: "a",
-                          },
-                          attributes: ["firstcurrency", "secondcurrency", "id"],
-                        })
-                          .then((currency) => {
-                            info.currencies = currency;
-                            return res.json(info);
-                          })
-                          .catch((err) => res.status(404).json(err));
-                      })
-                      .catch((err) => res.status(404).json(err));
-                  }
+                    .catch((err) => res.status(404).json(err));
                 })
                 .catch((err) => res.status(404).json(err));
             })
@@ -499,10 +527,6 @@ router.post(
   "/settings/mode",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
     const id = req.user.id;
     let mode;
     if (req.body.mode) {
@@ -527,10 +551,6 @@ router.post(
   "/settings/notify",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
     const id = req.user.id;
     let notify;
     if (req.body) {
@@ -555,10 +575,6 @@ router.post(
   "/settings/account",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
     const id = req.user.id;
     let account;
     if (req.body) {
@@ -605,8 +621,8 @@ router.post(
 );
 
 /*
-@route POST api/user/settings/notify
-@desc User post settings 
+@route POST api/user/settings/pass
+@desc User post passs 
 @access private
 */
 
@@ -614,10 +630,6 @@ router.post(
   "/settings/pass",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
     const id = req.user.id,
       errors = {};
     let pass;
@@ -629,18 +641,23 @@ router.post(
       .then((user) => {
         bcrypt.compare(pass.old, user.password).then((isMatch) => {
           if (isMatch) {
-            User.update(
-              { password: pass.new },
-              {
-                where: {
-                  id,
-                },
-              }
-            )
-              .then(() => {
-                res.json(true);
-              })
-              .catch((err) => res.json(err));
+            bcrypt.genSalt(10, (_err, salt) => {
+              bcrypt.hash(pass.new, salt, (err, hash) => {
+                let newPassword = hash;
+                User.update(
+                  { password: newPassword },
+                  {
+                    where: {
+                      id,
+                    },
+                  }
+                )
+                  .then(() => {
+                    res.json(true);
+                  })
+                  .catch((err) => res.json(err));
+              });
+            });
           } else {
             errors.password = "Incorrect Old Password";
             return res.status(400).json(errors);

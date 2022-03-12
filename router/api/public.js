@@ -14,6 +14,7 @@ const express = require("express"),
   Profile = require("../../db/models/Profile"),
   Premium = require("../../db/models/Premium"),
   Settings = require("../../db/models/Settings"),
+  Preference = require("../../db/models/Preference"),
   // Bring in View
   SignalView = require("../../db/models/SignalView"),
   //Bring in the Validation
@@ -150,15 +151,20 @@ router.post("/register", (req, res) => {
                                 .then(() => {
                                   Settings.create({
                                     UserId,
-                                    type: "l",
-                                    option: "d",
+                                    mode: "m",
                                   })
                                     .then(() => {
-                                      Referral.create({
-                                        referral: userField.referralId,
-                                        UserId: user.id,
+                                      Preference.create({
+                                        UserId,
                                       })
-                                        .then(() => res.json(1))
+                                        .then(() => {
+                                          Referral.create({
+                                            referral: userField.referralId,
+                                            UserId: user.id,
+                                          })
+                                            .then(() => res.json(1))
+                                            .catch((err) => res.json(err));
+                                        })
                                         .catch((err) => res.json(err));
                                     })
                                     .catch((err) => res.json(err));
@@ -541,7 +547,7 @@ router.post("/reset", (req, res) => {
 
       bcrypt.genSalt(10, (_err, salt) => {
         bcrypt.hash(password, salt, (err, hash) => {
-          newPassword = hash;
+          let newPassword = hash;
           User.update(
             {
               password: newPassword,

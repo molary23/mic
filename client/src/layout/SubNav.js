@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import jwtDecode from "jwt-decode";
 
-import { HiBadgeCheck } from "react-icons/hi";
+import { HiBadgeCheck, HiOutlineChatAlt2 } from "react-icons/hi";
+import { RiSettings3Line } from "react-icons/ri";
 
 import { getUserProfile } from "../action/profileAction";
 import logo from "../asset/images/logo.png";
@@ -14,11 +15,20 @@ import Dropdown from "./Dropdown";
 export class SubNav extends Component {
   state = {
     close: true,
-    premiuminfo:
-      JSON.parse(localStorage.getItem("premium")) ?? this.props.user.premium,
+    premiuminfo: "",
     userinfo:
       this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
   };
+
+  componentDidMount() {
+    if (this.props.auth.user.level === 1) {
+      this.setState({
+        premiuminfo:
+          this.props.user.premium ??
+          JSON.parse(localStorage.getItem("premium")),
+      });
+    }
+  }
 
   openNav = () => {
     this.setState({
@@ -61,33 +71,47 @@ export class SubNav extends Component {
                     username={userinfo.username}
                   />
                 </li>
-                <li className="nav-item dropdown">
-                  <p className="nav-name">{userinfo.username}&nbsp;</p>
+                <li className="nav-item">
+                  <a className="nav-link" href="/">
+                    <span className="nav-user-name">{userinfo.username}</span>
+                    {this.props.auth.user.level === 3 && (
+                      <span className="nav-sub-icon">
+                        {premiuminfo.status === "n" && <HiBadgeCheck />}
+                      </span>
+                    )}
+                  </a>
                 </li>
-                <li className="nav-item dropdown">
-                  <span className="nav-sub-icon">
-                    {premiuminfo.status === "n" && <HiBadgeCheck />}
-                  </span>
-                </li>
+
                 {(auth.user.level === 3 || auth.user.level === 1) && (
-                  <li className="nav-item dropdown">
-                    <span className="vl"></span>
+                  <li className="nav-item">
+                    <span className="nav-forum-icon">
+                      <Link
+                        className="nav-link"
+                        to={`/${
+                          (auth.user.level === 3 && "admin") ||
+                          (auth.user.level === 2 && "sp") ||
+                          (auth.user.level === 1 && "user")
+                        }/forums`}
+                      >
+                        <HiOutlineChatAlt2 />
+                      </Link>
+                    </span>
                   </li>
                 )}
-                {(auth.user.level === 3 || auth.user.level === 1) && (
-                  <li className="nav-item dropdown">
-                    <Link className="navbar-brand" to="/user/contact">
-                      <i className="far fa-bell nav-notify" />
+
+                <li className="nav-item">
+                  <span className="nav-settings-icon">
+                    <Link
+                      className="nav-link"
+                      to={`/${
+                        (auth.user.level === 3 && "admin") ||
+                        (auth.user.level === 2 && "sp") ||
+                        (auth.user.level === 1 && "user")
+                      }/settings`}
+                    >
+                      <RiSettings3Line />
                     </Link>
-                  </li>
-                )}
-                <li className="nav-item dropdown">
-                  <span className="vl"></span>
-                </li>
-                <li className="nav-item dropdown">
-                  <Link className="navbar-brand" to="/user/settings">
-                    <i className="fas fa-cog nav-settings" />
-                  </Link>
+                  </span>
                 </li>
               </ul>
             </div>

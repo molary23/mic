@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import TextPasswordField from "./TextPasswordField";
 
 function PasswordForm(props) {
-  const { onSubmit } = props;
+  const { onSubmit, error } = props;
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState({});
   const [pass1, setPass1] = useState(true);
@@ -62,6 +62,7 @@ function PasswordForm(props) {
       });
     } else {
       setLoading(true);
+      setErrors({});
       const pass = {
         old: inputs.oldpassword,
         new: inputs.newpassword,
@@ -88,7 +89,7 @@ function PasswordForm(props) {
           value={inputs.oldpassword || ""}
           onChange={changeHandler}
           onClick={() => checkPassHandler(1)}
-          error={errors.oldpassword}
+          error={errors.oldpassword || error.password}
         />
         <TextPasswordField
           id="add-admin-form-password"

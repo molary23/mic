@@ -27,8 +27,8 @@ import {
   CLEAR_WITHDRAWALS_ACTION,
   ADD_NEW_CURRENCY,
   CLEAR_ADD_NEW_CURRENCY,
-  DELETE_CURRENCY,
-  CLEAR_DELETE_CURRENCY,
+  UPDATE_CURRENCY,
+  CLEAR_UPDATE_CURRENCY,
   ADD_NEW_ADMIN,
   CLEAR_ADD_NEW_ADMIN,
   ADD_NEW_PROVIDER,
@@ -43,6 +43,14 @@ import {
   CLEAR_ADD_ANNOUNCEMENT,
   EDIT_ANNOUNCEMENT,
   CLEAR_EDIT_ANNOUNCEMENT,
+  GET_ADMIN_SETTINGS,
+  CLEAR_GET_ADMIN_SETTINGS,
+  ADMIN_UPDATE_MODE,
+  CLEAR_ADMIN_UPDATE_MODE,
+  ADMIN_UPDATE_PROFILE,
+  CLEAR_ADMIN_UPDATE_PROFILE,
+  ADMIN_UPDATE_PASSWORD,
+  CLEAR_ADMIN_UPDATE_PASSWORD,
 } from "../action/types";
 
 const initialState = {
@@ -74,7 +82,7 @@ const initialState = {
   annCount: 0,
   withcount: 0,
   withdrawals: [],
-  deletecurrency: false,
+  updatecurrency: false,
   addcurrency: false,
   addadmin: false,
   addprovider: false,
@@ -83,6 +91,10 @@ const initialState = {
   deleteann: false,
   editann: false,
   addann: false,
+  adminsettings: null,
+  setmode: false,
+  setprofile: false,
+  setpass: false,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -208,10 +220,10 @@ export default function adminReducer(state = initialState, action) {
         addcurrency: action.payload,
         loading: false,
       };
-    case DELETE_CURRENCY:
+    case UPDATE_CURRENCY:
       return {
         ...state,
-        deletecurrency: action.payload,
+        updatecurrency: action.payload,
         loading: false,
       };
     case ADD_NEW_ADMIN:
@@ -256,6 +268,31 @@ export default function adminReducer(state = initialState, action) {
         editann: action.payload,
         loading: false,
       };
+    case GET_ADMIN_SETTINGS:
+      return {
+        ...state,
+        adminsettings: action.payload,
+        loading: false,
+      };
+    case ADMIN_UPDATE_MODE:
+      return {
+        ...state,
+        setmode: action.payload,
+        loading: false,
+      };
+    case ADMIN_UPDATE_PROFILE:
+      return {
+        ...state,
+        setprofile: action.payload,
+        loading: false,
+      };
+
+    case ADMIN_UPDATE_PASSWORD:
+      return {
+        ...state,
+        setpass: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -295,8 +332,8 @@ export default function adminReducer(state = initialState, action) {
     case CLEAR_WITHDRAWALS_ACTION: {
       return { ...state, withdrawals: [], withcount: 0, fetching: false };
     }
-    case CLEAR_DELETE_CURRENCY: {
-      return { ...state, deletecurrency: false };
+    case CLEAR_UPDATE_CURRENCY: {
+      return { ...state, updatecurrency: false };
     }
     case CLEAR_ADD_NEW_CURRENCY: {
       return { ...state, addcurrency: false };
@@ -321,6 +358,18 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_EDIT_ANNOUNCEMENT: {
       return { ...state, editann: false };
+    }
+    case CLEAR_GET_ADMIN_SETTINGS: {
+      return { ...state, adminsettings: null };
+    }
+    case CLEAR_ADMIN_UPDATE_MODE: {
+      return { ...state, setmode: false };
+    }
+    case CLEAR_ADMIN_UPDATE_PROFILE: {
+      return { ...state, setprofile: false };
+    }
+    case CLEAR_ADMIN_UPDATE_PASSWORD: {
+      return { ...state, setpass: false };
     }
     default:
       return state;

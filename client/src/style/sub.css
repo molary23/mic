@@ -203,7 +203,7 @@ span.input-group-text {
 }
 
 .nav-logo {
-  width: 15%;
+  width: 200px;
 }
 
 /* Modal */
@@ -314,41 +314,30 @@ ul.dropdown-menu li a {
   margin-right: 5px;
 }
 
-.nav-item.dropdown .nav-settings,
-.nav-item.dropdown .nav-notify {
-  font-size: 20px;
-  color: rgba(102, 102, 102, 0.3);
-  margin: 10px 10px 0px 20px;
+.nav-item {
+  margin: 0px 5px;
 }
 
-.nav-item.dropdown .nav-user-image {
-  width: 30px;
-  margin: 0px 10px 0px 0px;
+.nav-forum-icon svg,
+.nav-settings-icon svg {
+  font-size: 25px;
+  color: rgba(102, 102, 102, 0.6);
 }
 
-.nav-item.dropdown .nav-sub-icon {
-  font-size: 16px;
-  margin: 10px 20px 0px 0px;
-}
-
-.nav-item.dropdown .nav-sub-icon svg {
-  color: #3794fd;
-  margin-top: 5px;
-}
-
-.nav-item.dropdown .nav-name {
-  font-weight: 600px;
-  margin-top: 5px;
+.nav-user-name {
   text-transform: capitalize;
-  margin-bottom: 0px;
-  color: rgba(102, 102, 102, 0.7);
+  color: rgba(102, 102, 102, 0.6);
 }
 
-.nav-item.dropdown .vl {
-  border-left: 2px solid rgba(102, 102, 102, 0.3);
-  height: 30px;
-  position: absolute;
+.nav-user-image {
+  width: 30px;
+  margin-right: 10px;
   margin-top: 5px;
+}
+
+span.nav-sub-icon svg {
+  color: #3794fd;
+  margin-left: 5px;
 }
 
 .sidebar {
@@ -374,7 +363,7 @@ ul.dropdown-menu li a {
 }
 
 .sidebar a {
-  padding: 8px 8px 8px 25px;
+  padding: 5px 8px 5px 25px;
   text-decoration: none;
   font-size: 15px;
   color: #818181;
@@ -558,9 +547,67 @@ ul.dropdown-menu li a {
   color: #fff;
 }
 
+.dashboard-content .dash-contents {
+  margin-bottom: 50px;
+}
+
 .dashboard-content .admin-dash {
-  height: 120px;
+  min-height: 140px;
   padding: 20px;
+}
+
+.dashboard-content .admin-dash.users {
+  background: #2193b0;
+  background: linear-gradient(125deg, #6dd5ed, #2193b0) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.signals {
+  background: #56ccf2;
+  background: linear-gradient(125deg, #56ccf2, #2f80ed) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.providers {
+  background: #800080;
+  background: linear-gradient(125deg, #ffc0cb, #800080) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.currencies {
+  background: #11998e;
+  background: linear-gradient(125deg, #38ef7d, #11998e) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.bonus {
+  background: #fbd3e9;
+  background: linear-gradient(125deg, #fbd3e9, #de6262) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.payouts {
+  background: #b993d6;
+  background: linear-gradient(125deg, #b993d6, #8ca6db) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.transactions {
+  background: #dad299;
+  background: linear-gradient(125deg, #dad299, #b0dab9) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.subscriptions {
+  background: #7474bf;
+  background: linear-gradient(125deg, #7474bf, #348ac7) no-repeat;
+  color: #fff;
+}
+
+.dashboard-content .admin-dash.referrals {
+  background: #757f9a;
+  background: linear-gradient(125deg, #d7dde8, #757f9a) no-repeat;
+  color: #fff;
 }
 
 .dashboard-content .pay-now-btn .btn {
@@ -568,15 +615,8 @@ ul.dropdown-menu li a {
   float: right;
 }
 
-.dashboard-content .box-icon i {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  padding-top: 20%;
-  padding-left: 20%;
-  background: rgba(23, 109, 207, 0.2);
-  color: rgba(23, 109, 207, 0.6);
-  font-size: 150%;
+.dashboard-content .box-icon svg {
+  font-size: 30px;
 }
 
 .dashboard-content .premium-user {
@@ -685,7 +725,7 @@ ul.dropdown-menu li a {
 
 /* Loader */
 .progress {
-  height: 5px;
+  height: 2.5px;
   inset: 0;
   z-index: 9999;
 }

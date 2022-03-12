@@ -3,6 +3,23 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { GiWallet, GiMoneyStack, GiReceiveMoney } from "react-icons/gi";
+import { RiExchangeBoxLine, RiShieldUserLine } from "react-icons/ri";
+import { HiOutlineUsers, HiOutlineSpeakerphone } from "react-icons/hi";
+import {
+  MdOutlinePayments,
+  MdOutlineSupervisedUserCircle,
+} from "react-icons/md";
+import { BsCurrencyExchange } from "react-icons/bs";
+import { FiHome } from "react-icons/fi";
+
+import {
+  AiOutlineUsergroupAdd,
+  AiFillSignal,
+  AiOutlineMoneyCollect,
+  AiOutlineBank,
+} from "react-icons/ai";
+
 function SideNav(props) {
   let navigate = useNavigate();
   let location = useLocation();
@@ -32,7 +49,7 @@ function SideNav(props) {
           <div className="side-nav-list">
             <Link to={`/${viewer}/`}>
               <span className="sidebar-icon">
-                <i className="fas fa-home" />
+                <FiHome />
               </span>
               Dashboard
             </Link>
@@ -40,7 +57,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/signals`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-signal" />
+                  <AiFillSignal />
                 </span>
                 Signals
               </Link>
@@ -49,7 +66,7 @@ function SideNav(props) {
             {level > 2 && (
               <Link to={`/${viewer}/currencies`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-money-bill-wave-alt" />
+                  <BsCurrencyExchange />
                 </span>
                 Currencies
               </Link>
@@ -58,7 +75,7 @@ function SideNav(props) {
             {level > 2 && (
               <Link to={`/${viewer}/users`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-user-friends" />
+                  <HiOutlineUsers />
                 </span>
                 Users
               </Link>
@@ -67,7 +84,7 @@ function SideNav(props) {
             {level > 2 && (
               <Link to={`/${viewer}/admins`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-user-tie" />
+                  <MdOutlineSupervisedUserCircle />
                 </span>
                 Admins
               </Link>
@@ -76,7 +93,7 @@ function SideNav(props) {
             {level > 2 && (
               <Link to={`/${viewer}/signal-providers`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-user-tag" />
+                  <RiShieldUserLine />
                 </span>
                 Signal Providers
               </Link>
@@ -85,7 +102,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/subscriptions`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-id-card-alt" />
+                  <MdOutlinePayments />
                 </span>
                 Subscriptions
               </Link>
@@ -94,7 +111,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/transactions`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-exchange-alt" />
+                  <RiExchangeBoxLine />
                 </span>
                 Transactions
               </Link>
@@ -103,7 +120,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/referrals`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-users" />
+                  <AiOutlineUsergroupAdd />
                 </span>
                 Referrals
               </Link>
@@ -112,7 +129,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/bonuses`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-wallet" />
+                  <GiWallet />
                 </span>
                 Bonus
               </Link>
@@ -121,7 +138,7 @@ function SideNav(props) {
             {level === 3 && (
               <Link to={`/${viewer}/accounts`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-file-invoice-dollar" />
+                  <AiOutlineMoneyCollect />
                 </span>
                 Accounts
               </Link>
@@ -130,7 +147,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/payments`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-dollar-sign" />
+                  <GiMoneyStack />
                 </span>
                 Payments
               </Link>
@@ -139,7 +156,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/withdrawals`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-hand-holding-usd" />
+                  <GiReceiveMoney />
                 </span>
                 Withdrawals
               </Link>
@@ -148,9 +165,17 @@ function SideNav(props) {
             {level === 3 && (
               <Link to={`/${viewer}/announcements`}>
                 <span className="sidebar-icon">
-                  <i className="fas fa-bullhorn" />
+                  <HiOutlineSpeakerphone />
                 </span>
                 Announcements
+              </Link>
+            )}
+            {level === 3 && (
+              <Link to={`/${viewer}/wallets`}>
+                <span className="sidebar-icon">
+                  <AiOutlineBank />
+                </span>
+                Wallets
               </Link>
             )}
           </div>

@@ -84,37 +84,30 @@ ul.dropdown-menu {
 
 .nav-item.dropdown {
   margin-right: 5px;
-  .nav-settings,
-  .nav-notify {
-    font-size: 20px;
-    color: rgba(102, 102, 102, 0.3);
-    margin: 10px 10px 0px 20px;
-  }
+}
+.nav-item {
+  margin: 0px 5px;
+}
+.nav-forum-icon svg,
+.nav-settings-icon svg {
+  font-size: 25px;
+  color: rgba(102, 102, 102, 0.6);
+}
 
-  .nav-user-image {
-    width: 30px;
-    margin: 0px 10px 0px 0px;
-  }
-  .nav-sub-icon {
-    font-size: 16px;
-    margin: 10px 20px 0px 0px;
-    svg {
-      color: #3794fd;
-      margin-top: 5px;
-    }
-  }
-  .nav-name {
-    font-weight: 600px;
-    margin-top: 5px;
-    text-transform: capitalize;
-    margin-bottom: 0px;
-    color: rgba(102, 102, 102, 0.7);
-  }
-  .vl {
-    border-left: 2px solid rgba(102, 102, 102, 0.3);
-    height: 30px;
-    position: absolute;
-    margin-top: 5px;
+.nav-user-name {
+  text-transform: capitalize;
+  color: rgba(102, 102, 102, 0.6);
+}
+
+.nav-user-image {
+  width: 30px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+span.nav-sub-icon {
+  svg {
+    color: #3794fd;
+    margin-left: 5px;
   }
 }
 
@@ -132,7 +125,7 @@ ul.dropdown-menu {
 
   /* The sidebar links */
   a {
-    padding: 8px 8px 8px 25px;
+    padding: 5px 8px 5px 25px;
     text-decoration: none;
     font-size: 15px;
     color: #818181;
@@ -334,10 +327,67 @@ ul.dropdown-menu {
       no-repeat;
     color: #fff;
   }
-
+  .dash-contents {
+    margin-bottom: 50px;
+  }
   .admin-dash {
-    height: 120px;
+    min-height: 140px;
     padding: 20px;
+  }
+  .admin-dash.users {
+    background: #2193b0;
+    background: -webkit-linear-gradient(125deg, #6dd5ed, #2193b0) no-repeat;
+    background: linear-gradient(125deg, #6dd5ed, #2193b0) no-repeat;
+    color: #fff;
+  }
+  .admin-dash.signals {
+    background: #56ccf2;
+    background: -webkit-linear-gradient(125deg, #56ccf2, #2f80ed) no-repeat;
+    background: linear-gradient(125deg, #56ccf2, #2f80ed) no-repeat;
+    color: #fff;
+  }
+  .admin-dash.providers {
+    background: #800080;
+    background: -webkit-linear-gradient(125deg, #ffc0cb, #800080) no-repeat;
+    background: linear-gradient(125deg, #ffc0cb, #800080) no-repeat;
+    color: #fff;
+  }
+  .admin-dash.currencies {
+    background: #11998e;
+    background: -webkit-linear-gradient(125deg, #38ef7d, #11998e) no-repeat;
+    background: linear-gradient(125deg, #38ef7d, #11998e) no-repeat;
+    color: #fff;
+  }
+  .admin-dash.bonus {
+    background: #fbd3e9;
+    background: -webkit-linear-gradient(125deg, #fbd3e9, #de6262) no-repeat;
+    background: linear-gradient(125deg, #fbd3e9, #de6262) no-repeat;
+    color: #fff;
+  }
+
+  .admin-dash.payouts {
+    background: #b993d6;
+    background: -webkit-linear-gradient(125deg, #b993d6, #8ca6db) no-repeat;
+    background: linear-gradient(125deg, #b993d6, #8ca6db) no-repeat;
+    color: #fff;
+  }
+  .admin-dash.transactions {
+    background: #dad299;
+    background: -webkit-linear-gradient(125deg, #dad299, #b0dab9) no-repeat;
+    background: linear-gradient(125deg, #dad299, #b0dab9) no-repeat;
+    color: #fff;
+  }
+  .admin-dash.subscriptions {
+    background: #7474bf;
+    background: -webkit-linear-gradient(125deg, #7474bf, #348ac7) no-repeat;
+    background: linear-gradient(125deg, #7474bf, #348ac7) no-repeat;
+    color: #fff;
+  }
+  .admin-dash.referrals {
+    background: #757f9a;
+    background: -webkit-linear-gradient(125deg, #d7dde8, #757f9a) no-repeat;
+    background: linear-gradient(125deg, #d7dde8, #757f9a) no-repeat;
+    color: #fff;
   }
 
   .pay-now-btn .btn {
@@ -352,17 +402,8 @@ ul.dropdown-menu {
     padding: 20px;
   }*/
 
-  .box-icon {
-    i {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      padding-top: 20%;
-      padding-left: 20%;
-      background: rgba($color: $def-blue, $alpha: 0.2);
-      color: rgba($color: $def-blue, $alpha: 0.6);
-      font-size: 150%;
-    }
+  .box-icon svg {
+    font-size: 30px;
   }
 
   .premium-user {
@@ -455,7 +496,7 @@ ul.dropdown-menu {
 /* Loader */
 
 .progress {
-  height: 5px;
+  height: 2.5px;
   inset: 0;
   z-index: 9999;
 }

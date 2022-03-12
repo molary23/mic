@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import {
   getContent,
   clearActions,
-  deleteCurrency,
+  updateCurrency,
   clearAdminAction,
   addCurrency,
 } from "../../action/adminAction";
@@ -93,10 +93,10 @@ class Currency extends Component {
     ) {
       this.afterUpdate("added");
     } else if (
-      prevProps.admin.deletecurrency !== this.props.admin.deletecurrency &&
-      this.props.admin.deletecurrency
+      prevProps.admin.updatecurrency !== this.props.admin.updatecurrency &&
+      this.props.admin.updatecurrency
     ) {
-      this.afterUpdate("deleted");
+      this.afterUpdate("updated");
     }
   }
 
@@ -338,15 +338,18 @@ class Currency extends Component {
   };*/
 
   clickHandler = (value) => {
+    let action = value[0],
+      cur = value[1];
+
     let check = window.confirm(
-      `Are you sure you want to delete ${
-        JSON.parse(value.firstcurrency.split(", "))[1] +
+      `Are you sure you want to ${action} ${
+        JSON.parse(cur.firstcurrency.split(", "))[1].toUpperCase() +
         "/" +
-        JSON.parse(value.secondcurrency.split(", "))[1]
+        JSON.parse(cur.secondcurrency.split(", "))[1].toUpperCase()
       } pair?`
     );
     if (check) {
-      this.props.deleteCurrency(value["id"]);
+      this.props.updateCurrency(action, cur["id"]);
     } else {
       return false;
     }
@@ -518,7 +521,7 @@ class Currency extends Component {
 Currency.propTypes = {
   getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func.isRequired,
-  deleteCurrency: PropTypes.func.isRequired,
+  updateCurrency: PropTypes.func.isRequired,
   addCurrency: PropTypes.func.isRequired,
   renderArrange: PropTypes.func,
   loadFromParams: PropTypes.func,
@@ -536,7 +539,7 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
-  deleteCurrency,
+  updateCurrency,
   clearAdminAction,
   addCurrency,
 })(Currency);

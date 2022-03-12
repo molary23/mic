@@ -21,6 +21,13 @@ function AddModal(props) {
     modalAnnDetails,
     walletList,
   } = props;
+  let sentDetails = {};
+  if (sender === "admin-announcements" && purpose === "edit") {
+    sentDetails = modalAnnDetails;
+  }
+  if (sender === "provider-signals" && purpose === "edit") {
+    sentDetails = modalsignaldetails;
+  }
 
   const [open, setOpen] = useState(modal);
   const [inputs, setInputs] = useState({});
@@ -29,6 +36,22 @@ function AddModal(props) {
   const [pass1, setPass1] = useState(true);
   const [pass2, setPass2] = useState(true);
   const [errors, setErrors] = useState({});
+  const [edits, setEdits] = useState({
+    editpair: sentDetails.CurrencyId,
+    editsignaloption: sentDetails.signaloption,
+    editsignalstatus: sentDetails.status,
+    edittakeprofit: sentDetails.takeprofit,
+    editstoploss: sentDetails.stoploss,
+    editrange: sentDetails.range,
+    editpip: sentDetails.pip,
+  });
+  const [anns, setAnns] = useState({
+    editanntitle: sentDetails.title,
+    editannlink: sentDetails.link,
+    editannstartdate: sentDetails.startdate,
+    editannenddate: sentDetails.enddate,
+    editannsummary: sentDetails.summary,
+  });
   let pattern = new RegExp("^[a-zA-Z0-9._-]+$");
 
   const signalOpt = [
@@ -201,46 +224,60 @@ function AddModal(props) {
     } else if (purpose === "edit") {
       // Submit Edit Signal
       const submitEditHandler = (e) => {
-        inputs.editpair = inputs.editpair ?? modalsignaldetails.CurrencyId;
-        inputs.editsignaloption =
-          inputs.editsignaloption ??
-          modalsignaldetails.signaloption.toLowerCase() === "sell"
-            ? "s"
-            : "b";
-        inputs.editsignalstatus =
-          inputs.editsignalstatus ??
-          modalsignaldetails.status.toLowerCase() === "filled"
-            ? "f"
-            : "c";
-        inputs.edittakeprofit =
-          inputs.edittakeprofit ?? modalsignaldetails.takeprofit.toString();
-        inputs.editstoploss =
-          inputs.editstoploss ?? modalsignaldetails.stoploss.toString();
-        inputs.editstartrange =
-          inputs.editstartrange ??
-          modalsignaldetails.range.split("-")[0].trim();
-        inputs.editendrange =
-          inputs.editendrange ?? modalsignaldetails.range.split("-")[1].trim();
-        inputs.editpip = inputs.editpip ?? modalsignaldetails.pip.toString();
         e.preventDefault();
-        const signal = checkEmptyInput({
-          inputs,
-          setErrors,
-          setLoading,
-          pair: "editpair",
-          option: "editsignaloption",
-          status: "editsignalstatus",
-          takeprofit: "edittakeprofit",
-          stoploss: "editstoploss",
-          startrange: "editstartrange",
-          endrange: "editendrange",
-          pip: "editpip",
-        });
-
-        if (signal !== false) {
+        if (edits.editpair === "") {
+          setErrors({
+            editpair: "Currency Pair Field can't be empty",
+          });
+        } else if (edits.editsignaloption === "") {
+          setErrors({
+            editsignaloption: "Signal Option Field can't be empty",
+          });
+        } else if (edits.edittakeprofit === "") {
+          setErrors({
+            edittakeprofit: "Take Profit Field can't be empty",
+          });
+        } else if (edits.editstoploss === "") {
+          setErrors({
+            editstoploss: "Stop Loss Field can't be empty",
+          });
+        } else if (edits.editstartrange === "") {
+          setErrors({
+            editstartrange: "Start Range Field can't be empty",
+          });
+        } else if (edits.editendrange === "") {
+          setErrors({
+            editendrange: "End Range Field can't be empty",
+          });
+        } else if (edits.editpip === "") {
+          setErrors({
+            editpip: "Pip Field can't be empty",
+          });
+        } else {
+          setLoading(true);
+          let tp = edits.edittakeprofit.split(",").map((element) => {
+            return parseFloat(element.trim());
+          });
+          let sl = edits.editstoploss.split(",").map((element) => {
+            return parseFloat(element.trim());
+          });
+          const signal = {
+            pair: parseInt(edits.editpair),
+            option: edits.editsignaloption,
+            status: edits.editsignalstatus,
+            takeprofit: tp,
+            stoploss: sl,
+            startrange: parseFloat(edits.editstartrange),
+            endrange: parseFloat(edits.editendrange),
+            pip: parseFloat(edits.editpip),
+          };
           setErrors({});
           onSubmit(["edit", signal, modalsignaldetails.signalid]);
         }
+      };
+
+      const changeEditHandler = (e) => {
+        setEdits({ ...edits, [e.target.name]: e.target.value });
       };
       title = "Edit Signal";
       text = (
@@ -248,32 +285,26 @@ function AddModal(props) {
           <form className="edit-signal-form" onSubmit={submitEditHandler}>
             <Select
               options={optArray}
-              onChange={changeHandler}
+              onChange={changeEditHandler}
               name="editpair"
-              value={inputs.editpair || modalsignaldetails.CurrencyId}
+              value={edits.editpair}
               error={errors.editpair}
             />
             <Select
               options={signalOpt}
-              onChange={changeHandler}
+              onChange={changeEditHandler}
               name="editsignaloption"
               value={
-                inputs.editsignaloption ||
-                modalsignaldetails.signaloption.toLowerCase() === "sell"
-                  ? "s"
-                  : "b"
+                edits.editsignaloption.toLowerCase() === "sell" ? "s" : "b"
               }
               error={errors.editsignaloption}
             />
             <Select
               options={statusOpt}
-              onChange={changeHandler}
+              onChange={changeEditHandler}
               name="editsignalstatus"
               value={
-                inputs.editsignalstatus ||
-                modalsignaldetails.status.toLowerCase() === "filled"
-                  ? "f"
-                  : "c"
+                edits.editsignalstatus.toLowerCase() === "filled" ? "f" : "c"
               }
               error={errors.editsignalstatus}
             />
@@ -283,11 +314,8 @@ function AddModal(props) {
               label="Take Profit *Separate multiple Take Profits with Comma (,)*"
               type="text"
               name="edittakeprofit"
-              value={
-                inputs.edittakeprofit ||
-                modalsignaldetails.takeprofit.toString()
-              }
-              onChange={changeHandler}
+              value={edits.edittakeprofit.toString()}
+              onChange={changeEditHandler}
               error={errors.edittakeprofit}
             />
             <TextInputField
@@ -296,10 +324,8 @@ function AddModal(props) {
               label="Stop Loss *Separate multiple Stop Loss with Comma (,)*"
               type="text"
               name="editstoploss"
-              value={
-                inputs.editstoploss || modalsignaldetails.stoploss.toString()
-              }
-              onChange={changeHandler}
+              value={edits.editstoploss.toString()}
+              onChange={changeEditHandler}
               error={errors.editstoploss}
             />
             <TextInputField
@@ -309,10 +335,9 @@ function AddModal(props) {
               type="text"
               name="editstartrange"
               value={
-                inputs.editstartrange ||
-                modalsignaldetails.range.split("-")[0].trim()
+                (edits.editstartrange = edits.editrange.split("-")[0].trim())
               }
-              onChange={changeHandler}
+              onChange={changeEditHandler}
               error={errors.editstartrange}
             />
             <TextInputField
@@ -322,10 +347,9 @@ function AddModal(props) {
               type="text"
               name="editendrange"
               value={
-                inputs.editendrange ||
-                modalsignaldetails.range.split("-")[1].trim()
+                (edits.editendrange = edits.editrange.split("-")[1].trim())
               }
-              onChange={changeHandler}
+              onChange={changeEditHandler}
               error={errors.editendrange}
             />
             <TextInputField
@@ -334,8 +358,8 @@ function AddModal(props) {
               label="Profit/Loss, Pip"
               type="text"
               name="editpip"
-              value={inputs.editpip || modalsignaldetails.pip.toString()}
-              onChange={changeHandler}
+              value={edits.editpip.toString()}
+              onChange={changeEditHandler}
               error={errors.editpip}
             />
             <div className="d-grid">
@@ -782,70 +806,45 @@ function AddModal(props) {
     } else {
       const submitEditAnnhandler = (e) => {
         e.preventDefault();
-        inputs.editanntitle =
-          inputs.editanntitle ?? modalAnnDetails.title.toString();
-        inputs.editannlink =
-          inputs.editannlink ?? modalAnnDetails.link.toString();
-        inputs.editannstartdate =
-          inputs.editannstartdate ?? modalAnnDetails.startdate;
-        inputs.editannenddate =
-          inputs.editannenddate ?? modalAnnDetails.enddate;
-        inputs.editannsummary =
-          inputs.editannsummary ?? modalAnnDetails.summary.toString();
-        if (
-          !Object.keys(inputs).includes("editanntitle") ||
-          inputs.editanntitle === ""
-        ) {
+        if (anns.editanntitle === "") {
           setErrors({
             editanntitle: "Announcement Title Field can't be empty",
           });
-        } else if (inputs.editanntitle.length > 50) {
+        } else if (anns.editanntitle.length > 50) {
           setErrors({
             editanntitle: "Announcement Title can't be more than 50 characters",
           });
-        } else if (
-          !Object.keys(inputs).includes("editannlink") ||
-          inputs.editannlink === ""
-        ) {
+        } else if (anns.editannlink === "") {
           setErrors({
             editannlink: "Announcement Link can't be empty",
           });
-        } else if (inputs.editannlink.length > 100) {
+        } else if (anns.editannlink.length > 100) {
           setErrors({
             editannlink: "Announcement Title can't be more than 30 characters",
           });
-        } else if (
-          !Object.keys(inputs).includes("editannstartdate") ||
-          inputs.editannstartdate === ""
-        ) {
+        } else if (anns.editannstartdate === "") {
           setErrors({
             editannstartdate: "Announcement Start Date Field can't be empty",
           });
-        } else if (inputs.editannstartdate.length > 10) {
+        } else if (anns.editannstartdate.length > 10) {
           setErrors({
             editannstartdate:
               "Announcement Start Date can't be more than 10 characters",
           });
-        } else if (
-          !Object.keys(inputs).includes("editannenddate") ||
-          inputs.editannenddate === ""
-        ) {
+        } else if (anns.editannenddate === "") {
           setErrors({
             editannenddate: "Announcement End Date can't be empty",
           });
-        } else if (inputs.editannenddate.length > 10) {
+        } else if (anns.editannenddate.length > 10) {
           setErrors({
             editannstartdate:
               "Announcement End Date can't be more than 10 characters",
           });
-        } else if (
-          !Object.keys(inputs).includes("editannsummary") ||
-          inputs.editannsummary === ""
-        ) {
+        } else if (anns.editannsummary === "") {
           setErrors({
             editannsummary: "Announcement Summary Field can't be empty",
           });
-        } else if (inputs.editannsummary.length > 255) {
+        } else if (anns.editannsummary.length > 255) {
           setErrors({
             editannsummary:
               "Announcement Summary can't be more than 255 characters",
@@ -853,14 +852,18 @@ function AddModal(props) {
         } else {
           setErrors({});
           const ann = {
-            title: inputs.editanntitle.toLowerCase(),
-            link: inputs.editannlink.toLowerCase(),
-            summary: inputs.editannsummary.toLowerCase(),
-            startdate: inputs.editannstartdate,
-            enddate: inputs.editannenddate,
+            title: anns.editanntitle.toLowerCase(),
+            link: anns.editannlink.toLowerCase(),
+            summary: anns.editannsummary.toLowerCase(),
+            startdate: anns.editannstartdate,
+            enddate: anns.editannenddate,
           };
           onSubmit(["edit", ann, modalAnnDetails.id]);
         }
+      };
+
+      const changeEditHandler = (e) => {
+        setAnns({ ...anns, [e.target.name]: e.target.value });
       };
 
       title = "Edit Announcements";
@@ -871,8 +874,8 @@ function AddModal(props) {
             placeholder="Announcement Title"
             type="text"
             name="editanntitle"
-            value={inputs.editanntitle || modalAnnDetails.title}
-            onChange={changeHandler}
+            value={anns.editanntitle}
+            onChange={changeEditHandler}
             error={errors.editanntitle}
           />
           <TextInputField
@@ -880,35 +883,35 @@ function AddModal(props) {
             placeholder="Announcement link"
             type="url"
             name="editannlink"
-            value={inputs.editannlink || modalAnnDetails.link}
-            onChange={changeHandler}
+            value={anns.editannlink}
+            onChange={changeEditHandler}
             error={errors.editannlink}
           />
           <TextInputField
             id="edit-ann-startdate"
             placeholder="Announcement Start Date"
             type="date"
-            name="editstartdate"
-            value={inputs.editstartdate || modalAnnDetails.startdate}
-            onChange={changeHandler}
-            error={errors.editstartdate}
+            name="editannstartdate"
+            value={anns.editannstartdate}
+            onChange={changeEditHandler}
+            error={errors.editannstartdate}
           />
           <TextInputField
             id="edit-ann-enddate"
             placeholder="Announcement End Date"
             type="date"
-            name="editenddate"
-            value={inputs.editannstartdate || modalAnnDetails.startdate}
-            onChange={changeHandler}
-            error={errors.editannstartdate}
+            name="editannenddate"
+            value={anns.editannenddate}
+            onChange={changeEditHandler}
+            error={errors.editenddate}
           />
           <TextAreaField
             id="edit-ann-summary"
             placeholder="Announcement Summary"
             type="url"
             name="editannsummary"
-            value={inputs.editannsummary || modalAnnDetails.summary}
-            onChange={changeHandler}
+            value={anns.editannsummary}
+            onChange={changeEditHandler}
             error={errors.editannsummary}
           />
           <div className="d-grid">

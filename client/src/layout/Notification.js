@@ -15,7 +15,7 @@ function Notification(props) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    setLoading(true);
+
     if ((notify && alert === "y") || (!notify && alert === "n")) {
       setErrors("You have not made any changes to your Notification Status");
     } else {
@@ -23,11 +23,23 @@ function Notification(props) {
       let buzz;
       if (notify) {
         buzz = "y";
+        setLoading(true);
+        onSubmit(buzz);
+        setLoading(load);
       } else {
-        buzz = "n";
+        let confirm = window.confirm(
+          "It is recommended that you have your Email Notification On at all times so that you can get Signal Updates on the Go. Do you wish to switch it off?"
+        );
+        if (!confirm) {
+          setLoading(false);
+          return false;
+        } else {
+          buzz = "n";
+          setLoading(true);
+          onSubmit(buzz);
+          setLoading(load);
+        }
       }
-      onSubmit(buzz);
-      setLoading(load);
     }
   };
   const changeHandler = (e) => {

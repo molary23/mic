@@ -410,7 +410,7 @@ router.get(
 */
 
 router.post(
-  "/currency/delete/:id",
+  "/currency/update/:action/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { error, isLevel } = checkSuperAdmin(req.user.level);
@@ -418,10 +418,18 @@ router.post(
       return res.status(400).json(error);
     }
     let id = req.params.id.split(":")[1];
+    let action = req.params.action.split(":")[1];
     id = parseInt(id);
 
+    let status;
+    if (action === "delete") {
+      status = "i";
+    } else if (action === "activate") {
+      status = "a";
+    }
+
     Currency.update(
-      { status: "i" },
+      { status },
       {
         where: {
           id,

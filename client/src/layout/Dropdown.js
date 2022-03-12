@@ -50,7 +50,16 @@ function Dropdown(props) {
 
       <ul className={`dropdown-menu ${display ? "show" : ""}`}>
         <li className="dropdown-item">
-          <DropdownItem {...{ title: "profile", url: "/forgot" }} />
+          <DropdownItem
+            {...{
+              title: "profile",
+              url: `/${
+                (props.auth.user.level === 3 && "admin") ||
+                (props.auth.user.level === 2 && "sp") ||
+                (props.auth.user.level === 1 && "user")
+              }/settings`,
+            }}
+          />
         </li>
         <li className="dropdown-item">
           <Link
