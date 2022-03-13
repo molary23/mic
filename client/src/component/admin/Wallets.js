@@ -92,8 +92,8 @@ export class Wallets extends Component {
     if (nextProps.errors) {
       update.error = nextProps.errors;
       update.isLoading = false;
-      update.startLoad = false;
     }
+
     return update;
   }
 

@@ -24,7 +24,10 @@ ForumView.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.ENUM("o", "c"), // Open or Close
+      type: DataTypes.STRING,
+    },
+    right: {
+      type: DataTypes.STRING,
     },
     replycount: {
       type: DataTypes.INTEGER.UNSIGNED,

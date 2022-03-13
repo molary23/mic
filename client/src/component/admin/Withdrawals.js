@@ -84,17 +84,20 @@ export class Withdrawals extends Component {
       this.props.admin.updatewithdrawals
     ) {
       this.afterUpdate("updated");
+      this.setState({
+        currentPage: Pagination.currentpage,
+      });
     }
   }
 
   afterUpdate = (text) => {
     const { limit, content } = this.state;
-
+    console.log(this.state.offset);
     this.props.clearAdminAction("update-withdrawals");
-    window.scrollTo({
+    /* window.scrollTo({
       top: 0,
       behavior: "smooth",
-    });
+    });*/
     this.setState({
       modal: false,
       toast: true,
@@ -109,9 +112,9 @@ export class Withdrawals extends Component {
     this.props.getContent(content, paginate);
 
     this.setState({
-      offset: this.state.offset + limit,
+      offset: this.state.offset - Pagination.limit,
     });
-    window.addEventListener("scroll", this.afterLoad, { passive: true });
+    window.addEventListener("scroll", this.loadMore, { passive: true });
     setTimeout(() => {
       this.setState({
         toast: false,

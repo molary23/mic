@@ -25,6 +25,11 @@ Forum.init(
     },
     status: {
       type: DataTypes.ENUM("o", "c"), // Open or Close
+      defaultValue: "o",
+    },
+    right: {
+      type: DataTypes.ENUM("u", "p"), // User-Only or Public
+      defaultValue: "u",
     },
   },
   {

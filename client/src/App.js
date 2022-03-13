@@ -29,6 +29,7 @@ import Payments from "./component/user/Payments";
 import Withdrawals from "./component/user/Withdrawals";
 import Settings from "./component/user/Settings";
 import Forum from "./component/user/Forum";
+import Forums from "./component/user/Forums";
 
 import Index from "./component/user/Index";
 import Subscriptions from "./component/user/Subscriptions";
@@ -54,7 +55,9 @@ import AdminAccounts from "./component/admin/Accounts";
 import AdminAnnouncements from "./component/admin/Announcements";
 import AdminSettings from "./component/admin/Settings";
 import AdminForum from "./component/admin/Forum";
+import AdminForums from "./component/admin/Forums";
 import AdminWallets from "./component/admin/Wallets";
+import AdminUserView from "./component/admin/UserView";
 
 // Signal Provider
 import ProviderDashboard from "./component/signalprovider/Dashboard";
@@ -169,8 +172,13 @@ function App() {
           />
           <Route
             exact
-            path="/user/forums"
+            path="/user/forum/:id"
             element={<PrivateRoute Component={Forum} />}
+          />
+          <Route
+            exact
+            path="/user/forums"
+            element={<PrivateRoute Component={Forums} />}
           />
         </Route>
 
@@ -260,13 +268,23 @@ function App() {
           />
           <Route
             exact
-            path="/admin/forums"
+            path="/admin/forum/:id"
             element={<PrivateRoute Component={AdminForum} />}
           />
           <Route
             exact
-            path="/admin/user/:userId"
+            path="/admin/forums"
+            element={<PrivateRoute Component={AdminForums} />}
+          />
+          <Route
+            exact
+            path="/admin/user/:id"
             element={<PrivateRoute Component={AdminUser} />}
+          />
+          <Route
+            exact
+            path="/admin/userview/:id/:table"
+            element={<PrivateRoute Component={AdminUserView} />}
           />
           <Route
             exact
