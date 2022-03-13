@@ -12,7 +12,7 @@ Wallet.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    Wallet: {
+    wallet: {
       type: DataTypes.STRING(10),
       allowNull: false,
     },

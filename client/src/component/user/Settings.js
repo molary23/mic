@@ -264,7 +264,7 @@ class Settings extends Component {
       load = false;
       loader = false;
       settings = user.usersettings;
-      notify = settings.settings.notify;
+      notify = settings.preference.notify;
       mode = settings.settings.mode;
       accounts = settings.accounts;
       profile = settings.profile;

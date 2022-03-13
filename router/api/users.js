@@ -1,5 +1,6 @@
 const Account = require("../../db/models/Account");
 const Preference = require("../../db/models/Preference");
+const Withdrawal = require("../../db/models/Withdrawal");
 
 const express = require("express"),
   router = express.Router(),
@@ -223,6 +224,7 @@ router.get(
         attributes: ["mode"],
       })
         .then((settings) => {
+          info.settings = settings;
           Preference.findOne({
             where: { UserId },
             attributes: ["currencies", "providers", "notify"],
@@ -665,6 +667,36 @@ router.post(
         });
       })
       .catch((err) => res.json(err));
+  }
+);
+
+/*
+@route POST api/user/withdrawals
+@desc User request withdrawal
+@access private
+*/
+
+router.post(
+  "/withdrawals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const withFields = {};
+
+    if (req.body.wallet) withFields.walletid = req.body.wallet;
+    if (req.body.accountnumber)
+      withFields.accountnumber = req.body.accountnumber;
+    if (req.body.amount) withFields.amount = req.body.amount;
+    withFields.UserId = req.user.id;
+
+    Withdrawal.create(withFields)
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
   }
 );
 

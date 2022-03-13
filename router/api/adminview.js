@@ -1856,6 +1856,7 @@ router.post(
       offset,
       limit,
       attributes: [
+        "withdrawalid",
         "fullname",
         "username",
         "UserId",
@@ -1977,6 +1978,8 @@ router.post(
     Wallet.findAndCountAll({
       where,
       order: [["id", "DESC"]],
+      limit,
+      offset,
       attributes: ["id", "wallet", "status", "createdAt", "UserId"],
       include: [{ model: User, attributes: ["username"] }],
     })

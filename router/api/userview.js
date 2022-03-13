@@ -1,5 +1,3 @@
-const Wallet = require("../../db/models/Wallet");
-
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -21,6 +19,9 @@ const express = require("express"),
   Withdrawal = require("../../db/models/Withdrawal"),
   Announcement = require("../../db/models/Announcement"),
   ProviderView = require("../../db/models/ProviderView"),
+  Wallet = require("../../db/models/Wallet"),
+  WithdrawalView = require("../../db/models/WithdrawalView"),
+  AccountView = require("../../db/models/AccountView"),
   Currency = require("../../db/models/Currency"),
   // Bring in View
   SignalView = require("../../db/models/SignalView"),
@@ -686,10 +687,17 @@ router.post(
       };
     }
     let result = [];
-    Withdrawal.findAndCountAll({
+    WithdrawalView.findAndCountAll({
       where,
-      order: [["id", "desc"]],
-      attributes: ["amount", "account", "status", "createdAt", "updatedAt"],
+      order: [["withdrawalid", "desc"]],
+      attributes: [
+        "amount",
+        "accountnumber",
+        "wallet",
+        "status",
+        "createdAt",
+        "updatedAt",
+      ],
       limit,
       offset,
     })
@@ -922,6 +930,77 @@ router.get(
       })
       .then((view) => {
         res.json(view);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/userview/balance
+@desc User View balance
+@access private
+*/
+
+router.get(
+  "/balance",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let UserId = req.user.id,
+      balance = {};
+
+    Transaction.sum("amount", {
+      where: {
+        type: "c",
+        UserId,
+      },
+    })
+      .then((credit) => {
+        balance.credit = credit;
+        Transaction.sum("amount", {
+          where: {
+            type: "d",
+            UserId,
+          },
+        })
+          .then((debit) => {
+            balance.debit = debit;
+            let total = balance.credit - balance.debit;
+            return res.json(total);
+          })
+          .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/userview/account
+@desc User View account
+@access private
+*/
+
+router.get(
+  "/account",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let UserId = req.user.id;
+
+    AccountView.findAll({
+      where: {
+        UserId,
+      },
+      attributes: ["walletid", "accountnumber", "wallet"],
+    })
+      .then((account) => {
+        return res.json(account);
       })
       .catch((err) => res.status(404).json(err));
   }

@@ -126,7 +126,7 @@ class Currency extends Component {
       });
       this.props.clearAdminAction("add-currency");
     } else {
-      this.props.clearAdminAction("delete-currency");
+      this.props.clearAdminAction("update-currency");
     }
     this.setState({
       offset: 0,

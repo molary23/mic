@@ -7,7 +7,7 @@ const view_name = "AccountViews";
 const original_query = [
   "SELECT ",
   " Accounts.id AS accountid, Accounts.accountnumber, Users.id AS UserId, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
-  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt, Wallets.wallet as wallet ",
+  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt, Wallets.id as walletid,Wallets.wallet as wallet ",
   " FROM Accounts ",
   " INNER JOIN Users ",
   " ON Accounts.UserId = Users.id ",
@@ -15,12 +15,13 @@ const original_query = [
   " ON Accounts.WalletId = Wallets.id ",
   " INNER JOIN Profiles ",
   " ON Accounts.UserId = Profiles.UserId ",
+  " WHERE Wallets.status = 'a' ",
 ].join("");
 
 const new_query = [
   "SELECT ",
   " Accounts.id AS accountid, Accounts.accountnumber, Users.id AS UserId, CONCAT(Profiles.firstname, ' ', Profiles.lastname) AS fullname,",
-  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt, Wallets.wallet as wallet ",
+  "Users.username, Accounts.createdAt AS createdAt, Accounts.updatedAt AS updatedAt, Wallets.id as walletid,Wallets.wallet as wallet ",
   " FROM Accounts ",
   " INNER JOIN Users ",
   " ON Accounts.UserId = Users.id ",
@@ -28,6 +29,7 @@ const new_query = [
   " ON Accounts.WalletId = Wallets.id ",
   " INNER JOIN Profiles ",
   " ON Accounts.UserId = Profiles.UserId ",
+  " WHERE Wallets.status = 'a' ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

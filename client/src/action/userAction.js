@@ -47,6 +47,12 @@ import {
   CLEAR_USER_UPDATE_ACCOUNT,
   USER_UPDATE_PASSWORD,
   CLEAR_USER_UPDATE_PASSWORD,
+  USER_GET_BALANCE,
+  CLEAR_USER_GET_BALANCE,
+  USER_GET_ACCOUNT,
+  CLEAR_USER_GET_ACCOUNT,
+  USER_REQUEST_WITHDRAWAL,
+  CLEAR_USER_REQUEST_WITHDRAWAL,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -110,6 +116,12 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_GET_PROVIDERS };
   } else if (actionToClear === "user-wallet") {
     return { type: CLEAR_USER_GET_WALLET };
+  } else if (actionToClear === "user-balance") {
+    return { type: CLEAR_USER_GET_BALANCE };
+  } else if (actionToClear === "user-account") {
+    return { type: CLEAR_USER_GET_ACCOUNT };
+  } else if (actionToClear === "user-payout") {
+    return { type: CLEAR_USER_REQUEST_WITHDRAWAL };
   }
 };
 
@@ -169,6 +181,57 @@ export const getUserSettings = () => async (dispatch) => {
   } catch (error) {
     console.log(error.response.data);
     dispatch({ type: GET_USER_SETTINGS, payload: [] });
+  }
+};
+
+export const getBalance = () => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("user-balance"));
+  try {
+    let response = await axios.get("/api/userview/balance");
+    const result = await dispatch({
+      type: USER_GET_BALANCE,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: USER_GET_BALANCE, payload: [] });
+  }
+};
+
+export const getAccount = () => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("user-account"));
+  try {
+    let response = await axios.get("/api/userview/account");
+    const result = await dispatch({
+      type: USER_GET_ACCOUNT,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: USER_GET_ACCOUNT, payload: [] });
+  }
+};
+
+export const requestWithdrawal = (withdata) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("user-account"));
+  try {
+    let response = await axios.post("/api/users/withdrawals", withdata);
+    const result = await dispatch({
+      type: USER_REQUEST_WITHDRAWAL,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: USER_REQUEST_WITHDRAWAL, payload: [] });
   }
 };
 

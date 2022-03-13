@@ -83,6 +83,8 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("currencies");
   localStorage.removeItem("currency");
   localStorage.removeItem("userCounts");
+  localStorage.removeItem("userdetails");
+  localStorage.removeItem("details");
   localStorage.removeItem("premium");
 
   //Remove Auth Header  for future requests

@@ -20,6 +20,7 @@ function AddModal(props) {
     error,
     modalAnnDetails,
     walletList,
+    isLoading,
   } = props;
   let sentDetails = {};
   if (sender === "admin-announcements" && purpose === "edit") {
@@ -1002,6 +1003,138 @@ function AddModal(props) {
         </form>
       );
     }
+  } else if (sender === "admin-wallets") {
+    const submitWalletHandler = (e) => {
+      e.preventDefault();
+      if (
+        !Object.keys(inputs).includes("walletname") ||
+        inputs.walletname === ""
+      ) {
+        setErrors({
+          walletname: "Wallet Field can't be empty",
+        });
+      } else if (inputs.walletname.length > 10) {
+        setErrors({
+          walletname: "Wallet Field can't be more than 10 characters",
+        });
+      } else {
+        setErrors({});
+        setLoading(true);
+        const wallet = {
+          wallet: inputs.walletname.toLowerCase(),
+        };
+        onSubmit(wallet);
+        setLoading(isLoading);
+      }
+    };
+    title = "Add New Wallet";
+    text = (
+      <form className="account-form" onSubmit={submitWalletHandler}>
+        <TextInputField
+          id="account-form-account-number"
+          placeholder="Wallet Name"
+          type="text"
+          name="walletname"
+          value={inputs.walletname || ""}
+          onChange={changeHandler}
+          error={errors.walletname || error.wallet}
+        />
+        <div className="d-grid">
+          <button type="submit" className="btn default-btn btn-lg btn-block">
+            Add Wallet
+            {loading && (
+              <span className="spinner-border spinner-border-sm ms-2"></span>
+            )}
+          </button>
+        </div>
+      </form>
+    );
+  } else if (sender === "user-withdrawals") {
+    const { accountList, balance } = props;
+    let accObj = {},
+      optArray = [{ value: "", option: "Select Account Details" }];
+    for (let i = 0; i < accountList.length; i++) {
+      accObj = {
+        value: `${accountList[i].walletid}-${accountList[i].accountnumber}`,
+        option: `${accountList[i].wallet.toUpperCase()} - ${accountList[
+          i
+        ].accountnumber.toUpperCase()}`,
+      };
+      optArray.push(accObj);
+    }
+    let max;
+
+    if (balance > 1000) {
+      max = 1000;
+    } else {
+      max = balance;
+    }
+    let amtObj = {},
+      amtArray = [{ value: "", option: "Select Amount" }];
+    for (let i = 100; i <= max; i += 100) {
+      amtObj = {
+        value: [i],
+        option: [i],
+      };
+      amtArray.push(amtObj);
+    }
+
+    const submitWithdrawHandler = (e) => {
+      e.preventDefault();
+      if (!Object.keys(inputs).includes("wallet") || inputs.wallet === "") {
+        setErrors({
+          wallet: "Wallet Field can't be empty",
+        });
+      } else if (
+        !Object.keys(inputs).includes("amount") ||
+        inputs.amount === ""
+      ) {
+        setErrors({
+          amount: "Amount Field can't be empty",
+        });
+      } else if (inputs.amount > balance) {
+        setErrors({
+          amount: "Amount can't be more than your balance",
+        });
+      } else {
+        setErrors({});
+        setLoading(true);
+        const withdrawals = {
+          wallet: parseInt(inputs.wallet.split("-")[0]),
+          accountnumber: inputs.wallet.split("-")[1],
+          amount: parseInt(inputs.amount),
+        };
+        onSubmit(withdrawals);
+        setLoading(isLoading);
+      }
+    };
+    title = "Request for a Payout";
+    text = (
+      <form className="withdraw-form" onSubmit={submitWithdrawHandler}>
+        <Select
+          options={optArray}
+          onChange={changeHandler}
+          name="wallet"
+          value={inputs.wallet || ""}
+          error={errors.wallet}
+        />
+        <Select
+          options={amtArray}
+          onChange={changeHandler}
+          name="amount"
+          value={inputs.amount || ""}
+          error={errors.amount}
+        />
+        <div className="d-grid">
+          <button type="submit" className="btn default-btn btn-lg btn-block">
+            Request
+            {loading && (
+              <span className="spinner-border spinner-border-sm ms-2"></span>
+            )}
+          </button>
+        </div>
+      </form>
+    );
   }
 
   return (

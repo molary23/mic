@@ -182,7 +182,7 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div className="dash-info-card dash-card dash-transaction">
                     <p className="mb-1">Transactions</p>
-                    <h4 className="mb-1">${userdetails.transactions}</h4>
+                    <h4 className="mb-1">{userdetails.transactions}</h4>
                     <div className="row">
                       <div className="col-6">
                         <p className="mb-1"></p>

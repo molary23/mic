@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/adminAction";
+import {
+  getContent,
+  clearActions,
+  updateWithdrawals,
+  clearAdminAction,
+} from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
 import TableHead from "../../layout/TableHead";
@@ -10,6 +15,8 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import Toast from "../../layout/Toast";
+import Spinner from "../../layout/Spinner";
 
 import {
   getMore,
@@ -17,6 +24,7 @@ import {
   renderArrange,
   loadFromParams,
 } from "../../util/LoadFunction";
+import Pagination from "../../util/Pagination";
 
 export class Withdrawals extends Component {
   state = {
@@ -29,16 +37,18 @@ export class Withdrawals extends Component {
       { value: "r", option: "Rejected" },
     ],
     status: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     withcount: JSON.parse(localStorage.getItem("counts")).withdrawals,
     startLoad: false,
     getLoad: true,
     content: "withdrawals",
+    toast: false,
+    toasttext: "",
   };
 
   componentDidMount() {
@@ -66,6 +76,49 @@ export class Withdrawals extends Component {
     this.props.clearActions(this.state.content);
     this.props.clearSearchActions(this.state.content);
   }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.admin.updatewithdrawals !==
+        this.props.admin.updatewithdrawals &&
+      this.props.admin.updatewithdrawals
+    ) {
+      this.afterUpdate("updated");
+    }
+  }
+
+  afterUpdate = (text) => {
+    const { limit, content } = this.state;
+
+    this.props.clearAdminAction("update-withdrawals");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    this.setState({
+      modal: false,
+      toast: true,
+      toasttext: `Withdrawal ${text} successfully`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState({
+      offset: this.state.offset + limit,
+    });
+    window.addEventListener("scroll", this.afterLoad, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
@@ -101,6 +154,20 @@ export class Withdrawals extends Component {
     });
   };
 
+  clickhandler = (value) => {
+    console.log(value);
+    let check = window.confirm(
+      `Are you sure you want to ${
+        value[0]
+      } ${value[2].toUpperCase()}'s Withdrawal Request?`
+    );
+    if (check) {
+      this.props.updateWithdrawals(value[0], value[1]);
+    } else {
+      return false;
+    }
+  };
+
   render() {
     const {
       sender,
@@ -110,6 +177,9 @@ export class Withdrawals extends Component {
       withcount,
       startLoad,
       getLoad,
+      toast,
+      toasttext,
+      error,
     } = this.state;
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -149,9 +219,7 @@ export class Withdrawals extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -195,7 +263,9 @@ export class Withdrawals extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -214,31 +284,39 @@ export class Withdrawals extends Component {
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickhandler}
               />
             </TableHead>
           </div>
         )}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }
 }
 
 Withdrawals.propTypes = {
-  getSub: PropTypes.func,
-  getTableCount: PropTypes.func,
-  searchSub: PropTypes.func,
+  getContent: PropTypes.func.isRequired,
+  updateWithdrawals: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearActions: PropTypes.func,
+  clearAdminAction: PropTypes.func,
   loadFromParams: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
   clearActions,
+  clearAdminAction,
+  updateWithdrawals,
 })(Withdrawals);

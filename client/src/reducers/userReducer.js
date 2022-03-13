@@ -44,6 +44,12 @@ import {
   CLEAR_USER_UPDATE_ACCOUNT,
   USER_UPDATE_PASSWORD,
   CLEAR_USER_UPDATE_PASSWORD,
+  USER_GET_BALANCE,
+  CLEAR_USER_GET_BALANCE,
+  USER_GET_ACCOUNT,
+  CLEAR_USER_GET_ACCOUNT,
+  USER_REQUEST_WITHDRAWAL,
+  CLEAR_USER_REQUEST_WITHDRAWAL,
 } from "../action/types";
 
 const initialState = {
@@ -76,6 +82,9 @@ const initialState = {
   userwallet: [],
   setaccount: false,
   setpass: false,
+  userbalance: 0,
+  useraccount: [],
+  requestwithdrawal: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -225,6 +234,24 @@ export default function userReducer(state = initialState, action) {
         setpass: action.payload,
         loading: false,
       };
+    case USER_GET_BALANCE:
+      return {
+        ...state,
+        userbalance: action.payload,
+        loading: false,
+      };
+    case USER_GET_ACCOUNT:
+      return {
+        ...state,
+        useraccount: action.payload,
+        loading: false,
+      };
+    case USER_REQUEST_WITHDRAWAL:
+      return {
+        ...state,
+        requestwithdrawal: action.payload,
+        loading: false,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -293,6 +320,15 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_GET_WALLET: {
       return { ...state, userwallet: [] };
+    }
+    case CLEAR_USER_GET_BALANCE: {
+      return { ...state, userbalance: 0 };
+    }
+    case CLEAR_USER_GET_ACCOUNT: {
+      return { ...state, useraccount: [] };
+    }
+    case CLEAR_USER_REQUEST_WITHDRAWAL: {
+      return { ...state, requestwithdrawal: false };
     }
     default:
       return state;

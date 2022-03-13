@@ -39,6 +39,7 @@ export const getMore = ({
     }
   }
 };
+
 let typingTimer;
 export const setSearchParams = ({
   selected,
@@ -146,7 +147,7 @@ export const renderArrange = ({
     showSearch = false;
     loader = true;
     totalCount = count;
-    totalText = "Total";
+    totalText = "All";
     if (list === [] && loading) {
       loader = true;
       load = false;
@@ -171,7 +172,7 @@ export const renderArrange = ({
     showSearch = true;
     loader = true;
     totalCount = searchcount;
-    totalText = "Selected/Searched";
+    totalText = "Filtered";
     if (searchlist === [] || searchlist.length <= 0) {
       noRecord = true;
       searchMain = [];
@@ -312,4 +313,17 @@ export const checkHandler = (input, target, setIcon, setErrors) => {
         error[input] = error.response;
       });
   }, 3000);
+};
+
+export const roundUp = (num) => {
+  let figure = parseFloat(num);
+  if (figure >= 1000000000) {
+    return `${(figure / 1000000000).toFixed(1)}B+`;
+  } else if (figure >= 1000000) {
+    return `${(figure / 1000000).toFixed(1)}M+`;
+  } else if (figure >= 1000) {
+    return `${(figure / 1000).toFixed(1)}K+`;
+  } else {
+    return figure;
+  }
 };

@@ -53,6 +53,12 @@ import {
   CLEAR_ADMIN_UPDATE_PASSWORD,
   GET_ALL_WALLETS,
   CLEAR_WALLETS_ACTION,
+  UPDATE_WALLET,
+  CLEAR_UPDATE_WALLET,
+  UPDATE_WITHDRAWALS,
+  CLEAR_UPDATE_WITHDRAWALS,
+  ADMIN_ADD_WALLET,
+  CLEAR_ADMIN_ADD_WALLET,
 } from "../action/types";
 
 const initialState = {
@@ -87,6 +93,8 @@ const initialState = {
   withcount: 0,
   withdrawals: [],
   updatecurrency: false,
+  updatewallet: false,
+  updatewithdrawals: false,
   addcurrency: false,
   addadmin: false,
   addprovider: false,
@@ -99,6 +107,7 @@ const initialState = {
   setmode: false,
   setprofile: false,
   setpass: false,
+  addwallet: false,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -238,6 +247,18 @@ export default function adminReducer(state = initialState, action) {
         updatecurrency: action.payload,
         loading: false,
       };
+    case UPDATE_WITHDRAWALS:
+      return {
+        ...state,
+        updatewithdrawals: action.payload,
+        loading: false,
+      };
+    case UPDATE_WALLET:
+      return {
+        ...state,
+        updatewallet: action.payload,
+        loading: false,
+      };
     case ADD_NEW_ADMIN:
       return {
         ...state,
@@ -248,6 +269,12 @@ export default function adminReducer(state = initialState, action) {
       return {
         ...state,
         addprovider: action.payload,
+        loading: false,
+      };
+    case ADMIN_ADD_WALLET:
+      return {
+        ...state,
+        addwallet: action.payload,
         loading: false,
       };
     case UPDATE_ADMIN:
@@ -344,8 +371,17 @@ export default function adminReducer(state = initialState, action) {
     case CLEAR_WITHDRAWALS_ACTION: {
       return { ...state, withdrawals: [], withcount: 0, fetching: false };
     }
+    case CLEAR_WALLETS_ACTION: {
+      return { ...state, wallets: [], walletcount: 0, fetching: false };
+    }
     case CLEAR_UPDATE_CURRENCY: {
       return { ...state, updatecurrency: false };
+    }
+    case CLEAR_UPDATE_WALLET: {
+      return { ...state, updatewallet: false };
+    }
+    case CLEAR_UPDATE_WITHDRAWALS: {
+      return { ...state, updatewithdrawals: false };
     }
     case CLEAR_ADD_NEW_CURRENCY: {
       return { ...state, addcurrency: false };
@@ -382,6 +418,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ADMIN_UPDATE_PASSWORD: {
       return { ...state, setpass: false };
+    }
+    case CLEAR_ADMIN_ADD_WALLET: {
+      return { ...state, addwallet: false };
     }
     default:
       return state;

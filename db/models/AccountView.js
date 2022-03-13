@@ -31,6 +31,10 @@ AccountView.init(
     updatedAt: {
       type: DataTypes.DATE,
     },
+    walletid: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
     wallet: {
       type: DataTypes.STRING(20),
       allowNull: false,

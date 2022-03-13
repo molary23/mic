@@ -6,7 +6,8 @@ import {
   getContent,
   clearActions,
   clearAdminAction,
-  //updateBonus,
+  updateWallet,
+  addWallet,
 } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
@@ -16,6 +17,8 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Toast from "../../layout/Toast";
+import AddModal from "../../layout/AddModal";
+import Spinner from "../../layout/Spinner";
 
 import {
   getMore,
@@ -55,6 +58,7 @@ export class Wallets extends Component {
       error: {},
       toast: false,
       toasttext: "",
+      isLoading: false,
     };
   }
 
@@ -77,38 +81,47 @@ export class Wallets extends Component {
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.errors) {
       update.error = nextProps.errors;
+      update.isLoading = false;
+      update.startLoad = false;
     }
     return update;
   }
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.admin.addadmin !== this.props.admin.addadmin &&
-      this.props.admin.addadmin
+      prevProps.admin.addwallet !== this.props.admin.addwallet &&
+      this.props.admin.addwallet
     ) {
       this.afterUpdate("added");
     }
     if (
-      prevProps.admin.updatebonus !== this.props.admin.updatebonus &&
-      this.props.admin.updatebonus
+      prevProps.admin.updatewallet !== this.props.admin.updatewallet &&
+      this.props.admin.updatewallet
     ) {
       this.afterUpdate("updated");
     }
   }
 
   afterUpdate = (text) => {
-    const { limit, content } = this.state;
-
-    this.props.clearAdminAction("update-bonus");
+    const { limit, content, walletcount } = this.state;
+    if (text === "added") {
+      this.setState({
+        numOfPages: Math.ceil((walletcount + 1) / limit),
+      });
+      this.props.clearAdminAction("add-wallet");
+    } else {
+      this.props.clearAdminAction("update-wallet");
+    }
 
     this.setState({
       offset: 0,
@@ -157,14 +170,14 @@ export class Wallets extends Component {
       `Are you sure you want to ${value[0]} ${value[2].toUpperCase()}'s Wallet?`
     );
     if (check) {
-      //  this.props.updateBonus({ action: value[0], id: value[1] });
+      this.props.updateWallet(value[0], value[1]);
     } else {
       return false;
     }
   };
 
   changeHandler = (e) => {
-    const { url, content, currentPage, limit, offset } = this.state;
+    const { url, content, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
@@ -181,6 +194,22 @@ export class Wallets extends Component {
     });
   };
 
+  openModal = () => {
+    this.setState({
+      modal: true,
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
+  submitHandler = (value) => {
+    this.props.addWallet(value);
+  };
+
   render() {
     const {
       sender,
@@ -193,6 +222,8 @@ export class Wallets extends Component {
       toast,
       toasttext,
       error,
+      modal,
+      isLoading,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -232,9 +263,7 @@ export class Wallets extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="bonus card holder-card ">
             <div className="page-dash-title mb-4">
@@ -251,7 +280,7 @@ export class Wallets extends Component {
                     value={search}
                   />
                 </div>
-                <div className="col-md-3 mb-3">
+                <div className="col-md-2 mb-3">
                   <Select
                     sender={sender}
                     options={statusOpt}
@@ -260,8 +289,16 @@ export class Wallets extends Component {
                     value={status}
                   />
                 </div>
-
-                <div className="col-md-3 mb-3">
+                <div className="col-md-2 mb-3">
+                  <button
+                    type="button"
+                    className="btn add-btn btn-sm"
+                    onClick={this.openModal}
+                  >
+                    Add New <i className="fas fa-folder-plus" />
+                  </button>
+                </div>
+                <div className="col-md-2 mb-3">
                   <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
@@ -301,6 +338,13 @@ export class Wallets extends Component {
             </TableHead>
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, error, isLoading }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
         {toast && <Toast text={toasttext} />}
       </div>
     );
@@ -308,8 +352,11 @@ export class Wallets extends Component {
 }
 
 Wallets.propTypes = {
-  getContent: PropTypes.func,
+  getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func,
+  updateWallet: PropTypes.func,
+  addWallet: PropTypes.func,
+  clearActions: PropTypes.func,
   clearAdminAction: PropTypes.func,
   loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
@@ -330,5 +377,6 @@ export default connect(mapStateToProps, {
   searchContent,
   clearSearchActions,
   clearAdminAction,
-  //updateBonus,
+  updateWallet,
+  addWallet,
 })(Wallets);

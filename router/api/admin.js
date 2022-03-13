@@ -10,7 +10,10 @@ const express = require("express"),
   Transaction = require("../../db/models/Transaction"),
   Announcement = require("../../db/models/Announcement"),
   Settings = require("../../db/models/Settings"),
+  Currency = require("../../db/models/Currency"),
+  Withdrawal = require("../../db/models/Withdrawal"),
   Profile = require("../../db/models/Profile"),
+  Wallet = require("../../db/models/Wallet"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   //Bring in Super Admin Checker
@@ -496,6 +499,145 @@ router.post(
         res.json(true);
       })
       .catch((err) => res.json(err));
+  }
+);
+
+/*
+@route GET api/signals/wallet/delete/:id
+@desc Admin Delete wallet
+@access private
+*/
+
+router.post(
+  "/wallet/update/:action/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let id = req.params.id.split(":")[1];
+    let action = req.params.action.split(":")[1];
+    id = parseInt(id);
+
+    let status;
+    if (action === "delete") {
+      status = "i";
+    } else if (action === "activate") {
+      status = "a";
+    }
+
+    Wallet.update(
+      { status },
+      {
+        where: {
+          id,
+        },
+      }
+    )
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/signals/withdrawals/delete/:id
+@desc Admin Delete withdrawals
+@access private
+*/
+
+router.post(
+  "/withdrawals/update/:action/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let id = req.params.id.split(":")[1];
+    let action = req.params.action.split(":")[1];
+    id = parseInt(id);
+
+    let status;
+    if (action === "approve") {
+      status = "a";
+    } else if (action === "reject") {
+      status = "r";
+    }
+
+    Withdrawal.update(
+      { status },
+      {
+        where: {
+          id,
+        },
+      }
+    )
+      .then(() => {
+        if (action === "approve") {
+          Withdrawal.findByPk(id, { attributes: ["amount", "UserId"] })
+            .then((withdrawal) => {
+              let transField = {
+                amount: withdrawal.amount,
+                UserId: withdrawal.UserId,
+                method: "w",
+                type: "d",
+              };
+              Transaction.create(transField)
+                .then(() => {
+                  return res.json(true);
+                })
+                .catch((err) => res.status(404).json(err));
+            })
+            .catch((err) => res.status(404).json(err));
+        } else {
+          return res.json(true);
+        }
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/wallet/add
+@desc Super Admin add wallet
+@access private
+*/
+router.post(
+  "/wallet/add",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id,
+      wallet = req.body.wallet;
+
+    Wallet.findOne({
+      where: {
+        wallet,
+      },
+    })
+      .then((wall) => {
+        if (wall) {
+          error.wallet = "Wallet exist!";
+          res.status(400).json(error);
+        } else {
+          Wallet.create({
+            wallet,
+            UserId,
+          })
+            .then(() => {
+              res.json(true);
+            })
+            .catch((err) => res.status(400).json(err));
+        }
+      })
+      .catch((err) => res.status(404).json(err));
   }
 );
 

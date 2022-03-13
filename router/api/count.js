@@ -105,7 +105,7 @@ router.get(
       count.accounts = await AccountView.count();
       count.announcement = await Announcement.count();
       count.withdrawals = await WithdrawalView.count();
-      count.wallet = await Wallet.count();
+      count.wallets = await Wallet.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);

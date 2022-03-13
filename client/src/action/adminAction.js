@@ -57,6 +57,12 @@ import {
   CLEAR_ADMIN_UPDATE_PASSWORD,
   GET_ALL_WALLETS,
   CLEAR_WALLETS_ACTION,
+  UPDATE_WALLET,
+  CLEAR_UPDATE_WALLET,
+  UPDATE_WITHDRAWALS,
+  CLEAR_UPDATE_WITHDRAWALS,
+  ADMIN_ADD_WALLET,
+  CLEAR_ADMIN_ADD_WALLET,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -183,6 +189,40 @@ export const updateCurrency = (action, id) => async (dispatch) => {
   }
 };
 
+export const updateWallet = (action, id) => async (dispatch) => {
+  let url = `/api/admin/wallet/update/:${action}/:${id}`;
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post(url);
+    const result = await dispatch({
+      type: UPDATE_WALLET,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const updateWithdrawals = (action, id) => async (dispatch) => {
+  let url = `/api/admin/withdrawals/update/:${action}/:${id}`;
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post(url);
+    const result = await dispatch({
+      type: UPDATE_WITHDRAWALS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
 export const addCurrency = (currency) => async (dispatch) => {
   let url = "/api/signals/currency/add/";
   dispatch(setLoading());
@@ -200,13 +240,30 @@ export const addCurrency = (currency) => async (dispatch) => {
   }
 };
 
+export const addWallet = (wallet) => async (dispatch) => {
+  let url = "/api/admin/wallet/add/";
+  dispatch(setLoading());
+  dispatch(clearErrors());
+  try {
+    let response = await axios.post(url, wallet);
+    const result = await dispatch({
+      type: ADMIN_ADD_WALLET,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
 // Clear Errors
 export const clearErrors = () => {
   return { type: CLEAR_ERRORS, payload: {} };
 };
 
 export const clearAdminAction = (info) => {
-  if (info === "delete-currency") return { type: CLEAR_UPDATE_CURRENCY };
+  if (info === "update-currency") return { type: CLEAR_UPDATE_CURRENCY };
   if (info === "add-currency") return { type: CLEAR_ADD_NEW_CURRENCY };
   if (info === "add-admin") return { type: CLEAR_ADD_NEW_ADMIN };
   if (info === "add-provider") return { type: CLEAR_ADD_NEW_PROVIDER };
@@ -215,6 +272,11 @@ export const clearAdminAction = (info) => {
   if (info === "delete-ann") return { type: CLEAR_DELETE_ANNOUNCEMENT };
   if (info === "add-ann") return { type: CLEAR_ADD_ANNOUNCEMENT };
   if (info === "edit-ann") return { type: CLEAR_EDIT_ANNOUNCEMENT };
+  if (info === "update-wallet") return { type: CLEAR_UPDATE_WALLET };
+  if (info === "update-withdrawals") return { type: CLEAR_UPDATE_WITHDRAWALS };
+  if (info === "add-wallet") {
+    return { type: CLEAR_ADMIN_ADD_WALLET };
+  }
 };
 
 export const addNewAdmin = (level, data) => async (dispatch) => {

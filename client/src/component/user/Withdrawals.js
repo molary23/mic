@@ -2,12 +2,22 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { MdOutlineRequestPage } from "react-icons/md";
+
 import TableBody from "../../layout/TableBody";
 import TableHead from "../../layout/TableHead";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
+import AddModal from "../../layout/AddModal";
+import Toast from "../../layout/Toast";
 
-import { getContent, clearActions } from "../../action/userAction";
+import {
+  getContent,
+  clearActions,
+  getBalance,
+  getAccount,
+  requestWithdrawal,
+} from "../../action/userAction";
 import {
   searchContent,
   clearSearchActions,
@@ -17,7 +27,10 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  roundUp,
 } from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 
 export class Withdrawals extends Component {
   state = {
@@ -30,20 +43,26 @@ export class Withdrawals extends Component {
     ],
     status: "",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     isLoading: false,
     withcount: JSON.parse(localStorage.getItem("userCounts")).withdrawals,
     upLoad: true,
     content: "withdrawals",
+    error: {},
+    modal: false,
+    toast: false,
+    toasttext: "",
   };
 
   componentDidMount() {
     const { limit, offset, withcount, content } = this.state;
+    this.props.getBalance();
+    this.props.getAccount();
     const paginate = {
       limit,
       offset,
@@ -54,6 +73,63 @@ export class Withdrawals extends Component {
     this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
+  componentWillUnmount() {
+    const { content } = this.state;
+    window.removeEventListener("scroll", this.loadMore);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.error = nextProps.errors;
+      update.isLoading = false;
+    }
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.user.requestwithdrawal !== this.props.user.requestwithdrawal &&
+      this.props.user.requestwithdrawal
+    ) {
+      this.afterUpdate();
+    }
+  }
+  afterUpdate = () => {
+    const { limit, content, walletcount } = this.state;
+
+    this.setState({
+      numOfPages: Math.ceil((walletcount + 1) / limit),
+    });
+    this.props.clearActions("user-payout");
+
+    this.setState({
+      offset: 0,
+      modal: false,
+      toast: true,
+      toasttext: `Withdrawal request sent`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState((prevState) => ({
+      offset: prevState.offset + limit,
+    }));
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
@@ -70,12 +146,6 @@ export class Withdrawals extends Component {
       self: this,
     });
   };
-
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
-  }
 
   changeHandler = (e) => {
     const { url, content, limit, offset } = this.state;
@@ -94,9 +164,36 @@ export class Withdrawals extends Component {
     });
   };
 
+  openModal = () => {
+    this.setState({
+      modal: true,
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
+  submitHandler = (value) => {
+    this.props.requestWithdrawal(value);
+  };
+
   render() {
-    const { sender, statusOptions, status, startLoad, getLoad, withcount } =
-      this.state;
+    const {
+      sender,
+      statusOptions,
+      status,
+      startLoad,
+      getLoad,
+      withcount,
+      error,
+      modal,
+      toast,
+      toasttext,
+      isLoading,
+    } = this.state;
 
     const { user, userSearch } = this.props;
     const { loading, fetching } = user;
@@ -130,6 +227,8 @@ export class Withdrawals extends Component {
       getLoad,
       withcount,
     });
+    let balance = user.userbalance;
+    let accountList = user.useraccount;
     return (
       <div>
         {loader && <ProgressBar />}
@@ -154,11 +253,32 @@ export class Withdrawals extends Component {
                   />
                 </div>
                 <div className="col-md-2">
+                  <div className="transactions-total table-figure">
+                    <h6>
+                      Balance
+                      <span className="badge rounded-pill bg-success">
+                        {roundUp(balance)}
+                      </span>
+                    </h6>
+                  </div>
+                </div>
+                {balance > 100 && (
+                  <div className="col-md-2">
+                    <button
+                      type="button"
+                      className="btn add-btn"
+                      onClick={this.openModal}
+                    >
+                      Withdraw <MdOutlineRequestPage />
+                    </button>
+                  </div>
+                )}
+                <div className="col-md-2">
                   <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-2">
                   <div className="transactions-total table-figure">
                     <h6>
                       {totalText} Withdrawals
@@ -170,15 +290,16 @@ export class Withdrawals extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
                 "S/N",
                 "amount",
                 "status",
-                "bank/wallet",
-                "account type",
+                "wallet",
                 "account number",
                 "request date",
                 "updated date",
@@ -191,6 +312,14 @@ export class Withdrawals extends Component {
             </TableHead>
           </div>
         )}
+        {modal ? (
+          <AddModal
+            {...{ modal, sender, accountList, balance, error, isLoading }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }
@@ -201,9 +330,13 @@ Withdrawals.propTypes = {
   searchContent: PropTypes.func.isRequired,
   clearActions: PropTypes.func.isRequired,
   clearSearchActions: PropTypes.func.isRequired,
+  getBalance: PropTypes.func.isRequired,
+  getAccount: PropTypes.func.isRequired,
+  roundUp: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
+  requestWithdrawal: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -216,4 +349,7 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
+  getBalance,
+  getAccount,
+  requestWithdrawal,
 })(Withdrawals);

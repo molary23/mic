@@ -187,16 +187,24 @@ function TableBody(props) {
           <td>{i + 1}</td>
           <td>{item.amount}</td>
           <td>
-            {item.status === "p" && "pending"}
-            {item.status === "a" && "approved"}
-            {item.status === "r" && "rejected"}
+            {item.status === "p" && (
+              <span className="new-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "a" && (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "r" && (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
           </td>
-          <td>
-            {item.account.bank && item.account.bank}
-            {item.account.wallet && item.account.wallet}
-          </td>
-          <td>{item.account.type && item.account.type}</td>
-          <td>{item.account.account}</td>
+          <td>{item.wallet}</td>
+          <td className="td-upper">{item.accountnumber}</td>
           <td>
             <DateFormat date={item.createdAt} />
           </td>
@@ -364,7 +372,7 @@ function TableBody(props) {
                   type="button"
                   className="btn btn-success btn-sm"
                   title="Activate Wallet"
-                  onClick={() => onClick(["reactivate", item.id])}
+                  onClick={() => onClick(["activate", item.id, item.wallet])}
                 >
                   <FiCheckCircle />
                 </button>
@@ -373,7 +381,7 @@ function TableBody(props) {
                   type="button"
                   className="btn btn-danger btn-sm"
                   title="Deactivate Wallet"
-                  onClick={() => onClick(["deactivate", item.id])}
+                  onClick={() => onClick(["delete", item.id, item.wallet])}
                 >
                   <ImCancelCircle />
                 </button>
@@ -463,10 +471,9 @@ function TableBody(props) {
                 <button
                   type="button"
                   className="btn btn-success btn-sm"
-                  data-id={item.bonusid}
-                  title="Approve Bonus"
+                  title="Approve Withdrawals"
                   onClick={() =>
-                    onClick(["approve", item.bonusid, item.username])
+                    onClick(["approve", item.withdrawalid, item.username])
                   }
                 >
                   <FiCheckCircle />
@@ -474,10 +481,9 @@ function TableBody(props) {
                 <button
                   type="button"
                   className="btn btn-danger btn-sm"
-                  data-id={item.bonusid}
-                  title="Disapprove Bonus"
+                  title="Reject Withdrawals"
                   onClick={() =>
-                    onClick(["reject", item.bonusid, item.username])
+                    onClick(["reject", item.withdrawalid, item.username])
                   }
                 >
                   <ImCancelCircle />
