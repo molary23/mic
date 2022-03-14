@@ -15,6 +15,8 @@ import {
   CLEAR_USERS_WITHDRAWALS_SEARCH,
   GET_USER_SEARCH_BONUS,
   CLEAR_USERS_BONUS_SEARCH,
+  USER_SEARCH_FORUM,
+  CLEAR_USER_SEARCH_FORUM,
 } from "./types";
 
 export const searchContent = (content, paginate) => async (dispatch) => {
@@ -35,6 +37,8 @@ export const searchContent = (content, paginate) => async (dispatch) => {
     type = GET_USER_SEARCH_WITHDRAWALS;
   } else if (content === "bonus") {
     type = GET_USER_SEARCH_BONUS;
+  } else if (content === "forums") {
+    type = USER_SEARCH_FORUM;
   }
   url += content;
   try {
@@ -65,6 +69,8 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_USERS_WITHDRAWALS_SEARCH };
   } else if (actionToClear === "bonus") {
     return { type: CLEAR_USERS_BONUS_SEARCH };
+  } else if (actionToClear === "forums") {
+    return { type: CLEAR_USER_SEARCH_FORUM };
   }
 };
 

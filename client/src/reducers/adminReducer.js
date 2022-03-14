@@ -108,6 +108,8 @@ const initialState = {
   setprofile: false,
   setpass: false,
   addwallet: false,
+  getuser: null,
+  getsub: null,
 };
 
 export default function adminReducer(state = initialState, action) {

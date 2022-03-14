@@ -1,25 +1,25 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "BonusViews";
-const view_name = "BonusViews";
+const auto_created_model_table_name = "SubscriptionViews";
+const view_name = "SubscriptionViews";
 
 const original_query = [
   "SELECT ",
-  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
-  "Users.username AS username, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId ",
-  " FROM Bonuses ",
-  " LEFT JOIN Users ",
-  " ON Bonuses.UserId = Users.id ",
+  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Subscriptions.createdAt AS subscriptiondate ",
+  " FROM Subscriptions ",
+  " LEFT JOIN Profiles ",
+  " ON Subscriptions.UserId = Profiles.UserId ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Bonuses.id AS bonusid, Bonuses.amount, Bonuses.status, ",
-  "Users.username  AS username, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId  ",
-  " FROM Bonuses ",
-  " LEFT JOIN Users ",
-  " ON Bonuses.UserId = Users.id ",
+  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Subscriptions.createdAt AS subscriptiondate ",
+  " FROM Subscriptions ",
+  " LEFT JOIN Profiles ",
+  " ON Subscriptions.UserId = Profiles.UserId ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

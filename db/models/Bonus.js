@@ -12,6 +12,10 @@ Bonus.init(
       autoIncrement: true,
       primaryKey: true,
     },
+    UserId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
     amount: {
       type: DataTypes.DOUBLE,
       allowNull: false,

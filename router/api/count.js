@@ -11,6 +11,7 @@ const express = require("express"),
   Signal = require("../../db/models/Signal"),
   Announcement = require("../../db/models/Announcement"),
   Wallet = require("../../db/models/Wallet"),
+  Forum = require("../../db/models/Forum"),
   WithdrawalView = require("../../db/models/WithdrawalView"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
   TransactionView = require("../../db/models/TransactionView"),
@@ -106,6 +107,7 @@ router.get(
       count.announcement = await Announcement.count();
       count.withdrawals = await WithdrawalView.count();
       count.wallets = await Wallet.count();
+      count.forums = await Forum.count();
       res.json(count);
     } catch (error) {
       res.status(404).json(error);
@@ -155,6 +157,7 @@ router.get(
       count.subscriptions = await Subscription.count({ where: { UserId } });
       count.bonus = await Bonus.count({ where: { UserId } });
       count.referrals = await Referral.count({ where: { referral: UserId } });
+      count.forums = await Forum.count({ where: { UserId } });
 
       count.signals = await SignalView.count({
         distinct: true,

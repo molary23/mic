@@ -1,25 +1,27 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "SubscriptionViews";
-const view_name = "SubscriptionViews";
+const auto_created_model_table_name = "ForumViews";
+const view_name = "ForumViews";
 
 const original_query = [
   "SELECT ",
-  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Subscriptions.createdAt AS subscriptiondate ",
-  " FROM Subscriptions ",
-  " LEFT JOIN Profiles ",
-  " ON Subscriptions.UserId = Profiles.UserId ",
+  " Forums.id AS id, Forums.title, Forums.about, Forums.text, Forums.status, Forums.right, ",
+  " (SELECT  COUNT(*) FROM ForumReplies WHERE ForumReplies.ForumId = Forums.id) AS replycount, Forums.UserId, (SELECT Users.username FROM Users WHERE Forums.UserId = Users.id) AS creator, Forums.createdAt",
+  " FROM Forums ",
+  " LEFT JOIN ForumReplies ",
+  " ON Forums.id = ForumReplies.ForumId ",
+  " GROUP BY  Forums.id ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS user, Subscriptions.createdAt AS subscriptiondate ",
-  " FROM Subscriptions ",
-  " LEFT JOIN Profiles ",
-  " ON Subscriptions.UserId = Profiles.UserId ",
+  " Forums.id AS id, Forums.title, Forums.about, Forums.text, Forums.status, Forums.right, ",
+  " (SELECT  COUNT(*) FROM ForumReplies WHERE ForumReplies.ForumId = Forums.id) AS replycount, Forums.UserId, (SELECT Users.username FROM Users WHERE Forums.UserId = Users.id) AS creator, Forums.createdAt",
+  " FROM Forums ",
+  " LEFT JOIN ForumReplies ",
+  " ON Forums.id = ForumReplies.ForumId ",
+  " GROUP BY  Forums.id ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

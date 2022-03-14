@@ -28,14 +28,17 @@ SubscriptionView.init(
       type: DataTypes.INTEGER.UNSIGNED,
     },
     status: {
-      type: DataTypes.TINYINT, // Duration in days
+      type: DataTypes.TINYINT,
       defaultValue: 1,
     },
-    user: {
-      type: DataTypes.STRING(50), // Duration in days
+    fullname: {
+      type: DataTypes.STRING(50),
+    },
+    username: {
+      type: DataTypes.STRING(30),
     },
     userId: {
-      type: DataTypes.INTEGER.UNSIGNED, // Duration in days
+      type: DataTypes.INTEGER.UNSIGNED,
     },
   },
   {

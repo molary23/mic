@@ -164,7 +164,7 @@ export class Subscriptions extends Component {
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Transactions</h1>
+              <h1>Subscriptions</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
@@ -224,8 +224,6 @@ export class Subscriptions extends Component {
                 "package",
                 "duration",
                 "date",
-                "payment info",
-                "sub info",
               ]}
             >
               <TableBody

@@ -1,27 +1,25 @@
 ("use strict");
 sequelize = require("../../config/config");
 
-const auto_created_model_table_name = "ForumViews";
-const view_name = "ForumViews";
+const auto_created_model_table_name = "BonusViews";
+const view_name = "BonusViews";
 
 const original_query = [
   "SELECT ",
-  " Forums.id AS id, Forums.title, Forums.ticket, Forums.text, Forums.status, Forums.right, ",
-  " (SELECT  COUNT(*) FROM ForumReplies WHERE ForumReplies.ForumId = Forums.id) AS replycount",
-  " FROM Forums ",
-  " LEFT JOIN ForumReplies ",
-  " ON Forums.id = ForumReplies.ForumId ",
-  " GROUP BY  Forums.id ",
+  " Bonuses.id AS bonusid, Bonuses.UserId, Bonuses.amount, Bonuses.status, ",
+  "Users.username AS username, (SELECT Users.username FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payer, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId ",
+  " FROM Bonuses ",
+  " LEFT JOIN Users ",
+  " ON Bonuses.UserId = Users.id ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Forums.id AS id, Forums.title, Forums.ticket, Forums.text, Forums.status, Forums.right, ",
-  " (SELECT  COUNT(*) FROM ForumReplies WHERE ForumReplies.ForumId = Forums.id) AS replycount",
-  " FROM Forums ",
-  " LEFT JOIN ForumReplies ",
-  " ON Forums.id = ForumReplies.ForumId ",
-  " GROUP BY  Forums.id ",
+  " Bonuses.id AS bonusid,Bonuses.UserId, Bonuses.amount, Bonuses.status, ",
+  "Users.username AS username, (SELECT Users.username FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payer, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId ",
+  " FROM Bonuses ",
+  " LEFT JOIN Users ",
+  " ON Bonuses.UserId = Users.id ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

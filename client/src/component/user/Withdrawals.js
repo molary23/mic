@@ -337,6 +337,9 @@ Withdrawals.propTypes = {
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
   requestWithdrawal: PropTypes.func,
+  auth: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  userSearch: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({

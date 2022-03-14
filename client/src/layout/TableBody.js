@@ -43,9 +43,17 @@ function TableBody(props) {
           <td>{i + 1}</td>
           <td>{item.amount}</td>
           <td>
-            {item.status === 1 && "disapproved"}
-            {item.status === 2 && "pending"}
-            {item.status === 3 && "approved"}
+            {item.status === "a" && (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+
+            {item.status === "r" && (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
           </td>
           <td>{item.type === "b" ? "bonus" : "pay"}</td>
           <td>
@@ -55,32 +63,6 @@ function TableBody(props) {
           <td>{item.duration} days</td>
           <td>
             <DateFormat date={item.createdAt} />
-          </td>
-          <td>
-            {item.payID && (
-              <div className="action-buttons">
-                <Link
-                  type="button"
-                  className="btn btn-info btn-sm"
-                  title="View Payment"
-                  to={`/user/payment/:${item.payID}`}
-                >
-                  View Payment
-                </Link>
-              </div>
-            )}
-          </td>
-          <td>
-            <div className="action-buttons">
-              <Link
-                type="button"
-                className="btn btn-primary btn-sm"
-                title="View Subscription"
-                to={`/admin/subscription/:${item.id}`}
-              >
-                View
-              </Link>
-            </div>
           </td>
         </tr>
       );
@@ -93,28 +75,31 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td>{item.amount}</td>
+          <td>{item.payer}</td>
           <td>
-            {item.status === "a" && "approved"}
-            {item.status === "p" && "pending"}
-            {item.status === "r" && "rejected"}
+            {item.status === "a" && (
+              <span className="active-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+
+            {item.status === "r" && (
+              <span className="inactive-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
+            {item.status === "p" && (
+              <span className="new-status status-info">
+                <span>&bull;</span>
+              </span>
+            )}
           </td>
+
           <td>
             <DateFormat date={item.createdAt} />
           </td>
           <td>
             <DateFormat date={item.updatedAt} />
-          </td>
-          <td>
-            <div className="action-buttons">
-              <Link
-                type="button"
-                className="btn btn-primary btn-sm"
-                title="View Subscription"
-                to={`/admin/subscription/:${item.subscriptionid}`}
-              >
-                View
-              </Link>
-            </div>
           </td>
         </tr>
       );
@@ -126,32 +111,23 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td className="td-lower">
-            <Link
-              type="button"
-              className=""
-              title="View User"
-              to={`/user/user/:${item.referredId}`}
-            >
-              {item.referred}
-            </Link>
-          </td>
+          <td>{item.referred}</td>
           <td>{item.phone}</td>
           <td>
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span> Active
+                <span>&bull;</span>
               </span>
             )}
 
             {item.status === "i" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span> Inactive
+                <span>&bull;</span>
               </span>
             )}
             {item.status === "n" && (
               <span className="new-status status-info">
-                <span>&bull;</span> New
+                <span>&bull;</span>
               </span>
             )}
           </td>

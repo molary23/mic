@@ -16,8 +16,9 @@ ForumView.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    ticket: {
-      type: DataTypes.STRING(20),
+    about: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     text: {
       type: DataTypes.TEXT,
@@ -32,10 +33,19 @@ ForumView.init(
     replycount: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
+    UserId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    creator: {
+      type: DataTypes.STRING,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
   },
   {
     // don't forget to enable timestamps!
-    timestamps: true,
+    timestamps: false,
 
     // I want createdAt
     createdAt: true,
@@ -47,5 +57,5 @@ ForumView.init(
     modelName: "ForumView", // We need to choose the model name
   }
 );
-AccountView.sync = () => Promise.resolve();
+ForumView.sync = () => Promise.resolve();
 module.exports = ForumView;

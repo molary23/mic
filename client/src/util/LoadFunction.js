@@ -10,7 +10,6 @@ export const getMore = ({
   searchParams,
   self,
 }) => {
-  console.log(limit, numOfPages, iScrollPos, currentPage, content, winScroll);
   if (winScroll > iScrollPos) {
     if (currentPage <= numOfPages) {
       self.setState((prevState) => ({

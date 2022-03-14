@@ -16,8 +16,9 @@ Forum.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    ticket: {
-      type: DataTypes.STRING(20),
+    about: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
     text: {
       type: DataTypes.TEXT,

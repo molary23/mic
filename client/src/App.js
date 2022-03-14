@@ -170,6 +170,7 @@ function App() {
             path="/user/settings"
             element={<PrivateRoute Component={Settings} />}
           />
+
           <Route
             exact
             path="/user/forum/:id"

@@ -189,10 +189,10 @@ export class Bonuses extends Component {
               head={[
                 "S/N",
                 "amount",
+                "from",
                 "status",
                 "bonus date",
                 "update date",
-                "action",
               ]}
             >
               <TableBody

@@ -696,3 +696,10 @@ ul.list-group.list-group-horizontal {
 .account-form select {
   text-transform: capitalize;
 }
+
+/* Discussions */
+.discussion-card {
+  border-radius: 15px;
+  min-height: 150px;
+  padding: 20px;
+}

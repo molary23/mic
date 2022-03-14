@@ -53,6 +53,8 @@ import {
   CLEAR_USER_GET_ACCOUNT,
   USER_REQUEST_WITHDRAWAL,
   CLEAR_USER_REQUEST_WITHDRAWAL,
+  USER_GET_FORUM,
+  CLEAR_USER_GET_FORUM,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -74,6 +76,8 @@ export const getContent = (content, paginate) => async (dispatch) => {
     type = GET_USER_WITHDRAWALS;
   } else if (content === "bonus") {
     type = GET_USER_BONUS;
+  } else if (content === "forums") {
+    type = USER_GET_FORUM;
   }
   url += content;
   try {
@@ -122,6 +126,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_GET_ACCOUNT };
   } else if (actionToClear === "user-payout") {
     return { type: CLEAR_USER_REQUEST_WITHDRAWAL };
+  } else if (actionToClear === "forums") {
+    return { type: CLEAR_USER_GET_FORUM };
   }
 };
 

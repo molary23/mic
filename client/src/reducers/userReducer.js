@@ -50,6 +50,10 @@ import {
   CLEAR_USER_GET_ACCOUNT,
   USER_REQUEST_WITHDRAWAL,
   CLEAR_USER_REQUEST_WITHDRAWAL,
+  USER_GET_FORUM,
+  CLEAR_USER_GET_FORUM,
+  CLEAR_USER_ADD_FORUM,
+  USER_ADD_FORUM,
 } from "../action/types";
 
 const initialState = {
@@ -85,6 +89,9 @@ const initialState = {
   userbalance: 0,
   useraccount: [],
   requestwithdrawal: false,
+  forums: [],
+  forumscount: 0,
+  addforum: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -252,6 +259,21 @@ export default function userReducer(state = initialState, action) {
         requestwithdrawal: action.payload,
         loading: false,
       };
+    case USER_ADD_FORUM:
+      return {
+        ...state,
+        addforum: action.payload,
+        loading: false,
+      };
+    case USER_GET_FORUM:
+      return {
+        ...state,
+        forumscount: action.payload.shift(),
+        forums: [...state.forums, ...action.payload],
+        loading: false,
+        fetching: true,
+      };
+
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -275,6 +297,9 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_BONUS_ACTION: {
       return { ...state, bonus: [], bonuscount: 0, fetching: false };
+    }
+    case CLEAR_USER_GET_FORUM: {
+      return { ...state, forum: [], forumscount: 0, fetching: false };
     }
     case CLEAR_GET_PREMIUM_STATUS: {
       return { ...state, premium: [] };
@@ -329,6 +354,9 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_REQUEST_WITHDRAWAL: {
       return { ...state, requestwithdrawal: false };
+    }
+    case CLEAR_USER_ADD_FORUM: {
+      return { ...state, addforum: false };
     }
     default:
       return state;

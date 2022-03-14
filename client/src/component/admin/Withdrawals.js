@@ -92,7 +92,7 @@ export class Withdrawals extends Component {
 
   afterUpdate = (text) => {
     const { limit, content } = this.state;
-    console.log(this.state.offset);
+
     this.props.clearAdminAction("update-withdrawals");
     /* window.scrollTo({
       top: 0,

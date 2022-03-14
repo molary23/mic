@@ -18,7 +18,10 @@ BonusView.init(
     status: {
       type: DataTypes.TINYINT,
     },
-    user: {
+    username: {
+      type: DataTypes.STRING(50),
+    },
+    payer: {
       type: DataTypes.STRING(50),
     },
     createdAt: {
