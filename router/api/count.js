@@ -157,7 +157,9 @@ router.get(
       count.subscriptions = await Subscription.count({ where: { UserId } });
       count.bonus = await Bonus.count({ where: { UserId } });
       count.referrals = await Referral.count({ where: { referral: UserId } });
-      count.forums = await Forum.count({ where: { UserId } });
+      count.forums = await Forum.count({
+        where: { [Op.or]: [{ UserId }, { right: "p" }] },
+      });
 
       count.signals = await SignalView.count({
         distinct: true,

@@ -18,7 +18,7 @@ export class Index extends Component {
     this.state = {
       copy: false,
       premiuminfo:
-        this.props.user.premium ?? JSON.parse(localStorage.getItem("premium")),
+        JSON.parse(localStorage.getItem("premium")) ?? this.props.user.premium,
       userinfo:
         this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
       daysleft: 0,

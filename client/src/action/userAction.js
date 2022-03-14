@@ -55,6 +55,16 @@ import {
   CLEAR_USER_REQUEST_WITHDRAWAL,
   USER_GET_FORUM,
   CLEAR_USER_GET_FORUM,
+  USER_ADD_FORUM,
+  CLEAR_USER_ADD_FORUM,
+  USER_UPDATE_FORUM,
+  CLEAR_USER_UPDATE_FORUM,
+  USER_GET_A_FORUM,
+  CLEAR_USER_GET_A_FORUM,
+  USER_REPLY,
+  CLEAR_USER_REPLY,
+  USER_DELETE_REPLY,
+  CLEAR_USER_DELETE_REPLY,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -128,6 +138,16 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_REQUEST_WITHDRAWAL };
   } else if (actionToClear === "forums") {
     return { type: CLEAR_USER_GET_FORUM };
+  } else if (actionToClear === "add-forum") {
+    return { type: CLEAR_USER_ADD_FORUM };
+  } else if (actionToClear === "update-forum") {
+    return { type: CLEAR_USER_UPDATE_FORUM };
+  } else if (actionToClear === "get-forum") {
+    return { type: CLEAR_USER_GET_A_FORUM };
+  } else if (actionToClear === "user-reply") {
+    return { type: CLEAR_USER_REPLY };
+  } else if (actionToClear === "delete-reply") {
+    return { type: CLEAR_USER_DELETE_REPLY };
   }
 };
 
@@ -224,6 +244,23 @@ export const getAccount = () => async (dispatch) => {
   }
 };
 
+export const getForum = (id) => async (dispatch) => {
+  // dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("get-forum"));
+  try {
+    let response = await axios.get(`/api/userview/forum/:${id}`);
+    const result = await dispatch({
+      type: USER_GET_A_FORUM,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
 export const requestWithdrawal = (withdata) => async (dispatch) => {
   dispatch(clearErrors());
   dispatch(setLoading());
@@ -237,7 +274,75 @@ export const requestWithdrawal = (withdata) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: USER_REQUEST_WITHDRAWAL, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const addForum = (forumData) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("add-forum"));
+  try {
+    let response = await axios.post("/api/users/add/forum", forumData);
+    const result = await dispatch({
+      type: USER_ADD_FORUM,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const replyForum = (replyData) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("user-reply"));
+  try {
+    let response = await axios.post("/api/users/forum/reply", replyData);
+    const result = await dispatch({
+      type: USER_REPLY,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const deleteReply = (id) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("delete-reply"));
+  try {
+    let response = await axios.delete(`/api/users/reply/delete/:${id}`);
+    const result = await dispatch({
+      type: USER_DELETE_REPLY,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const updateForum = (forumData) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("update-forum"));
+  try {
+    let response = await axios.post("/api/users/update/forum/", forumData);
+    const result = await dispatch({
+      type: USER_UPDATE_FORUM,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 

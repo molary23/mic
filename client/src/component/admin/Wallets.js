@@ -144,7 +144,6 @@ export class Wallets extends Component {
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
     }, 3000);
   };

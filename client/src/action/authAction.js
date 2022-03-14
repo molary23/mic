@@ -91,6 +91,7 @@ export const logoutUser = () => (dispatch) => {
   setAuthToken(false);
   // Set current user to {}  which will set isAuthenticated to false
   dispatch(clearActions("premium"));
+  dispatch(clearErrors());
   dispatch(setCurrentUser({}));
   dispatch({
     type: CLEAR_ALL_ACTIONS,

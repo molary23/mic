@@ -6,7 +6,7 @@ const view_name = "ForumViews";
 
 const original_query = [
   "SELECT ",
-  " Forums.id AS id, Forums.title, Forums.about, Forums.text, Forums.status, Forums.right, ",
+  " Forums.id AS id, Forums.title, Forums.text, Forums.status, Forums.right, ",
   " (SELECT  COUNT(*) FROM ForumReplies WHERE ForumReplies.ForumId = Forums.id) AS replycount, Forums.UserId, (SELECT Users.username FROM Users WHERE Forums.UserId = Users.id) AS creator, Forums.createdAt",
   " FROM Forums ",
   " LEFT JOIN ForumReplies ",
@@ -16,7 +16,7 @@ const original_query = [
 
 const new_query = [
   "SELECT ",
-  " Forums.id AS id, Forums.title, Forums.about, Forums.text, Forums.status, Forums.right, ",
+  " Forums.id AS id, Forums.title,  Forums.text, Forums.status, Forums.right, ",
   " (SELECT  COUNT(*) FROM ForumReplies WHERE ForumReplies.ForumId = Forums.id) AS replycount, Forums.UserId, (SELECT Users.username FROM Users WHERE Forums.UserId = Users.id) AS creator, Forums.createdAt",
   " FROM Forums ",
   " LEFT JOIN ForumReplies ",

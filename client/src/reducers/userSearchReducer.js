@@ -14,6 +14,8 @@ import {
   CLEAR_USERS_WITHDRAWALS_SEARCH,
   GET_USER_SEARCH_BONUS,
   CLEAR_USERS_BONUS_SEARCH,
+  USER_SEARCH_FORUM,
+  CLEAR_USER_SEARCH_FORUM,
 } from "../action/types";
 
 const initialState = {
@@ -33,6 +35,8 @@ const initialState = {
   withdrawals: [],
   bonus: [],
   bonuscount: 0,
+  forumscount: 0,
+  forums: [],
 };
 
 export default function userReducer(state = initialState, action) {
@@ -93,6 +97,14 @@ export default function userReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case USER_SEARCH_FORUM:
+      return {
+        ...state,
+        forumscount: action.payload.shift(),
+        forums: [...state.forums, ...action.payload],
+        loading: false,
+        searching: true,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -116,6 +128,9 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USERS_BONUS_SEARCH: {
       return { ...state, bonus: [], bonuscount: 0, searching: false };
+    }
+    case CLEAR_USER_SEARCH_FORUM: {
+      return { ...state, forums: [], forumscount: 0, searching: false };
     }
     default:
       return state;

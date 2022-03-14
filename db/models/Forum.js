@@ -16,10 +16,6 @@ Forum.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    about: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
     text: {
       type: DataTypes.TEXT,
       allowNull: false,

@@ -787,7 +787,7 @@ function AddModal(props) {
           <TextAreaField
             id="add-new-ann-summary"
             placeholder="Announcement Summary"
-            type="url"
+            type="text"
             name="addannsummary"
             value={inputs.addannsummary || ""}
             onChange={changeHandler}
@@ -909,7 +909,7 @@ function AddModal(props) {
           <TextAreaField
             id="edit-ann-summary"
             placeholder="Announcement Summary"
-            type="url"
+            type="text"
             name="editannsummary"
             value={anns.editannsummary}
             onChange={changeEditHandler}
@@ -1128,6 +1128,69 @@ function AddModal(props) {
         <div className="d-grid">
           <button type="submit" className="btn default-btn btn-lg btn-block">
             Request
+            {loading && (
+              <span className="spinner-border spinner-border-sm ms-2"></span>
+            )}
+          </button>
+        </div>
+      </form>
+    );
+  } else if (sender === "user-forums") {
+    const submitWithdrawHandler = (e) => {
+      e.preventDefault();
+      if (
+        !Object.keys(inputs).includes("forumtitle") ||
+        inputs.forumtitle === ""
+      ) {
+        setErrors({
+          forumtitle: "Discussion Title Field can't be empty",
+        });
+      } else if (inputs.forumtitle.length > 100) {
+        setErrors({
+          forumtitle: "Discussion Title can't be more than 100 characters",
+        });
+      } else if (
+        !Object.keys(inputs).includes("forumtext") ||
+        inputs.forumtext === ""
+      ) {
+        setErrors({
+          forumtext: "Discussion Content Field can't be empty",
+        });
+      } else {
+        setErrors({});
+        setLoading(true);
+        const forum = {
+          title: inputs.forumtitle.toLowerCase(),
+          text: inputs.forumtext.toLowerCase(),
+        };
+        onSubmit(forum);
+        setLoading(isLoading);
+      }
+    };
+    title = "Create a Discussion";
+    text = (
+      <form className="withdraw-form" onSubmit={submitWithdrawHandler}>
+        <TextInputField
+          id="create-forum-title"
+          placeholder="Discussion Title"
+          type="text"
+          name="forumtitle"
+          value={inputs.forumtitle || ""}
+          onChange={changeHandler}
+          error={errors.forumtitle || error.wallet}
+        />
+        <TextAreaField
+          id="create-forum-text"
+          placeholder="Discussion Text"
+          type="text"
+          name="forumtext"
+          value={inputs.forumtext || ""}
+          onChange={changeHandler}
+          error={errors.forumtext}
+        />
+        <div className="d-grid">
+          <button type="submit" className="btn default-btn btn-lg btn-block">
+            Create
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
             )}

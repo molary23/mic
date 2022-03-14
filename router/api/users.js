@@ -1,7 +1,3 @@
-const Account = require("../../db/models/Account");
-const Preference = require("../../db/models/Preference");
-const Withdrawal = require("../../db/models/Withdrawal");
-
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -18,6 +14,11 @@ const express = require("express"),
   Settings = require("../../db/models/Settings"),
   Currency = require("../../db/models/Currency"),
   AccountView = require("../../db/models/AccountView"),
+  Account = require("../../db/models/Account"),
+  Forum = require("../../db/models/Forum"),
+  ForumReply = require("../../db/models/ForumReply"),
+  Preference = require("../../db/models/Preference"),
+  Withdrawal = require("../../db/models/Withdrawal"),
   // Bring in View
   UserView = require("../../db/models/UserView"),
   ProviderView = require("../../db/models/ProviderView"),
@@ -695,6 +696,155 @@ router.post(
     Withdrawal.create(withFields)
       .then(() => {
         res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/add/forum
+@desc User add forum
+@access private
+*/
+
+router.post(
+  "/add/forum",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const forumFields = {};
+
+    if (req.body.title) forumFields.title = req.body.title;
+    if (req.body.text) forumFields.text = req.body.text;
+    forumFields.UserId = req.user.id;
+
+    Forum.create(forumFields)
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/update/forum
+@desc User update forum
+@access private
+*/
+
+router.post(
+  "/update/forum",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let action, forumid, userId;
+    if (req.body.action) action = req.body.action;
+    if (req.body.id) forumid = req.body.id;
+    UserId = req.user.id;
+
+    Forum.findByPk(forumid, { attributes: ["UserId"] })
+      .then((forum) => {
+        let creatorId = forum.UserId;
+        if (UserId !== creatorId) {
+          error.user = "You are not authorised to change this post";
+          return res.json(error);
+        } else {
+          if (action === "close") {
+            Forum.update(
+              {
+                status: "c",
+              },
+              {
+                where: {
+                  id: forumid,
+                },
+              }
+            )
+              .then(() => {
+                return res.json(true);
+              })
+              .catch((err) => res.status(404).json(err));
+          } else if (action === "delete") {
+            Forum.destroy({
+              where: {
+                id: forumid,
+              },
+            })
+              .then(() => {
+                return res.json(true);
+              })
+              .catch((err) => res.status(404).json(err));
+          }
+        }
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/forum/reply
+@desc User add reply
+@access private
+*/
+
+router.post(
+  "/forum/reply",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const replyFields = {};
+
+    if (req.body.text) replyFields.text = req.body.text;
+    if (req.body.ForumId) replyFields.ForumId = req.body.ForumId;
+    replyFields.UserId = req.user.id;
+
+    ForumReply.create(replyFields)
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/user/delete/reply
+@desc User add reply
+@access private
+*/
+
+router.delete(
+  "/reply/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id,
+      replyid = req.params.id.split(":")[1];
+
+    ForumReply.findByPk(replyid, { attributes: ["UserId"] })
+      .then((reply) => {
+        if (reply.UserId !== UserId) {
+          error.allow = "You are not authorised to delete this reply";
+          return res.status(400).json(error);
+        } else {
+          ForumReply.destroy({ where: { id: replyid } })
+            .then(() => {
+              return res.json(true);
+            })
+            .catch((err) => res.status(404).json(err));
+        }
       })
       .catch((err) => res.status(404).json(err));
   }

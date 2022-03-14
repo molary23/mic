@@ -54,6 +54,14 @@ import {
   CLEAR_USER_GET_FORUM,
   CLEAR_USER_ADD_FORUM,
   USER_ADD_FORUM,
+  USER_UPDATE_FORUM,
+  CLEAR_USER_UPDATE_FORUM,
+  USER_GET_A_FORUM,
+  CLEAR_USER_GET_A_FORUM,
+  USER_REPLY,
+  CLEAR_USER_REPLY,
+  USER_DELETE_REPLY,
+  CLEAR_USER_DELETE_REPLY,
 } from "../action/types";
 
 const initialState = {
@@ -92,6 +100,10 @@ const initialState = {
   forums: [],
   forumscount: 0,
   addforum: false,
+  updateforum: false,
+  getforum: null,
+  userreply: false,
+  deletereply: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -265,6 +277,24 @@ export default function userReducer(state = initialState, action) {
         addforum: action.payload,
         loading: false,
       };
+    case USER_UPDATE_FORUM:
+      return {
+        ...state,
+        updateforum: action.payload,
+        loading: false,
+      };
+    case USER_REPLY:
+      return {
+        ...state,
+        userreply: action.payload,
+        loading: false,
+      };
+    case USER_DELETE_REPLY:
+      return {
+        ...state,
+        deletereply: action.payload,
+        loading: false,
+      };
     case USER_GET_FORUM:
       return {
         ...state,
@@ -273,7 +303,13 @@ export default function userReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
-
+    case USER_GET_A_FORUM:
+      return {
+        ...state,
+        getforum: action.payload,
+        loading: false,
+        fetching: true,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -299,7 +335,7 @@ export default function userReducer(state = initialState, action) {
       return { ...state, bonus: [], bonuscount: 0, fetching: false };
     }
     case CLEAR_USER_GET_FORUM: {
-      return { ...state, forum: [], forumscount: 0, fetching: false };
+      return { ...state, forums: [], forumscount: 0, fetching: false };
     }
     case CLEAR_GET_PREMIUM_STATUS: {
       return { ...state, premium: [] };
@@ -357,6 +393,18 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_ADD_FORUM: {
       return { ...state, addforum: false };
+    }
+    case CLEAR_USER_UPDATE_FORUM: {
+      return { ...state, updateforum: false };
+    }
+    case CLEAR_USER_GET_A_FORUM: {
+      return { ...state, getforum: null };
+    }
+    case CLEAR_USER_REPLY: {
+      return { ...state, userreply: false };
+    }
+    case CLEAR_USER_DELETE_REPLY: {
+      return { ...state, deletereply: false };
     }
     default:
       return state;

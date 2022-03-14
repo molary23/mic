@@ -17,6 +17,7 @@ const express = require("express"),
   Subscription = require("../../db/models/Subscription"),
   Bonus = require("../../db/models/Bonus"),
   Withdrawal = require("../../db/models/Withdrawal"),
+  ForumReply = require("../../db/models/ForumReply"),
   Announcement = require("../../db/models/Announcement"),
   ProviderView = require("../../db/models/ProviderView"),
   Wallet = require("../../db/models/Wallet"),
@@ -1047,30 +1048,18 @@ router.post(
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
           newSearchObj = {
-            [Op.and]: [
+            [Op.or]: [
               {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
+                title: { [Op.substring]: searchArray[i] },
               },
               {
-                [Op.or]: [
-                  {
-                    title: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    creator: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    about: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    text: { [Op.substring]: searchArray[i] },
-                  },
-                ],
+                creator: { [Op.substring]: searchArray[i] },
+              },
+              {
+                about: { [Op.substring]: searchArray[i] },
+              },
+              {
+                text: { [Op.substring]: searchArray[i] },
               },
             ],
           };
@@ -1079,59 +1068,21 @@ router.post(
 
         if (req.body.right && req.body.status === undefined) {
           where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
-              },
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status: req.body.status },
-            ],
+            [Op.and]: newSearchArray,
+
+            status: req.body.status,
           };
         } else if (req.body.status === undefined && req.body.right) {
           where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
-              },
-              {
-                [Op.and]: newSearchArray,
-              },
-              { right: req.body.right },
-            ],
+            [Op.and]: newSearchArray,
+
+            right: req.body.right,
           };
         } else if (req.body.status && req.body.right) {
           where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
-              },
-              {
-                [Op.and]: newSearchArray,
-              },
-              {
-                [Op.and]: [
-                  { status: req.body.status },
-                  { right: req.body.right },
-                ],
-              },
-            ],
+            [Op.and]: newSearchArray,
+
+            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
           };
         } else {
           where = {
@@ -1142,196 +1093,186 @@ router.post(
         let search = searchArray[0];
         if (req.body.status && req.body.right === undefined) {
           where = {
-            [Op.and]: [
+            [Op.or]: [
               {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
+                title: { [Op.substring]: search },
               },
               {
-                [Op.or]: [
-                  {
-                    title: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    creator: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    about: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    text: { [Op.substring]: searchArray[i] },
-                  },
-                ],
+                creator: { [Op.substring]: search },
               },
-              { status: req.body.status },
+              {
+                about: { [Op.substring]: search },
+              },
+              {
+                text: { [Op.substring]: search },
+              },
             ],
+            status: req.body.status,
           };
         } else if (req.body.status === undefined && req.body.right) {
           where = {
-            [Op.and]: [
+            [Op.or]: [
               {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
+                title: { [Op.substring]: search },
               },
               {
-                [Op.or]: [
-                  {
-                    title: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    creator: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    about: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    text: { [Op.substring]: searchArray[i] },
-                  },
-                ],
+                creator: { [Op.substring]: search },
               },
-              { right: req.body.right },
+              {
+                about: { [Op.substring]: search },
+              },
+              {
+                text: { [Op.substring]: search },
+              },
             ],
+            right: req.body.right,
           };
         } else if (req.body.status && req.body.right) {
           where = {
-            [Op.and]: [
+            [Op.or]: [
               {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
+                title: { [Op.substring]: search },
               },
               {
-                [Op.or]: [
-                  {
-                    title: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    creator: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    about: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    text: { [Op.substring]: searchArray[i] },
-                  },
-                ],
+                creator: { [Op.substring]: search },
               },
               {
-                [Op.and]: [
-                  { status: req.body.status },
-                  { right: req.body.right },
-                ],
+                about: { [Op.substring]: search },
+              },
+              {
+                text: { [Op.substring]: search },
               },
             ],
+
+            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
           };
         } else {
           where = {
-            [Op.and]: [
+            [Op.or]: [
               {
-                [Op.or]: [
-                  {
-                    UserId,
-                    right: "p",
-                  },
-                ],
+                title: { [Op.substring]: search },
               },
               {
-                [Op.or]: [
-                  {
-                    title: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    creator: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    about: { [Op.substring]: searchArray[i] },
-                  },
-                  {
-                    text: { [Op.substring]: searchArray[i] },
-                  },
-                ],
+                creator: { [Op.substring]: search },
+              },
+              {
+                about: { [Op.substring]: search },
+              },
+              {
+                text: { [Op.substring]: search },
               },
             ],
           };
         }
       }
+    } else if (req.body.status && req.body.right === undefined) {
+      where = {
+        status: req.body.status,
+      };
+    } else if (req.body.status === undefined && req.body.right) {
+      where = {
+        right: req.body.right,
+      };
+    } else if (req.body.status && req.body.right) {
+      where = {
+        [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
+      };
     } else {
-      if (req.body.status && req.body.right === undefined) {
-        where = {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  UserId,
-                  right: "p",
-                },
-              ],
-            },
-            {
-              status: req.body.status,
-            },
-          ],
-        };
-      } else if (req.body.status === undefined && req.body.right) {
-        where = {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  UserId,
-                  right: "p",
-                },
-              ],
-            },
-            {
-              right: req.body.right,
-            },
-          ],
-        };
-      } else if (req.body.status && req.body.right) {
-        where = {
-          [Op.and]: [
-            {
-              [Op.or]: [
-                {
-                  UserId,
-                  right: "p",
-                },
-              ],
-            },
-            {
-              [Op.and]: [
-                { status: req.body.status },
-                { right: req.body.right },
-              ],
-            },
-          ],
-        };
-      }
+      where = {};
     }
 
     let result = [];
     ForumView.findAndCountAll({
-      where,
+      order: [
+        ["id", "Desc"],
+        ["status", "Asc"],
+      ],
+      limit,
+      offset,
+      where: {
+        [Op.and]: [
+          {
+            [Op.or]: [
+              {
+                UserId,
+              },
+              {
+                right: "p",
+              },
+            ],
+          },
+          where,
+        ],
+      },
     })
       .then((entries) => {
         const { count, rows } = entries;
-        result = [...[count], rows];
+        result = [...[count], ...rows];
         return res.json(result);
       })
       .catch((err) => res.status(404).json(err));
   }
 );
 
+/*
+@route GET api/userview/forum/:id
+@desc User View forum
+@access private
+*/
+
+router.get(
+  "/forum/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let UserId = req.user.id,
+      forumid = req.params.id.split(":")[1];
+
+    Forum.findByPk(forumid, { attributes: ["UserId", "right"] })
+      .then((forum) => {
+        let creatorId = forum.UserId,
+          right = forum.right;
+        if (creatorId !== UserId && right !== "p") {
+          error.user = "You don't have any connection to this post";
+          return res.status(400).json(error);
+        } else {
+          let post = {};
+          Forum.findByPk(forumid, {
+            include: [
+              {
+                model: User,
+                attributes: ["username"],
+                required: true,
+              },
+            ],
+          })
+            .then((forum) => {
+              post.forum = forum;
+              ForumReply.findAll({
+                where: {
+                  ForumId: forumid,
+                },
+                include: [
+                  {
+                    model: User,
+                    attributes: ["username"],
+                    required: true,
+                  },
+                ],
+              })
+                .then((reply) => {
+                  post.reply = reply;
+                  return res.json(post);
+                })
+                .catch((err) => res.status(404).json(err));
+            })
+            .catch((err) => res.status(404).json(err));
+        }
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 module.exports = router;
