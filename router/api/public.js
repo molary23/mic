@@ -82,13 +82,13 @@ router.get("/finder", async (req, res) => {
 @access public
 */
 router.post("/register", (req, res) => {
-  const { errors, isValid } = validateAddUserInput(req.body.newUser);
+  const { errors, isValid } = validateAddUserInput(req.body.user);
 
   if (!isValid) {
     return res.status(404).json(errors);
   }
 
-  const { referral, username, email, phone, password } = req.body.newUser;
+  const { referral, username, email, phone, password } = req.body.user;
   const userField = {};
 
   if (email) userField.email = email;
@@ -123,7 +123,7 @@ router.post("/register", (req, res) => {
                     errors.email = "Email Addresss has been taken!";
                     return res.status(400).json(errors);
                   } else if (user.username === userField.username) {
-                    errors.email = "Username has been taken!";
+                    errors.username = "Username has been taken!";
                     return res.status(400).json(errors);
                   }
                 } else {
@@ -138,20 +138,16 @@ router.post("/register", (req, res) => {
                               s: "200",
                               r: "pg",
                               d: "mm",
-                            }),
-                            date = new Date();
-                          let startdate = date.toISOString(),
-                            enddate = startdate;
+                            });
                           Profile.create({
                             UserId,
                             avatar,
                           })
                             .then(() => {
-                              Premium.create({ UserId, startdate, enddate })
+                              Premium.create({ UserId })
                                 .then(() => {
                                   Settings.create({
                                     UserId,
-                                    mode: "m",
                                   })
                                     .then(() => {
                                       Preference.create({
@@ -200,7 +196,7 @@ router.post("/register", (req, res) => {
               errors.email = "Email Addresss has been taken!";
               return res.status(400).json(errors);
             } else if (user.username === userField.username) {
-              errors.email = "Username has been taken!";
+              errors.username = "Username has been taken!";
               return res.status(400).json(errors);
             }
           } else {
@@ -215,24 +211,30 @@ router.post("/register", (req, res) => {
                         s: "200",
                         r: "pg",
                         d: "mm",
-                      }),
-                      date = new Date();
-                    let startdate = date.toISOString(),
-                      enddate = startdate;
+                      });
                     Profile.create({
                       UserId,
                       avatar,
                     })
                       .then(() => {
-                        Premium.create({ UserId, startdate, enddate })
+                        Premium.create({ UserId })
                           .then(() => {
                             Settings.create({
                               UserId,
-                              type: "l",
-                              option: "d",
                             })
                               .then(() => {
-                                return res.json(1);
+                                Preference.create({
+                                  UserId,
+                                })
+                                  .then(() => {
+                                    Referral.create({
+                                      referral: userField.referralId,
+                                      UserId: user.id,
+                                    })
+                                      .then(() => res.json(1))
+                                      .catch((err) => res.json(err));
+                                  })
+                                  .catch((err) => res.json(err));
                               })
                               .catch((err) => res.json(err));
                           })

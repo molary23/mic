@@ -1219,7 +1219,7 @@ router.get(
       return res.status(400).json(error);
     }
     let UserId = req.user.id,
-      forumid = req.params.id.split(":")[1];
+      forumid = parseInt(req.params.id.split(":")[1]);
 
     Forum.findByPk(forumid, { attributes: ["UserId", "right"] })
       .then((forum) => {
@@ -1234,7 +1234,7 @@ router.get(
             include: [
               {
                 model: User,
-                attributes: ["username"],
+                attributes: ["username", "level"],
                 required: true,
               },
             ],
@@ -1248,7 +1248,7 @@ router.get(
                 include: [
                   {
                     model: User,
-                    attributes: ["username"],
+                    attributes: ["username", "level"],
                     required: true,
                   },
                 ],

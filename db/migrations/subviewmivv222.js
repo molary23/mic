@@ -6,20 +6,20 @@ const view_name = "SubscriptionViews";
 
 const original_query = [
   "SELECT ",
-  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Subscriptions.createdAt AS subscriptiondate ",
+  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Subscriptions.UserId AS userId, Users.username AS username, Subscriptions.PayID AS PayId,",
+  " Subscriptions.createdAt AS subscriptiondate ",
   " FROM Subscriptions ",
-  " LEFT JOIN Profiles ",
-  " ON Subscriptions.UserId = Profiles.UserId ",
+  " LEFT JOIN Users ",
+  " ON Subscriptions.UserId = Users.id ",
 ].join("");
 
 const new_query = [
   "SELECT ",
-  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Profiles.UserId AS userId,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Subscriptions.createdAt AS subscriptiondate ",
+  " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Subscriptions.UserId AS userId, Users.username AS username,Subscriptions.PayID AS PayId,",
+  " Subscriptions.createdAt AS subscriptiondate ",
   " FROM Subscriptions ",
-  " LEFT JOIN Profiles ",
-  " ON Subscriptions.UserId = Profiles.UserId ",
+  " LEFT JOIN Users ",
+  " ON Subscriptions.UserId = Users.id ",
 ].join("");
 module.exports = {
   up: function (queryInterface, Sequelize) {

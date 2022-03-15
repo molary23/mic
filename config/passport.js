@@ -16,7 +16,9 @@ module.exports = (passport) => {
             return done(null, user);
           }
         })
-        .catch((err) => res.status(401).json({ error: err }));
+        .catch((err) => {
+          res.status(401).json(err);
+        });
     })
   );
 };

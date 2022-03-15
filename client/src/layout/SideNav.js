@@ -127,7 +127,7 @@ function SideNav(props) {
             )}
 
             {(level === 1 || level === 3) && (
-              <Link to={`/${viewer}/bonuses`}>
+              <Link to={`/${viewer}/earnings`}>
                 <span className="sidebar-icon">
                   <GiWallet />
                 </span>

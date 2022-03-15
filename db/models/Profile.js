@@ -27,10 +27,10 @@ Profile.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: "timeCreated",
+    createdAt: true,
 
     // I dont want updatedAt
-    updatedAt: "timeUpdated",
+    updatedAt: true,
     // Other model options go here
     sequelize, // We need to pass the connection instance
     modelName: "Profile", // We need to choose the model name

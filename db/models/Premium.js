@@ -19,10 +19,12 @@ Premium.init(
     startdate: {
       type: DataTypes.DATEONLY, // Start date of recent sub
       allowNull: false,
+      defaultValue: new Date(),
     },
     enddate: {
       type: DataTypes.DATEONLY, // Duration in days
       allowNull: false,
+      defaultValue: new Date(),
     },
     subId: {
       type: DataTypes.INTEGER.UNSIGNED, // Subscription ID

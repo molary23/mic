@@ -5,7 +5,11 @@ import PropTypes from "prop-types";
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
@@ -110,65 +114,40 @@ export class Subscriptions extends Component {
       startLoad,
       getLoad,
     } = this.state;
+
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.subCount,
+      list = admin.sub,
+      searchcount = searchTerms.subCount,
+      searchlist = searchTerms.sub,
+      searchloading = searchTerms.loading;
 
-    console.log(admin.sub);
-
-    let load = startLoad,
-      loader = getLoad,
-      sub = [],
-      searchsub,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = subcount;
-
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.subCount;
-      totalText = "Total sub";
-      if (admin.sub === [] && loading) {
-        loader = true;
-        load = false;
-      } else if (admin.sub.length > 0 && !loading) {
-        sub = admin.sub;
-        load = false;
-        loader = false;
-      } else if (admin.sub.length > 0 && loading) {
-        sub = admin.sub;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        sub = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.subCount;
-      totalText = "Selected/Searched Subscriptions";
-      if (searchTerms.sub === [] || searchTerms.sub.length <= 0) {
-        noRecord = true;
-        searchsub = [];
-        loader = false;
-      } else if (searchTerms.sub.length > 0 && !searchTerms.loading) {
-        searchsub = searchTerms.sub;
-        loader = false;
-      } else if (searchTerms.sub.length > 0 && searchTerms.loading) {
-        searchsub = searchTerms.sub;
-        loader = true;
-      }
-    }
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      subcount,
+    });
 
     return (
       <div>
@@ -213,7 +192,7 @@ export class Subscriptions extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-2">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
@@ -235,7 +214,7 @@ export class Subscriptions extends Component {
               head={[
                 "S/N",
                 "amount",
-                "User Fullname",
+                "username",
                 "type",
                 "package",
                 "plan",
@@ -244,7 +223,7 @@ export class Subscriptions extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? sub : searchsub}
+                tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
           </div>
@@ -256,8 +235,8 @@ export class Subscriptions extends Component {
 
 Subscriptions.propTypes = {
   getSub: PropTypes.func,
-  getTableCount: PropTypes.func,
   searchSub: PropTypes.func,
+  renderArrange: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 
@@ -271,4 +250,5 @@ export default connect(mapStateToProps, {
   searchContent,
   clearSearchActions,
   clearActions,
+  renderArrange,
 })(Subscriptions);

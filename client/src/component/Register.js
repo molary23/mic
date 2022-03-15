@@ -52,36 +52,37 @@ class Register extends Component {
   checkHandler = (input, target) => {
     let req = {},
       response;
-
-    clearTimeout(typingTimer);
-    if (input === "email") {
-      req = { email: target };
-    } else if (input === "username") {
-      req = { username: target };
-    } else if (input === "referral") {
-      req = { referral: target };
+    if (target !== "") {
+      clearTimeout(typingTimer);
+      if (input === "email") {
+        req = { email: target };
+      } else if (input === "username") {
+        req = { username: target };
+      } else if (input === "referral") {
+        req = { referral: target };
+      }
+      typingTimer = setTimeout(() => {
+        this.setState({
+          loader: {
+            [input]: true,
+          },
+        });
+        axios
+          .post(`/api/public/${input}/`, req, {})
+          .then((res) => {
+            response = res.data.text;
+            this.setState({
+              error: {
+                [input]: response,
+              },
+              loader: {
+                [input]: false,
+              },
+            });
+          })
+          .catch((error) => console.log(error.response));
+      }, this.state.doneTypingInterval);
     }
-    typingTimer = setTimeout(() => {
-      this.setState({
-        loader: {
-          [input]: true,
-        },
-      });
-      axios
-        .post(`/api/public/${input}/`, req, {})
-        .then((res) => {
-          response = res.data.text;
-          this.setState({
-            error: {
-              [input]: response,
-            },
-            loader: {
-              [input]: false,
-            },
-          });
-        })
-        .catch((error) => console.log(error.response));
-    }, this.state.doneTypingInterval);
   };
 
   keyHandler = (e) => {
@@ -171,7 +172,7 @@ class Register extends Component {
       this.setState({
         loading: true,
       });
-      const newUser = {
+      const user = {
         referral: referral.trim(),
         username: username.trim(),
         email: email.trim(),
@@ -183,13 +184,14 @@ class Register extends Component {
         let response = await axios.post(
           "/api/public/register/",
           {
-            newUser,
+            user,
           },
           {}
         );
         if (response.data === 1) {
           this.setState({
             modal: true,
+            loading: false,
             username: "",
             email: "",
             password: "",
@@ -288,7 +290,7 @@ class Register extends Component {
                 id="register-form-password"
                 placeholder="Password"
                 label="Password"
-                icon={`far ${pass1 ? "fa-eye-slash" : "fa-eye"}`}
+                icon={`far ${pass1 ? "fa-eye" : "fa-eye-slash"}`}
                 type={pass1 ? "password" : "text"}
                 name="password"
                 value={password}
@@ -300,7 +302,7 @@ class Register extends Component {
                 id="register-form-password2"
                 placeholder="Confirm Password"
                 label="Confirm Password"
-                icon={`far ${pass2 ? "fa-eye-slash" : "fa-eye"}`}
+                icon={`far ${pass2 ? "fa-eye" : "fa-eye-slash"}`}
                 type={pass2 ? "password" : "text"}
                 name="password2"
                 value={password2}

@@ -1,8 +1,10 @@
+const Preference = require("../../db/models/Preference");
+
 const express = require("express"),
   router = express.Router(),
   Sequelize = require("sequelize"),
   passport = require("passport"),
-  { Op } = require("sequelize"),
+  { Op, where } = require("sequelize"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
@@ -13,6 +15,7 @@ const express = require("express"),
   Currency = require("../../db/models/Currency"),
   Referral = require("../../db/models/Referral"),
   Wallet = require("../../db/models/Wallet"),
+  Profile = require("../../db/models/Profile"),
   User = require("../../db/models/User"),
   Announcement = require("../../db/models/Announcement"),
   Forum = require("../../db/models/Forum"),
@@ -225,7 +228,7 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = { user: { [Op.substring]: searchArray[i] } };
+          newSearchObj = { username: { [Op.substring]: searchArray[i] } };
           newSearchArray.push(newSearchObj);
         }
 
@@ -271,21 +274,21 @@ router.post(
         if (req.body.type && req.body.subPackage === undefined) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              { username: { [Op.substring]: search } },
               { type: req.body.type },
             ],
           };
         } else if (req.body.type === undefined && req.body.subPackage) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              { username: { [Op.substring]: search } },
               { package: req.body.subPackage },
             ],
           };
         } else if (req.body.type && req.body.subPackage) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              { username: { [Op.substring]: search } },
               {
                 [Op.and]: [
                   { type: req.body.type },
@@ -296,7 +299,7 @@ router.post(
           };
         } else {
           where = {
-            user: { [Op.substring]: search },
+            username: { [Op.substring]: search },
           };
         }
       }
@@ -319,26 +322,11 @@ router.post(
       attributes: [
         "subscriptionid",
         "amount",
-        [
-          Sequelize.literal(
-            `CASE WHEN type = 'b' THEN 'Bonus' WHEN type = 'y' THEN 'Pay' END `
-          ),
-          "Payment Type",
-        ],
-        [
-          Sequelize.literal(
-            `CASE WHEN package = 'm' THEN 'Monthly' WHEN package = 'y' THEN 'Annual' END `
-          ),
-          "Package",
-        ],
-        [
-          Sequelize.literal(
-            `CASE WHEN status = 0 THEN 'Unapproved' WHEN status = 1 THEN 'Pending' WHEN status = 2 THEN 'Approved' END `
-          ),
-          "Status",
-        ],
+        "type",
+        "package",
+        "status",
         "plan",
-        "user",
+        "username",
         "userId",
         "subscriptiondate",
       ],
@@ -1264,7 +1252,7 @@ router.get(
 @route GET api/adminview/bonus/:id
 @desc Admin view each Bonus
 @access private
-*/
+
 
 router.get(
   "/bonus/:id",
@@ -1291,7 +1279,7 @@ router.get(
       .catch((err) => res.status(404).json(err));
   }
 );
-
+*/
 /*
 @route GET api/adminview/subscription/:id
 @desc Admin view each Subscription
@@ -1316,7 +1304,7 @@ router.get(
         if (subtype === "p") {
           Subscription.findByPk(subId, { attributes: ["payID"] })
             .then((subpay) => {
-              let id = subpay;
+              let id = subpay.payID;
               Payment.findByPk(id)
                 .then((pay) => {
                   content.pay = pay;
@@ -2187,14 +2175,14 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    let forumid = req.params.id.split(":")[1];
+    let forumid = parseInt(req.params.id.split(":")[1]);
 
     let post = {};
     Forum.findByPk(forumid, {
       include: [
         {
           model: User,
-          attributes: ["username"],
+          attributes: ["username", "level"],
           required: true,
         },
       ],
@@ -2208,7 +2196,7 @@ router.get(
           include: [
             {
               model: User,
-              attributes: ["username"],
+              attributes: ["username", "level"],
               required: true,
             },
           ],
@@ -2220,6 +2208,141 @@ router.get(
           .catch((err) => res.status(404).json(err));
       })
       .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/adminview/bonus/:id
+@desc Admin View bonus
+@access private
+*/
+
+router.get(
+  "/bonus/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let bonusid = parseInt(req.params.id.split(":")[1]);
+
+    let info = {},
+      SubscriptionId = null;
+    BonusView.findOne({ where: { bonusid } })
+      .then((bonus) => {
+        info.bonus = bonus;
+        if (bonus === null) {
+          return res.json(info);
+        } else {
+          SubscriptionId = bonus.SubscriptionId;
+          Subscription.findByPk(SubscriptionId, {
+            attributes: ["payID"],
+          })
+            .then((sub) => {
+              let PayId = sub.payID;
+              if (PayId === null) {
+                return res.json(info);
+              } else {
+                Payment.findByPk(PayId, {
+                  attributes: [
+                    "amount",
+                    "reference",
+                    "status",
+                    "gateway",
+                    "createdAt",
+                  ],
+                })
+                  .then((pay) => {
+                    info.pay = pay;
+                    return res.json(info);
+                  })
+                  .catch((err) => res.status(404).json(err));
+              }
+            })
+            .catch((err) => res.status(404).json(err));
+        }
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/adminview/admin/:id
+@desc Admin View admin
+@access private
+*/
+
+router.get(
+  "/admin/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let adminid = parseInt(req.params.id.split(":")[1]);
+
+    let info = {};
+    User.findByPk(adminid, {
+      attributes: [
+        "id",
+        "email",
+        "username",
+        "level",
+        "phone",
+        "createdAt",
+        "status",
+      ],
+      include: [{ model: Profile, attributes: ["firstname", "lastname"] }],
+    })
+      .then((user) => {
+        if (user === null) {
+          info.user = null;
+          return res.json(info);
+        } else {
+          let level = user.level;
+          if (level < 2) {
+            info.user = null;
+            return res.json(info);
+          } else {
+            info.user = user;
+            if (level === 2) {
+              Signal.count({
+                where: {
+                  UserId: adminid,
+                },
+              })
+                .then((signalcount) => {
+                  info.signalcount = signalcount;
+                  Preference.count({
+                    where: {
+                      providers: { [Op.regexp]: adminid },
+                    },
+                  })
+                    .then((followerscount) => {
+                      info.followerscount = followerscount;
+                      return res.json(info);
+                    })
+                    .catch((err) => res.status(404).json(`P ${err}`));
+                })
+                .catch((err) => res.status(404).json(`S ${err}`));
+            } else if (level === 3) {
+              Currency.count({
+                where: {
+                  UserId: adminid,
+                },
+              })
+                .then((currencycount) => {
+                  info.currencycount = currencycount;
+                  return res.json(info);
+                })
+                .catch((err) => res.status(404).json(`C ${err}`));
+            }
+          }
+        }
+      })
+      .catch((err) => res.status(404).json(`U ${err}`));
   }
 );
 

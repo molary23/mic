@@ -71,6 +71,10 @@ import {
   CLEAR_ADMIN_REPLY,
   ADMIN_DELETE_REPLY,
   CLEAR_ADMIN_DELETE_REPLY,
+  ADMIN_GET_A_BONUS,
+  CLEAR_ADMIN_GET_A_BONUS,
+  ADMIN_GET_AN_ADMIN,
+  CLEAR_ADMIN_GET_AN_ADMIN,
 } from "../action/types";
 
 const initialState = {
@@ -129,6 +133,8 @@ const initialState = {
   getforum: null,
   adminreply: false,
   deletereply: false,
+  getbonus: null,
+  getadmin: null,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -395,6 +401,20 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case ADMIN_GET_A_BONUS:
+      return {
+        ...state,
+        getbonus: action.payload,
+        loading: false,
+        fetching: true,
+      };
+    case ADMIN_GET_AN_ADMIN:
+      return {
+        ...state,
+        getadmin: action.payload,
+        loading: false,
+        fetching: true,
+      };
     case CLEAR_SUBSCRIPTIONS_ACTION: {
       return { ...state, sub: [], subCount: 0, fetching: false };
     }
@@ -493,6 +513,12 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ADMIN_GET_A_FORUM: {
       return { ...state, getforum: null };
+    }
+    case CLEAR_ADMIN_GET_A_BONUS: {
+      return { ...state, getbonus: null };
+    }
+    case CLEAR_ADMIN_GET_AN_ADMIN: {
+      return { ...state, getadmin: null };
     }
     case CLEAR_ADMIN_REPLY: {
       return { ...state, adminreply: false };

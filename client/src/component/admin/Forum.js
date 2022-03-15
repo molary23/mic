@@ -138,13 +138,12 @@ class Forum extends Component {
   };
 
   render() {
-    const { text, error, sender, toasttext, toast, isLoading, trt } =
-      this.state;
+    const { text, error, sender, toasttext, toast, isLoading } = this.state;
     let loader = false,
       load = false,
       noRecord = false,
       notAllowed = false;
-    const { admin, errors, auth } = this.props,
+    const { admin, auth } = this.props,
       { loading } = admin;
     let forum, post, reply, UserId, level;
 
@@ -205,6 +204,10 @@ class Forum extends Component {
                     </div>
 
                     <p className="mt-1">{post.text}</p>
+                    <span className="reply-by">{post.User.username}</span>
+                    <span className="reply-level">
+                      {post.User.level === 3 && "Admin"}
+                    </span>
                     <span>
                       {reply.length} repl{reply.length > 1 ? "ies" : "y"}
                     </span>

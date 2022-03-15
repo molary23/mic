@@ -1,7 +1,337 @@
-import React from "react";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-function Bonus() {
-  return <div>Bonus</div>;
+import Spinner from "../../layout/Spinner";
+import ProgressBar from "../../layout/ProgressBar";
+import DateFormat from "../../layout/DateFormat";
+import Toast from "../../layout/Toast";
+
+import { ImCancelCircle } from "react-icons/im";
+
+import { IoReturnUpBackOutline } from "react-icons/io5";
+import { FiCheckCircle } from "react-icons/fi";
+
+import {
+  clearErrors,
+  getBonus,
+  clearActions,
+  updateBonus,
+  clearAdminAction,
+} from "../../action/adminAction";
+
+class Bonus extends Component {
+  state = {
+    text: "",
+    sender: "admin-bonus",
+    error: {},
+    url: new URL(window.location),
+    bonusid: null,
+    toast: null,
+    toasttext: null,
+    isLoading: {},
+    servererror: {},
+    bonusaction: null,
+  };
+  componentDidMount() {
+    const { url } = this.state;
+    let params = url.pathname.split("bonus")[1],
+      id = params.split(":")[1];
+    this.setState({
+      bonusid: id,
+    });
+    this.props.clearErrors();
+    this.props.getBonus(id);
+  }
+
+  componentWillUnmount() {
+    this.props.clearActions("get-bonus");
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (nextProps.errors) {
+      update.servererror = nextProps.errors;
+    }
+
+    return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.admin.updatebonus !== this.props.admin.updatebonus &&
+      this.props.admin.updatebonus
+    ) {
+      this.afterUpdate();
+      this.setState({
+        isLoading: {},
+      });
+    }
+  }
+
+  errorUpdate = () => {};
+
+  afterUpdate = () => {
+    const { bonusid, bonusaction } = this.state;
+    this.setState({
+      text: "",
+      toast: true,
+      toasttext: `Bonus ${bonusaction}.`,
+    });
+    this.props.clearAdminAction("update-bonus");
+    this.props.getBonus(bonusid);
+
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+      });
+    }, 3000);
+  };
+
+  clickHandler = (value) => {
+    let check = window.confirm(
+      `Are you sure you want to ${value[0]} this Bonus?`
+    );
+    if (check) {
+      this.setState({
+        isLoading: {
+          [value[0]]: true,
+        },
+        bonusaction: `${value[0]}d`,
+      });
+      this.props.updateBonus({ action: value[0], id: value[1] });
+    } else {
+      return false;
+    }
+  };
+
+  render() {
+    const { toasttext, toast, isLoading } = this.state;
+    let loader = false,
+      load = false,
+      noRecord = false,
+      notAllowed = false;
+    const { admin } = this.props,
+      { loading } = admin;
+    let bonus, bonusinfo, pay;
+
+    if (admin.getbonus === null || loading) {
+      loader = true;
+      load = true;
+    } else if (admin.getbonus.bonus !== null && !loading) {
+      loader = false;
+      load = false;
+      bonus = admin.getbonus;
+      bonusinfo = bonus.bonus;
+      pay = bonus.pay;
+    } else if (admin.getbonus.bonus === null && !loading) {
+      loader = false;
+      load = false;
+      noRecord = true;
+      notAllowed = "There is no Bonus with the specified ID";
+    }
+
+    if (isLoading.approve || isLoading.reject) {
+      loader = true;
+    }
+    return (
+      <div>
+        {loader && <ProgressBar />}
+        {load ? (
+          <Spinner />
+        ) : (
+          <div>
+            {noRecord ? (
+              <p className="no-records">
+                {notAllowed}. Go{" "}
+                <Link to="/admin/earnings">
+                  Back <IoReturnUpBackOutline />
+                </Link>
+              </p>
+            ) : (
+              <div className="bonus-card card">
+                <div className="page-dash-title mb-4">
+                  <h1>Bonus Details</h1>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 col-sm-12">
+                    <div className="bonus-info-card">
+                      <h3>Bonus Info</h3>
+                      <div className="bonus-to">
+                        <div className="card-label">Bonus to</div>
+                        <div className="card-value">{bonusinfo.username}</div>
+                      </div>
+                      <div className="amount-payer">
+                        <div className="card-label">Amount</div>
+                        <div className="card-value">{bonusinfo.amount}</div>
+                      </div>
+                      <div className="bonus-status">
+                        <div className="card-label">Status</div>
+                        <div className="card-value">
+                          {bonusinfo.status === "p" && (
+                            <div>
+                              <span className="new-status status-info">
+                                <span>&bull;</span>
+                              </span>
+                              pending
+                            </div>
+                          )}
+                          {bonusinfo.status === "a" && (
+                            <div>
+                              <span className="active-status status-info">
+                                <span>&bull;</span>
+                              </span>
+                              approved
+                            </div>
+                          )}
+                          {bonusinfo.status === "r" && (
+                            <div>
+                              <span className="inactive-status status-info">
+                                <span>&bull;</span>
+                              </span>
+                              rejected
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="bonus-date">
+                        <div className="card-label">date created</div>
+                        <div className="card-value">
+                          <DateFormat date={bonusinfo.createdAt} />
+                        </div>
+                      </div>
+                      {bonusinfo.status === "p" && (
+                        <div className="bonus-date">
+                          <div className="card-label">
+                            Date{" "}
+                            {bonusinfo.status === "a" ? "approved" : "rejected"}
+                          </div>
+                          <div className="card-value">
+                            <DateFormat date={bonusinfo.updatedAt} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-md-6 col-sm-12">
+                    <div className="payer-info-card">
+                      <h3>Payment Info</h3>
+                      <div className="bonus-from">
+                        <div className="card-label">bonus from</div>
+                        <div className="card-value">{bonusinfo.payer}</div>
+                      </div>
+                      <div className="pay-amount">
+                        <div className="card-label">amount paid</div>
+                        <div className="card-value">{pay.amount}</div>
+                      </div>
+                      <div className="pay-gateway">
+                        <div className="card-label">payment medium</div>
+                        <div className="card-value">
+                          {pay.gateway === "c" ? "crypto" : "bank"}
+                        </div>
+                      </div>
+                      <div className="pay-status">
+                        <div className="card-label">payment status</div>
+                        <div className="card-value">
+                          {pay.status === "s" ? (
+                            <div>
+                              <span className="active-status status-info">
+                                <span>&bull;</span>
+                              </span>
+                              successful
+                            </div>
+                          ) : (
+                            <div>
+                              <span className="inactive-status status-info">
+                                <span>&bull;</span>
+                              </span>
+                              failed
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="pay-reference">
+                        <div className="card-label">payment reference</div>
+                        <div className="card-value">{pay.reference}</div>
+                      </div>
+                      <div className="pay-date">
+                        <div className="card-label">date of payment </div>
+                        <div className="card-value">
+                          <DateFormat date={pay.createdAt} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {bonusinfo.status === "p" && (
+                  <div className="bonus-action">
+                    <div className="row">
+                      <div className="col-6">
+                        <div className="d-grid">
+                          <button
+                            type="button"
+                            className="btn default-btn btn-lg btn-block"
+                            onClick={() =>
+                              this.clickHandler(["approve", bonusinfo.bonusid])
+                            }
+                          >
+                            Approve <FiCheckCircle />
+                            {isLoading.approve && (
+                              <span className="spinner-border spinner-border-sm ms-2"></span>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="col-6">
+                        <div className="d-grid">
+                          <button
+                            type="button"
+                            className="btn reject-btn btn-lg btn-block"
+                            onClick={() =>
+                              this.clickHandler(["reject", bonusinfo.bonusid])
+                            }
+                          >
+                            Reject <ImCancelCircle />
+                            {isLoading.reject && (
+                              <span className="spinner-border spinner-border-sm ms-2"></span>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+        {toast && <Toast text={toasttext} />}
+      </div>
+    );
+  }
 }
 
-export default Bonus;
+Bonus.propTypes = {
+  clearErrors: PropTypes.func,
+  updateBonus: PropTypes.func,
+  clearActions: PropTypes.func.isRequired,
+  clearAdminAction: PropTypes.func.isRequired,
+  getBonus: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  admin: PropTypes.object.isRequired,
+  errors: PropTypes.object,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  admin: state.admin,
+  errors: state.errors,
+});
+export default connect(mapStateToProps, {
+  clearErrors,
+  getBonus,
+  clearActions,
+  updateBonus,
+  clearAdminAction,
+})(Bonus);

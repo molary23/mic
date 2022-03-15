@@ -225,6 +225,10 @@ class Forum extends Component {
                     </div>
 
                     <p className="mt-1">{post.text}</p>
+                    <span className="reply-by">{post.User.username}</span>
+                    <span className="reply-level">
+                      {post.User.level === 3 && "Admin"}
+                    </span>
                     <span>{reply.length} replies</span>
                   </div>
                 </div>

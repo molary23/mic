@@ -272,7 +272,7 @@ function TableBody(props) {
                     onClick(["reject", item.bonusid, item.username])
                   }
                 >
-                  <i className="fas fa-ban" />
+                  <ImCancelCircle />
                 </button>
               </div>
             )}
@@ -295,7 +295,7 @@ function TableBody(props) {
               title="View Details"
               to={`/admin/user/:${item.userId}`} // change to user ID later
             >
-              {item.user}
+              {item.username}
             </Link>
           </td>
           <td>{item.method}</td>
@@ -540,12 +540,12 @@ function TableBody(props) {
               title="View Details"
               to={`/admin/user/:${item.userId}`}
             >
-              {item.user}
+              {item.username}
             </Link>
           </td>
-          <td>{item["Payment Type"]}</td>
+          <td>{item.type === "b" ? "bonus" : "payment"}</td>
 
-          <td>{item.Package}</td>
+          <td>{item.package === "m" ? "monthly" : "annually"}</td>
           <td>{item.plan}</td>
           <td>
             <DateFormat date={item.subscriptiondate} />
@@ -709,7 +709,7 @@ function TableBody(props) {
                 type=""
                 className=""
                 title="View Addmin"
-                to={`/admin/user/:${item.UserId}`}
+                to={`/admin/admin/:${item.UserId}`}
               >
                 {item.User.username}
               </Link>

@@ -2,7 +2,7 @@ const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
   passport = require("passport"),
-  // Use Json Web Token
+  gravatar = require("gravatar"),
   User = require("../../db/models/User"),
   Payment = require("../../db/models/Payment"),
   Subscription = require("../../db/models/Subscription"),
@@ -69,10 +69,22 @@ router.post(
                     userField.password = hash;
                     User.create(userField)
                       .then((user) => {
-                        let UserId = user.id;
-                        Settings.create(UserId)
+                        const UserId = user.id,
+                          avatar = gravatar.url(userField.email, {
+                            s: "200",
+                            r: "pg",
+                            d: "mm",
+                          });
+                        Profile.create({
+                          UserId,
+                          avatar,
+                        })
                           .then(() => {
-                            return res.json(true);
+                            Settings.create(UserId)
+                              .then(() => {
+                                return res.json(true);
+                              })
+                              .catch((err) => res.json(err));
                           })
                           .catch((err) => res.json(err));
                       })

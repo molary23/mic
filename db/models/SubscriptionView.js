@@ -31,13 +31,13 @@ SubscriptionView.init(
       type: DataTypes.TINYINT,
       defaultValue: 1,
     },
-    fullname: {
-      type: DataTypes.STRING(50),
-    },
     username: {
       type: DataTypes.STRING(30),
     },
     userId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    PayId: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
   },

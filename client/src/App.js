@@ -22,7 +22,7 @@ import Home from "./component/Home";
 import Dashboard from "./component/user/Dashboard";
 import Signals from "./component/user/Signals";
 import Transactions from "./component/user/Transactions";
-import Bonuses from "./component/user/Bonuses";
+import Earnings from "./component/user/Earnings";
 import Referrals from "./component/user/Referrals";
 import Pay from "./component/user/Pay";
 import Payments from "./component/user/Payments";
@@ -37,7 +37,7 @@ import Subscriptions from "./component/user/Subscriptions";
 //Admin
 import AdminDashboard from "./component/admin/Dashboard";
 import AdminIndex from "./component/admin/AdminIndex";
-import AdminBonuses from "./component/admin/Bonuses";
+import AdminEarnings from "./component/admin/Earnings";
 import AdminBonus from "./component/admin/Bonus";
 import AddminTransaction from "./component/admin/Transaction";
 import AddminTransactions from "./component/admin/Transactions";
@@ -49,7 +49,7 @@ import AdminPayments from "./component/admin/Payments";
 import AdminSubscriptions from "./component/admin/Subscriptions";
 import AdminCurrency from "./component/admin/Currency";
 import AdminSignalProviders from "./component/admin/SignalProviders";
-import AdminViewAdmins from "./component/admin/ViewAdmin";
+import AdminViewAdmins from "./component/admin/ViewAdmins";
 import AdminSignals from "./component/admin/Signals";
 import AdminAccounts from "./component/admin/Accounts";
 import AdminAnnouncements from "./component/admin/Announcements";
@@ -58,6 +58,7 @@ import AdminForum from "./component/admin/Forum";
 import AdminForums from "./component/admin/Forums";
 import AdminWallets from "./component/admin/Wallets";
 import AdminUserView from "./component/admin/UserView";
+import AdminViewAdmin from "./component/admin/ViewAdmin";
 
 // Signal Provider
 import ProviderDashboard from "./component/signalprovider/Dashboard";
@@ -137,8 +138,8 @@ function App() {
           />
           <Route
             exact
-            path="/user/bonuses"
-            element={<PrivateRoute Component={Bonuses} />}
+            path="/user/earnings"
+            element={<PrivateRoute Component={Earnings} />}
           />
           <Route
             exact
@@ -194,8 +195,8 @@ function App() {
           ></Route>
           <Route
             exact
-            path="/admin/bonuses"
-            element={<PrivateRoute Component={AdminBonuses} />}
+            path="/admin/earnings"
+            element={<PrivateRoute Component={AdminEarnings} />}
           />
           <Route
             exact
@@ -286,6 +287,11 @@ function App() {
             exact
             path="/admin/userview/:id/:table"
             element={<PrivateRoute Component={AdminUserView} />}
+          />
+          <Route
+            exact
+            path="/admin/admin/:id/"
+            element={<PrivateRoute Component={AdminViewAdmin} />}
           />
           <Route
             exact

@@ -75,6 +75,10 @@ import {
   CLEAR_ADMIN_REPLY,
   ADMIN_DELETE_REPLY,
   CLEAR_ADMIN_DELETE_REPLY,
+  ADMIN_GET_A_BONUS,
+  CLEAR_ADMIN_GET_A_BONUS,
+  ADMIN_GET_AN_ADMIN,
+  CLEAR_ADMIN_GET_AN_ADMIN,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -192,6 +196,10 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ADMIN_REPLY };
   } else if (actionToClear === "delete-reply") {
     return { type: CLEAR_ADMIN_DELETE_REPLY };
+  } else if (actionToClear === "get-bonus") {
+    return { type: CLEAR_ADMIN_GET_A_BONUS };
+  } else if (actionToClear === "get-admin") {
+    return { type: CLEAR_ADMIN_GET_AN_ADMIN };
   }
 };
 
@@ -552,6 +560,38 @@ export const getForum = (id) => async (dispatch) => {
     let response = await axios.get(`/api/adminview/forum/:${id}`);
     const result = await dispatch({
       type: ADMIN_GET_A_FORUM,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const getBonus = (id) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearActions("get-bonus"));
+  try {
+    let response = await axios.get(`/api/adminview/bonus/:${id}`);
+    const result = await dispatch({
+      type: ADMIN_GET_A_BONUS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const getAdmin = (id) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearActions("get-admin"));
+  try {
+    let response = await axios.get(`/api/adminview/admin/:${id}`);
+    const result = await dispatch({
+      type: ADMIN_GET_AN_ADMIN,
       payload: response.data,
     });
     return result;

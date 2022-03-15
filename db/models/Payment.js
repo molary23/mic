@@ -22,8 +22,8 @@ Payment.init(
       allowNull: false,
     },
     status: {
-      type: DataTypes.TINYINT,
-      defaultValue: 1,
+      type: DataTypes.ENUM("s", "f"), //successful,failed
+      defaultValue: "s",
     },
     gateway: {
       type: DataTypes.ENUM("b", "c"), //Bank,Crypto

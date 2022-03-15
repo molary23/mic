@@ -20,7 +20,7 @@ import {
   // loadFromParams,
 } from "../../util/LoadFunction";
 
-export class Bonuses extends Component {
+export class Earnings extends Component {
   state = {
     sender: "user-bonus",
     statusOptions: [
@@ -208,7 +208,7 @@ export class Bonuses extends Component {
   }
 }
 
-Bonuses.propTypes = {
+Earnings.propTypes = {
   getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func.isRequired,
   // loadFromParams: PropTypes.func.isRequired,
@@ -229,4 +229,4 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
-})(Bonuses);
+})(Earnings);
