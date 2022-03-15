@@ -1,4 +1,5 @@
 const Preference = require("../../db/models/Preference");
+const Premium = require("../../db/models/Premium");
 
 const express = require("express"),
   router = express.Router(),
@@ -101,7 +102,7 @@ router.post(
               },
               {
                 [Op.and]: [
-                  { type: req.body.status },
+                  { status: req.body.status },
                   { package: req.body.gateway },
                 ],
               },
@@ -117,24 +118,24 @@ router.post(
         if (req.body.status && req.body.gateway === undefined) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
-              { type: req.body.status },
+              { username: { [Op.substring]: search } },
+              { status: req.body.status },
             ],
           };
         } else if (req.body.status === undefined && req.body.gateway) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              { username: { [Op.substring]: search } },
               { package: req.body.gateway },
             ],
           };
         } else if (req.body.status && req.body.gateway) {
           where = {
             [Op.and]: [
-              { user: { [Op.substring]: search } },
+              { username: { [Op.substring]: search } },
               {
                 [Op.and]: [
-                  { type: req.body.status },
+                  { status: req.body.status },
                   { package: req.body.gateway },
                 ],
               },
@@ -148,12 +149,15 @@ router.post(
       }
     } else {
       if (req.body.status && req.body.gateway === undefined) {
-        where.type = req.body.status;
+        where.status = req.body.status;
       } else if (req.body.status === undefined && req.body.gateway) {
         where.gateway = req.body.gateway;
       } else if (req.body.status && req.body.gateway) {
         where = {
-          [Op.and]: [{ type: req.body.status }, { gateway: req.body.gateway }],
+          [Op.and]: [
+            { status: req.body.status },
+            { gateway: req.body.gateway },
+          ],
         };
       }
     }
@@ -165,18 +169,8 @@ router.post(
       attributes: [
         "payid",
         "amount",
-        [
-          Sequelize.literal(
-            `CASE WHEN gateway = 'b' THEN 'BitPay' WHEN gateway = 's' THEN 'Stripe' END `
-          ),
-          "gateway",
-        ],
-        [
-          Sequelize.literal(
-            `CASE WHEN status = 0 THEN 'failed' WHEN status = 1 THEN 'successful' END`
-          ),
-          "status",
-        ],
+        "gateway",
+        "status",
         "reference",
         "username",
         "UserId",
@@ -1325,7 +1319,7 @@ router.get(
 @route GET api/adminview/user/:id
 @desc Admin view user details
 @access private
-*/
+
 
 router.get(
   "/user/:id",
@@ -1371,7 +1365,7 @@ router.get(
         .catch((err) => res.status(404).json(err)),
     ]);
   }
-);
+);*/
 
 /*
 @route GET api/adminview/user/transactions/:id
@@ -2284,65 +2278,240 @@ router.get(
     let adminid = parseInt(req.params.id.split(":")[1]);
 
     let info = {};
-    User.findByPk(adminid, {
-      attributes: [
-        "id",
-        "email",
-        "username",
-        "level",
-        "phone",
-        "createdAt",
-        "status",
-      ],
-      include: [{ model: Profile, attributes: ["firstname", "lastname"] }],
-    })
-      .then((user) => {
-        if (user === null) {
-          info.user = null;
-          return res.json(info);
-        } else {
-          let level = user.level;
-          if (level < 2) {
+    return Promise.all([
+      User.findByPk(adminid, {
+        attributes: [
+          "id",
+          "email",
+          "username",
+          "level",
+          "phone",
+          "createdAt",
+          "status",
+        ],
+        include: [{ model: Profile, attributes: ["firstname", "lastname"] }],
+      })
+        .then((user) => {
+          if (user === null) {
             info.user = null;
             return res.json(info);
           } else {
-            info.user = user;
-            if (level === 2) {
-              Signal.count({
-                where: {
-                  UserId: adminid,
-                },
-              })
-                .then((signalcount) => {
-                  info.signalcount = signalcount;
-                  Preference.count({
-                    where: {
-                      providers: { [Op.regexp]: adminid },
-                    },
-                  })
-                    .then((followerscount) => {
-                      info.followerscount = followerscount;
-                      return res.json(info);
+            let level = user.level;
+            if (level < 2) {
+              info.user = null;
+              return res.json(info);
+            } else {
+              info.user = user;
+              if (level === 2) {
+                Signal.count({
+                  where: {
+                    UserId: adminid,
+                  },
+                })
+                  .then((signalcount) => {
+                    info.signalcount = signalcount;
+                    Preference.count({
+                      where: {
+                        providers: { [Op.regexp]: adminid },
+                      },
                     })
-                    .catch((err) => res.status(404).json(`P ${err}`));
+                      .then((followerscount) => {
+                        info.followerscount = followerscount;
+                        return res.json(info);
+                      })
+                      .catch((err) => res.status(404).json(`P ${err}`));
+                  })
+                  .catch((err) => res.status(404).json(`S ${err}`));
+              } else if (level === 3) {
+                Currency.count({
+                  where: {
+                    UserId: adminid,
+                  },
                 })
-                .catch((err) => res.status(404).json(`S ${err}`));
-            } else if (level === 3) {
-              Currency.count({
-                where: {
-                  UserId: adminid,
-                },
-              })
-                .then((currencycount) => {
-                  info.currencycount = currencycount;
-                  return res.json(info);
-                })
-                .catch((err) => res.status(404).json(`C ${err}`));
+                  .then((currencycount) => {
+                    info.currencycount = currencycount;
+                    return res.json(info);
+                  })
+                  .catch((err) => res.status(404).json(`C ${err}`));
+              }
             }
           }
-        }
+        })
+        .catch((err) => res.status(404).json(`U ${err}`)),
+    ]);
+  }
+);
+
+/*
+@route GET api/adminview/user/:id
+@desc Admin View user
+@access private
+*/
+
+router.get(
+  "/user/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let UserId = parseInt(req.params.id.split(":")[1]);
+
+    let info = {};
+    return Promise.all([
+      User.findByPk(UserId, {
+        attributes: [
+          "id",
+          "email",
+          "username",
+          "level",
+          "phone",
+          "createdAt",
+          "status",
+        ],
+        include: [{ model: Profile, attributes: ["firstname", "lastname"] }],
       })
-      .catch((err) => res.status(404).json(`U ${err}`));
+        .then((user) => {
+          if (user === null) {
+            info.user = null;
+            return res.json(info);
+          } else {
+            let level = user.level;
+            if (level !== 1) {
+              info.user = null;
+              return res.json(info);
+            } else {
+              info.user = user;
+              Subscription.count({ where: { UserId } })
+                .then((sub) => {
+                  info.sub = sub;
+                  Bonus.sum("amount", {
+                    where: {
+                      UserId,
+                      status: "a",
+                    },
+                  })
+                    .then((bonus) => {
+                      info.bonus = bonus;
+                      Transaction.sum("amount", {
+                        where: {
+                          UserId,
+                          type: "d",
+                        },
+                      })
+                        .then((debit) => {
+                          info.debit = debit;
+                          Transaction.sum("amount", {
+                            where: {
+                              UserId,
+                              type: "c",
+                            },
+                          })
+                            .then((credit) => {
+                              info.credit = credit;
+                              Transaction.sum("amount", {
+                                where: {
+                                  UserId,
+                                  method: "w",
+                                },
+                              })
+                                .then((withdrawal) => {
+                                  info.withdrawal = withdrawal;
+                                  Premium.findOne({
+                                    where: {
+                                      UserId,
+                                    },
+                                    attributes: [
+                                      "status",
+                                      "startdate",
+                                      "enddate",
+                                    ],
+                                  })
+                                    .then((premiumstatus) => {
+                                      info.premiumstatus = premiumstatus;
+                                      Preference.findOne({
+                                        where: {
+                                          UserId,
+                                        },
+                                        attributes: [
+                                          "currencies",
+                                          "providers",
+                                          "notify",
+                                        ],
+                                      })
+                                        .then((preference) => {
+                                          info.preference = preference;
+                                          Payment.sum("amount", {
+                                            where: {
+                                              UserId,
+                                              status: "s",
+                                            },
+                                          })
+                                            .then((pay) => {
+                                              info.pay = pay;
+                                              Referral.count({
+                                                where: {
+                                                  referral: UserId,
+                                                },
+                                              })
+                                                .then((referralcount) => {
+                                                  info.referralcount =
+                                                    referralcount;
+                                                  ReferralView.findOne({
+                                                    where: {
+                                                      referredId: UserId,
+                                                    },
+                                                    attributes: [
+                                                      "referral",
+                                                      "referralid",
+                                                    ],
+                                                  })
+                                                    .then((referredby) => {
+                                                      info.referredby =
+                                                        referredby;
+                                                      return res.json(info);
+                                                    })
+                                                    .catch((err) =>
+                                                      res
+                                                        .status(404)
+                                                        .json(`pay ${err}`)
+                                                    );
+                                                })
+                                                .catch((err) =>
+                                                  res
+                                                    .status(404)
+                                                    .json(`pay ${err}`)
+                                                );
+                                            })
+                                            .catch((err) =>
+                                              res.status(404).json(`pay ${err}`)
+                                            );
+                                        })
+                                        .catch((err) =>
+                                          res.status(404).json(`pref ${err}`)
+                                        );
+                                    })
+                                    .catch((err) =>
+                                      res.status(404).json(`mium ${err}`)
+                                    );
+                                })
+                                .catch((err) =>
+                                  res.status(404).json(`t w ${err}`)
+                                );
+                            })
+                            .catch((err) => res.status(404).json(`t c ${err}`));
+                        })
+                        .catch((err) => res.status(404).json(`T d ${err}`));
+                    })
+                    .catch((err) => res.status(404).json(`b ${err}`));
+                })
+                .catch((err) => res.status(404).json(`S ${err}`));
+            }
+          }
+        })
+        .catch((err) => res.status(404).json(`U ${err}`)),
+    ]);
   }
 );
 

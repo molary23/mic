@@ -79,6 +79,8 @@ import {
   CLEAR_ADMIN_GET_A_BONUS,
   ADMIN_GET_AN_ADMIN,
   CLEAR_ADMIN_GET_AN_ADMIN,
+  ADMIN_GET_A_USER,
+  CLEAR_ADMIN_GET_A_USER,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -200,6 +202,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ADMIN_GET_A_BONUS };
   } else if (actionToClear === "get-admin") {
     return { type: CLEAR_ADMIN_GET_AN_ADMIN };
+  } else if (actionToClear === "get-user") {
+    return { type: CLEAR_ADMIN_GET_A_USER };
   }
 };
 
@@ -592,6 +596,22 @@ export const getAdmin = (id) => async (dispatch) => {
     let response = await axios.get(`/api/adminview/admin/:${id}`);
     const result = await dispatch({
       type: ADMIN_GET_AN_ADMIN,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const getUser = (id) => async (dispatch) => {
+  dispatch(setLoading());
+  dispatch(clearActions("get-user"));
+  try {
+    let response = await axios.get(`/api/adminview/user/:${id}`);
+    const result = await dispatch({
+      type: ADMIN_GET_A_USER,
       payload: response.data,
     });
     return result;

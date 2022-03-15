@@ -142,15 +142,16 @@ table {
   .status-info {
     font-size: 30px;
   }
-  .active-status span {
-    color: #04c734;
-  }
-  .inactive-status span {
-    color: #dd1010;
-  }
-  .new-status {
-    color: #06c2f7;
-  }
+}
+
+.active-status span {
+  color: #04c734;
+}
+.inactive-status span {
+  color: #dd1010;
+}
+.new-status {
+  color: #06c2f7;
 }
 
 a.default-anchor {

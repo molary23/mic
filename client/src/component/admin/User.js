@@ -5,18 +5,31 @@ import PropTypes from "prop-types";
 
 import Spinner from "../../layout/Spinner";
 import ProgressBar from "../../layout/ProgressBar";
-import DateFormat from "../../layout/DateFormat";
-import Toast from "../../layout/Toast";
 
-import { ImCancelCircle } from "react-icons/im";
+import Toast from "../../layout/Toast";
+import CardDetails from "../../layout/CardDetails";
+
+import { GiWallet } from "react-icons/gi";
+import { BsBell } from "react-icons/bs";
 
 import { IoReturnUpBackOutline } from "react-icons/io5";
-import { FiCheckCircle } from "react-icons/fi";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
+
+import { GiMoneyStack, GiReceiveMoney, GiPayMoney } from "react-icons/gi";
+import { RiShieldUserLine } from "react-icons/ri";
+
+import {
+  MdOutlinePayments,
+  MdOutlineCreditCardOff,
+  MdCreditScore,
+} from "react-icons/md";
+import { BsCurrencyExchange } from "react-icons/bs";
 
 import {
   clearErrors,
   clearActions,
   clearAdminAction,
+  getUser,
 } from "../../action/adminAction";
 
 class User extends Component {
@@ -40,7 +53,8 @@ class User extends Component {
     });
 
     this.props.clearErrors();
-    this.props.getAdmin(id);
+    this.props.clearActions("get-admin");
+    this.props.getUser(id);
   }
 
   componentWillUnmount() {
@@ -57,53 +71,15 @@ class User extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    /*  if (
-      prevProps.admin.updatebonus !== this.props.admin.updatebonus &&
-      this.props.admin.updatebonus
+    if (
+      prevProps.errors !== this.props.errors &&
+      Object.keys(this.props.errors).length > 0
     ) {
-      this.afterUpdate();
-      this.setState({
-        isLoading: {},
-      });
-    }*/
+      // console.log(this.props.errors);
+    }
   }
 
   errorUpdate = () => {};
-
-  afterUpdate = () => {
-    const { userid, adminaction } = this.state;
-    this.setState({
-      text: "",
-      toast: true,
-      toasttext: `Bonus ${adminaction}.`,
-    });
-    this.props.clearAdminAction("update-bonus");
-    this.props.clearActions("get-bonus");
-    // this.props.getAdmin(userid);
-
-    setTimeout(() => {
-      this.setState({
-        toast: false,
-      });
-    }, 3000);
-  };
-
-  clickHandler = (value) => {
-    let check = window.confirm(
-      `Are you sure you want to ${value[0]} this Bonus?`
-    );
-    if (check) {
-      // this.props.updateBonus({ action: value[0], id: value[1] });
-      this.setState({
-        isLoading: {
-          [value[0]]: true,
-        },
-        adminaction: `${value[0]}d`,
-      });
-    } else {
-      return false;
-    }
-  };
 
   render() {
     const { toasttext, toast, isLoading } = this.state;
@@ -113,32 +89,48 @@ class User extends Component {
       notAllowed = false;
     const { admin } = this.props,
       { loading } = admin;
-    let adm, admininfo, currencycount, signalcount, followerscount;
+    let user,
+      sub,
+      bonus,
+      debit,
+      credit,
+      withdrawal,
+      premiumstatus,
+      preference,
+      pay,
+      referralcount,
+      currencies,
+      providers,
+      referredby,
+      notify;
 
-    if (admin.getadmin === null || loading) {
+    if (admin.getuser === null || loading) {
       loader = true;
       load = true;
-    } else if (admin.getadmin.user !== null && !loading) {
+    } else if (admin.getuser.user !== null && !loading) {
       loader = false;
       load = false;
-      adm = admin.getadmin;
-      admininfo = adm.user;
-      if (admininfo.level === 3) {
-        currencycount = adm.currencycount;
-      } else if (admininfo.level === 2) {
-        signalcount = adm.signalcount;
-        followerscount = adm.followerscount;
-      }
-    } else if (admin.getadmin.user === null && !loading) {
+      user = admin.getuser.user;
+      sub = admin.getuser.sub;
+      bonus = admin.getuser.bonus ?? 0;
+      debit = admin.getuser.debit ?? 0;
+      credit = admin.getuser.credit ?? 0;
+      withdrawal = admin.getuser.withdrawal ?? 0;
+      premiumstatus = admin.getuser.premiumstatus;
+      preference = admin.getuser.preference;
+      currencies = preference.currencies;
+      providers = preference.providers;
+      notify = preference.notify;
+      pay = admin.getuser.pay ?? 0;
+      referralcount = admin.getuser.referralcount;
+      referredby = admin.getuser.referredby;
+    } else if (admin.getuser.user === null && !loading) {
       loader = false;
       load = false;
       noRecord = true;
       notAllowed = "There is no User with the specified ID";
     }
 
-    if (isLoading.approve || isLoading.reject) {
-      loader = true;
-    }
     return (
       <div>
         {loader && <ProgressBar />}
@@ -149,147 +141,277 @@ class User extends Component {
             {noRecord ? (
               <p className="no-records">
                 {notAllowed}. Go{" "}
-                <Link to="/admin/earnings">
+                <Link to="/admin/users">
                   Back <IoReturnUpBackOutline />
                 </Link>
               </p>
             ) : (
-              <div className="bonus-card card">
+              <div className="view-card card">
                 <div className="page-dash-title mb-4">
-                  <h1>Admin Details</h1>
+                  <h1>User Details</h1>
                 </div>
                 <div className="row">
                   <div className="col-md-6 col-sm-12">
-                    <div className="bonus-info-card">
-                      <h3>Personal Info</h3>
-                      <div className="card-line-details">
-                        <div className="card-label">Last Name</div>
-                        <div className="card-value">
-                          {admininfo.Profile !== null &&
-                            admininfo.Profile.firstname}
-                        </div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">First Name</div>
-                        <div className="card-value">
-                          {admininfo.Profile !== null &&
-                            admininfo.Profile.lastname}
-                        </div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">Email</div>
-                        <div className="card-value">{admininfo.email}</div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">Username</div>
-                        <div className="card-value">{admininfo.username}</div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">Phone</div>
-                        <div className="card-value">{admininfo.phone}</div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">Status</div>
-                        <div className="card-value">
-                          {admininfo.status === "a" && (
+                    <h3>Personal Info</h3>
+                    <CardDetails
+                      {...{
+                        label: "last name",
+                        value: `${
+                          user.Profile !== null ? user.Profile.lastname : ""
+                        } `,
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: "First Name",
+                        value: `${
+                          user.Profile !== null ? user.Profile.firstname : ""
+                        } `,
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: "email",
+                        value: user.email,
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: "username",
+                        value: user.username,
+                      }}
+                    />
+                    {}
+                    <CardDetails
+                      {...{
+                        label: "phone number",
+                        value: user.phone,
+                      }}
+                    />
+                    {premiumstatus.status === "n" && (
+                      <CardDetails
+                        {...{
+                          label: "premium status",
+                          value: (
+                            <div>
+                              <span className="new-status status-info">
+                                <span>&bull;</span>
+                              </span>
+                              new
+                            </div>
+                          ),
+                        }}
+                      />
+                    )}
+                    {premiumstatus.status === "i" && (
+                      <CardDetails
+                        {...{
+                          label: "premium status",
+                          value: (
+                            <div>
+                              <span className="inactive-status status-info">
+                                <span>&bull;</span>
+                              </span>
+                              inactive
+                            </div>
+                          ),
+                        }}
+                      />
+                    )}
+                    {premiumstatus.status === "a" && (
+                      <CardDetails
+                        {...{
+                          label: "premium status",
+                          value: (
                             <div>
                               <span className="active-status status-info">
                                 <span>&bull;</span>
                               </span>
                               active
                             </div>
-                          )}
-                          {admininfo.status === "i" && (
-                            <div>
-                              <span className="inactive-status status-info">
-                                <span>&bull;</span>
-                              </span>
-                              deactivated
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">joined on</div>
-                        <div className="card-value">
-                          <DateFormat date={admininfo.createdAt} />
-                        </div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">Role</div>
-                        <div className="card-value">
-                          {admininfo.level === 3
-                            ? "super admin"
-                            : "signal provider"}
-                        </div>
-                      </div>
-                    </div>
+                          ),
+                        }}
+                      />
+                    )}
+                    {(premiumstatus.status === "n" ||
+                      premiumstatus.status === "i") && (
+                      <CardDetails
+                        {...{
+                          label: "last subscription expiry date",
+                          value: new Date(premiumstatus.enddate).toDateString(),
+                        }}
+                      />
+                    )}
+                    {premiumstatus.status === "a" && (
+                      <CardDetails
+                        {...{
+                          label: "next subscription date",
+                          value: new Date(premiumstatus.enddate).toDateString(),
+                        }}
+                      />
+                    )}
+                    {referredby !== null && (
+                      <CardDetails
+                        {...{
+                          label: "referred by",
+                          value: (
+                            <a href={`/admin/user/:${referredby.referralid}`}>
+                              {referredby.referral}
+                            </a>
+                          ),
+                        }}
+                      />
+                    )}
                   </div>
-                  <div className="col-md-6 col-sm-12">
-                    <div className="payer-info-card">
-                      <h3>Job Info</h3>
-                      {admininfo.level === 3 && (
-                        <div className="bonus-from">
-                          <div className="card-label">
-                            currency pair created
-                          </div>
-                          <div className="card-value">{currencycount}</div>
-                        </div>
-                      )}
-                      {admininfo.level === 2 && (
-                        <div className="card-line-details">
-                          <div className="card-label">signals created</div>
-                          <div className="card-value">{signalcount}</div>
-                        </div>
-                      )}
-                      {admininfo.level === 2 && (
-                        <div className="card-line-details">
-                          <div className="card-label">number of followerss</div>
-                          <div className="card-value">{followerscount}</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
 
-                <div className="bonus-action">
-                  <div className="row">
-                    {admininfo.status === "i" && (
-                      <div className="col-6">
-                        <div className="d-grid">
-                          <button
-                            type="button"
-                            className="btn default-btn btn-lg btn-block"
-                            onClick={() =>
-                              this.clickHandler(["approve", admininfo.bonusid])
-                            }
+                  <div className="col-md-6 col-sm-12">
+                    <h3>Activity Info</h3>
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <AiOutlineUsergroupAdd /> referral count
+                          </span>
+                        ),
+                        value: referralcount,
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <MdOutlinePayments /> lifetime subscriptions
+                          </span>
+                        ),
+                        value: sub,
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <GiPayMoney /> lifetime payments
+                          </span>
+                        ),
+                        value: (
+                          <Link
+                            to={`/admin/payments?search=${user.username}&status=s`}
                           >
-                            Approve <FiCheckCircle />
-                            {isLoading.approve && (
-                              <span className="spinner-border spinner-border-sm ms-2"></span>
-                            )}
-                          </button>
-                        </div>
-                      </div>
+                            {pay.toFixed(2)}
+                          </Link>
+                        ),
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <GiWallet /> lifetime earnings
+                          </span>
+                        ),
+                        value: bonus.toFixed(2),
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <MdOutlineCreditCardOff /> lifetime debits
+                          </span>
+                        ),
+                        value: debit.toFixed(2),
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <MdCreditScore /> lifetime credits
+                          </span>
+                        ),
+                        value: credit.toFixed(2),
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <GiMoneyStack /> balance
+                          </span>
+                        ),
+                        value: `${(credit - debit).toFixed(2)}`,
+                      }}
+                    />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <GiReceiveMoney /> lifetime withdrawal
+                          </span>
+                        ),
+                        value: withdrawal.toFixed(2),
+                      }}
+                    />
+                    {currencies !== null ? (
+                      <CardDetails
+                        {...{
+                          label: (
+                            <span>
+                              <BsCurrencyExchange /> following
+                            </span>
+                          ),
+                          value: `${currencies.length} currency pair${
+                            currencies.length > 1 ? "s" : ""
+                          }`,
+                        }}
+                      />
+                    ) : (
+                      <CardDetails
+                        {...{
+                          label: (
+                            <span>
+                              <BsCurrencyExchange /> following
+                            </span>
+                          ),
+                          value: "all currency  pairs",
+                        }}
+                      />
                     )}
-                    {admininfo.status === "a" && (
-                      <div className="col-6">
-                        <div className="d-grid">
-                          <button
-                            type="button"
-                            className="btn reject-btn btn-lg btn-block"
-                            onClick={() =>
-                              this.clickHandler(["reject", admininfo.bonusid])
-                            }
-                          >
-                            Reject <ImCancelCircle />
-                            {isLoading.reject && (
-                              <span className="spinner-border spinner-border-sm ms-2"></span>
-                            )}
-                          </button>
-                        </div>
-                      </div>
+                    {providers !== null ? (
+                      <CardDetails
+                        {...{
+                          label: (
+                            <span>
+                              <RiShieldUserLine /> following
+                            </span>
+                          ),
+                          value: `${providers.length} signal provider${
+                            providers.length > 1 ? "s" : ""
+                          }`,
+                        }}
+                      />
+                    ) : (
+                      <CardDetails
+                        {...{
+                          label: (
+                            <span>
+                              <RiShieldUserLine /> following
+                            </span>
+                          ),
+                          value: "all signal providers",
+                        }}
+                      />
                     )}
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <BsBell /> email notification
+                          </span>
+                        ),
+                        value: `${notify === "y" ? "on" : "off"}`,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -305,7 +427,7 @@ class User extends Component {
 User.propTypes = {
   clearErrors: PropTypes.func,
   clearActions: PropTypes.func.isRequired,
-
+  getUser: PropTypes.func.isRequired,
   clearAdminAction: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
@@ -321,4 +443,5 @@ export default connect(mapStateToProps, {
   clearErrors,
   clearActions,
   clearAdminAction,
+  getUser,
 })(User);

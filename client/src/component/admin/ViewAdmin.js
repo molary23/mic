@@ -140,7 +140,7 @@ class ViewAdmin extends Component {
       loader = false;
       load = false;
       noRecord = true;
-      notAllowed = "There is no User with the specified ID";
+      notAllowed = "There is no Admin with the specified ID";
     }
 
     if (isLoading.approve || isLoading.reject) {
@@ -161,7 +161,7 @@ class ViewAdmin extends Component {
                 </Link>
               </p>
             ) : (
-              <div className="bonus-card card">
+              <div className="view-card card">
                 <div className="page-dash-title mb-4">
                   <h1>Admin Details</h1>
                 </div>
@@ -169,20 +169,27 @@ class ViewAdmin extends Component {
                   <div className="col-md-6 col-sm-12">
                     <div className="bonus-info-card">
                       <h3>Personal Info</h3>
-                      <div className="card-line-details">
-                        <div className="card-label">Last Name</div>
-                        <div className="card-value">
-                          {admininfo.Profile !== null &&
-                            admininfo.Profile.firstname}
-                        </div>
-                      </div>
-                      <div className="card-line-details">
-                        <div className="card-label">First Name</div>
-                        <div className="card-value">
-                          {admininfo.Profile !== null &&
-                            admininfo.Profile.lastname}
-                        </div>
-                      </div>
+
+                      <CardDetails
+                        {...{
+                          label: "last name",
+                          value: `${
+                            admininfo.Profile !== null
+                              ? admininfo.Profile.lastname
+                              : ""
+                          } `,
+                        }}
+                      />
+                      <CardDetails
+                        {...{
+                          label: "First Name",
+                          value: `${
+                            admininfo.Profile !== null
+                              ? admininfo.Profile.firstname
+                              : ""
+                          } `,
+                        }}
+                      />
                       <CardDetails
                         {...{ label: "Email", value: admininfo.email }}
                       />
@@ -239,37 +246,33 @@ class ViewAdmin extends Component {
                           }`,
                         }}
                       />
-                      <div className="card-line-details">
-                        <div className="card-label">Role</div>
-                        <div className="card-value">
-                          {admininfo.level === 3
-                            ? "super admin"
-                            : "signal provider"}
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <div className="col-md-6 col-sm-12">
                     <div className="payer-info-card">
                       <h3>Job Info</h3>
                       {admininfo.level === 3 && (
-                        <div className="bonus-from">
-                          <div className="card-label">
-                            currency pair created
-                          </div>
-                          <div className="card-value">{currencycount}</div>
-                        </div>
+                        <CardDetails
+                          {...{
+                            label: "currency pair created",
+                            value: currencycount,
+                          }}
+                        />
                       )}
                       {admininfo.level === 2 && (
-                        <div className="card-line-details">
-                          <div className="card-label">signals created</div>
-                          <div className="card-value">{signalcount}</div>
-                        </div>
-                      )}
-                      {admininfo.level === 2 && (
-                        <div className="card-line-details">
-                          <div className="card-label">number of followerss</div>
-                          <div className="card-value">{followerscount}</div>
+                        <div>
+                          <CardDetails
+                            {...{
+                              label: "signals created",
+                              value: signalcount,
+                            }}
+                          />
+                          <CardDetails
+                            {...{
+                              label: "number of followers",
+                              value: followerscount,
+                            }}
+                          />
                         </div>
                       )}
                     </div>

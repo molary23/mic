@@ -703,3 +703,27 @@ ul.list-group.list-group-horizontal {
   min-height: 150px;
   padding: 20px;
 }
+
+/* Admin Views */
+.view-card {
+  padding: 20px;
+
+  .card-line-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-bottom: 1px dashed $shadow;
+    padding: 15px 0px 5px;
+    text-transform: capitalize;
+  }
+  .card-value {
+    justify-self: flex-end;
+  }
+  svg {
+    margin-right: 5px;
+  }
+
+  .status-info {
+    font-size: 18px;
+    margin-right: 5px;
+  }
+}

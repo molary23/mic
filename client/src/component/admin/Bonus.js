@@ -7,6 +7,7 @@ import Spinner from "../../layout/Spinner";
 import ProgressBar from "../../layout/ProgressBar";
 import DateFormat from "../../layout/DateFormat";
 import Toast from "../../layout/Toast";
+import CardDetails from "../../layout/CardDetails";
 
 import { ImCancelCircle } from "react-icons/im";
 
@@ -150,7 +151,7 @@ class Bonus extends Component {
                 </Link>
               </p>
             ) : (
-              <div className="bonus-card card">
+              <div className="view-card card">
                 <div className="page-dash-title mb-4">
                   <h1>Bonus Details</h1>
                 </div>
@@ -158,109 +159,161 @@ class Bonus extends Component {
                   <div className="col-md-6 col-sm-12">
                     <div className="bonus-info-card">
                       <h3>Bonus Info</h3>
-                      <div className="bonus-to">
-                        <div className="card-label">Bonus to</div>
-                        <div className="card-value">{bonusinfo.username}</div>
-                      </div>
-                      <div className="amount-payer">
-                        <div className="card-label">Amount</div>
-                        <div className="card-value">{bonusinfo.amount}</div>
-                      </div>
-                      <div className="bonus-status">
-                        <div className="card-label">Status</div>
-                        <div className="card-value">
-                          {bonusinfo.status === "p" && (
-                            <div>
-                              <span className="new-status status-info">
-                                <span>&bull;</span>
-                              </span>
-                              pending
-                            </div>
-                          )}
-                          {bonusinfo.status === "a" && (
-                            <div>
-                              <span className="active-status status-info">
-                                <span>&bull;</span>
-                              </span>
-                              approved
-                            </div>
-                          )}
-                          {bonusinfo.status === "r" && (
-                            <div>
-                              <span className="inactive-status status-info">
-                                <span>&bull;</span>
-                              </span>
-                              rejected
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="bonus-date">
-                        <div className="card-label">date created</div>
-                        <div className="card-value">
-                          <DateFormat date={bonusinfo.createdAt} />
-                        </div>
-                      </div>
+                      <CardDetails
+                        {...{
+                          label: "Bonus to",
+                          value: bonusinfo.username,
+                        }}
+                      />
+                      <CardDetails
+                        {...{
+                          label: "Amount",
+                          value: bonusinfo.amount,
+                        }}
+                      />
+                      <CardDetails
+                        {...{
+                          label: "Amount",
+                          value: bonusinfo.amount,
+                        }}
+                      />
+
                       {bonusinfo.status === "p" && (
-                        <div className="bonus-date">
-                          <div className="card-label">
-                            Date{" "}
-                            {bonusinfo.status === "a" ? "approved" : "rejected"}
-                          </div>
-                          <div className="card-value">
-                            <DateFormat date={bonusinfo.updatedAt} />
-                          </div>
-                        </div>
+                        <CardDetails
+                          {...{
+                            label: "status",
+                            value: (
+                              <div>
+                                <span className="new-status status-info">
+                                  <span>&bull;</span>
+                                </span>
+                                pending
+                              </div>
+                            ),
+                          }}
+                        />
+                      )}
+                      {bonusinfo.status === "a" && (
+                        <CardDetails
+                          {...{
+                            label: "status",
+                            value: (
+                              <div>
+                                <span className="active-status status-info">
+                                  <span>&bull;</span>
+                                </span>
+                                approved
+                              </div>
+                            ),
+                          }}
+                        />
+                      )}
+                      {bonusinfo.status === "r" && (
+                        <CardDetails
+                          {...{
+                            label: "status",
+                            value: (
+                              <div>
+                                <span className="inactive-status status-info">
+                                  <span>&bull;</span>
+                                </span>
+                                rejected
+                              </div>
+                            ),
+                          }}
+                        />
+                      )}
+
+                      <CardDetails
+                        {...{
+                          label: "date created",
+                          value: <DateFormat date={bonusinfo.createdAt} />,
+                        }}
+                      />
+
+                      <CardDetails
+                        {...{
+                          label: `date ${
+                            bonusinfo.status === "a" ? "approved" : "rejected"
+                          }`,
+                          value: <DateFormat date={bonusinfo.updatedAt} />,
+                        }}
+                      />
+                      {bonusinfo.status !== "p" && (
+                        <CardDetails
+                          {...{
+                            label: `date ${
+                              bonusinfo.status === "a" ? "approved" : "rejected"
+                            }`,
+                            value: <DateFormat date={bonusinfo.updatedAt} />,
+                          }}
+                        />
                       )}
                     </div>
                   </div>
                   <div className="col-md-6 col-sm-12">
                     <div className="payer-info-card">
                       <h3>Payment Info</h3>
-                      <div className="bonus-from">
-                        <div className="card-label">bonus from</div>
-                        <div className="card-value">{bonusinfo.payer}</div>
-                      </div>
-                      <div className="pay-amount">
-                        <div className="card-label">amount paid</div>
-                        <div className="card-value">{pay.amount}</div>
-                      </div>
-                      <div className="pay-gateway">
-                        <div className="card-label">payment medium</div>
-                        <div className="card-value">
-                          {pay.gateway === "c" ? "crypto" : "bank"}
-                        </div>
-                      </div>
-                      <div className="pay-status">
-                        <div className="card-label">payment status</div>
-                        <div className="card-value">
-                          {pay.status === "s" ? (
-                            <div>
-                              <span className="active-status status-info">
-                                <span>&bull;</span>
-                              </span>
-                              successful
-                            </div>
-                          ) : (
-                            <div>
-                              <span className="inactive-status status-info">
-                                <span>&bull;</span>
-                              </span>
-                              failed
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <div className="pay-reference">
-                        <div className="card-label">payment reference</div>
-                        <div className="card-value">{pay.reference}</div>
-                      </div>
-                      <div className="pay-date">
-                        <div className="card-label">date of payment </div>
-                        <div className="card-value">
-                          <DateFormat date={pay.createdAt} />
-                        </div>
-                      </div>
+                      <CardDetails
+                        {...{
+                          label: "bonus from",
+                          value: bonusinfo.payer,
+                        }}
+                      />
+                      <CardDetails
+                        {...{
+                          label: "amount paid",
+                          value: pay.amount,
+                        }}
+                      />
+                      <CardDetails
+                        {...{
+                          label: "payment medium",
+                          value: `${pay.gateway ? "crypto" : "bank"}`,
+                        }}
+                      />
+
+                      {pay.status === "s" ? (
+                        <CardDetails
+                          {...{
+                            label: "payment status",
+                            value: (
+                              <div>
+                                <span className="active-status status-info">
+                                  <span>&bull;</span>
+                                </span>
+                                successful
+                              </div>
+                            ),
+                          }}
+                        />
+                      ) : (
+                        <CardDetails
+                          {...{
+                            label: "payment status",
+                            value: (
+                              <div>
+                                <span className="inactive-status status-info">
+                                  <span>&bull;</span>
+                                </span>
+                                failed
+                              </div>
+                            ),
+                          }}
+                        />
+                      )}
+                      <CardDetails
+                        {...{
+                          label: "payment reference",
+                          value: pay.reference,
+                        }}
+                      />
+                      <CardDetails
+                        {...{
+                          label: "date of payment",
+                          value: pay.createdAt,
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

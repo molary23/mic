@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import jwtDecode from "jwt-decode";
@@ -12,12 +12,16 @@ import logo from "../asset/images/logo.png";
 
 import Dropdown from "./Dropdown";
 
+import { logoutUser } from "../action/authAction";
+import { clearCurrentProfile } from "../action/profileAction";
+
 export class SubNav extends Component {
   state = {
     close: true,
     premiuminfo: "",
     userinfo:
       this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
+    navigate: false,
   };
 
   componentDidMount() {
@@ -26,6 +30,20 @@ export class SubNav extends Component {
         premiuminfo:
           this.props.user.premium ??
           JSON.parse(localStorage.getItem("premium")),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.errors !== this.props.errors &&
+      this.props.errors === "unauthorized"
+    ) {
+      this.props.logoutUser();
+      // props.clearActions();
+      this.props.clearCurrentProfile();
+      this.setState({
+        navigate: true,
       });
     }
   }
@@ -43,7 +61,7 @@ export class SubNav extends Component {
   };
 
   render() {
-    const { premiuminfo, userinfo } = this.state;
+    const { premiuminfo, userinfo, navigate } = this.state;
     const { auth } = this.props;
 
     return (
@@ -117,6 +135,7 @@ export class SubNav extends Component {
             </div>
           </div>
         </nav>
+        {navigate && <Navigate to={"/"} replace={true} />}
       </div>
     );
   }
@@ -126,12 +145,20 @@ SubNav.propTypes = {
   auth: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  logoutUser: PropTypes.func.isRequired,
+  clearCurrentProfile: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
   profile: state.profile,
+  errors: state.errors,
 });
 
-export default connect(mapStateToProps, { getUserProfile })(SubNav);
+export default connect(mapStateToProps, {
+  getUserProfile,
+  logoutUser,
+  clearCurrentProfile,
+})(SubNav);

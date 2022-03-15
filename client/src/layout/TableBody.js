@@ -489,8 +489,8 @@ function TableBody(props) {
             </Link>
           </td>
 
-          <td>{item.status}</td>
-          <td>{item.gateway}</td>
+          <td>{item.status === "s" ? "successful" : "failed"}</td>
+          <td>{item.gateway === "c" ? "crypto" : "bank"}</td>
           <td className="td-shorter">{item.reference}</td>
           <td>
             <DateFormat date={item.createdAt} />
@@ -562,7 +562,11 @@ function TableBody(props) {
           <td>{i + 1}</td>
           <td>{item.fullname}</td>
           <td className="td-lower">{item.email}</td>
-          <td className="td-lower">{item.username}</td>
+          <td className="td-lower">
+            <Link title="View User" to={`/admin/user/:${item.userid}`}>
+              {item.username}
+            </Link>
+          </td>
           <td>{item.phone}</td>
           <td>
             {item.userstatus === "a" ? (
@@ -591,19 +595,6 @@ function TableBody(props) {
                 <span>&bull;</span>
               </span>
             )}
-          </td>
-          <td>
-            <div className="action-buttons">
-              <Link
-                type="button"
-                className="btn btn-info btn-sm"
-                data-id={i}
-                title="View User"
-                to={`/admin/user/:${item.userid}`}
-              >
-                <FaRegEye />
-              </Link>
-            </div>
           </td>
         </tr>
       );

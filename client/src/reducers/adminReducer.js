@@ -75,6 +75,8 @@ import {
   CLEAR_ADMIN_GET_A_BONUS,
   ADMIN_GET_AN_ADMIN,
   CLEAR_ADMIN_GET_AN_ADMIN,
+  ADMIN_GET_A_USER,
+  CLEAR_ADMIN_GET_A_USER,
 } from "../action/types";
 
 const initialState = {
@@ -124,8 +126,6 @@ const initialState = {
   setprofile: false,
   setpass: false,
   addwallet: false,
-  getuser: null,
-  getsub: null,
   forums: [],
   forumscount: 0,
   addforum: false,
@@ -135,6 +135,7 @@ const initialState = {
   deletereply: false,
   getbonus: null,
   getadmin: null,
+  getuser: null,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -415,6 +416,13 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case ADMIN_GET_A_USER:
+      return {
+        ...state,
+        getuser: action.payload,
+        loading: false,
+        fetching: true,
+      };
     case CLEAR_SUBSCRIPTIONS_ACTION: {
       return { ...state, sub: [], subCount: 0, fetching: false };
     }
@@ -519,6 +527,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ADMIN_GET_AN_ADMIN: {
       return { ...state, getadmin: null };
+    }
+    case CLEAR_ADMIN_GET_A_USER: {
+      return { ...state, getuser: null };
     }
     case CLEAR_ADMIN_REPLY: {
       return { ...state, adminreply: false };
