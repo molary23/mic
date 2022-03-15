@@ -37,7 +37,6 @@ import Pagination from "../../util/Pagination";
 class Forums extends Component {
   state = {
     sender: "user-forums",
-    active: 0,
     limit: Pagination.limit,
     offset: Pagination.offset,
     numOfPages: Pagination.numberofpages,
@@ -238,7 +237,7 @@ class Forums extends Component {
       modal,
     } = this.state;
 
-    const { user, userSearch } = this.props;
+    const { user, userSearch, auth } = this.props;
     const { loading, fetching } = user;
     const { searching } = userSearch;
     const count = user.forumscount,
@@ -270,6 +269,8 @@ class Forums extends Component {
       getLoad,
       forumcount,
     });
+    let UserId = auth.user.id,
+      level = auth.user.level;
     return (
       <div>
         {loader && <ProgressBar />}
@@ -335,6 +336,8 @@ class Forums extends Component {
               sender={sender}
               forum={!showSearch ? main : searchMain}
               onClick={this.clickhandler}
+              user={UserId}
+              level={level}
             />
           </div>
         )}

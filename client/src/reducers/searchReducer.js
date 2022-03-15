@@ -27,6 +27,8 @@ import {
   CLEAR_SEARCH_WITHDRAWALS_ACTION,
   GET_SEARCH_WALLETS,
   CLEAR_SEARCH_WALLETS_ACTION,
+  ADMIN_SEARCH_FORUM,
+  CLEAR_ADMIN_SEARCH_FORUM,
 } from "../action/types";
 
 const initialState = {
@@ -60,6 +62,8 @@ const initialState = {
   withdrawals: [],
   wallets: [],
   walletcount: 0,
+  forumscount: 0,
+  forums: [],
 };
 
 export default function searchReducer(state = initialState, action) {
@@ -190,6 +194,14 @@ export default function searchReducer(state = initialState, action) {
         loading: false,
         searching: true,
       };
+    case ADMIN_SEARCH_FORUM:
+      return {
+        ...state,
+        forumscount: action.payload.shift(),
+        forums: [...state.forums, ...action.payload],
+        loading: false,
+        searching: true,
+      };
     case CLEAR_SEARCH_SUBSCRIPTIONS_ACTION:
       return {
         ...state,
@@ -281,6 +293,9 @@ export default function searchReducer(state = initialState, action) {
         walletcount: 0,
         searching: false,
       };
+    case CLEAR_ADMIN_SEARCH_FORUM: {
+      return { ...state, forums: [], forumscount: 0, searching: false };
+    }
     default:
       return state;
   }

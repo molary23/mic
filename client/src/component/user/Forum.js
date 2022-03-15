@@ -28,6 +28,7 @@ class Forum extends Component {
     text: "",
     sender: "user-forum",
     error: {},
+    servererror: {},
     url: new URL(window.location),
     forumId: null,
     toast: null,
@@ -51,7 +52,7 @@ class Forum extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.errors) {
-      update.error = nextProps.errors;
+      update.servererror = nextProps.errors;
     }
 
     return update;
@@ -62,7 +63,14 @@ class Forum extends Component {
       prevProps.user.userreply !== this.props.user.userreply &&
       this.props.user.userreply
     ) {
-      this.afterUpdate();
+      this.afterUpdate("added");
+    }
+
+    if (
+      prevProps.user.deletereply !== this.props.user.deletereply &&
+      this.props.user.deletereply
+    ) {
+      this.afterUpdate("deleted");
     }
     if (prevProps.errors.allow !== this.props.errors.allow) {
       this.errorUpdate();
@@ -70,10 +78,10 @@ class Forum extends Component {
   }
 
   errorUpdate = () => {
-    const { forumId, error } = this.state;
+    const { forumId, servererror } = this.state;
     this.setState({
       toast: true,
-      toasttext: error.allow,
+      toasttext: servererror.allow,
     });
 
     setTimeout(() => {
@@ -85,12 +93,12 @@ class Forum extends Component {
     this.props.getForum(forumId);
   };
 
-  afterUpdate = () => {
+  afterUpdate = (text) => {
     const { forumId } = this.state;
     this.setState({
       text: "",
       toast: true,
-      toasttext: `Reply added.`,
+      toasttext: `Reply ${text}.`,
     });
     this.props.clearActions("get-forum");
     this.props.getForum(forumId);
@@ -127,7 +135,12 @@ class Forum extends Component {
   };
 
   clickHandler = (value) => {
-    this.props.deleteReply(value);
+    let check = window.confirm(`Are you sure you want to delete this reply?`);
+    if (check) {
+      this.props.deleteReply(value);
+    } else {
+      return false;
+    }
   };
 
   render() {
@@ -138,7 +151,7 @@ class Forum extends Component {
       notAllowed = false;
     const { user, errors, auth } = this.props,
       { loading } = user;
-    let forum, post, reply, UserId;
+    let forum, post, reply, UserId, level;
 
     console.log(user.getforum);
 
@@ -149,7 +162,7 @@ class Forum extends Component {
       loader = true;
       load = true;
     } else if (
-      user.getforum !== null &&
+      user.getforum.forum !== null &&
       !loading &&
       !Object.keys(errors).includes("user")
     ) {
@@ -159,11 +172,17 @@ class Forum extends Component {
       post = forum.forum;
       reply = forum.reply;
       UserId = auth.user.id;
+      level = auth.user.level;
     } else if (user.getforum === null && Object.keys(errors).includes("user")) {
       loader = false;
       load = false;
       noRecord = true;
       notAllowed = errors.user;
+    } else if (user.getforum.forum === null && !loading) {
+      loader = false;
+      load = false;
+      noRecord = true;
+      notAllowed = "There is no Discussion with the specified ID";
     }
 
     return (
@@ -206,12 +225,13 @@ class Forum extends Component {
                     </div>
 
                     <p className="mt-1">{post.text}</p>
+                    <span>{reply.length} replies</span>
                   </div>
                 </div>
                 <div className="replies-card">
-                  {reply.length > 1 ? (
+                  {reply.length >= 1 ? (
                     <ReplyCard
-                      {...{ sender, UserId, reply }}
+                      {...{ sender, UserId, reply, level }}
                       onClick={this.clickHandler}
                     />
                   ) : (

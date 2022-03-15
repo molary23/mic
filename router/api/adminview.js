@@ -15,7 +15,10 @@ const express = require("express"),
   Wallet = require("../../db/models/Wallet"),
   User = require("../../db/models/User"),
   Announcement = require("../../db/models/Announcement"),
+  Forum = require("../../db/models/Forum"),
+  ForumReply = require("../../db/models/ForumReply"),
   ReferralView = require("../../db/models/ReferralView"),
+  ForumView = require("../../db/models/ForumView"),
   Transaction = require("../../db/models/Transaction"),
   TransactionView = require("../../db/models/TransactionView"),
   ProviderView = require("../../db/models/ProviderView"),
@@ -1991,4 +1994,233 @@ router.post(
       .catch((err) => res.status(404).json(err));
   }
 );
+
+/*
+@route GET api/adminview/forums
+@desc Admin View all forums
+@access private
+*/
+
+router.post(
+  "/forums",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let limit = null,
+      gateway = null,
+      status = null,
+      search = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.right) right = req.body.right;
+    if (req.body.status) status = req.body.status;
+    if (req.body.search) search = req.body.search;
+    let where = {};
+    if (req.body.search !== undefined) {
+      const searchTerms = req.body.search;
+      let searchArray = searchTerms.split("+");
+
+      if (searchArray.length > 1) {
+        let newSearchArray = [],
+          newSearchObj = {};
+        for (let i = 0; i < searchArray.length; i++) {
+          newSearchObj = {
+            [Op.or]: [
+              {
+                title: { [Op.substring]: searchArray[i] },
+              },
+              {
+                creator: { [Op.substring]: searchArray[i] },
+              },
+
+              {
+                text: { [Op.substring]: searchArray[i] },
+              },
+            ],
+          };
+          newSearchArray.push(newSearchObj);
+        }
+
+        if (req.body.right && req.body.status === undefined) {
+          where = {
+            [Op.and]: newSearchArray,
+
+            status: req.body.status,
+          };
+        } else if (req.body.status === undefined && req.body.right) {
+          where = {
+            [Op.and]: newSearchArray,
+
+            right: req.body.right,
+          };
+        } else if (req.body.status && req.body.right) {
+          where = {
+            [Op.and]: newSearchArray,
+
+            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
+          };
+        } else {
+          where = {
+            [Op.and]: newSearchArray,
+          };
+        }
+      } else {
+        let search = searchArray[0];
+        if (req.body.status && req.body.right === undefined) {
+          where = {
+            [Op.or]: [
+              {
+                title: { [Op.substring]: search },
+              },
+              {
+                creator: { [Op.substring]: search },
+              },
+
+              {
+                text: { [Op.substring]: search },
+              },
+            ],
+            status: req.body.status,
+          };
+        } else if (req.body.status === undefined && req.body.right) {
+          where = {
+            [Op.or]: [
+              {
+                title: { [Op.substring]: search },
+              },
+              {
+                creator: { [Op.substring]: search },
+              },
+
+              {
+                text: { [Op.substring]: search },
+              },
+            ],
+            right: req.body.right,
+          };
+        } else if (req.body.status && req.body.right) {
+          where = {
+            [Op.or]: [
+              {
+                title: { [Op.substring]: search },
+              },
+              {
+                creator: { [Op.substring]: search },
+              },
+
+              {
+                text: { [Op.substring]: search },
+              },
+            ],
+
+            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
+          };
+        } else {
+          where = {
+            [Op.or]: [
+              {
+                title: { [Op.substring]: search },
+              },
+              {
+                creator: { [Op.substring]: search },
+              },
+
+              {
+                text: { [Op.substring]: search },
+              },
+            ],
+          };
+        }
+      }
+    } else if (req.body.status && req.body.right === undefined) {
+      where = {
+        status: req.body.status,
+      };
+    } else if (req.body.status === undefined && req.body.right) {
+      where = {
+        right: req.body.right,
+      };
+    } else if (req.body.status && req.body.right) {
+      where = {
+        [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
+      };
+    } else {
+      where = {};
+    }
+
+    let result = [];
+    ForumView.findAndCountAll({
+      order: [
+        ["id", "Desc"],
+        ["status", "Asc"],
+      ],
+      limit,
+      offset,
+      where,
+    })
+      .then((entries) => {
+        const { count, rows } = entries;
+        result = [...[count], ...rows];
+        return res.json(result);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route GET api/adminview/forum/:id
+@desc Admin View forum
+@access private
+*/
+
+router.get(
+  "/forum/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let forumid = req.params.id.split(":")[1];
+
+    let post = {};
+    Forum.findByPk(forumid, {
+      include: [
+        {
+          model: User,
+          attributes: ["username"],
+          required: true,
+        },
+      ],
+    })
+      .then((forum) => {
+        post.forum = forum;
+        ForumReply.findAll({
+          where: {
+            ForumId: forumid,
+          },
+          include: [
+            {
+              model: User,
+              attributes: ["username"],
+              required: true,
+            },
+          ],
+        })
+          .then((reply) => {
+            post.reply = reply;
+            return res.json(post);
+          })
+          .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
 module.exports = router;

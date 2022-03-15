@@ -743,7 +743,7 @@ router.post(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    let action, forumid, userId;
+    let action, forumid, UserId;
     if (req.body.action) action = req.body.action;
     if (req.body.id) forumid = req.body.id;
     UserId = req.user.id;
@@ -776,6 +776,21 @@ router.post(
                 id: forumid,
               },
             })
+              .then(() => {
+                return res.json(true);
+              })
+              .catch((err) => res.status(404).json(err));
+          } else if (action === "public") {
+            Forum.update(
+              {
+                right: "p",
+              },
+              {
+                where: {
+                  id: forumid,
+                },
+              }
+            )
               .then(() => {
                 return res.json(true);
               })
@@ -817,7 +832,7 @@ router.post(
 
 /*
 @route POST api/user/delete/reply
-@desc User add reply
+@desc User delete reply
 @access private
 */
 

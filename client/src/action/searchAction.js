@@ -29,6 +29,8 @@ import {
   CLEAR_SEARCH_WITHDRAWALS_ACTION,
   GET_SEARCH_WALLETS,
   CLEAR_SEARCH_WALLETS_ACTION,
+  ADMIN_SEARCH_FORUM,
+  CLEAR_ADMIN_SEARCH_FORUM,
 } from "./types";
 
 export const searchContent = (content, searchData) => async (dispatch) => {
@@ -79,6 +81,9 @@ export const searchContent = (content, searchData) => async (dispatch) => {
   } else if (content === "wallets") {
     url = `${url}wallets`;
     type = GET_SEARCH_WALLETS;
+  } else if (content === "forums") {
+    url = `${url}forums`;
+    type = ADMIN_SEARCH_FORUM;
   }
 
   try {
@@ -129,6 +134,8 @@ export const clearSearchActions = (actionToClear) => {
     return { type: CLEAR_SEARCH_WITHDRAWALS_ACTION };
   } else if (actionToClear === "wallets") {
     return { type: CLEAR_SEARCH_WALLETS_ACTION };
+  } else if (actionToClear === "forums") {
+    return { type: CLEAR_ADMIN_SEARCH_FORUM };
   }
 };
 export const setLoading = () => {

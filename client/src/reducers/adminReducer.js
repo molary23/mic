@@ -59,6 +59,18 @@ import {
   CLEAR_UPDATE_WITHDRAWALS,
   ADMIN_ADD_WALLET,
   CLEAR_ADMIN_ADD_WALLET,
+  ADMIN_GET_FORUM,
+  CLEAR_ADMIN_GET_FORUM,
+  ADMIN_ADD_FORUM,
+  CLEAR_ADMIN_ADD_FORUM,
+  ADMIN_UPDATE_FORUM,
+  CLEAR_ADMIN_UPDATE_FORUM,
+  ADMIN_GET_A_FORUM,
+  CLEAR_ADMIN_GET_A_FORUM,
+  ADMIN_REPLY,
+  CLEAR_ADMIN_REPLY,
+  ADMIN_DELETE_REPLY,
+  CLEAR_ADMIN_DELETE_REPLY,
 } from "../action/types";
 
 const initialState = {
@@ -110,6 +122,13 @@ const initialState = {
   addwallet: false,
   getuser: null,
   getsub: null,
+  forums: [],
+  forumscount: 0,
+  addforum: false,
+  updateforum: false,
+  getforum: null,
+  adminreply: false,
+  deletereply: false,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -337,6 +356,45 @@ export default function adminReducer(state = initialState, action) {
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
+    case ADMIN_ADD_FORUM:
+      return {
+        ...state,
+        addforum: action.payload,
+        loading: false,
+      };
+    case ADMIN_UPDATE_FORUM:
+      return {
+        ...state,
+        updateforum: action.payload,
+        loading: false,
+      };
+    case ADMIN_REPLY:
+      return {
+        ...state,
+        adminreply: action.payload,
+        loading: false,
+      };
+    case ADMIN_DELETE_REPLY:
+      return {
+        ...state,
+        deletereply: action.payload,
+        loading: false,
+      };
+    case ADMIN_GET_FORUM:
+      return {
+        ...state,
+        forumscount: action.payload.shift(),
+        forums: [...state.forums, ...action.payload],
+        loading: false,
+        fetching: true,
+      };
+    case ADMIN_GET_A_FORUM:
+      return {
+        ...state,
+        getforum: action.payload,
+        loading: false,
+        fetching: true,
+      };
     case CLEAR_SUBSCRIPTIONS_ACTION: {
       return { ...state, sub: [], subCount: 0, fetching: false };
     }
@@ -423,6 +481,24 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ADMIN_ADD_WALLET: {
       return { ...state, addwallet: false };
+    }
+    case CLEAR_ADMIN_GET_FORUM: {
+      return { ...state, forums: [], forumscount: 0, fetching: false };
+    }
+    case CLEAR_ADMIN_ADD_FORUM: {
+      return { ...state, addforum: false };
+    }
+    case CLEAR_ADMIN_UPDATE_FORUM: {
+      return { ...state, updateforum: false };
+    }
+    case CLEAR_ADMIN_GET_A_FORUM: {
+      return { ...state, getforum: null };
+    }
+    case CLEAR_ADMIN_REPLY: {
+      return { ...state, adminreply: false };
+    }
+    case CLEAR_ADMIN_DELETE_REPLY: {
+      return { ...state, deletereply: false };
     }
     default:
       return state;

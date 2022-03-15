@@ -9,7 +9,7 @@ import DateFormat from "./DateFormat";
 import { Link } from "react-router-dom";
 
 function ForumCard(props) {
-  const { onClick, sender, forum } = props;
+  const { onClick, sender, forum, user, level } = props;
 
   const clickHandler = (value) => {
     onClick(value);
@@ -30,15 +30,17 @@ function ForumCard(props) {
               )}
             </span>
           </h3>
-          <div className="row">
-            <div className="col-md-2">
-              {item.right === "p" ? "From Knowledge base" : "Created by You"}
-            </div>
-            <div className="col-md-3">
-              <DateFormat date={item.createdAt} />
-            </div>
+          <div className="forum-time">
+            <DateFormat date={item.createdAt} />
           </div>
-
+          <div className="forum-from">
+            <span className="forum-right">
+              {item.right === "p" && "From Knowledge base"}
+            </span>
+            <span className="forum-by">
+              {item.UserId === user && "Created by You"}
+            </span>
+          </div>
           <p className="mt-1">{item.text}</p>
         </div>
         <div className="row">
@@ -51,7 +53,7 @@ function ForumCard(props) {
             <div className="forum-action">
               <Link
                 className="btn view-btn"
-                to={`/user/forum/:${item.id}`}
+                to={`/${level === 3 ? "admin" : "user"}/forum/:${item.id}`}
                 title="view discussion"
               >
                 <FaRegEye />
@@ -75,7 +77,7 @@ function ForumCard(props) {
                   <IoLockClosedOutline />
                 </button>
               )}
-              {sender === "admin-forums" && (
+              {sender === "admin-forums" && item.right !== "p" && (
                 <button
                   className="btn close-btn"
                   title="turn to knowledge base"

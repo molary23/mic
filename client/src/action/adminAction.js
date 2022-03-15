@@ -63,6 +63,18 @@ import {
   CLEAR_UPDATE_WITHDRAWALS,
   ADMIN_ADD_WALLET,
   CLEAR_ADMIN_ADD_WALLET,
+  ADMIN_GET_FORUM,
+  CLEAR_ADMIN_GET_FORUM,
+  ADMIN_ADD_FORUM,
+  CLEAR_ADMIN_ADD_FORUM,
+  ADMIN_UPDATE_FORUM,
+  CLEAR_ADMIN_UPDATE_FORUM,
+  ADMIN_GET_A_FORUM,
+  CLEAR_ADMIN_GET_A_FORUM,
+  ADMIN_REPLY,
+  CLEAR_ADMIN_REPLY,
+  ADMIN_DELETE_REPLY,
+  CLEAR_ADMIN_DELETE_REPLY,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -114,6 +126,9 @@ export const getContent = (content, paginate) => async (dispatch) => {
   } else if (content === "wallets") {
     url = `${url}wallets`;
     type = GET_ALL_WALLETS;
+  } else if (content === "forums") {
+    url = `${url}forums`;
+    type = ADMIN_GET_FORUM;
   }
   try {
     let response = await axios.post(url, paginate);
@@ -165,6 +180,18 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_GET_ADMIN_SETTINGS };
   } else if (actionToClear === "wallets") {
     return { type: CLEAR_WALLETS_ACTION };
+  } else if (actionToClear === "forums") {
+    return { type: CLEAR_ADMIN_GET_FORUM };
+  } else if (actionToClear === "add-forum") {
+    return { type: CLEAR_ADMIN_ADD_FORUM };
+  } else if (actionToClear === "update-forum") {
+    return { type: CLEAR_ADMIN_UPDATE_FORUM };
+  } else if (actionToClear === "get-forum") {
+    return { type: CLEAR_ADMIN_GET_A_FORUM };
+  } else if (actionToClear === "admin-reply") {
+    return { type: CLEAR_ADMIN_REPLY };
+  } else if (actionToClear === "delete-reply") {
+    return { type: CLEAR_ADMIN_DELETE_REPLY };
   }
 };
 
@@ -447,5 +474,89 @@ export const clearSettings = (settings) => {
   }
   if (settings === "password") {
     return { type: CLEAR_ADMIN_UPDATE_PASSWORD };
+  }
+};
+
+export const addForum = (forumData) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("add-forum"));
+  try {
+    let response = await axios.post("/api/admin/add/forum", forumData);
+    const result = await dispatch({
+      type: ADMIN_ADD_FORUM,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const replyForum = (replyData) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("admin-reply"));
+  try {
+    let response = await axios.post("/api/admin/forum/reply", replyData);
+    const result = await dispatch({
+      type: ADMIN_REPLY,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const deleteReply = (id) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("delete-reply"));
+  try {
+    let response = await axios.delete(`/api/admin/reply/delete/:${id}`);
+    const result = await dispatch({
+      type: ADMIN_DELETE_REPLY,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+
+export const updateForum = (forumData) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("update-forum"));
+  try {
+    let response = await axios.post("/api/admin/update/forum/", forumData);
+    const result = await dispatch({
+      type: ADMIN_UPDATE_FORUM,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
+};
+export const getForum = (id) => async (dispatch) => {
+  // dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("get-forum"));
+  try {
+    let response = await axios.get(`/api/adminview/forum/:${id}`);
+    const result = await dispatch({
+      type: ADMIN_GET_A_FORUM,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };

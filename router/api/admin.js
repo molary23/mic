@@ -9,6 +9,9 @@ const express = require("express"),
   Bonus = require("../../db/models/Bonus"),
   Transaction = require("../../db/models/Transaction"),
   Announcement = require("../../db/models/Announcement"),
+  Forum = require("../../db/models/Forum"),
+  ForumReply = require("../../db/models/ForumReply"),
+  ForumView = require("../../db/models/ForumView"),
   Settings = require("../../db/models/Settings"),
   Currency = require("../../db/models/Currency"),
   Withdrawal = require("../../db/models/Withdrawal"),
@@ -636,6 +639,136 @@ router.post(
             })
             .catch((err) => res.status(400).json(err));
         }
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/add/forum
+@desc Admin add forum
+@access private
+*/
+
+router.post(
+  "/add/forum",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const forumFields = {};
+
+    if (req.body.title) forumFields.title = req.body.title;
+    if (req.body.text) forumFields.text = req.body.text;
+    forumFields.UserId = req.user.id;
+    forumFields.right = "p";
+
+    Forum.create(forumFields)
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/update/forum
+@desc Admin update forum
+@access private
+*/
+
+router.post(
+  "/update/forum",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let action, forumid;
+    if (req.body.action) action = req.body.action;
+    if (req.body.id) forumid = req.body.id;
+
+    if (action === "close") {
+      Forum.update(
+        {
+          status: "c",
+        },
+        {
+          where: {
+            id: forumid,
+          },
+        }
+      )
+        .then(() => {
+          return res.json(true);
+        })
+        .catch((err) => res.status(404).json(err));
+    } else if (action === "delete") {
+      Forum.destroy({
+        where: {
+          id: forumid,
+        },
+      })
+        .then(() => {
+          return res.json(true);
+        })
+        .catch((err) => res.status(404).json(err));
+    }
+  }
+);
+
+/*
+@route POST api/admin/forum/reply
+@desc Admin add reply
+@access private
+*/
+
+router.post(
+  "/forum/reply",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    const replyFields = {};
+
+    if (req.body.text) replyFields.text = req.body.text;
+    if (req.body.ForumId) replyFields.ForumId = req.body.ForumId;
+    replyFields.UserId = req.user.id;
+
+    ForumReply.create(replyFields)
+      .then(() => {
+        res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/delete/reply
+@desc Admin delete reply
+@access private
+*/
+
+router.delete(
+  "/reply/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id,
+      replyid = req.params.id.split(":")[1];
+
+    ForumReply.destroy({ where: { id: replyid } })
+      .then(() => {
+        return res.json(true);
       })
       .catch((err) => res.status(404).json(err));
   }

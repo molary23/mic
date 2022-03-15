@@ -1055,9 +1055,7 @@ router.post(
               {
                 creator: { [Op.substring]: searchArray[i] },
               },
-              {
-                about: { [Op.substring]: searchArray[i] },
-              },
+
               {
                 text: { [Op.substring]: searchArray[i] },
               },
@@ -1100,9 +1098,7 @@ router.post(
               {
                 creator: { [Op.substring]: search },
               },
-              {
-                about: { [Op.substring]: search },
-              },
+
               {
                 text: { [Op.substring]: search },
               },
@@ -1118,9 +1114,7 @@ router.post(
               {
                 creator: { [Op.substring]: search },
               },
-              {
-                about: { [Op.substring]: search },
-              },
+
               {
                 text: { [Op.substring]: search },
               },
@@ -1136,9 +1130,7 @@ router.post(
               {
                 creator: { [Op.substring]: search },
               },
-              {
-                about: { [Op.substring]: search },
-              },
+
               {
                 text: { [Op.substring]: search },
               },
@@ -1155,9 +1147,7 @@ router.post(
               {
                 creator: { [Op.substring]: search },
               },
-              {
-                about: { [Op.substring]: search },
-              },
+
               {
                 text: { [Op.substring]: search },
               },

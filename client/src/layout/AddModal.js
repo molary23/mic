@@ -1135,7 +1135,7 @@ function AddModal(props) {
         </div>
       </form>
     );
-  } else if (sender === "user-forums") {
+  } else if (sender === "user-forums" || sender === "admin-forums") {
     const submitWithdrawHandler = (e) => {
       e.preventDefault();
       if (
