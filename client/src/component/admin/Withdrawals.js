@@ -72,9 +72,10 @@ export class Withdrawals extends Component {
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   componentDidUpdate(prevProps) {
@@ -305,6 +306,8 @@ Withdrawals.propTypes = {
   clearActions: PropTypes.func,
   clearAdminAction: PropTypes.func,
   loadFromParams: PropTypes.func,
+  renderArrange: PropTypes.func,
+  setSearchParams: PropTypes.func,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object,
 };

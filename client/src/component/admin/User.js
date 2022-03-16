@@ -295,7 +295,7 @@ class User extends Component {
                         ),
                         value: (
                           <Link
-                            to={`/admin/payments?search=${user.username}&status=s`}
+                            to={`/admin/payments?ref=true&id=${user.id}&status=s`}
                           >
                             {pay.toFixed(2)}
                           </Link>

@@ -10,8 +10,16 @@ import TableHead from "../../layout/TableHead";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import Spinner from "../../layout/Spinner";
 
-let typingTimer;
+import {
+  getMore,
+  setSearchParams,
+  renderArrange,
+  loadFromParams,
+} from "../../util/LoadFunction";
+import Pagination from "../../util/Pagination";
+
 export class Payments extends Component {
   state = {
     sender: "admin-payments",
@@ -22,27 +30,34 @@ export class Payments extends Component {
     ],
     gatewayOptions: [
       { value: "", option: "Filter by Gateway" },
-      { value: "b", option: "BitPay" },
-      { value: "s", option: "Stripe" },
+      { value: "c", option: "BitPay" },
+      { value: "b", option: "Stripe" },
     ],
     gateway: "",
     status: "",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
+    startLoad: false,
+    getLoad: true,
     isLoading: false,
-    doneTypingInterval: 5000,
     paymentcount: JSON.parse(localStorage.getItem("counts")).payments,
-    upLoad: true,
     content: "payments",
+    toast: false,
+    toasttext: "",
   };
 
   componentDidMount() {
     const { limit, offset, paymentcount, content } = this.state;
+
+    let searchParams = window.location.search;
+
+    loadFromParams({ limit, self: this, content, searchParams });
+
     const paginate = {
       limit,
       offset,
@@ -50,120 +65,97 @@ export class Payments extends Component {
     this.setState({
       numOfPages: Math.ceil(paymentcount / limit),
     });
+
     this.props.getContent(content, paginate);
+
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
+
+  componentDidUpdate(prevProps) {
+    /*   if (
+      prevProps.admin.updatepayment !==
+        this.props.admin.updatepayment &&
+      this.props.admin.updatepayment
+    ) {
+      this.afterUpdate("updated");
+      this.setState({
+        currentPage: Pagination.currentpage,
+      });
+    }*/
+  }
+
+  afterUpdate = (text) => {
+    const { limit, content } = this.state;
+
+    this.props.clearAdminAction("update-withdrawals");
+    /* window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });*/
+    this.setState({
+      modal: false,
+      toast: true,
+      toasttext: `Withdrawal ${text} successfully`,
+    });
+    const paginate = {
+      limit,
+      offset: 0,
+    };
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    this.props.getContent(content, paginate);
+
+    this.setState({
+      offset: this.state.offset - Pagination.limit,
+    });
+    window.addEventListener("scroll", this.loadMore, { passive: true });
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+        newsignal: {},
+      });
+    }, 3000);
+  };
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search;
-
-    let winScroll = window.scrollY;
-
-    if (winScroll > iScrollPos) {
-      if (currentPage <= numOfPages) {
-        this.setState((prevState) => ({
-          offset: prevState.offset + limit,
-          upLoad: (prevState.upLoad = false),
-        }));
-
-        if (searchParams !== "") {
-          let queryTerms = searchParams.split("?")[1];
-          queryTerms = queryTerms.split("&");
-          let terms = queryTerms.map((term) => term.split("="));
-          let params = Object.fromEntries(terms);
-          params.offset = this.state.offset;
-          params.limit = this.state.limit;
-          // Search Now
-          this.props.searchContent(content, params);
-        } else {
-          const paginate = {
-            offset: this.state.offset,
-            limit: this.state.limit,
-          };
-          this.props.getContent(content, paginate);
-        }
-
-        this.setState({
-          currentPage: this.state.currentPage + 1,
-        });
-      }
-    }
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
   };
 
   changeHandler = (e) => {
+    const { url, content, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
-      loading: true,
     });
-    this.setSearchParams(e.target.name, e.target.value);
-  };
 
-  setSearchParams = (selected, valueOfSelected) => {
-    const { url, content } = this.state;
-    this.setState({
-      offset: 0,
-      limit: 4,
-      currentPage: 2,
+    setSearchParams({
+      selected: e.target.name,
+      valueOfSelected: e.target.value,
+      url,
+      content,
+      limit,
+      offset,
+      doneTypingInterval: this.state.doneTypingInterval,
+      self: this,
     });
-    if (valueOfSelected !== "") {
-      url.searchParams.set(selected, valueOfSelected);
-      window.history.pushState({}, "", url);
-    } else if (valueOfSelected === "") {
-      url.searchParams.delete(selected);
-      window.history.pushState({}, "", url);
-    }
-
-    let searchParams = window.location.search;
-    if (searchParams !== "") {
-      let queryTerms = searchParams.split("?")[1];
-      queryTerms = queryTerms.split("&");
-      let terms = queryTerms.map((term) => term.split("="));
-      let params = Object.fromEntries(terms);
-      params.offset = 0;
-      params.limit = this.state.limit;
-
-      // Search Now
-      this.props.clearSearchActions("currency");
-      if (selected === "search") {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-          this.setState({
-            isLoading: true,
-          });
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-          this.props.searchContent(content, params);
-        }, this.state.doneTypingInterval);
-      } else {
-        this.setState({
-          isLoading: true,
-        });
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        this.props.searchContent(content, params);
-      }
-    } else {
-      const paginate = {
-        offset: 0,
-        limit: this.state.limit,
-      };
-      this.props.clearActions(content);
-      this.setState((prevState) => ({
-        upLoad: (prevState.upLoad = false),
-      }));
-      this.props.getContent(content, paginate);
-    }
   };
 
   render() {
@@ -171,8 +163,8 @@ export class Payments extends Component {
       sender,
       statusOptions,
       status,
-      isLoading,
-      upLoad,
+      startLoad,
+      getLoad,
       search,
       paymentcount,
       gatewayOptions,
@@ -183,66 +175,41 @@ export class Payments extends Component {
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.payCount,
+      list = admin.pay,
+      searchcount = searchTerms.payCount,
+      searchlist = searchTerms.pay,
+      searchloading = searchTerms.loading;
 
-    let load = upLoad,
-      loader = isLoading,
-      pay = [],
-      searchpay,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = paymentcount;
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      paymentcount,
+    });
 
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.payCount;
-      totalText = "Total Payment";
-      if (admin.pay === [] && loading) {
-        loader = true;
-        load = upLoad;
-      } else if (admin.pay.length > 0 && !loading) {
-        pay = admin.pay;
-        load = false;
-        loader = false;
-      } else if (admin.pay.length > 0 && loading) {
-        pay = admin.pay;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        pay = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.payCount;
-      totalText = "Selected/Searched Payments";
-      if (searchTerms.pay === [] || searchTerms.pay.length <= 0) {
-        noRecord = true;
-        searchpay = [];
-        loader = false;
-      } else if (searchTerms.pay.length > 0 && !searchTerms.loading) {
-        searchpay = searchTerms.pay;
-        loader = false;
-      } else if (searchTerms.pay.length > 0 && searchTerms.loading) {
-        searchpay = searchTerms.pay;
-        loader = true;
-      }
-    }
     return (
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="payments card holder-card ">
             <div className="page-dash-title mb-4">
@@ -311,7 +278,7 @@ export class Payments extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? pay : searchpay}
+                tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
           </div>
@@ -325,12 +292,17 @@ Payments.propTypes = {
   getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  loadFromParams: PropTypes.func,
+  renderArrange: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

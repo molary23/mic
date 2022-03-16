@@ -44,7 +44,6 @@ class Currency extends Component {
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
     url: new URL(window.location),
-    doneTypingInterval: 5000,
     currencycount:
       JSON.parse(localStorage.getItem("counts")).currency ??
       this.props.auth.allCounts.currency,
@@ -60,17 +59,19 @@ class Currency extends Component {
   componentDidMount() {
     const { limit, offset, currencycount, content } = this.state;
     let searchParams = window.location.search;
-    loadFromParams({ limit, self: this, content, searchParams });
-
-    const paginate = {
-      limit,
-      offset,
-    };
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(currencycount / limit),
       startLoad: true,
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
@@ -167,7 +168,6 @@ class Currency extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
     });
 

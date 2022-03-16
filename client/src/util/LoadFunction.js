@@ -164,25 +164,23 @@ export const renderArrange = ({
       emptyRecord = true;
       main = [];
     }
-  }
-
-  if (!searching) {
-    showSearch = searching;
-  } else {
+  } else if (searching) {
     showSearch = true;
-    loader = true;
+    loader = false;
     totalCount = searchcount;
     totalText = "Filtered";
-    if (searchlist === [] || searchlist.length <= 0) {
+    if ((searchlist === [] || searchlist.length <= 0) && !searchloading) {
       noRecord = true;
       searchMain = [];
       loader = false;
+      load = false;
     } else if (searchlist.length > 0 && !searchloading) {
       searchMain = searchlist;
       loader = false;
+      load = false;
     } else if (searchlist.length > 0 && searchloading) {
       searchMain = searchlist;
-      loader = true;
+      loader = false;
     }
   }
   return {

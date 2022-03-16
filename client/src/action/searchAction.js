@@ -31,6 +31,7 @@ import {
   CLEAR_SEARCH_WALLETS_ACTION,
   ADMIN_SEARCH_FORUM,
   CLEAR_ADMIN_SEARCH_FORUM,
+  GET_ERRORS,
 } from "./types";
 
 export const searchContent = (content, searchData) => async (dispatch) => {
@@ -95,7 +96,7 @@ export const searchContent = (content, searchData) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 

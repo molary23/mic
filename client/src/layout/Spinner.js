@@ -1,10 +1,11 @@
 import React from "react";
+import { CgSpinner } from "react-icons/cg";
 
 function Spinner() {
   return (
     <div>
-      <div className="loader">
-        <i className="fas fa-circle-notch fa-2x fa-spin" />
+      <div className="loader icon-spin">
+        <CgSpinner />
       </div>
     </div>
   );
