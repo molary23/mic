@@ -116,6 +116,7 @@ export const loadFromParams = ({ limit, self, content, searchParams }) => {
     });
 
     // Search Now
+    self.props.clearActions(content);
     self.props.clearSearchActions(content);
     self.props.searchContent(content, params);
   }

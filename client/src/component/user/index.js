@@ -105,7 +105,13 @@ export class Index extends Component {
 
     let load = true,
       username = userinfo.username,
-      userdetails;
+      userdetails,
+      bonus,
+      credit,
+      debit,
+      transactions,
+      sub,
+      referral;
     if (
       (user.userdetails === null ||
         Object.keys(user.userdetails).length <= 0) &&
@@ -114,6 +120,12 @@ export class Index extends Component {
       load = true;
     } else if (user.userdetails !== null && !loading) {
       userdetails = user.userdetails;
+      bonus = userdetails.bonus ?? 0;
+      credit = userdetails.credit ?? 0;
+      debit = userdetails.debit ?? 0;
+      transactions = userdetails.transactions ?? 0;
+      sub = userdetails.sub ?? 0;
+      referral = userdetails.referral ?? 0;
       load = false;
     }
     return (
@@ -144,10 +156,12 @@ export class Index extends Component {
                     <p className="mb-1">
                       {daysleft >= 1 ? "Active" : "Inactive"}
                     </p>
-                    <h4 className="mb-1">{daysleft}</h4>
+                    <h4 className="mb-1">{daysleft >= 0 ? daysleft : 0}</h4>
                     <div className="row">
                       <div className="col-6">
-                        <p className="mb-1">day{daysleft > 1 && "s"} left</p>
+                        <p className="mb-1">
+                          day{daysleft === 1 ? "" : "s"} left
+                        </p>
                       </div>
                       <div className="col-6">
                         <span className="pay-now-btn">
@@ -162,9 +176,7 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div className="dash-info-card dash-card dash-balance">
                     <p className="mb-1">Balance</p>
-                    <h4 className="mb-1">
-                      ${(userdetails.credit - userdetails.debit).toFixed(2)}
-                    </h4>
+                    <h4 className="mb-1">${(credit - debit).toFixed(2)}</h4>
                     <div className="row">
                       <div className="col-6">
                         <p className="mb-1"></p>
@@ -182,7 +194,7 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div className="dash-info-card dash-card dash-transaction">
                     <p className="mb-1">Transactions</p>
-                    <h4 className="mb-1">{userdetails.transactions}</h4>
+                    <h4 className="mb-1">{transactions}</h4>
                     <div className="row">
                       <div className="col-6">
                         <p className="mb-1"></p>
@@ -203,7 +215,7 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div className="dash-info-card dash-card dash-sub">
                     <p className="mb-1">Subscriptions</p>
-                    <h4 className="mb-1">{userdetails.sub}</h4>
+                    <h4 className="mb-1">{sub}</h4>
                     <div className="row">
                       <div className="col-6">
                         <p className="mb-1"></p>
@@ -228,7 +240,7 @@ export class Index extends Component {
                 <div className="col-md-5 col-xs-12">
                   <div className="dash-basic dash-card">
                     <h4 className="mb-2">Referrals </h4>
-                    <h1 className="mb-2">{userdetails.referral}</h1>
+                    <h1 className="mb-2">{referral}</h1>
                     <code>http://localhost:3000/referral/:{username}</code>
                     <div className={`tiptool ${copy && "showTip"}`}>
                       <span className="tooltiptext">Copied to Clipboard</span>
@@ -274,7 +286,7 @@ export class Index extends Component {
                 <div className="col-md-6 col-xs-12">
                   <div className="dash-bonus dash-card">
                     <h4 className="mb-3">Bonus Index</h4>
-                    <h1 className="mb-3">${userdetails.bonus}</h1>
+                    <h1 className="mb-3">${bonus.toFixed(2)}</h1>
                     <p>Estimated earning</p>
                   </div>
                 </div>

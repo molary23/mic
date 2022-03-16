@@ -49,6 +49,7 @@ class Currency extends Component {
       this.props.auth.allCounts.currency,
     getLoad: true,
     startLoad: false,
+    isLoading: false,
     content: "currency",
     modal: "",
     error: {},
@@ -130,6 +131,7 @@ class Currency extends Component {
       this.props.clearAdminAction("update-currency");
     }
     this.setState({
+      isLoading: false,
       offset: 0,
       modal: false,
       toast: true,
@@ -207,6 +209,9 @@ class Currency extends Component {
   submitHandler = (value) => {
     if (value[0] === "add") {
       this.props.addCurrency(value[1]);
+      this.setState({
+        isLoading: true,
+      });
     }
   };
 
@@ -223,6 +228,7 @@ class Currency extends Component {
       error,
       toast,
       toasttext,
+      isLoading,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -257,6 +263,9 @@ class Currency extends Component {
       getLoad,
       currencycount,
     });
+    if (isLoading) {
+      loader = true;
+    }
     return (
       <div>
         {loader && <ProgressBar />}
