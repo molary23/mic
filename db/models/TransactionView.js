@@ -30,7 +30,7 @@ TransactionView.init(
     transactiondate: {
       type: DataTypes.DATE,
     },
-    userId: {
+    UserId: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
   },

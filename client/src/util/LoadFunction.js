@@ -137,7 +137,7 @@ export const renderArrange = ({
   let load = getLoad,
     loader = startLoad,
     main = [],
-    searchMain,
+    searchMain = [],
     showSearch,
     emptyRecord = false,
     noRecord = false,

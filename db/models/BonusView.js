@@ -24,6 +24,9 @@ BonusView.init(
     payer: {
       type: DataTypes.STRING(50),
     },
+    payerid: {
+      type: DataTypes.STRING(50),
+    },
     createdAt: {
       type: DataTypes.DATE,
     },

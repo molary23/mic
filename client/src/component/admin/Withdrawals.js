@@ -42,8 +42,11 @@ export class Withdrawals extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
     url: new URL(window.location),
-    withcount: JSON.parse(localStorage.getItem("counts")).withdrawals,
+    withcount:
+      JSON.parse(localStorage.getItem("counts")).withdrawals ??
+      this.props.auth.allCounts.withdrawals,
     startLoad: false,
     getLoad: true,
     content: "withdrawals",
@@ -56,17 +59,18 @@ export class Withdrawals extends Component {
 
     let searchParams = window.location.search;
 
-    loadFromParams({ limit, self: this, content, searchParams });
-
-    const paginate = {
-      limit,
-      offset,
-    };
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(withcount / limit),
     });
-
-    this.props.getContent(content, paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
@@ -92,7 +96,7 @@ export class Withdrawals extends Component {
   }
 
   afterUpdate = (text) => {
-    const { limit, content } = this.state;
+    const { limit, content, timer } = this.state;
 
     this.props.clearAdminAction("update-withdrawals");
     /* window.scrollTo({
@@ -121,27 +125,36 @@ export class Withdrawals extends Component {
         toast: false,
         newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
     let searchParams = window.location.search,
       winScroll = window.scrollY;
-    getMore({
-      limit,
-      numOfPages,
-      iScrollPos,
-      currentPage,
-      content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+    let lastScrollTop = 0;
+    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      // downscroll code
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    } else {
+      // upscroll code
+      console.log("upscroll code");
+    }
+    lastScrollTop = toTop <= 0 ? 0 : toTop; // For Mobile or negative scrolling
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -153,8 +166,8 @@ export class Withdrawals extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
+      timer,
     });
   };
 

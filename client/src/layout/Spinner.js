@@ -1,11 +1,11 @@
 import React from "react";
-import { CgSpinner } from "react-icons/cg";
+import { RiLoader2Line } from "react-icons/ri";
 
 function Spinner() {
   return (
     <div>
-      <div className="loader icon-spin">
-        <CgSpinner />
+      <div className="loader ">
+        <RiLoader2Line className="icon-spin" />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ const Pagination = {
   currentpage: 2,
   scrollposition: 10,
   limit: 4,
+  timer: 5000,
 };
 
 export default Pagination;

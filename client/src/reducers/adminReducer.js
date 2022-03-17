@@ -9,6 +9,7 @@ import {
   GET_ALL_CURRENCY,
   CLEAR_CURRENCY_ACTION,
   GET_ALL_PAYMENTS,
+  CLEAR_PAYMENTS_ACTION,
   GET_ALL_REFERRALS,
   CLEAR_REFERRALS_ACTION,
   CLEAR_BONUS_ACTION,
@@ -434,6 +435,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_CURRENCY_ACTION: {
       return { ...state, currency: [], curCount: 0, fetching: false };
+    }
+    case CLEAR_PAYMENTS_ACTION: {
+      return { ...state, pay: [], payCount: 0, fetching: false };
     }
     case CLEAR_REFERRALS_ACTION: {
       return { ...state, referrals: [], refCount: 0, fetching: false };

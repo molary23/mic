@@ -143,10 +143,6 @@ table .td-shorter {
   font-size: 14px;
 }
 
-table .status-info {
-  font-size: 30px;
-}
-
 .active-status span {
   color: #04c734;
 }
@@ -977,37 +973,31 @@ ul.list-group.list-group-horizontal {
   margin-right: 5px;
 }
 
-.view-card .status-info {
-  font-size: 18px;
-  margin-right: 5px;
+.view-card .lower {
+  text-transform: lowercase;
 }
 
 /*Spinner*/
 .icon-spin {
-  font-size: 40px;
-  -webkit-animation: icon-spin 2s infinite linear;
-  animation: icon-spin 2s infinite linear;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin: -60px 0 0 -60px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
 }
 
-@-webkit-keyframes icon-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
+@-webkit-keyframes spin {
   100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
+    -webkit-transform: rotate(360deg);
   }
 }
 
-@keyframes icon-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
+@keyframes spin {
   100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 /*# sourceMappingURL=sub.css.map */

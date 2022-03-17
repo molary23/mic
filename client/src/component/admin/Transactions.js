@@ -6,14 +6,21 @@ import PropTypes from "prop-types";
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
+import {
+  getMore,
+  setSearchParams,
+  loadFromParams,
+  renderArrange,
+} from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import Spinner from "../../layout/Spinner";
 
+import Pagination from "../../util/Pagination";
 export class Transactions extends Component {
   state = {
     sender: "admin-transactions",
@@ -31,14 +38,15 @@ export class Transactions extends Component {
     type: "",
     method: "",
     search: "",
-    limit: 4,
-    offset: 0,
-    sub: "",
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
-    transcount: JSON.parse(localStorage.getItem("counts")).subscriptions,
+    transcount:
+      JSON.parse(localStorage.getItem("counts")).transactions ??
+      this.props.auth.allCounts.transactions,
     startLoad: false,
     getLoad: true,
     content: "transactions",
@@ -47,26 +55,29 @@ export class Transactions extends Component {
   componentDidMount() {
     const { limit, offset, transcount, content } = this.state;
 
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
 
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
       startLoad: true,
     });
 
-    this.props.getContent(content, paginate);
-
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions("trans");
-    this.props.clearSearchActions("users");
-    this.props.clearSearchActions("trans");
+    this.props.clearActions(this.state.content);
+    this.props.clearSearchActions(this.state.content);
   }
 
   loadMore = () => {
@@ -116,69 +127,43 @@ export class Transactions extends Component {
     } = this.state;
 
     const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
+    const { loading, fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.transCount,
+      list = admin.trans,
+      searchcount = searchTerms.transCount,
+      searchlist = searchTerms.trans,
+      searchloading = searchTerms.loading;
 
-    let load = startLoad,
-      loader = getLoad,
-      trans = [],
-      searchTrans,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "Total Transactions",
-      totalCount = transcount;
-
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.transCount;
-      totalText = "Total Transactions";
-      if (admin.trans === [] && loading) {
-        loader = true;
-        load = false;
-      } else if (admin.trans.length > 0 && !loading) {
-        trans = admin.trans;
-        load = false;
-        loader = false;
-      } else if (admin.trans.length > 0 && loading) {
-        trans = admin.trans;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        trans = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.transCount;
-      totalText = "Selected/Searched Transactions";
-      if (searchTerms.trans === [] || searchTerms.trans.length <= 0) {
-        noRecord = true;
-        searchTrans = [];
-        loader = false;
-      } else if (searchTerms.trans.length > 0 && !searchTerms.loading) {
-        searchTrans = searchTerms.trans;
-        loader = false;
-      } else if (searchTerms.trans.length > 0 && searchTerms.loading) {
-        searchTrans = searchTerms.trans;
-        loader = true;
-      }
-    }
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      transcount,
+    });
 
     return (
       <div>
-        {loader || load ? (
-          <div>
-            <ProgressBar loading={{ loader, load }} />
-          </div>
+        {loader && <ProgressBar />}
+        {load ? (
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -214,7 +199,7 @@ export class Transactions extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-2">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
@@ -230,21 +215,17 @@ export class Transactions extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={["S/N", "amount", "User", "method", "type", "date"]}
             >
-              {!showSearch && (
-                <TableBody
-                  sender={sender}
-                  tablebody={trans !== undefined ? trans : null}
-                />
-              )}
-
-              {showSearch && (
-                <TableBody sender={sender} tablebody={searchTrans} />
-              )}
+              <TableBody
+                sender={sender}
+                tablebody={!showSearch ? main : searchMain}
+              />
             </TableHead>
           </div>
         )}
@@ -256,6 +237,9 @@ export class Transactions extends Component {
 Transactions.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  renderArrange: PropTypes.func,
+  loadFromParams: PropTypes.func,
+  setSearchParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

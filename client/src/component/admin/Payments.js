@@ -41,11 +41,14 @@ export class Payments extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
     url: new URL(window.location),
     startLoad: false,
     getLoad: true,
     isLoading: false,
-    paymentcount: JSON.parse(localStorage.getItem("counts")).payments,
+    paymentcount:
+      JSON.parse(localStorage.getItem("counts")).payments ??
+      this.props.auth.allCounts.payments,
     content: "payments",
     toast: false,
     toasttext: "",
@@ -56,17 +59,18 @@ export class Payments extends Component {
 
     let searchParams = window.location.search;
 
-    loadFromParams({ limit, self: this, content, searchParams });
-
-    const paginate = {
-      limit,
-      offset,
-    };
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(paymentcount / limit),
     });
-
-    this.props.getContent(content, paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
@@ -91,10 +95,10 @@ export class Payments extends Component {
     }*/
   }
 
-  afterUpdate = (text) => {
-    const { limit, content } = this.state;
+  afterUpdate = () => {
+    const { limit, content, timer } = this.state;
 
-    this.props.clearAdminAction("update-withdrawals");
+    this.props.clearAdminAction("update-payments");
     /* window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -102,7 +106,7 @@ export class Payments extends Component {
     this.setState({
       modal: false,
       toast: true,
-      toasttext: `Withdrawal ${text} successfully`,
+      toasttext: `Payment updated successfully`,
     });
     const paginate = {
       limit,
@@ -121,7 +125,7 @@ export class Payments extends Component {
         toast: false,
         newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
@@ -141,11 +145,11 @@ export class Payments extends Component {
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
+      loading: true,
     });
-
     setSearchParams({
       selected: e.target.name,
       valueOfSelected: e.target.value,
@@ -153,7 +157,7 @@ export class Payments extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
+      timer,
       self: this,
     });
   };
@@ -261,7 +265,9 @@ export class Payments extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -289,13 +295,17 @@ export class Payments extends Component {
 }
 
 Payments.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  loadFromParams: PropTypes.func,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
+  getContent: PropTypes.func.isRequired,
+  clearActions: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearSearchActions: PropTypes.func,
   renderArrange: PropTypes.func,
   setSearchParams: PropTypes.func,
-  errors: PropTypes.object,
+  loadFromParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

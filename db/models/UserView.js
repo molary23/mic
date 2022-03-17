@@ -5,7 +5,7 @@ sequelize = require("../../config/dbcon");
 class UserView extends Model {}
 UserView.init(
   {
-    userid: {
+    UserId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       autoIncrement: true,

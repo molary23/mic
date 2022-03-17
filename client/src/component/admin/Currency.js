@@ -25,6 +25,7 @@ import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
+import Spinner from "../../layout/Spinner";
 
 import Pagination from "../../util/Pagination";
 
@@ -43,6 +44,8 @@ class Currency extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
     currencycount:
       JSON.parse(localStorage.getItem("counts")).currency ??
@@ -105,23 +108,36 @@ class Currency extends Component {
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
   afterUpdate = (text) => {
-    const { limit, content, signalcount } = this.state;
+    const { limit, content, signalcount, timer } = this.state;
     if (text === "added") {
       this.setState({
         numOfPages: Math.ceil((signalcount + 1) / limit),
@@ -154,14 +170,13 @@ class Currency extends Component {
         toast: false,
         newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
-      loading: true,
     });
     setSearchParams({
       selected: e.target.name,
@@ -171,6 +186,7 @@ class Currency extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
 
     //  this.setSearchParams(e.target.name, e.target.value);
@@ -263,16 +279,15 @@ class Currency extends Component {
       getLoad,
       currencycount,
     });
+
     if (isLoading) {
-      loader = true;
+      //   loader = true; bring a loader here
     }
     return (
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -371,6 +386,7 @@ Currency.propTypes = {
   addCurrency: PropTypes.func.isRequired,
   renderArrange: PropTypes.func,
   loadFromParams: PropTypes.func,
+  setSearchParams: PropTypes.func,
   auth: PropTypes.object.isRequired,
 };
 

@@ -34,7 +34,7 @@ SubscriptionView.init(
     username: {
       type: DataTypes.STRING(30),
     },
-    userId: {
+    UserId: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
     PayId: {

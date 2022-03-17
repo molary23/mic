@@ -1,11 +1,8 @@
-const Preference = require("../../db/models/Preference");
-const Premium = require("../../db/models/Premium");
-
 const express = require("express"),
   router = express.Router(),
   Sequelize = require("sequelize"),
   passport = require("passport"),
-  { Op, where } = require("sequelize"),
+  { Op } = require("sequelize"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
@@ -19,6 +16,7 @@ const express = require("express"),
   Profile = require("../../db/models/Profile"),
   User = require("../../db/models/User"),
   Announcement = require("../../db/models/Announcement"),
+  Account = require("../../db/models/Account"),
   Forum = require("../../db/models/Forum"),
   ForumReply = require("../../db/models/ForumReply"),
   ReferralView = require("../../db/models/ReferralView"),
@@ -28,6 +26,8 @@ const express = require("express"),
   ProviderView = require("../../db/models/ProviderView"),
   Signal = require("../../db/models/Signal"),
   SignalView = require("../../db/models/SignalView"),
+  Preference = require("../../db/models/Preference"),
+  Premium = require("../../db/models/Premium"),
   PaymentView = require("../../db/models/PaymentView"),
   WithdrawalView = require("../../db/models/WithdrawalView"),
   BonusView = require("../../db/models/BonusView"),
@@ -53,16 +53,30 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      status = null,
+      gateway = null,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.status) status = req.body.status;
+    if (req.body.gateway) gateway = req.body.gateway;
+    if (req.body.search) search = req.body.search;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (req.body.search !== undefined) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (gateway !== null) {
+      where = { ...where, ...{ gateway } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -75,91 +89,24 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.status && req.body.gateway === undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { type: req.body.status },
-            ],
-          };
-        } else if (req.body.status === undefined && req.body.gateway) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { package: req.body.gateway },
-            ],
-          };
-        } else if (req.body.status && req.body.gateway) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              {
-                [Op.and]: [
-                  { status: req.body.status },
-                  { package: req.body.gateway },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.status && req.body.gateway === undefined) {
-          where = {
-            [Op.and]: [
-              { username: { [Op.substring]: search } },
-              { status: req.body.status },
-            ],
-          };
-        } else if (req.body.status === undefined && req.body.gateway) {
-          where = {
-            [Op.and]: [
-              { username: { [Op.substring]: search } },
-              { package: req.body.gateway },
-            ],
-          };
-        } else if (req.body.status && req.body.gateway) {
-          where = {
-            [Op.and]: [
-              { username: { [Op.substring]: search } },
-              {
-                [Op.and]: [
-                  { status: req.body.status },
-                  { package: req.body.gateway },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            username: { [Op.substring]: search },
-          };
-        }
-      }
-    } else {
-      if (req.body.status && req.body.gateway === undefined) {
-        where.status = req.body.status;
-      } else if (req.body.status === undefined && req.body.gateway) {
-        where.gateway = req.body.gateway;
-      } else if (req.body.status && req.body.gateway) {
+        let searchTerms = searchArray[0];
         where = {
-          [Op.and]: [
-            { status: req.body.status },
-            { gateway: req.body.gateway },
-          ],
+          ...where,
+          ...{
+            [Op.or]: [
+              { username: { [Op.substring]: searchTerms } },
+              { reference: { [Op.substring]: searchTerms } },
+            ],
+          },
         };
       }
+    }
+
+    if ((user !== null) & (ref !== null)) {
+      let UserId = user;
+      where = { ...where, ...{ UserId } };
     }
 
     const query = {
@@ -208,105 +155,54 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      type = null,
+      plan = null,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.plan) plan = req.body.plan;
+    if (req.body.type) type = req.body.type;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (req.body.search !== undefined) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (plan !== null) {
+      where = { ...where, ...{ plan } };
+    }
+    if (type !== null) {
+      where = { ...where, ...{ type } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = { username: { [Op.substring]: searchArray[i] } };
+          newSearchObj = {
+            [Op.or]: [{ username: { [Op.substring]: searchArray[i] } }],
+          };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.type && req.body.subPackage === undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { type: req.body.type },
-            ],
-          };
-        } else if (req.body.type === undefined && req.body.subPackage) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { package: req.body.subPackage },
-            ],
-          };
-        } else if (req.body.type && req.body.subPackage) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              {
-                [Op.and]: [
-                  { type: req.body.type },
-                  { package: req.body.subPackage },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.type && req.body.subPackage === undefined) {
-          where = {
-            [Op.and]: [
-              { username: { [Op.substring]: search } },
-              { type: req.body.type },
-            ],
-          };
-        } else if (req.body.type === undefined && req.body.subPackage) {
-          where = {
-            [Op.and]: [
-              { username: { [Op.substring]: search } },
-              { package: req.body.subPackage },
-            ],
-          };
-        } else if (req.body.type && req.body.subPackage) {
-          where = {
-            [Op.and]: [
-              { username: { [Op.substring]: search } },
-              {
-                [Op.and]: [
-                  { type: req.body.type },
-                  { package: req.body.subPackage },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            username: { [Op.substring]: search },
-          };
-        }
-      }
-    } else {
-      if (req.body.type && req.body.subPackage === undefined) {
-        where.type = req.body.type;
-      } else if (req.body.type === undefined && req.body.subPackage) {
-        where.package = req.body.subPackage;
-      } else if (req.body.type && req.body.subPackage) {
+        let searchTerms = searchArray[0];
         where = {
-          [Op.and]: [{ type: req.body.type }, { package: req.body.subPackage }],
+          ...where,
+          ...{
+            [Op.or]: [{ username: { [Op.substring]: searchTerms } }],
+          },
         };
       }
+    }
+
+    if ((user !== null) & (ref !== null)) {
+      let UserId = user;
+      where = { ...where, ...{ UserId } };
     }
 
     const query = {
@@ -354,57 +250,56 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      status = null,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.status) status = req.body.status;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
 
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = { username: { [Op.substring]: searchArray[i] } };
+          newSearchObj = {
+            [Op.or]: [
+              { username: { [Op.substring]: searchArray[i] } },
+              { payer: { [Op.substring]: searchArray[i] } },
+            ],
+          };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { userstatus },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.status) {
-          where = {
-            [Op.and]: [
-              { username: { [Op.substring]: search } },
-              { status: req.body.status },
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
+            [Op.or]: [
+              { username: { [Op.substring]: searchTerms } },
+              { payer: { [Op.substring]: searchTerms } },
             ],
-          };
-        } else {
-          where = {
-            username: { [Op.substring]: search },
-          };
-        }
+          },
+        };
       }
-    } else {
-      if (req.body.status) {
-        where.status = req.body.status;
-      }
+    }
+
+    if ((user !== null) & (ref !== null)) {
+      let UserId = user;
+      where = { ...where, ...{ UserId } };
     }
 
     const query = {
@@ -418,6 +313,9 @@ router.post(
         "username",
         "createdAt",
         "updatedAt",
+        "UserId",
+        "payerid",
+        "payer",
       ],
       where,
       raw: true,
@@ -449,140 +347,51 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      status = null,
+      search = null,
+      signaloption = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.status) status = req.body.status;
+    if (req.body.signaloption) signaloption = req.body.signaloption;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (signaloption !== null) {
+      where = { ...where, ...{ signaloption } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
           newSearchObj = {
             [Op.or]: [
-              {
-                provider: { [Op.substring]: searchArray[i] },
-              },
-              {
-                firstcurrency: { [Op.substring]: searchArray[i] },
-              },
-              {
-                secondcurrency: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
-          newSearchArray.push(newSearchObj);
-        }
-
-        if (req.body.signaloption && req.body.status === undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { signaloption: req.body.signaloption },
-            ],
-          };
-        } else if (req.body.signaloption === undefined && req.body.status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status: req.body.status },
-            ],
-          };
-        } else if (req.body.signaloption && req.body.status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              {
-                [Op.and]: [
-                  { signaloption: req.body.signaloption },
-                  { status: req.body.status },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
-      } else {
-        let search = searchArray[0];
-        if (req.body.signaloption && req.body.status === undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { provider: { [Op.substring]: search } },
-                  { firstcurrency: { [Op.substring]: search } },
-                  { secondcurrency: { [Op.substring]: search } },
-                ],
-              },
-              { signaloption: req.body.signaloption },
-            ],
-          };
-        } else if (req.body.signaloption === undefined && req.body.status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { provider: { [Op.substring]: search } },
-                  { firstcurrency: { [Op.substring]: search } },
-                  { secondcurrency: { [Op.substring]: search } },
-                ],
-              },
-              { status: req.body.status },
-            ],
-          };
-        } else if (req.body.signaloption && req.body.status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { provider: { [Op.substring]: search } },
-                  { firstcurrency: { [Op.substring]: search } },
-                  { secondcurrency: { [Op.substring]: search } },
-                ],
-              },
-              {
-                [Op.and]: [
-                  { signaloption: req.body.signaloption },
-                  { status: req.body.status },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.or]: [
               { provider: { [Op.substring]: search } },
               { firstcurrency: { [Op.substring]: search } },
               { secondcurrency: { [Op.substring]: search } },
             ],
           };
+          newSearchArray.push(newSearchObj);
         }
-      }
-    } else {
-      if (req.body.signaloption && req.body.status === undefined) {
-        where.signaloption = req.body.signaloption;
-      } else if (req.body.signaloption === undefined && req.body.status) {
-        where.status = req.body.status;
-      } else if (req.body.signaloption && req.body.status) {
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
+      } else {
+        let searchTerms = searchArray[0];
         where = {
-          [Op.and]: [
-            { signaloption: req.body.signaloption },
-            { status: req.body.status },
-          ],
+          ...where,
+          ...{
+            [Op.or]: [
+              { provider: { [Op.substring]: searchTerms } },
+              { firstcurrency: { [Op.substring]: searchTerms } },
+              { secondcurrency: { [Op.substring]: searchTerms } },
+            ],
+          },
         };
       }
     }
@@ -602,18 +411,8 @@ router.post(
         "updatedAt",
         "provider",
         "providerid",
-        [
-          Sequelize.literal(
-            `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `
-          ),
-          "signaloption",
-        ],
-        [
-          Sequelize.literal(
-            `CASE WHEN status = 'f' THEN 'Filled' WHEN status = 'c' THEN 'Cancelled' END `
-          ),
-          "status",
-        ],
+        "signaloption",
+        "status",
         [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
       ],
       where,
@@ -646,147 +445,46 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      premiumstatus = null,
+      search = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.premiumstatus) premiumstatus = req.body.premiumstatus;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (premiumstatus !== null) {
+      where = { ...where, ...{ premiumstatus } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
           newSearchObj = {
             [Op.or]: [
-              {
-                username: { [Op.substring]: searchArray[i] },
-              },
-              {
-                fullname: { [Op.substring]: searchArray[i] },
-              },
-              {
-                email: { [Op.substring]: searchArray[i] },
-              },
+              { username: { [Op.substring]: searchArray[i] } },
+              { email: { [Op.substring]: searchArray[i] } },
+              { fullname: { [Op.substring]: searchArray[i] } },
             ],
           };
-
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.userstatus && req.body.premiumstatus === undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { userstatus: req.body.userstatus },
-            ],
-          };
-        } else if (
-          req.body.userstatus === undefined &&
-          req.body.premiumstatus
-        ) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { premiumstatus: req.body.premiumstatus },
-            ],
-          };
-        } else if (req.body.userstatus && req.body.premiumstatus) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              {
-                [Op.and]: [
-                  { userstatus: req.body.userstatus },
-                  { premiumstatus: req.body.premiumstatus },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.userstatus && req.body.premiumstatus === "") {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { fullname: { [Op.substring]: search } },
-                  { email: { [Op.substring]: search } },
-                  { username: { [Op.substring]: search } },
-                ],
-              },
-              { userstatus: req.body.userstatus },
-            ],
-          };
-        } else if (
-          req.body.userstatus === undefined &&
-          req.body.premiumstatus
-        ) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { fullname: { [Op.substring]: search } },
-                  { email: { [Op.substring]: search } },
-                  { username: { [Op.substring]: search } },
-                ],
-              },
-              { premiumstatus: req.body.premiumstatus },
-            ],
-          };
-        } else if (req.body.userstatus && req.body.premiumstatus) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { user: { [Op.substring]: search } },
-                  { email: { [Op.substring]: search } },
-                  { username: { [Op.substring]: search } },
-                ],
-              },
-              {
-                [Op.and]: [
-                  { userstatus: req.body.userstatus },
-                  { premiumstatus: req.body.premiumstatus },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.or]: [
-              { fullname: { [Op.substring]: search } },
-              { email: { [Op.substring]: search } },
-              { username: { [Op.substring]: search } },
-            ],
-          };
-        }
-      }
-    } else {
-      if (req.body.userstatus && req.body.premiumstatus === undefined) {
-        where.userstatus = req.body.userstatus;
-      } else if (req.body.userstatus === undefined && req.body.premiumstatus) {
-        where.premiumstatus = req.body.premiumstatus;
-      } else if (req.body.userstatus && req.body.premiumstatus) {
+        let searchTerms = searchArray[0];
         where = {
-          [Op.and]: [
-            { userstatus: req.body.userstatus },
-            { premiumstatus: req.body.premiumstatus },
-          ],
+          ...where,
+          ...{
+            [Op.or]: [
+              { username: { [Op.substring]: searchTerms } },
+              { email: { [Op.substring]: searchTerms } },
+              { fullname: { [Op.substring]: searchTerms } },
+            ],
+          },
         };
       }
     }
@@ -831,18 +529,29 @@ router.post(
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
     let limit = null,
       offset = 0,
-      table = "providers";
-    if (req.body.table) table = req.body.table;
+      status = null,
+      search = null,
+      table = null,
+      user = null,
+      ref = null,
+      where = {};
+
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.status) status = req.body.status;
+    if (req.body.table) table = req.body.table;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -856,75 +565,72 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status: req.body.status },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.status) {
-          where = {
-            [Op.and]: [
-              { status: req.body.status },
-              {
-                [Op.or]: [
-                  { username: { [Op.substring]: search } },
-                  { fullname: { [Op.substring]: search } },
-                  { email: { [Op.substring]: search } },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
             [Op.or]: [
-              { username: { [Op.substring]: search } },
-              { fullname: { [Op.substring]: search } },
-              { email: { [Op.substring]: search } },
+              { username: { [Op.substring]: searchTerms } },
+              { email: { [Op.substring]: searchTerms } },
+              { fullname: { [Op.substring]: searchTerms } },
             ],
-          };
-        }
-      }
-    } else {
-      if (req.body.status) {
-        where.status = req.body.status;
+          },
+        };
       }
     }
-
-    const query = {
-      order: [["userid", "DESC"]],
-      offset,
-      limit,
-      attributes: ["userid", "username", "email", "fullname", "status"],
-      where,
-      raw: true,
-    };
-    let result = [],
+    let UserId,
+      providers,
+      result = [],
       view;
-    if (table === "providers") {
-      view = ProviderView;
-    } else if (table === "superadmin") {
-      view = SuperView;
+
+    if ((user !== null) & (ref !== null)) {
+      UserId = user;
+      Preference.findOne({ where: { UserId }, attributes: ["providers"] })
+        .then((sp) => {
+          providers = sp.providers;
+          where = { ...where, ...{ userid: providers } };
+          const query = {
+            order: [["userid", "DESC"]],
+            offset,
+            limit,
+            attributes: ["userid", "username", "email", "fullname", "status"],
+            where,
+            raw: true,
+          };
+          ProviderView.findAndCountAll(query)
+            .then((entries) => {
+              const { count, rows } = entries;
+              result = [...[count], ...rows];
+              return res.json(result);
+            })
+            .catch((err) => res.status(404).json(err));
+        })
+        .catch((err) => res.status(404).json(err));
+    } else {
+      const query = {
+        order: [["userid", "DESC"]],
+        offset,
+        limit,
+        attributes: ["userid", "username", "email", "fullname", "status"],
+        where,
+        raw: true,
+      };
+      if (table === "providers") {
+        view = ProviderView;
+      } else if (table === "superadmin") {
+        view = SuperView;
+      }
+      view
+        .findAndCountAll(query)
+        .then((entries) => {
+          const { count, rows } = entries;
+          result = [...[count], ...rows];
+          return res.json(result);
+        })
+        .catch((err) => res.status(404).json(err));
     }
-    view
-      .findAndCountAll(query)
-      .then((entries) => {
-        const { count, rows } = entries;
-        result = [...[count], ...rows];
-        res.json(result);
-      })
-      .catch((err) => res.status(404).json(err));
   }
 );
 
@@ -944,17 +650,25 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      status = null,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
-    if (req.body.limit) limit = parseInt(req.body.limit);
-    if (req.body.offset) offset = parseInt(req.body.offset);
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.status) status = req.body.status;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-
-    if (req.body.search !== undefined) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -971,64 +685,63 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.status !== undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status: req.body.status },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.status !== undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { firstcurrency: { [Op.substring]: search } },
-                  { secondcurrency: { [Op.substring]: search } },
-                ],
-              },
-              { status: req.body.status },
-            ],
-          };
-        } else {
-          where = {
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
             [Op.or]: [
-              { firstcurrency: { [Op.substring]: search } },
-              { secondcurrency: { [Op.substring]: search } },
+              {
+                firstcurrency: { [Op.substring]: searchTerms },
+              },
+              {
+                secondcurrency: { [Op.substring]: searchTerms },
+              },
             ],
-          };
-        }
-      }
-    } else {
-      if (req.body.status !== undefined) {
-        where.status = req.body.status;
+          },
+        };
       }
     }
-
-    let result = [];
-    Currency.findAndCountAll({
-      order: [["id", "DESC"]],
-      offset,
-      limit,
-      where,
-      include: [{ model: User, attributes: ["username"] }],
-    })
-      .then((entries) => {
-        const { count, rows } = entries;
-        result = [...[count], ...rows];
-        res.json(result);
+    let UserId,
+      currencies,
+      result = [];
+    if ((user !== null) & (ref !== null)) {
+      UserId = user;
+      Preference.findOne({ where: { UserId }, attributes: ["currencies"] })
+        .then((sp) => {
+          currencies = sp.currencies;
+          where = { ...where, ...{ id: currencies } };
+          Currency.findAndCountAll({
+            order: [["id", "DESC"]],
+            offset,
+            limit,
+            where,
+            include: [{ model: User, attributes: ["username"] }],
+          })
+            .then((entries) => {
+              const { count, rows } = entries;
+              result = [...[count], ...rows];
+              return res.json(result);
+            })
+            .catch((err) => res.status(404).json(err));
+        })
+        .catch((err) => res.status(404).json(err));
+    } else {
+      Currency.findAndCountAll({
+        order: [["id", "DESC"]],
+        offset,
+        limit,
+        where,
+        include: [{ model: User, attributes: ["username"] }],
       })
-      .catch((err) => res.status(404).json(err));
+        .then((entries) => {
+          const { count, rows } = entries;
+          result = [...[count], ...rows];
+          return res.json(result);
+        })
+        .catch((err) => res.status(404).json(err));
+    }
   }
 );
 
@@ -1048,16 +761,30 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      type = null,
+      method = null,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.type) type = req.body.type;
+    if (req.body.method) method = req.body.method;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (req.body.search !== undefined) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (type !== null) {
+      where = { ...where, ...{ type } };
+    }
+    if (method !== null) {
+      where = { ...where, ...{ method } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -1074,106 +801,28 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.type && req.body.method === undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { type: req.body.type },
-            ],
-          };
-        } else if (req.body.type === undefined && req.body.method) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { method: req.body.method },
-            ],
-          };
-        } else if (req.body.type && req.body.method) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              {
-                [Op.and]: [
-                  { type: req.body.type },
-                  { method: req.body.method },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.type && req.body.method === undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { fullname: { [Op.substring]: search } },
-                  { username: { [Op.substring]: search } },
-                ],
-              },
-              { type: req.body.type },
-            ],
-          };
-        } else if (req.body.type === undefined && req.body.method) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { fullname: { [Op.substring]: search } },
-                  { username: { [Op.substring]: search } },
-                ],
-              },
-              { method: req.body.method },
-            ],
-          };
-        } else if (req.body.type && req.body.method) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { fullname: { [Op.substring]: search } },
-                  { username: { [Op.substring]: search } },
-                ],
-              },
-              {
-                [Op.and]: [
-                  { type: req.body.type },
-                  { method: req.body.method },
-                ],
-              },
-            ],
-          };
-        } else {
-          where = {
-            [Op.or]: [
-              { fullname: { [Op.substring]: search } },
-              { username: { [Op.substring]: search } },
-            ],
-          };
-        }
-      }
-    } else {
-      if (req.body.type && req.body.method === undefined) {
-        where.type = req.body.type;
-      } else if (req.body.type === undefined && req.body.method) {
-        where.method = req.body.method;
-      } else if (req.body.type && req.body.method) {
+        let searchTerms = searchArray[0];
         where = {
-          [Op.and]: [{ type: req.body.type }, { method: req.body.method }],
+          ...where,
+          ...{
+            [Op.or]: [
+              {
+                fullname: { [Op.substring]: searchTerms },
+              },
+              {
+                username: { [Op.substring]: searchTerms },
+              },
+            ],
+          },
         };
       }
+    }
+
+    if ((user !== null) & (ref !== null)) {
+      let UserId = user;
+      where = { ...where, ...{ UserId } };
     }
 
     const query = {
@@ -1184,21 +833,11 @@ router.post(
         "transactionid",
         "amount",
         "fullname",
-        "userId",
+        "UserId",
         "username",
         "transactiondate",
-        [
-          Sequelize.literal(
-            `CASE WHEN type = 'c' THEN 'Credit' WHEN type = 'd' THEN 'Debit' END `
-          ),
-          "type",
-        ],
-        [
-          Sequelize.literal(
-            `CASE WHEN method = 'b' THEN 'Bonus' WHEN method = 's' THEN 'Subscriptions' WHEN method = 'w' THEN 'Withdrawal' END `
-          ),
-          "method",
-        ],
+        "type",
+        "method",
       ],
       where,
       raw: true,
@@ -1229,12 +868,10 @@ router.get(
       return res.status(400).json(error);
     }
 
-    let clause = {},
-      where = {};
-    where.premiumstatus = 2;
-    clause = { where };
+    let where = {};
+    where.premiumstatus = "a";
 
-    UserView.findAll(clause)
+    UserView.findAll(where)
       .then((users) => {
         res.json(users);
       })
@@ -1278,7 +915,7 @@ router.get(
 @route GET api/adminview/subscription/:id
 @desc Admin view each Subscription
 @access private
-*/
+
 
 router.get(
   "/subscription/:id",
@@ -1365,13 +1002,13 @@ router.get(
         .catch((err) => res.status(404).json(err)),
     ]);
   }
-);*/
+);
 
-/*
+
 @route GET api/adminview/user/transactions/:id
 @desc Admin view transactions
 @access private
-*/
+
 
 router.get(
   "/user/transactions/:id",
@@ -1391,11 +1028,11 @@ router.get(
   }
 );
 
-/*
+
 @route GET api/adminview/user/subscriptions/:id
 @desc Admin view subscriptions
 @access private
-*/
+
 
 router.get(
   "/user/subscriptions/:id",
@@ -1415,11 +1052,11 @@ router.get(
   }
 );
 
-/*
+
 @route GET api/adminview/user/payments/:id
 @desc Admin view User Payments
 @access private
-*/
+
 
 router.get(
   "/user/payments/:id",
@@ -1443,7 +1080,7 @@ router.get(
 @route GET api/adminview/user/bonus/:id
 @desc Admin view Bonus
 @access private
-*/
+
 
 router.get(
   "/user/bonus/:id",
@@ -1463,11 +1100,11 @@ router.get(
   }
 );
 
-/*
+
 @route GET api/adminview/user/signals/:id
 @desc Admin view signal
 @access private
-*/
+
 
 router.get(
   "/user/signals/:id",
@@ -1486,6 +1123,7 @@ router.get(
       .catch((err) => res.status(404).json(err));
   }
 );
+*/
 
 /*
 @route GET api/admin/referrals
@@ -1503,16 +1141,30 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      type = null,
+      method = null,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.type) type = req.body.type;
+    if (req.body.method) method = req.body.method;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (type !== null) {
+      where = { ...where, ...{ type } };
+    }
+    if (method !== null) {
+      where = { ...where, ...{ method } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -1525,23 +1177,29 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-        where = {
-          [Op.and]: newSearchArray,
-        };
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
+        let searchTerms = searchArray[0];
         where = {
-          [Op.or]: [
-            { referral: { [Op.substring]: search } },
-            { referred: { [Op.substring]: search } },
-          ],
+          ...where,
+          ...{
+            [Op.or]: [
+              { referral: { [Op.substring]: searchTerms } },
+              { referred: { [Op.substring]: searchTerms } },
+            ],
+          },
         };
       }
+    }
+
+    if ((user !== null) & (ref !== null)) {
+      let UserId = user;
+      where = { ...where, ...{ referralId: UserId } };
     }
     let result = [];
     ReferralView.findAndCountAll({
       where,
-      order: [["id", "desc"]],
+      order: [["id", "DESC"]],
       limit,
       offset,
     })
@@ -1570,16 +1228,20 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -1600,24 +1262,36 @@ router.post(
               },
             ],
           };
-
           newSearchArray.push(newSearchObj);
         }
-
-        where = {
-          [Op.and]: newSearchArray,
-        };
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
+        let searchTerms = searchArray[0];
         where = {
-          [Op.or]: [
-            { fullname: { [Op.substring]: search } },
-            { username: { [Op.substring]: search } },
-            { wallet: { [Op.substring]: search } },
-            { accountnumber: { [Op.substring]: search } },
-          ],
+          ...where,
+          ...{
+            [Op.or]: [
+              {
+                username: { [Op.substring]: searchTerms },
+              },
+              {
+                fullname: { [Op.substring]: searchTerms },
+              },
+              {
+                wallet: { [Op.substring]: searchTerms },
+              },
+              {
+                accountnumber: { [Op.substring]: searchTerms },
+              },
+            ],
+          },
         };
       }
+    }
+
+    if ((user !== null) & (ref !== null)) {
+      let UserId = user;
+      where = { ...where, ...{ UserId } };
     }
 
     const query = {
@@ -1663,16 +1337,18 @@ router.post(
     }
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.search) search = req.body.search;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -1692,23 +1368,24 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-        where = {
-          [Op.and]: newSearchArray,
-        };
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
+        let searchTerms = searchArray[0];
         where = {
-          [Op.or]: [
-            {
-              summary: { [Op.substring]: search },
-            },
-            {
-              link: { [Op.substring]: search },
-            },
-            {
-              title: { [Op.substring]: search },
-            },
-          ],
+          ...where,
+          ...{
+            [Op.or]: [
+              {
+                summary: { [Op.substring]: searchTerms },
+              },
+              {
+                link: { [Op.substring]: searchTerms },
+              },
+              {
+                title: { [Op.substring]: searchTerms },
+              },
+            ],
+          },
         };
       }
     }
@@ -1753,19 +1430,25 @@ router.post(
     }
 
     let limit = null,
-      search = null,
+      offset = 0,
       status = null,
-      offset = 0;
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
     if (req.body.search) search = req.body.search;
     if (req.body.status) status = req.body.status;
+    if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.ref) ref = req.body.ref;
 
-    let where = {};
-    if (search) {
-      let searchArray = search.split("+");
-
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -1788,52 +1471,34 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.or]: [
-                  { fullname: { [Op.substring]: search } },
-                  { username: { [Op.substring]: search } },
-                  { wallet: { [Op.substring]: search } },
-                  { accountnumber: { [Op.substring]: search } },
-                ],
-              },
-              { status },
-            ],
-          };
-        } else {
-          where = {
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
             [Op.or]: [
-              { fullname: { [Op.substring]: search } },
-              { username: { [Op.substring]: search } },
-              { wallet: { [Op.substring]: search } },
-              { accountnumber: { [Op.substring]: search } },
+              {
+                fullname: { [Op.substring]: searchTerms },
+              },
+              {
+                username: { [Op.substring]: searchTerms },
+              },
+              {
+                wallet: { [Op.substring]: searchTerms },
+              },
+              {
+                accountnumber: { [Op.substring]: searchTerms },
+              },
             ],
-          };
-        }
+          },
+        };
       }
-    } else {
-      if (status) {
-        where.status = status;
-      }
+    }
+
+    if ((user !== null) & (ref !== null)) {
+      let UserId = user;
+      where = { ...where, ...{ UserId } };
     }
 
     const query = {
@@ -1882,19 +1547,23 @@ router.post(
     }
 
     let limit = null,
-      search = null,
+      offset = 0,
       status = null,
-      offset = 0;
+      search = null,
+      user = null,
+      ref = null,
+      where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
     if (req.body.search) search = req.body.search;
     if (req.body.status) status = req.body.status;
 
-    let where = {};
-    if (search) {
-      let searchArray = search.split("+");
-
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -1908,57 +1577,22 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (status) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (status) {
-          where = {
-            [Op.and]: [
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
+            [Op.or]: [
               {
-                [Op.or]: [{ wallet: { [Op.substring]: search } }],
+                wallet: { [Op.substring]: searchTerms },
               },
-              { status },
             ],
-          };
-        } else {
-          where = {
-            [Op.or]: [{ wallet: { [Op.substring]: search } }],
-          };
-        }
-      }
-    } else {
-      if (status) {
-        where.status = status;
+          },
+        };
       }
     }
 
-    /* const query = {
-      order: [["withdrawalid", "DESC"]],
-      offset,
-      limit,
-      attributes: [
-        "wallet",
-        "status",
-        "date created",
-        "created by",
-      ],
-      where,
-      raw: true,
-    };*/
     let result = [];
     Wallet.findAndCountAll({
       where,
@@ -1993,21 +1627,27 @@ router.post(
     }
 
     let limit = null,
-      gateway = null,
+      offset = 0,
       status = null,
+      right = null,
       search = null,
-      offset = 0;
+      where = {},
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
-    if (req.body.right) right = req.body.right;
-    if (req.body.status) status = req.body.status;
     if (req.body.search) search = req.body.search;
-    let where = {};
-    if (req.body.search !== undefined) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
+    if (req.body.status) status = req.body.status;
+    if (req.body.right) right = req.body.right;
 
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (right !== null) {
+      where = { ...where, ...{ right } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -2028,115 +1668,29 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.right && req.body.status === undefined) {
-          where = {
-            [Op.and]: newSearchArray,
-
-            status: req.body.status,
-          };
-        } else if (req.body.status === undefined && req.body.right) {
-          where = {
-            [Op.and]: newSearchArray,
-
-            right: req.body.right,
-          };
-        } else if (req.body.status && req.body.right) {
-          where = {
-            [Op.and]: newSearchArray,
-
-            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.status && req.body.right === undefined) {
-          where = {
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
             [Op.or]: [
               {
-                title: { [Op.substring]: search },
+                title: { [Op.substring]: searchTerms },
               },
               {
-                creator: { [Op.substring]: search },
+                creator: { [Op.substring]: searchTerms },
               },
 
               {
-                text: { [Op.substring]: search },
+                text: { [Op.substring]: searchTerms },
               },
             ],
-            status: req.body.status,
-          };
-        } else if (req.body.status === undefined && req.body.right) {
-          where = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: search },
-              },
-              {
-                creator: { [Op.substring]: search },
-              },
-
-              {
-                text: { [Op.substring]: search },
-              },
-            ],
-            right: req.body.right,
-          };
-        } else if (req.body.status && req.body.right) {
-          where = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: search },
-              },
-              {
-                creator: { [Op.substring]: search },
-              },
-
-              {
-                text: { [Op.substring]: search },
-              },
-            ],
-
-            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
-          };
-        } else {
-          where = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: search },
-              },
-              {
-                creator: { [Op.substring]: search },
-              },
-
-              {
-                text: { [Op.substring]: search },
-              },
-            ],
-          };
-        }
+          },
+        };
       }
-    } else if (req.body.status && req.body.right === undefined) {
-      where = {
-        status: req.body.status,
-      };
-    } else if (req.body.status === undefined && req.body.right) {
-      where = {
-        right: req.body.right,
-      };
-    } else if (req.body.status && req.body.right) {
-      where = {
-        [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
-      };
-    } else {
-      where = {};
     }
 
-    let result = [];
     ForumView.findAndCountAll({
       order: [
         ["id", "Desc"],
@@ -2470,7 +2024,17 @@ router.get(
                                                     .then((referredby) => {
                                                       info.referredby =
                                                         referredby;
-                                                      return res.json(info);
+                                                      Account.count({
+                                                        where: {
+                                                          UserId,
+                                                        },
+                                                      }).then(
+                                                        (accountcount) => {
+                                                          info.accountcount =
+                                                            accountcount;
+                                                          return res.json(info);
+                                                        }
+                                                      );
                                                     })
                                                     .catch((err) =>
                                                       res
@@ -2479,34 +2043,28 @@ router.get(
                                                     );
                                                 })
                                                 .catch((err) =>
-                                                  res
-                                                    .status(404)
-                                                    .json(`pay ${err}`)
+                                                  res.status(404).json(err)
                                                 );
                                             })
                                             .catch((err) =>
-                                              res.status(404).json(`pay ${err}`)
+                                              res.status(404).json(err)
                                             );
                                         })
                                         .catch((err) =>
-                                          res.status(404).json(`pref ${err}`)
+                                          res.status(404).json(err)
                                         );
                                     })
-                                    .catch((err) =>
-                                      res.status(404).json(`mium ${err}`)
-                                    );
+                                    .catch((err) => res.status(404).json(err));
                                 })
-                                .catch((err) =>
-                                  res.status(404).json(`t w ${err}`)
-                                );
+                                .catch((err) => res.status(404).json(err));
                             })
-                            .catch((err) => res.status(404).json(`t c ${err}`));
+                            .catch((err) => res.status(404).json(err));
                         })
-                        .catch((err) => res.status(404).json(`T d ${err}`));
+                        .catch((err) => res.status(404).json(err));
                     })
-                    .catch((err) => res.status(404).json(`b ${err}`));
+                    .catch((err) => res.status(404).json(err));
                 })
-                .catch((err) => res.status(404).json(`S ${err}`));
+                .catch((err) => res.status(404).json(err));
             }
           }
         })

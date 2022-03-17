@@ -16,6 +16,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Toast from "../../layout/Toast";
+import Spinner from "../../layout/Spinner";
 
 import {
   getMore,
@@ -26,7 +27,6 @@ import {
 
 import Pagination from "../../util/Pagination";
 
-let typingTimer;
 export class Earnings extends Component {
   constructor(props) {
     super(props);
@@ -66,22 +66,24 @@ export class Earnings extends Component {
 
     if (searchParams !== "") {
       loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
     }
-    const paginate = {
-      limit,
-      offset,
-    };
     this.setState({
       numOfPages: Math.ceil(bonuscount / limit),
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -158,124 +160,23 @@ export class Earnings extends Component {
       return false;
     }
   };
-  /*
-  loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search;
-
-    let winScroll = window.scrollY;
-    console.log(winScroll);
-    
-    if (winScroll > iScrollPos) {
-      if (currentPage <= numOfPages) {
-        this.setState((prevState) => ({
-          offset: prevState.offset + limit,
-          upLoad: (prevState.upLoad = false),
-        }));
-
-        if (searchParams !== "") {
-          let queryTerms = searchParams.split("?")[1];
-          queryTerms = queryTerms.split("&");
-          let terms = queryTerms.map((term) => term.split("="));
-          let params = Object.fromEntries(terms);
-          params.offset = this.state.offset;
-          params.limit = this.state.limit;
-          // Search Now
-          this.props.searchContent(content, params);
-        } else {
-          const paginate = {
-            offset: this.state.offset,
-            limit: this.state.limit,
-          };
-          this.props.getContent(content, paginate);
-        }
-
-        this.setState({
-          currentPage: this.state.currentPage + 1,
-        });
-      }
-    }
-  };*/
 
   changeHandler = (e) => {
-    const { url, content, currentPage, limit, offset } = this.state;
+    const { url, content, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
     });
     setSearchParams({
-      selected: [e.target.name],
-      valueOfSelected: [e.target.value],
-      typingTimer,
+      selected: e.target.name,
+      valueOfSelected: e.target.value,
       url,
       content,
-      currentPage,
       limit,
       offset,
       self: this,
     });
   };
-
-  /*  setSearchParams = (selected, valueOfSelected) => {
-    const { url, content } = this.state;
-    this.setState({
-      offset: 0,
-      limit: 4,
-      currentPage: 2,
-    });
-    if (valueOfSelected !== "") {
-      url.searchParams.set(selected, valueOfSelected);
-      window.history.pushState({}, "", url);
-    } else if (valueOfSelected === "") {
-      url.searchParams.delete(selected);
-      window.history.pushState({}, "", url);
-    }
-
-    let searchParams = window.location.search;
-    if (searchParams !== "") {
-      let queryTerms = searchParams.split("?")[1];
-      queryTerms = queryTerms.split("&");
-      let terms = queryTerms.map((term) => term.split("="));
-      let params = Object.fromEntries(terms);
-      params.offset = 0;
-      params.limit = this.state.limit;
-
-      // Search Now
-      this.props.clearSearchActions(content);
-      if (selected === "search") {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-          this.setState({
-            isLoading: true,
-          });
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-          this.props.searchContent(content, params);
-        }, this.state.doneTypingInterval);
-      } else {
-        this.setState({
-          isLoading: true,
-        });
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        this.props.searchContent(content, params);
-      }
-    } else {
-      const paginate = {
-        offset: 0,
-        limit: this.state.limit,
-      };
-      this.props.clearActions(content);
-      this.setState((prevState) => ({
-        upLoad: (prevState.upLoad = false),
-      }));
-      this.props.getContent(content, paginate);
-    }
-  };*/
 
   render() {
     const {
@@ -328,13 +229,11 @@ export class Earnings extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="bonus card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Bonus</h1>
+              <h1>Earnings</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
@@ -358,7 +257,7 @@ export class Earnings extends Component {
                 </div>
 
                 <div className="col-md-3 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
+                  <button type="button" className="btn download-btn">
                     Download <i className="far fa-file-excel" />
                   </button>
                 </div>
@@ -383,8 +282,9 @@ export class Earnings extends Component {
               head={[
                 "S/N",
                 "amount",
+                "payer",
                 "status",
-                "username",
+                "receiver",
                 "date created",
                 "date approved",
                 "view",
@@ -406,14 +306,16 @@ export class Earnings extends Component {
 }
 
 Earnings.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
   clearAdminAction: PropTypes.func,
   loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
-  updateAdmin: PropTypes.func,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object,
+  updateBonus: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

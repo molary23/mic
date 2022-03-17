@@ -10,210 +10,129 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 
-let typingTimer;
+import Spinner from "../../layout/Spinner";
+
+import {
+  getMore,
+  setSearchParams,
+  renderArrange,
+  loadFromParams,
+} from "../../util/LoadFunction";
+import Pagination from "../../util/Pagination";
 export class Referrals extends Component {
   state = {
     sender: "admin-referrals",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
-    isLoading: false,
-    doneTypingInterval: 5000,
-    refcount: JSON.parse(localStorage.getItem("counts")).referrals,
+    startLoad: false,
+    getLoad: true,
+    refcount:
+      JSON.parse(localStorage.getItem("counts")).referrals ??
+      this.props.auth.allCounts.referrals,
     upLoad: true,
     content: "referrals",
   };
 
   componentDidMount() {
     const { limit, offset, refcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(refcount / limit),
     });
-    this.props.getContent(content, paginate);
+
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
-
   loadMore = () => {
     const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search;
-
-    let winScroll = window.scrollY;
-
-    if (winScroll > iScrollPos) {
-      if (currentPage <= numOfPages) {
-        this.setState((prevState) => ({
-          offset: prevState.offset + limit,
-          upLoad: (prevState.upLoad = false),
-        }));
-
-        if (searchParams !== "") {
-          let queryTerms = searchParams.split("?")[1];
-          queryTerms = queryTerms.split("&");
-          let terms = queryTerms.map((term) => term.split("="));
-          let params = Object.fromEntries(terms);
-          params.offset = this.state.offset;
-          params.limit = this.state.limit;
-          // Search Now
-          this.props.searchContent(content, params);
-        } else {
-          const paginate = {
-            offset: this.state.offset,
-            limit: this.state.limit,
-          };
-          this.props.getContent(content, paginate);
-        }
-
-        this.setState({
-          currentPage: this.state.currentPage + 1,
-        });
-      }
-    }
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    getMore({
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      winScroll,
+      searchParams,
+      self: this,
+    });
   };
-
   changeHandler = (e) => {
+    const { url, content, limit, offset } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
     });
-    this.setSearchParams(e.target.name, e.target.value);
-  };
-
-  setSearchParams = (selected, valueOfSelected) => {
-    const { url, content } = this.state;
-    this.setState({
-      offset: 0,
-      limit: 4,
-      currentPage: 2,
+    setSearchParams({
+      selected: e.target.name,
+      valueOfSelected: e.target.value,
+      url,
+      content,
+      limit,
+      offset,
+      self: this,
     });
-    if (valueOfSelected !== "") {
-      url.searchParams.set(selected, valueOfSelected);
-      window.history.pushState({}, "", url);
-    } else if (valueOfSelected === "") {
-      url.searchParams.delete(selected);
-      window.history.pushState({}, "", url);
-    }
-
-    let searchParams = window.location.search;
-    if (searchParams !== "") {
-      let queryTerms = searchParams.split("?")[1];
-      queryTerms = queryTerms.split("&");
-      let terms = queryTerms.map((term) => term.split("="));
-      let params = Object.fromEntries(terms);
-      params.offset = 0;
-      params.limit = this.state.limit;
-
-      // Search Now
-      this.props.clearSearchActions(content);
-      if (selected === "search") {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-          this.setState({
-            isLoading: true,
-          });
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-          this.props.searchContent(content, params);
-        }, this.state.doneTypingInterval);
-      } else {
-        this.setState({
-          isLoading: true,
-        });
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        this.props.searchContent(content, params);
-      }
-    } else {
-      const paginate = {
-        offset: 0,
-        limit: this.state.limit,
-      };
-      this.props.clearActions(content);
-      this.setState((prevState) => ({
-        upLoad: (prevState.upLoad = false),
-      }));
-      this.props.getContent(content, paginate);
-    }
   };
 
   render() {
-    const { sender, isLoading, upLoad, search, refcount } = this.state;
+    const { sender, search, refcount, startLoad, getLoad } = this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.refCount,
+      list = admin.referrals,
+      searchcount = searchTerms.refCount,
+      searchlist = searchTerms.referrals,
+      searchloading = searchTerms.loading;
 
-    let load = upLoad,
-      loader = isLoading,
-      ref = [],
-      searchref,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = refcount;
-    console.log(admin.referrals);
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      refcount,
+    });
 
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.refCount;
-      totalText = "Total Users";
-      if (admin.referrals === [] && loading) {
-        loader = true;
-        load = upLoad;
-      } else if (admin.referrals.length > 0 && !loading) {
-        ref = admin.referrals;
-        load = false;
-        loader = false;
-      } else if (admin.referrals.length > 0 && loading) {
-        ref = admin.referrals;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        ref = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.refCount;
-      totalText = "Selected/Searched Users";
-      if (searchTerms.referrals === [] || searchTerms.referrals.length <= 0) {
-        noRecord = true;
-        searchref = [];
-        loader = false;
-      } else if (searchTerms.referrals.length > 0 && !searchTerms.loading) {
-        searchref = searchTerms.referrals;
-        loader = false;
-      } else if (searchTerms.referrals.length > 0 && searchTerms.loading) {
-        searchref = searchTerms.referrals;
-        loader = true;
-      }
-    }
     return (
       <div>
         {loader && <ProgressBar />}
@@ -261,7 +180,7 @@ export class Referrals extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? ref : searchref}
+                tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
           </div>
@@ -272,13 +191,24 @@ export class Referrals extends Component {
 }
 
 Referrals.propTypes = {
-  getContent: PropTypes.func,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
+  getContent: PropTypes.func.isRequired,
+  clearActions: PropTypes.func,
   searchContent: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  renderArrange: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  loadFromParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

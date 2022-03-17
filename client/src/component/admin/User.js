@@ -11,9 +11,10 @@ import CardDetails from "../../layout/CardDetails";
 
 import { GiWallet } from "react-icons/gi";
 import { BsBell } from "react-icons/bs";
+import { VscCircleFilled } from "react-icons/vsc";
 
 import { IoReturnUpBackOutline } from "react-icons/io5";
-import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { AiOutlineUsergroupAdd, AiOutlineMoneyCollect } from "react-icons/ai";
 
 import { GiMoneyStack, GiReceiveMoney, GiPayMoney } from "react-icons/gi";
 import { RiShieldUserLine } from "react-icons/ri";
@@ -99,6 +100,7 @@ class User extends Component {
       preference,
       pay,
       referralcount,
+      accountcount,
       currencies,
       providers,
       referredby,
@@ -118,11 +120,14 @@ class User extends Component {
       withdrawal = admin.getuser.withdrawal ?? 0;
       premiumstatus = admin.getuser.premiumstatus;
       preference = admin.getuser.preference;
-      currencies = preference.currencies;
-      providers = preference.providers;
+      if (preference) {
+        currencies = preference.currencies;
+        providers = preference.providers;
+      }
       notify = preference.notify;
       pay = admin.getuser.pay ?? 0;
       referralcount = admin.getuser.referralcount;
+      accountcount = admin.getuser.accountcount;
       referredby = admin.getuser.referredby;
     } else if (admin.getuser.user === null && !loading) {
       loader = false;
@@ -172,7 +177,7 @@ class User extends Component {
                     <CardDetails
                       {...{
                         label: "email",
-                        value: user.email,
+                        value: <span className="lower">{user.email}</span>,
                       }}
                     />
                     <CardDetails
@@ -188,61 +193,53 @@ class User extends Component {
                         value: user.phone,
                       }}
                     />
-                    {premiumstatus.status === "n" && (
-                      <CardDetails
-                        {...{
-                          label: "premium status",
-                          value: (
+
+                    <CardDetails
+                      {...{
+                        label: "premium status",
+                        value:
+                          (premiumstatus.status === "n" && (
                             <div>
                               <span className="new-status status-info">
-                                <span>&bull;</span>
+                                <span>
+                                  <VscCircleFilled />
+                                </span>
                               </span>
                               new
                             </div>
-                          ),
-                        }}
-                      />
-                    )}
-                    {premiumstatus.status === "i" && (
-                      <CardDetails
-                        {...{
-                          label: "premium status",
-                          value: (
-                            <div>
-                              <span className="inactive-status status-info">
-                                <span>&bull;</span>
-                              </span>
-                              inactive
-                            </div>
-                          ),
-                        }}
-                      />
-                    )}
-                    {premiumstatus.status === "a" && (
-                      <CardDetails
-                        {...{
-                          label: "premium status",
-                          value: (
+                          )) ||
+                          (premiumstatus.status === "a" && (
                             <div>
                               <span className="active-status status-info">
-                                <span>&bull;</span>
+                                <span>
+                                  <VscCircleFilled />
+                                </span>
                               </span>
-                              active
+                              new
                             </div>
-                          ),
-                        }}
-                      />
-                    )}
-                    {(premiumstatus.status === "n" ||
-                      premiumstatus.status === "i") && (
+                          )) ||
+                          (premiumstatus.status === "i" && (
+                            <div>
+                              <span className="inactive-status status-info">
+                                <span>
+                                  <VscCircleFilled />
+                                </span>
+                              </span>
+                              new
+                            </div>
+                          )),
+                      }}
+                    />
+
+                    {premiumstatus.status === "n" ||
+                    premiumstatus.status === "i" ? (
                       <CardDetails
                         {...{
                           label: "last subscription expiry date",
                           value: new Date(premiumstatus.enddate).toDateString(),
                         }}
                       />
-                    )}
-                    {premiumstatus.status === "a" && (
+                    ) : (
                       <CardDetails
                         {...{
                           label: "next subscription date",
@@ -250,6 +247,7 @@ class User extends Component {
                         }}
                       />
                     )}
+
                     {referredby !== null && (
                       <CardDetails
                         {...{
@@ -273,7 +271,16 @@ class User extends Component {
                             <AiOutlineUsergroupAdd /> referral count
                           </span>
                         ),
-                        value: referralcount,
+                        value:
+                          referralcount !== 0 ? (
+                            <Link
+                              to={`/admin/referrals?ref=true&user=${user.id}`}
+                            >
+                              {referralcount}
+                            </Link>
+                          ) : (
+                            referralcount
+                          ),
                       }}
                     />
                     <CardDetails
@@ -283,7 +290,16 @@ class User extends Component {
                             <MdOutlinePayments /> lifetime subscriptions
                           </span>
                         ),
-                        value: sub,
+                        value:
+                          sub !== 0 ? (
+                            <Link
+                              to={`/admin/subscriptions?ref=true&user=${user.id}`}
+                            >
+                              {sub}
+                            </Link>
+                          ) : (
+                            sub
+                          ),
                       }}
                     />
                     <CardDetails
@@ -293,13 +309,16 @@ class User extends Component {
                             <GiPayMoney /> lifetime payments
                           </span>
                         ),
-                        value: (
-                          <Link
-                            to={`/admin/payments?ref=true&id=${user.id}&status=s`}
-                          >
-                            {pay.toFixed(2)}
-                          </Link>
-                        ),
+                        value:
+                          pay !== 0 ? (
+                            <Link
+                              to={`/admin/payments?ref=true&user=${user.id}&status=s`}
+                            >
+                              {pay.toFixed(2)}
+                            </Link>
+                          ) : (
+                            pay
+                          ),
                       }}
                     />
                     <CardDetails
@@ -309,7 +328,16 @@ class User extends Component {
                             <GiWallet /> lifetime earnings
                           </span>
                         ),
-                        value: bonus.toFixed(2),
+                        value:
+                          bonus !== 0 ? (
+                            <Link
+                              to={`/admin/earnings?ref=true&user=${user.id}&status=a`}
+                            >
+                              {bonus.toFixed(2)}
+                            </Link>
+                          ) : (
+                            bonus
+                          ),
                       }}
                     />
                     <CardDetails
@@ -319,7 +347,16 @@ class User extends Component {
                             <MdOutlineCreditCardOff /> lifetime debits
                           </span>
                         ),
-                        value: debit.toFixed(2),
+                        value:
+                          debit !== 0 ? (
+                            <Link
+                              to={`/admin/transactions?ref=true&user=${user.id}&type=d`}
+                            >
+                              {debit.toFixed(2)}
+                            </Link>
+                          ) : (
+                            debit
+                          ),
                       }}
                     />
                     <CardDetails
@@ -329,7 +366,16 @@ class User extends Component {
                             <MdCreditScore /> lifetime credits
                           </span>
                         ),
-                        value: credit.toFixed(2),
+                        value:
+                          credit !== 0 ? (
+                            <Link
+                              to={`/admin/transactions?ref=true&user=${user.id}&type=c`}
+                            >
+                              {credit.toFixed(2)}
+                            </Link>
+                          ) : (
+                            credit
+                          ),
                       }}
                     />
                     <CardDetails
@@ -349,7 +395,16 @@ class User extends Component {
                             <GiReceiveMoney /> lifetime withdrawal
                           </span>
                         ),
-                        value: withdrawal.toFixed(2),
+                        value:
+                          withdrawal !== 0 ? (
+                            <Link
+                              to={`/admin/withdrawals?ref=true&user=${user.id}&status=a`}
+                            >
+                              {withdrawal.toFixed(2)}
+                            </Link>
+                          ) : (
+                            withdrawal
+                          ),
                       }}
                     />
                     {currencies !== null ? (
@@ -360,9 +415,15 @@ class User extends Component {
                               <BsCurrencyExchange /> following
                             </span>
                           ),
-                          value: `${currencies.length} currency pair${
-                            currencies.length > 1 ? "s" : ""
-                          }`,
+                          value: (
+                            <Link
+                              to={`/admin/currencies?ref=true&user=${user.id}&status=a`}
+                            >
+                              {`${currencies.length} currency pair${
+                                currencies.length > 1 ? "s" : ""
+                              }`}
+                            </Link>
+                          ),
                         }}
                       />
                     ) : (
@@ -385,9 +446,16 @@ class User extends Component {
                               <RiShieldUserLine /> following
                             </span>
                           ),
-                          value: `${providers.length} signal provider${
-                            providers.length > 1 ? "s" : ""
-                          }`,
+
+                          value: (
+                            <Link
+                              to={`/admin/signal-providers?ref=true&user=${user.id}&status=a`}
+                            >
+                              {`${providers.length} signal provider${
+                                providers.length > 1 ? "s" : ""
+                              }`}
+                            </Link>
+                          ),
                         }}
                       />
                     ) : (
@@ -412,6 +480,25 @@ class User extends Component {
                         value: `${notify === "y" ? "on" : "off"}`,
                       }}
                     />
+                    <CardDetails
+                      {...{
+                        label: (
+                          <span>
+                            <AiOutlineMoneyCollect /> all account details
+                          </span>
+                        ),
+                        value:
+                          accountcount !== 0 ? (
+                            <Link
+                              to={`/admin/accounts?ref=true&user=${user.id}`}
+                            >
+                              {accountcount}
+                            </Link>
+                          ) : (
+                            accountcount
+                          ),
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -431,7 +518,7 @@ User.propTypes = {
   clearAdminAction: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
-  errors: PropTypes.object,
+  errors: PropTypes.any,
 };
 
 const mapStateToProps = (state) => ({

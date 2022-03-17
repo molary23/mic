@@ -23,7 +23,7 @@ WithdrawalView.init(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    userid: {
+    UserId: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
     fullname: {

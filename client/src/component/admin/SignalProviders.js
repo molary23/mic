@@ -44,6 +44,7 @@ class ViewAdmin extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
     url: new URL(window.location),
     isLoading: false,
     usercount: 9,
@@ -56,6 +57,7 @@ class ViewAdmin extends Component {
     toast: false,
     toasttext: "",
     error: {},
+    servererror: {},
   };
 
   componentDidMount() {
@@ -65,17 +67,16 @@ class ViewAdmin extends Component {
 
     if (searchParams !== "") {
       loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
     }
-
-    const paginate = {
-      limit,
-      offset,
-    };
     this.setState({
       numOfPages: Math.ceil(providercount / limit),
     });
-
-    this.props.getContent(content, paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
@@ -90,7 +91,7 @@ class ViewAdmin extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.errors) {
-      update.error = nextProps.errors;
+      update.servererror = nextProps.errors;
     }
     return update;
   }
@@ -112,7 +113,7 @@ class ViewAdmin extends Component {
   }
 
   afterUpdate = (text) => {
-    const { limit, content, signalcount } = this.state;
+    const { limit, content, signalcount, timer } = this.state;
     if (text === "added") {
       this.setState({
         numOfPages: Math.ceil((signalcount + 1) / limit),
@@ -145,7 +146,7 @@ class ViewAdmin extends Component {
         toast: false,
         newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
@@ -355,19 +356,23 @@ class ViewAdmin extends Component {
 }
 
 ViewAdmin.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
   renderArrange: PropTypes.func,
   clearAdminAction: PropTypes.func,
   addNewAdmin: PropTypes.func,
   updateAdmin: PropTypes.func,
-  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

@@ -7,6 +7,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
 import { FiCheckCircle } from "react-icons/fi";
+import { VscCircleFilled } from "react-icons/vsc";
 
 import Flag from "react-flagpack";
 
@@ -21,7 +22,7 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>
             {item.method === "b" && "bonus"}
             {item.method === "s" && "subscription"}
@@ -41,17 +42,21 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
 
             {item.status === "r" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -74,23 +79,29 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>{item.payer}</td>
           <td>
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
 
             {item.status === "r" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "p" && (
               <span className="new-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -116,18 +127,24 @@ function TableBody(props) {
           <td>
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
 
             {item.status === "i" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "n" && (
               <span className="new-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -143,7 +160,7 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>{item.gateway === "c" ? "crypto" : "bank"}</td>
           <td>{item.reference}</td>
           <td>{item.status === 2 ? "successful" : "failed"}</td>
@@ -161,21 +178,27 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>
             {item.status === "p" && (
               <span className="new-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "r" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -197,7 +220,7 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>{item.reference}</td>
           <td>{item.status}</td>
           <td>{item.date.toISOString()}</td>
@@ -212,31 +235,55 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
+          <td>
+            <Link
+              type="button"
+              title="View Payer"
+              to={`/admin/user/:${item.payerid}`}
+            >
+              {item.payer}
+            </Link>
+          </td>
           <td>
             {item.status === "p" && (
               <span className="new-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "r" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
-          <td>{item.username}</td>
+          <td>
+            <Link
+              type="button"
+              title="View User"
+              to={`/admin/user/:${item.UserId}`}
+            >
+              {item.username}
+            </Link>
+          </td>
           <td>
             <DateFormat date={item.createdAt} />
           </td>
           <td>
             <DateFormat date={item.updatedAt} />
           </td>
+
           <td>
             <div className="action-buttons">
               <Link
@@ -287,19 +334,23 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>
             <Link
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${item.userId}`} // change to user ID later
+              to={`/admin/user/:${item.UserId}`} // change to user ID later
             >
               {item.username}
             </Link>
           </td>
-          <td>{item.method}</td>
-          <td>{item.type}</td>
+          <td>
+            {item.method === "b" && "bonus"}
+            {item.method === "s" && "subscription"}
+            {item.method === "w" && "withdrawal"}
+          </td>
+          <td>{item.type === "d" ? "debit" : "credit"}</td>
           <td>
             <DateFormat date={item.transactiondate}></DateFormat>
           </td>
@@ -317,12 +368,16 @@ function TableBody(props) {
           <td>
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "i" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -332,7 +387,7 @@ function TableBody(props) {
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${item.userId}`}
+              to={`/admin/admin/:${item.UserId}`}
             >
               {item.User.username}
             </Link>
@@ -389,7 +444,7 @@ function TableBody(props) {
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${item.referral}`}
+              to={`/admin/user/:${item.referralid}`}
             >
               {item.referral}
             </Link>
@@ -404,7 +459,7 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>{item.fullname}</td>
           <td>
             <Link
@@ -419,17 +474,23 @@ function TableBody(props) {
           <td>
             {item.status === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "r" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.status === "p" && (
               <span className="new-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -477,7 +538,7 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td className="td-lower">
             <Link
               type=""
@@ -531,22 +592,22 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>{item.amount}</td>
+          <td>{item.amount !== null && item.amount.toFixed(2)}</td>
 
           <td>
             <Link
               className=""
               data-id={i}
               title="View Details"
-              to={`/admin/user/:${item.userId}`}
+              to={`/admin/user/:${item.UserId}`}
             >
               {item.username}
             </Link>
           </td>
           <td>{item.type === "b" ? "bonus" : "payment"}</td>
 
-          <td>{item.package === "m" ? "monthly" : "annually"}</td>
-          <td>{item.plan}</td>
+          <td>{item.plan === "m" ? "monthly" : "annually"}</td>
+          <td>{item.package}</td>
           <td>
             <DateFormat date={item.subscriptiondate} />
           </td>
@@ -563,7 +624,7 @@ function TableBody(props) {
           <td>{item.fullname}</td>
           <td className="td-lower">{item.email}</td>
           <td className="td-lower">
-            <Link title="View User" to={`/admin/user/:${item.userid}`}>
+            <Link title="View User" to={`/admin/user/:${item.UserId}`}>
               {item.username}
             </Link>
           </td>
@@ -571,28 +632,38 @@ function TableBody(props) {
           <td>
             {item.userstatus === "a" ? (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             ) : (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
           <td>
             {item.premiumstatus === "a" && (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.premiumstatus === "i" && (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
             {item.premiumstatus === "n" && (
               <span className="new-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -635,7 +706,7 @@ function TableBody(props) {
               className=""
               data-id={i}
               title={`View ${adm}`}
-              to={`/admin/admin/:${item.userid}`}
+              to={`/admin/admin/:${item.UserId}`}
             >
               {item.username}
             </Link>
@@ -644,11 +715,15 @@ function TableBody(props) {
           <td>
             {item.status === "a" ? (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             ) : (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -660,7 +735,7 @@ function TableBody(props) {
                   className="btn btn-danger btn-sm"
                   data-id={item.id}
                   title={`Deactivate ${adm}`}
-                  onClick={() => onClick(["delete", item.userid])}
+                  onClick={() => onClick(["delete", item.UserId])}
                 >
                   <MdOutlineDeleteForever />
                 </button>
@@ -672,7 +747,7 @@ function TableBody(props) {
                   className="btn btn-success btn-sm"
                   data-id={item.id}
                   title={`Activate ${adm}`}
-                  onClick={() => onClick(["reactivate", item.userid])}
+                  onClick={() => onClick(["reactivate", item.UserId])}
                 >
                   <RiRefreshLine />
                 </button>
@@ -764,11 +839,15 @@ function TableBody(props) {
           <td>
             {item.status === "a" ? (
               <span className="active-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             ) : (
               <span className="inactive-status status-info">
-                <span>&bull;</span>
+                <span>
+                  <VscCircleFilled />
+                </span>
               </span>
             )}
           </td>
@@ -784,8 +863,8 @@ function TableBody(props) {
             <Link
               type=""
               className=""
-              title="View Admin"
-              to={`/admin/user/:${item.UserId}`}
+              title="View Provider"
+              to={`/admin/admin/:${item.UserId}`}
             >
               {item.User.username}
             </Link>
@@ -848,8 +927,12 @@ function TableBody(props) {
               </>
             }
           </td>
-          <td>{item.signaloption}</td>
-          <td>{item.status}</td>
+          <td>{item.signaloption === "s" ? "sell" : "buy"}</td>
+          <td>
+            {item.status === "c" && "cancelled"}
+            {item.status === "f" && "fulfilled"}
+            {item.status === null && ""}
+          </td>
           <td>
             {item.takeprofit.map((tp, i) => {
               let profit;
@@ -889,7 +972,7 @@ function TableBody(props) {
                 type=""
                 className=""
                 title="View Provider"
-                to={`/admin/signal-provider/:${item.userid}`}
+                to={`/admin/signal-provider/:${item.providerid}`}
               >
                 {item.provider}
               </Link>

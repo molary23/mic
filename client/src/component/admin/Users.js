@@ -18,23 +18,25 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import Spinner from "../../layout/Spinner";
+import Pagination from "../../util/Pagination";
 
 class Users extends Component {
   state = {
     sender: "admin-users",
     search: "",
-    premiumstatusOpt: [
+    statusOpt: [
       { value: "", option: "Filter by Premium Status" },
       { value: "a", option: "Active" },
       { value: "i", option: "Inactive" },
       { value: "n", option: "New" },
     ],
     premiumstatus: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     usercount:
       JSON.parse(localStorage.getItem("counts")).users ??
@@ -47,25 +49,29 @@ class Users extends Component {
   componentDidMount() {
     const { limit, offset, usercount, content } = this.state;
     let searchParams = window.location.search;
-    loadFromParams({ limit, self: this, content, searchParams });
-    const paginate = {
-      limit,
-      offset,
-    };
+
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(usercount / limit),
       startLoad: true,
     });
 
-    this.props.getContent(content, paginate);
-
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   loadMore = () => {
@@ -105,7 +111,7 @@ class Users extends Component {
     const {
       sender,
       premiumstatus,
-      premiumstatusOpt,
+      statusOpt,
       usercount,
       startLoad,
       getLoad,
@@ -149,13 +155,11 @@ class Users extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Transactions</h1>
+              <h1>Users</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
@@ -171,7 +175,7 @@ class Users extends Component {
                 <div className="col-md-3 mb-3">
                   <Select
                     sender={sender}
-                    options={premiumstatusOpt}
+                    options={statusOpt}
                     onChange={this.changeHandler}
                     name="premiumstatus"
                     value={premiumstatus}
@@ -203,10 +207,9 @@ class Users extends Component {
                 "fullname",
                 "email",
                 "username",
-                "phone number",
+                "phone",
                 "User Status ",
                 "Premium Status",
-                "View",
               ]}
             >
               <TableBody
@@ -222,6 +225,10 @@ class Users extends Component {
 }
 
 Users.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
   loadFromParams: PropTypes.func,
@@ -232,6 +239,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

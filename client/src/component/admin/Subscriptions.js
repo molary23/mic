@@ -9,6 +9,7 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  loadFromParams,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -16,6 +17,8 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import Spinner from "../../layout/Spinner";
+import Pagination from "../../util/Pagination";
 
 export class Subscriptions extends Component {
   state = {
@@ -26,46 +29,52 @@ export class Subscriptions extends Component {
       { value: "b", option: "Bonus" },
       { value: "p", option: "Pay" },
     ],
-    packageOptions: [
-      { value: "", option: "Filter by Package" },
+    planOptions: [
+      { value: "", option: "Filter by Plan" },
       { value: "m", option: "Monthly" },
       { value: "y", option: "Yearly" },
     ],
     type: "",
-    subPackage: "",
-    limit: 4,
-    offset: 0,
-    sub: "",
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    plan: "",
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     subcount: JSON.parse(localStorage.getItem("counts")).subscriptions,
     startLoad: false,
     getLoad: true,
+    isLoading: false,
     content: "subscriptions",
   };
 
   componentDidMount() {
     const { limit, offset, subcount, content } = this.state;
 
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(subcount / limit),
     });
-
-    this.props.getContent(content, paginate);
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   loadMore = () => {
@@ -97,7 +106,6 @@ export class Subscriptions extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
     });
   };
@@ -106,9 +114,9 @@ export class Subscriptions extends Component {
     const {
       sender,
       typeOptions,
-      packageOptions,
+      planOptions,
       type,
-      subPackage,
+      plan,
       search,
       subcount,
       startLoad,
@@ -153,9 +161,7 @@ export class Subscriptions extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -185,10 +191,10 @@ export class Subscriptions extends Component {
                 <div className="col-md-2 mb-2">
                   <Select
                     sender={sender}
-                    options={packageOptions}
+                    options={planOptions}
                     onChange={this.changeHandler}
-                    name="subPackage"
-                    value={subPackage}
+                    name="plan"
+                    value={plan}
                   />
                 </div>
                 <div className="col-md-2 mb-2">
@@ -216,8 +222,8 @@ export class Subscriptions extends Component {
                 "amount",
                 "username",
                 "type",
-                "package",
                 "plan",
+                "package",
                 "date",
               ]}
             >
@@ -234,21 +240,25 @@ export class Subscriptions extends Component {
 }
 
 Subscriptions.propTypes = {
-  getSub: PropTypes.func,
-  searchSub: PropTypes.func,
-  renderArrange: PropTypes.func,
+  getContent: PropTypes.func.isRequired,
+  searchContent: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  loadFromParams: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  renderArrange: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  errors: PropTypes.any,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
   clearActions,
-  renderArrange,
 })(Subscriptions);

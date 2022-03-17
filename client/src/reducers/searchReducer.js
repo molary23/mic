@@ -81,20 +81,20 @@ export default function searchReducer(state = initialState, action) {
         searching: true,
       };
     case GET_SEARCH_TRANSACTIONS:
-      let countTrans = action.payload.shift();
+      let transCount = action.payload.shift();
       return {
         ...state,
         trans: [...state.trans, ...action.payload],
-        transCount: countTrans,
+        transCount,
         loading: false,
         searching: true,
       };
     case GET_SEARCH_USERS:
-      let countUser = action.payload.shift();
+      let usersCount = action.payload.shift();
       return {
         ...state,
         users: [...state.users, ...action.payload],
-        transCount: countUser,
+        usersCount,
         loading: false,
         searching: true,
       };

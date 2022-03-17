@@ -27,11 +27,11 @@ Subscription.init(
     payID: {
       type: DataTypes.INTEGER.UNSIGNED, // Payment ID
     },
-    package: {
+    plan: {
       type: DataTypes.ENUM("m", "y"), // Package Paid for
       allowNull: false,
     },
-    plan: {
+    package: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },

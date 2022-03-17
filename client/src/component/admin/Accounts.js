@@ -8,22 +8,29 @@ import { RiFileExcel2Line } from "react-icons/ri";
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
-import { getMore, setSearchParams } from "../../util/LoadFunction";
-
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
+import Spinner from "../../layout/Spinner";
+
+import {
+  getMore,
+  setSearchParams,
+  renderArrange,
+  loadFromParams,
+} from "../../util/LoadFunction";
+import Pagination from "../../util/Pagination";
 
 class Accounts extends Component {
   state = {
     sender: "admin-accounts",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
     url: new URL(window.location),
     accountcount: JSON.parse(localStorage.getItem("counts")).accounts,
     startLoad: false,
@@ -34,24 +41,30 @@ class Accounts extends Component {
   componentDidMount() {
     const { limit, offset, accountcount, content } = this.state;
 
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(accountcount / limit),
       startLoad: true,
     });
 
-    this.props.getContent(content, paginate);
-
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   loadMore = () => {
@@ -88,73 +101,47 @@ class Accounts extends Component {
   };
 
   render() {
-    const { sender, accountcount, isLoading, upLoad, search } = this.state;
+    const { sender, accountcount, search, startLoad, getLoad } = this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
     const { fetching } = admin;
     const { searching } = searchTerms;
+    const count = admin.accCount,
+      list = admin.accounts,
+      searchcount = searchTerms.accCount,
+      searchlist = searchTerms.accounts,
+      searchloading = searchTerms.loading;
 
-    let load = upLoad,
-      loader = isLoading,
-      accounts = [],
-      searchaccounts,
+    const {
       showSearch,
-      emptyRecord = false,
-      noRecord = false,
-      totalText = "",
-      totalCount = accountcount;
+      main,
+      searchMain,
+      emptyRecord,
+      noRecord,
+      totalText,
+      totalCount,
+      load,
+      loader,
+    } = renderArrange({
+      fetching,
+      loading,
+      list,
+      count,
+      searching,
+      searchcount,
+      searchlist,
+      searchloading,
+      startLoad,
+      getLoad,
+      accountcount,
+    });
 
-    if (fetching) {
-      showSearch = false;
-      loader = true;
-      totalCount = admin.accCount;
-      totalText = "Total User";
-      if (admin.accounts === [] && loading) {
-        loader = true;
-        load = upLoad;
-      } else if (admin.accounts.length > 0 && !loading) {
-        accounts = admin.accounts;
-        load = false;
-
-        loader = false;
-      } else if (admin.accounts.length > 0 && loading) {
-        accounts = admin.accounts;
-        load = false;
-        loader = true;
-      } else {
-        load = false;
-        emptyRecord = true;
-        accounts = [];
-      }
-    }
-
-    if (!searching) {
-      showSearch = searching;
-    } else {
-      showSearch = true;
-      loader = true;
-      totalCount = searchTerms.accCount;
-      totalText = "Selected/Searched";
-      if (searchTerms.accounts === [] || searchTerms.accounts.length <= 0) {
-        noRecord = true;
-        searchaccounts = [];
-        loader = false;
-      } else if (searchTerms.accounts.length > 0 && !searchTerms.loading) {
-        searchaccounts = searchTerms.accounts;
-        loader = false;
-      } else if (searchTerms.accounts.length > 0 && searchTerms.loading) {
-        searchaccounts = searchTerms.accounts;
-        loader = true;
-      }
-    }
     return (
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -188,7 +175,9 @@ class Accounts extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -203,7 +192,7 @@ class Accounts extends Component {
             >
               <TableBody
                 sender={sender}
-                tablebody={!showSearch ? accounts : searchaccounts}
+                tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
           </div>
@@ -214,16 +203,24 @@ class Accounts extends Component {
 }
 
 Accounts.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
   getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func.isRequired,
-  clearSearchActions: PropTypes.func.isRequired,
+  clearActions: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  renderArrange: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  loadFromParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

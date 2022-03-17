@@ -7,7 +7,7 @@ const view_name = "BonusViews";
 const original_query = [
   "SELECT ",
   " Bonuses.id AS bonusid, Bonuses.UserId, Bonuses.amount, Bonuses.status, ",
-  "Users.username AS username, (SELECT Users.username FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payer, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId ",
+  "Users.username AS username, (SELECT Users.username FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payer, (SELECT Users.id FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payerid, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId ",
   " FROM Bonuses ",
   " LEFT JOIN Users ",
   " ON Bonuses.UserId = Users.id ",
@@ -15,8 +15,8 @@ const original_query = [
 
 const new_query = [
   "SELECT ",
-  " Bonuses.id AS bonusid,Bonuses.UserId, Bonuses.amount, Bonuses.status, ",
-  "Users.username AS username, (SELECT Users.username FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payer, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId ",
+  " Bonuses.id AS bonusid, Bonuses.UserId, Bonuses.amount, Bonuses.status, ",
+  "Users.username AS username, (SELECT Users.username FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payer, (SELECT Users.id FROM Users INNER JOIN Subscriptions ON Users.id = Subscriptions.UserId WHERE Subscriptions.id = Bonuses.SubscriptionId) AS payerid, Bonuses.createdAt, Bonuses.updatedAt, Bonuses.SubscriptionId ",
   " FROM Bonuses ",
   " LEFT JOIN Users ",
   " ON Bonuses.UserId = Users.id ",

@@ -437,17 +437,21 @@ class Signals extends Component {
 }
 
 Signals.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
   getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func.isRequired,
   loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
-  auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,
