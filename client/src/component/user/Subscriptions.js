@@ -6,6 +6,8 @@ import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
+import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import { getContent, clearActions } from "../../action/userAction";
 import {
@@ -16,8 +18,11 @@ import {
 import {
   getMore,
   setSearchParams,
+  loadFromParams,
   renderArrange,
 } from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 
 export class Subscriptions extends Component {
   state = {
@@ -25,9 +30,9 @@ export class Subscriptions extends Component {
     loading: false,
     statusOptions: [
       { value: "", option: "Filter by Status" },
-      { value: 1, option: "Disapproved" },
-      { value: 2, option: "Pending" },
-      { value: 3, option: "Approved" },
+      { value: "r", option: "Disapproved" },
+      { value: "p", option: "Pending" },
+      { value: "a", option: "Approved" },
     ],
     typeOptions: [
       { value: "", option: "Filter by Type" },
@@ -35,54 +40,46 @@ export class Subscriptions extends Component {
       { value: "p", option: "Pay" },
     ],
 
-    packageOptions: [
+    planOptions: [
       { value: "", option: "Filter by Package" },
       { value: "m", option: "Monthly" },
       { value: "y", option: "Yearly" },
     ],
     type: "",
     status: "",
-    subpackage: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    plan: "",
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
+    lastScrollTop: 0,
     url: new URL(window.location),
-    isLoading: false,
-    subcount: JSON.parse(localStorage.getItem("userCounts")).subscriptions,
-    upLoad: true,
+    subcount:
+      JSON.parse(localStorage.getItem("userCounts")).subscriptions ??
+      this.props.auth.userCounts.subscriptions,
+    startLoad: false,
+    getLoad: true,
     content: "subscriptions",
   };
 
   componentDidMount() {
     const { limit, offset, subcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(subcount / limit),
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
-
-  loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
-      limit,
-      numOfPages,
-      iScrollPos,
-      currentPage,
-      content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
-  };
 
   componentWillUnmount() {
     window.removeEventListener("scroll", this.loadMore);
@@ -90,8 +87,37 @@ export class Subscriptions extends Component {
     this.props.clearSearchActions(this.state.content);
   }
 
+  loadMore = () => {
+    const {
+      limit,
+      numOfPages,
+      iScrollPos,
+      currentPage,
+      content,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
+    });
+  };
+
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -104,6 +130,7 @@ export class Subscriptions extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
 
@@ -112,10 +139,10 @@ export class Subscriptions extends Component {
       sender,
       statusOptions,
       typeOptions,
-      packageOptions,
+      planOptions,
       type,
       status,
-      subpackage,
+      plan,
       subcount,
       startLoad,
       getLoad,
@@ -158,9 +185,7 @@ export class Subscriptions extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -189,16 +214,16 @@ export class Subscriptions extends Component {
                 <div className="col-md-2">
                   <Select
                     sender={sender}
-                    options={packageOptions}
+                    options={planOptions}
                     onChange={this.changeHandler}
-                    name="subpackage"
-                    value={subpackage}
+                    name="plan"
+                    value={plan}
                   />
                 </div>
 
                 <div className="col-md-2">
                   <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-4">
@@ -213,7 +238,9 @@ export class Subscriptions extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -221,7 +248,7 @@ export class Subscriptions extends Component {
                 "amount",
                 "status",
                 "type",
-                "package",
+                "plan",
                 "duration",
                 "date",
               ]}
@@ -239,10 +266,15 @@ export class Subscriptions extends Component {
 }
 
 Subscriptions.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func.isRequired,
-  clearSearchActions: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  user: PropTypes.object.isRequired,
+  userSearch: PropTypes.object,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
@@ -252,6 +284,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
   userSearch: state.userSearch,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

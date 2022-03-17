@@ -229,10 +229,12 @@ Users.propTypes = {
   errors: PropTypes.any,
   admin: PropTypes.object.isRequired,
   searchTerms: PropTypes.object,
+  clearSearchActions: PropTypes.func,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
   loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

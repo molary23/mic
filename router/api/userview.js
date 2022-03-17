@@ -48,11 +48,21 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
     const UserId = req.user.id;
     Payment.findAll({
       where: {
         UserId,
       },
+      order: ["id", "DESC"],
+      limit,
+      offset,
     })
       .then((pay) => {
         res.json(pay);
@@ -75,17 +85,22 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
+
+    let limit = null,
+      offset = 0;
+
+    if (req.body.limit) limit = req.body.limit;
+    if (req.body.offset) offset = req.body.offset;
+
     const UserId = req.user.id;
-    Subscription.findAll(
-      {
-        where: {
-          UserId,
-        },
+    Subscription.findAll({
+      where: {
+        UserId,
       },
-      {
-        include: [Payment],
-      }
-    )
+      order: ["id", "DESC"],
+      limit,
+      offset,
+    })
       .then((sub) => {
         res.json(sub);
       })
@@ -378,50 +393,27 @@ router.post(
     let limit = null,
       offset = 0,
       status = null,
-      package = null,
-      type = null;
+      plan = null,
+      type = null,
+      where = { UserId },
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
     if (req.body.status) status = req.body.status;
-    if (req.body.subpackage) package = req.body.subpackage;
+    if (req.body.plan) plan = req.body.plan;
     if (req.body.type) type = req.body.type;
 
-    let where = {};
-    if (type && status === null && package === null) {
-      where = {
-        [Op.and]: [{ type }, { UserId }],
-      };
-    } else if (type && status && package === null) {
-      where = {
-        [Op.and]: [{ type }, { status: status }, { UserId }],
-      };
-    } else if (type === null && status === null && package) {
-      where = {
-        [Op.and]: [{ package }, { UserId }],
-      };
-    } else if (type && package && status === null) {
-      where = {
-        [Op.and]: [{ type }, { package }, { UserId }],
-      };
-    } else if (type === null && status && package === null) {
-      where = {
-        [Op.and]: [{ status }, { UserId }],
-      };
-    } else if (type === null && status && package) {
-      where = {
-        [Op.and]: [{ package }, { status }, { UserId }],
-      };
-    } else if (type && status && package) {
-      where = {
-        [Op.and]: [{ package }, { status }, { type }, { UserId }],
-      };
-    } else {
-      where = {
-        UserId,
-      };
+    if (status !== null) {
+      where = { ...where, ...{ status } };
     }
-    let result = [];
+    if (type !== null) {
+      where = { ...where, ...{ type } };
+    }
+    if (plan !== null) {
+      where = { ...where, ...{ plan } };
+    }
+
     Subscription.findAndCountAll({
       where,
       order: [["id", "desc"]],
@@ -469,32 +461,22 @@ router.post(
     let limit = null,
       offset = 0,
       method = null,
-      type = null;
+      type = null,
+      where = { UserId },
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
     if (req.body.method) method = req.body.method;
     if (req.body.type) type = req.body.type;
 
-    let where = {};
-    if (type && method === null) {
-      where = {
-        [Op.and]: [{ type }, { UserId }],
-      };
-    } else if (type === null && method) {
-      where = {
-        [Op.and]: [{ method }, { UserId }],
-      };
-    } else if (type && method) {
-      where = {
-        [Op.and]: [{ type }, { method }, { UserId }],
-      };
-    } else {
-      where = {
-        UserId,
-      };
+    if (method !== null) {
+      where = { ...where, ...{ method } };
     }
-    let result = [];
+    if (type !== null) {
+      where = { ...where, ...{ type } };
+    }
+
     Transaction.findAndCountAll({
       where,
       order: [["id", "desc"]],

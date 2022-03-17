@@ -318,16 +318,20 @@ export class Withdrawals extends Component {
 }
 
 Withdrawals.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  updateWithdrawals: PropTypes.func,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
+  getContent: PropTypes.func,
   searchContent: PropTypes.func,
   clearActions: PropTypes.func,
   clearAdminAction: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  updateWithdrawals: PropTypes.func,
   loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({

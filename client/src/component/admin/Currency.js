@@ -380,6 +380,10 @@ class Currency extends Component {
 }
 
 Currency.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
   getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func.isRequired,
   updateCurrency: PropTypes.func.isRequired,
@@ -387,7 +391,7 @@ Currency.propTypes = {
   renderArrange: PropTypes.func,
   loadFromParams: PropTypes.func,
   setSearchParams: PropTypes.func,
-  auth: PropTypes.object.isRequired,
+  getMore: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

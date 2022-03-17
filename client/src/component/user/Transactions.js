@@ -6,6 +6,9 @@ import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
+import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
+
 import { getContent, clearActions } from "../../action/userAction";
 import {
   searchContent,
@@ -15,64 +18,89 @@ import {
 import {
   getMore,
   setSearchParams,
+  loadFromParams,
   renderArrange,
 } from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 
 export class Transactions extends Component {
   state = {
     sender: "user-transactions",
     loading: false,
     methodOptions: [
-      { value: 0, option: "Filter by Method" },
+      { value: "", option: "Filter by Method" },
       { value: "b", option: "Bonus" },
       { value: "s", option: "Subscriptions" },
       { value: "w", option: "Withdrawal" },
     ],
     typeOptions: [
-      { value: 0, option: "Filter by Type" },
+      { value: "", option: "Filter by Type" },
       { value: "d", option: "Debit" },
       { value: "c", option: "Credit" },
     ],
     type: "",
     method: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
+    lastScrollTop: 0,
     url: new URL(window.location),
-    isLoading: false,
-    transcount: JSON.parse(localStorage.getItem("userCounts")).transactions,
-    upLoad: true,
+
+    transcount:
+      JSON.parse(localStorage.getItem("userCounts")).transactions ??
+      this.props.auth.userCounts.transactions,
+    startLoad: false,
+    getLoad: true,
     content: "transactions",
   };
 
   componentDidMount() {
     const { limit, offset, transcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
@@ -83,7 +111,7 @@ export class Transactions extends Component {
   }
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -96,6 +124,7 @@ export class Transactions extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
 
@@ -148,9 +177,7 @@ export class Transactions extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -178,7 +205,7 @@ export class Transactions extends Component {
                 </div>
                 <div className="col-md-2">
                   <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-4">
@@ -193,7 +220,9 @@ export class Transactions extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={["S/N", "amount", "method", "type", "date"]}
@@ -211,10 +240,15 @@ export class Transactions extends Component {
 }
 
 Transactions.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func.isRequired,
-  clearSearchActions: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  user: PropTypes.object.isRequired,
+  userSearch: PropTypes.object,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
@@ -224,6 +258,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
   userSearch: state.userSearch,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

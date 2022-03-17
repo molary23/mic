@@ -62,8 +62,8 @@ function TableBody(props) {
           </td>
           <td>{item.type === "b" ? "bonus" : "pay"}</td>
           <td>
-            {item.plan} {item.package === "m" ? "month" : "year"}
-            {item.plan > 1 && "s"}
+            {item.package} {item.plan === "m" ? "month" : "year"}
+            {item.package > 1 && "s"}
           </td>
           <td>{item.duration} days</td>
           <td>
