@@ -235,6 +235,11 @@ span.nav-sub-icon {
     }
   }
 
+  .dash-intro .dash-card {
+    height: 240px;
+    padding: 20px;
+  }
+
   .dash-bonus {
     background: rgb(254, 196, 176);
     background: linear-gradient(
@@ -244,8 +249,12 @@ span.nav-sub-icon {
       rgba(242, 70, 138, 1) 68%
     );
     color: #fff;
-    height: 200px;
-    padding: 20px;
+  }
+
+  .dash-qr {
+    .qr-code {
+      text-align: center;
+    }
   }
 
   .dash-basic {
@@ -257,14 +266,13 @@ span.nav-sub-icon {
       rgb(3, 162, 202) 73%
     );
     color: #fff;
-    height: 200px;
-    padding: 20px;
-    .share-ref-social i {
-      margin-right: 15px;
+    .share-ref-social svg {
+      margin-right: 10px;
       cursor: pointer;
-      font-size: 20px;
+      font-size: 25px;
     }
   }
+
   .dash-user-name {
     text-transform: capitalize;
   }
@@ -453,10 +461,12 @@ span.nav-sub-icon {
     margin: 0px 10px;
     .signal-stat {
       text-align: center;
-      text-transform: uppercase;
+      text-transform: capitalize;
     }
   }
-
+  .signal-opt {
+    text-transform: capitalize;
+  }
   .signal-align-right {
     justify-self: flex-end;
   }
@@ -582,8 +592,7 @@ span.nav-sub-icon {
 .tiptool {
   position: relative;
   display: inline-block;
-  top: 5%;
-  right: 20%;
+  left: 40%;
 
   .tooltiptext {
     visibility: hidden;

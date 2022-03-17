@@ -11,79 +11,122 @@ import {
 import Signal from "../../layout/Signal";
 import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
+import Spinner from "../../layout/Spinner";
 
 import {
   getMore,
   setSearchParams,
   renderArrange,
+  landingLoad,
 } from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 let interval;
 export class Signals extends Component {
   state = {
     sender: "user-signals",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
-    signalcount: JSON.parse(localStorage.getItem("userCounts")).signals,
+    signalcount:
+      JSON.parse(localStorage.getItem("userCounts")).signals ??
+      this.props.auth.userCounts.signals,
+    premium:
+      JSON.parse(localStorage.getItem("premium")) ??
+      JSON.parse(this.props.auth.user.premium),
     startLoad: false,
     getLoad: true,
     content: "signals",
-    autoRefresh: false,
+    refreshing: false,
   };
 
   componentDidMount() {
     const { limit, offset, signalcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset, self: this, content, searchParams });
+    /* if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }*/
     this.setState({
       numOfPages: Math.ceil(signalcount / limit),
       startLoad: true,
     });
-    this.props.getContent(content, paginate);
+
     window.addEventListener("scroll", this.loadMore, { passive: true });
 
-    /*  interval = setInterval(() => {
+    interval = setInterval(() => {
       this.setState({
         autoRefresh: true,
       });
-      this.props.getContent(content, paginate);
-      this.setState({
-        autoRefresh: false,
-      });
-    }, 5000);*/
+      this.props.clearActions(content);
+      this.props.clearSearchActions(content);
+      landingLoad({ limit, offset, self: this, content, searchParams });
+      console.log("first");
+    }, 300000);
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
-    //  clearInterval(interval);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    clearInterval(interval);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.user.fetching !== this.props.user.fetching &&
+      !this.props.user.loading
+    ) {
+      this.setState({
+        autoRefresh: false,
+      });
+    }
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -96,6 +139,7 @@ export class Signals extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
 
@@ -142,14 +186,11 @@ export class Signals extends Component {
     } else {
       signal = searchMain;
     }
-    console.log(main);
     return (
       <div>
-        {loader || (autoRefresh && <ProgressBar />)}
-        {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+        {(loader || autoRefresh) && <ProgressBar />}
+        {load && !autoRefresh ? (
+          <Spinner />
         ) : (
           <div className="signal-page">
             <div className="page-dash-title mb-4">
@@ -179,7 +220,9 @@ export class Signals extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <div className="container-fluid">
               <div className="row">
                 {signal.map((signal, i) => {
@@ -201,15 +244,25 @@ export class Signals extends Component {
 }
 
 Signals.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  user: PropTypes.object.isRequired,
+  userSearch: PropTypes.object,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
-  auth: PropTypes.object.isRequired,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  landingLoad: PropTypes.func,
+  renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
+  setSearchParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
   userSearch: state.userSearch,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

@@ -326,3 +326,16 @@ export const roundUp = (num) => {
     return figure;
   }
 };
+
+//On Component mount load
+export const landingLoad = ({ limit, offset, self, content, searchParams }) => {
+  if (searchParams !== "") {
+    loadFromParams({ limit, self, content, searchParams });
+  } else {
+    const paginate = {
+      limit,
+      offset,
+    };
+    self.props.getContent(content, paginate);
+  }
+};

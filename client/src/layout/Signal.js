@@ -51,7 +51,7 @@ function Signal(props) {
         <div className="signal-about">
           <div className="signal-type signal-title">Signal Option</div>
           <div className="signal-opt signal-align-right">
-            {signal.signaloption}
+            {signal.signaloption === "s" ? "sell" : "buy"}
           </div>
         </div>
         <div className="signal-about">
@@ -84,7 +84,9 @@ function Signal(props) {
         </div>
 
         <div className="signal-status">
-          <div className="signal-stat">{signal.status}</div>
+          <div className="signal-stat">
+            {signal.status === "f" ? "fulfilled" : "cancelled"}
+          </div>
         </div>
         <div className="signal-stop-loss">
           {signal.stoploss.map((sl, i) => {

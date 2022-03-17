@@ -39,6 +39,7 @@ export class SubNav extends Component {
       prevProps.errors !== this.props.errors &&
       this.props.errors === "Unauthorized"
     ) {
+      console.log(this.props.errors);
       this.props.logoutUser();
       // props.clearActions();
       this.props.clearCurrentProfile();

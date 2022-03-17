@@ -163,7 +163,7 @@ function TableBody(props) {
           <td>{item.amount !== null && item.amount.toFixed(2)}</td>
           <td>{item.gateway === "c" ? "crypto" : "bank"}</td>
           <td>{item.reference}</td>
-          <td>{item.status === 2 ? "successful" : "failed"}</td>
+          <td>{item.status === "s" ? "successful" : "failed"}</td>
 
           <td>
             <DateFormat date={item.createdAt} />

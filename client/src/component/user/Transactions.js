@@ -48,7 +48,6 @@ export class Transactions extends Component {
     currentPage: Pagination.currentpage,
     lastScrollTop: 0,
     url: new URL(window.location),
-
     transcount:
       JSON.parse(localStorage.getItem("userCounts")).transactions ??
       this.props.auth.userCounts.transactions,
@@ -105,9 +104,10 @@ export class Transactions extends Component {
   };
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   changeHandler = (e) => {

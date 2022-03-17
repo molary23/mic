@@ -7,6 +7,8 @@ import TableHead from "../../layout/TableHead";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
+import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import { getContent, clearActions } from "../../action/userAction";
 import {
@@ -17,16 +19,19 @@ import {
 import {
   getMore,
   setSearchParams,
+  loadFromParams,
   renderArrange,
 } from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 
 export class Payments extends Component {
   state = {
     sender: "user-payments",
     statusOptions: [
       { value: "", option: "Filter by Status" },
-      { value: "1", option: "Failed" },
-      { value: "2", option: "Success" },
+      { value: "f", option: "Failed" },
+      { value: "s", option: "Success" },
     ],
     gatewayOptions: [
       { value: "", option: "Filter by Gateway" },
@@ -36,55 +41,81 @@ export class Payments extends Component {
     status: "",
     gateway: "",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
-    isLoading: false,
-    paycount: JSON.parse(localStorage.getItem("userCounts")).payments,
+    startLoad: false,
+    getLoad: true,
+    paycount:
+      JSON.parse(localStorage.getItem("userCounts")).payments ??
+      this.props.auth.userCounts.payments,
     upLoad: true,
     content: "payments",
   };
 
   componentDidMount() {
     const { limit, offset, paycount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
+
     this.setState({
       numOfPages: Math.ceil(paycount / limit),
     });
-    this.props.getContent(content, paginate);
+
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search;
+    let winScroll = window.scrollY;
+    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -97,6 +128,7 @@ export class Payments extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
 
@@ -149,9 +181,7 @@ export class Payments extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="payments card holder-card ">
             <div className="page-dash-title mb-4">
@@ -188,7 +218,7 @@ export class Payments extends Component {
                 </div>
                 <div className="col-md-2">
                   <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-3">
@@ -203,7 +233,9 @@ export class Payments extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -228,10 +260,15 @@ export class Payments extends Component {
 }
 
 Payments.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func.isRequired,
-  clearSearchActions: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  user: PropTypes.object.isRequired,
+  userSearch: PropTypes.object,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
@@ -241,6 +278,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
   userSearch: state.userSearch,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

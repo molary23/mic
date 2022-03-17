@@ -12,10 +12,10 @@ import {
 } from "react-icons/md";
 import { BsCurrencyExchange } from "react-icons/bs";
 import { FiHome } from "react-icons/fi";
+import { CgSignal } from "react-icons/cg";
 
 import {
   AiOutlineUsergroupAdd,
-  AiFillSignal,
   AiOutlineMoneyCollect,
   AiOutlineBank,
 } from "react-icons/ai";
@@ -57,7 +57,7 @@ function SideNav(props) {
             {(level === 1 || level === 3) && (
               <Link to={`/${viewer}/signals`}>
                 <span className="sidebar-icon">
-                  <AiFillSignal />
+                  <CgSignal />
                 </span>
                 Signals
               </Link>
@@ -131,7 +131,7 @@ function SideNav(props) {
                 <span className="sidebar-icon">
                   <GiWallet />
                 </span>
-                Bonus
+                Earnings
               </Link>
             )}
 

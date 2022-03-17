@@ -486,26 +486,31 @@ span.nav-sub-icon svg {
   text-align: right;
 }
 
+.dashboard-content .dash-intro .dash-card {
+  height: 240px;
+  padding: 20px;
+}
+
 .dashboard-content .dash-bonus {
   background: #fec4b0;
   background: linear-gradient(142deg, #fec4b0 0%, #fe6aa4 40%, #f2468a 68%);
   color: #fff;
-  height: 200px;
-  padding: 20px;
+}
+
+.dashboard-content .dash-qr .qr-code {
+  text-align: center;
 }
 
 .dashboard-content .dash-basic {
   background: #24d4fe;
   background: linear-gradient(142deg, #24d4fe 0%, #16e0eb 38%, #03a2ca 73%);
   color: #fff;
-  height: 200px;
-  padding: 20px;
 }
 
-.dashboard-content .dash-basic .share-ref-social i {
-  margin-right: 15px;
+.dashboard-content .dash-basic .share-ref-social svg {
+  margin-right: 10px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 25px;
 }
 
 .dashboard-content .dash-user-name {
@@ -682,7 +687,11 @@ span.nav-sub-icon svg {
 
 .signal-detail .signal-status .signal-stat {
   text-align: center;
-  text-transform: uppercase;
+  text-transform: capitalize;
+}
+
+.signal-detail .signal-opt {
+  text-transform: capitalize;
 }
 
 .signal-detail .signal-align-right {
@@ -814,8 +823,7 @@ span.nav-sub-icon svg {
 .tiptool {
   position: relative;
   display: inline-block;
-  top: 5%;
-  right: 20%;
+  left: 40%;
 }
 
 .tiptool .tooltiptext {

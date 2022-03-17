@@ -10,11 +10,8 @@ import { HiOutlineUsers } from "react-icons/hi";
 import { MdOutlinePayments } from "react-icons/md";
 import { BsCurrencyExchange } from "react-icons/bs";
 
-import {
-  AiOutlineUsergroupAdd,
-  AiFillSignal,
-  AiOutlineMoneyCollect,
-} from "react-icons/ai";
+import { AiOutlineUsergroupAdd, AiOutlineMoneyCollect } from "react-icons/ai";
+import { CgSignal } from "react-icons/cg";
 
 import { getUserProfile } from "../../action/profileAction";
 import { getAllCounts } from "../../action/authAction";
@@ -119,7 +116,7 @@ export class Index extends Component {
                 <div className="row">
                   <div className="col-4">
                     <div className="box-icon">
-                      <AiFillSignal />
+                      <CgSignal />
                     </div>
                   </div>
                   <div className="col-8">

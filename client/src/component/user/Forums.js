@@ -31,6 +31,7 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  loadFromParams,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -42,6 +43,8 @@ class Forums extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
     loading: false,
     modal: false,
@@ -52,7 +55,8 @@ class Forums extends Component {
     search: "",
     status: "",
     right: "",
-    isLoading: false,
+    startLoad: false,
+    getLoad: true,
     statusOptions: [
       { value: "", option: "Filter by Status" },
       { value: "o", option: "Open" },
@@ -63,21 +67,28 @@ class Forums extends Component {
       { value: "u", option: "User" },
       { value: "p", option: "Public" },
     ],
-    forumcount: JSON.parse(localStorage.getItem("userCounts")).forums,
+    forumcount:
+      JSON.parse(localStorage.getItem("userCounts")).forums ??
+      this.props.auth.userCounts.forums,
     content: "forums",
     update: "",
   };
 
   componentDidMount() {
     const { limit, offset, forumcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    if (searchParams !== "") {
+      loadFromParams({ limit, self: this, content, searchParams });
+    } else {
+      const paginate = {
+        limit,
+        offset,
+      };
+      this.props.getContent(content, paginate);
+    }
     this.setState({
       numOfPages: Math.ceil(forumcount / limit),
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
   componentWillUnmount() {
@@ -169,7 +180,7 @@ class Forums extends Component {
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -182,6 +193,7 @@ class Forums extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
 
@@ -355,18 +367,20 @@ class Forums extends Component {
 }
 
 Forums.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func.isRequired,
-  clearSearchActions: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  user: PropTypes.object.isRequired,
+  userSearch: PropTypes.object,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
-  addForum: PropTypes.func,
-  updateForum: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
-  auth: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  userSearch: PropTypes.object.isRequired,
+  addForum: PropTypes.func,
+  updateForum: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

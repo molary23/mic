@@ -4,10 +4,21 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
+import QRCode from "react-qr-code";
+
 import { getUserProfile } from "../../action/profileAction";
 import { getUserDetails } from "../../action/userAction";
 import ProgressBar from "../../layout/ProgressBar";
 import AnnCard from "../../layout/AnnCard";
+import Spinner from "../../layout/Spinner";
+
+import {
+  FaTwitterSquare,
+  FaFacebookSquare,
+  FaWhatsappSquare,
+  FaLinkedin,
+} from "react-icons/fa";
+import { IoMdCopy } from "react-icons/io";
 
 //const [details, setDetails] = useState(null);
 
@@ -35,7 +46,6 @@ export class Index extends Component {
       daysleft: Math.floor((expDate - curDate) / (24 * 3600)),
     });
     this.props.getUserDetails();
-    // console.log(premiuminfo.enddate);
   }
 
   clickHandler = (e) => {
@@ -104,6 +114,7 @@ export class Index extends Component {
     const { loading, user } = this.props;
 
     let load = true,
+      loader = false,
       username = userinfo.username,
       userdetails,
       bonus,
@@ -118,6 +129,7 @@ export class Index extends Component {
       loading
     ) {
       load = true;
+      loader = true;
     } else if (user.userdetails !== null && !loading) {
       userdetails = user.userdetails;
       bonus = userdetails.bonus ?? 0;
@@ -127,16 +139,13 @@ export class Index extends Component {
       sub = userdetails.sub ?? 0;
       referral = userdetails.referral ?? 0;
       load = false;
+      loader = false;
     }
     return (
       <div className="dashboard-item">
+        {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <ProgressBar />
-            <div>
-              <i className="fas fa-circle-notch fa-2x fa-spin" />
-            </div>
-          </div>
+          <Spinner />
         ) : (
           <div className="container">
             <div className="welcome-dashboard mb-5">
@@ -237,7 +246,7 @@ export class Index extends Component {
             </div>
             <div className="dash-intro mb-5">
               <div className="row">
-                <div className="col-md-5 col-xs-12">
+                <div className="col-md-4 col-xs-12">
                   <div className="dash-basic dash-card">
                     <h4 className="mb-2">Referrals </h4>
                     <h1 className="mb-2">{referral}</h1>
@@ -254,36 +263,51 @@ export class Index extends Component {
                     />
                     <p className="mb-1">Invite More</p>
                     <div className="share-ref-social">
-                      <i
-                        className="fab fa-facebook-square"
-                        title="Share on Facebook"
+                      <span
+                        className="share-ref-btn"
                         onClick={() => this.shareRef("facebook")}
-                      />
-                      <i
-                        className="fab fa-twitter-square"
-                        title="Share on Twitter"
+                      >
+                        <FaFacebookSquare />
+                      </span>
+                      <span
+                        className="share-ref-btn"
                         onClick={() => this.shareRef("twitter")}
-                      />
-                      <i
-                        className="fab fa-linkedin"
-                        title="Share on Linkedin"
+                      >
+                        <FaTwitterSquare />
+                      </span>
+                      <span
+                        className="share-ref-btn"
                         onClick={() => this.shareRef("linkedin")}
-                      />
-                      <i
-                        className="fab fa-whatsapp-square"
-                        title="Share on WhatsApp"
+                      >
+                        <FaLinkedin />
+                      </span>
+                      <span
+                        className="share-ref-btn"
                         onClick={() => this.shareRef("whatsapp")}
-                      />
-                      <i
-                        className="far fa-copy"
-                        title="Copy Link"
+                      >
+                        <FaWhatsappSquare />
+                      </span>
+                      <span
+                        className="share-ref-btn"
                         onClick={() => this.shareRef("copy")}
+                      >
+                        <IoMdCopy />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-3 col-xs-12">
+                  <div className="dash-qr dash-card">
+                    <div className="qr-code">
+                      <QRCode
+                        value={`http://localhost:3000/referral/:${username}`}
+                        size={200}
+                        level={"Q"}
                       />
                     </div>
                   </div>
                 </div>
-                <div className="col-md-1"></div>
-                <div className="col-md-6 col-xs-12">
+                <div className="col-md-5 col-xs-12">
                   <div className="dash-bonus dash-card">
                     <h4 className="mb-3">Bonus Index</h4>
                     <h1 className="mb-3">${bonus.toFixed(2)}</h1>
@@ -294,7 +318,9 @@ export class Index extends Component {
             </div>
 
             <div className="row">
-              <AnnCard details={userdetails.ann} />
+              {userdetails.ann.length >= 1 && (
+                <AnnCard details={userdetails.ann} />
+              )}
             </div>
           </div>
         )}

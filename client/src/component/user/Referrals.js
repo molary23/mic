@@ -12,73 +12,94 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  landingLoad,
 } from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
+import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 export class Referrals extends Component {
   state = {
     sender: "user-referrals",
     statusOptions: [
       { value: "", option: "Filter by Status" },
-      { value: "1", option: "Active" },
-      { value: "0", option: "Inactive" },
+      { value: "a", option: "Active" },
+      { value: "n", option: "New" },
+      { value: "i", option: "Inactive" },
     ],
     status: "",
     search: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
     isLoading: false,
-    refcount: JSON.parse(localStorage.getItem("userCounts")).referrals,
+    refcount:
+      JSON.parse(localStorage.getItem("userCounts")).referrals ??
+      this.props.auth.userCounts.referrals,
     upLoad: true,
     content: "referrals",
   };
 
   componentDidMount() {
     const { limit, offset, refcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset, self: this, content, searchParams });
+
     this.setState({
       numOfPages: Math.ceil(refcount / limit),
+      startLoad: true,
     });
-    this.props.getContent(content, paginate);
+
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
   };
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -91,6 +112,7 @@ export class Referrals extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
 
@@ -141,9 +163,7 @@ export class Referrals extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -171,7 +191,7 @@ export class Referrals extends Component {
                 </div>
                 <div className="col-md-3 ">
                   <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-3 ">
@@ -186,14 +206,16 @@ export class Referrals extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
                 "S/N",
                 "username",
-                "phone number",
-                "Status",
+                "phone",
+                "premium tatus",
                 "registered date",
               ]}
             >
@@ -210,10 +232,15 @@ export class Referrals extends Component {
 }
 
 Referrals.propTypes = {
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func.isRequired,
-  clearSearchActions: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  user: PropTypes.object.isRequired,
+  userSearch: PropTypes.object,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
@@ -223,6 +250,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
   userSearch: state.userSearch,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,

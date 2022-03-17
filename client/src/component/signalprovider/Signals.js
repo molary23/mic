@@ -21,7 +21,10 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  landingLoad,
 } from "../../util/LoadFunction";
+
+import Pagination from "../../util/Pagination";
 
 import TableHead from "../../layout/TableHead";
 import TableBody from "../../layout/TableBody";
@@ -30,6 +33,9 @@ import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
+import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
+import { MdAddChart } from "react-icons/md";
 
 class Signals extends Component {
   state = {
@@ -47,13 +53,16 @@ class Signals extends Component {
     search: "",
     status: "",
     signaloption: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
-    url: new URL(window.location),
-    signalcount: JSON.parse(localStorage.getItem("providerCounts")).signals,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
+    signalcount:
+      JSON.parse(localStorage.getItem("providerCounts")).signals ??
+      this.props.auth.providerCounts.signals,
     startLoad: false,
     getLoad: true,
     content: "signals",
@@ -67,23 +76,21 @@ class Signals extends Component {
 
   componentDidMount() {
     const { limit, offset, signalcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(signalcount / limit),
       startLoad: true,
     });
-    this.props.getContent(content, paginate);
     this.props.getCurrency();
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
     this.props.clearCurrency();
   }
 
@@ -147,23 +154,33 @@ class Signals extends Component {
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
@@ -175,8 +192,8 @@ class Signals extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
+      timer,
     });
   };
 
@@ -211,6 +228,10 @@ class Signals extends Component {
       this.props.editSignal(signaldetail, signalinfo[2]);
     }
     // this.props.addSignal(addSignal);
+  };
+
+  downloadHandler = () => {
+    console.log("first");
   };
 
   render() {
@@ -276,9 +297,7 @@ class Signals extends Component {
       <div>
         {loader && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -321,10 +340,14 @@ class Signals extends Component {
                     className="btn btn-sm add-new"
                     onClick={this.openModal}
                   >
-                    Add New <i className="fas fa-folder-plus" />
+                    Add New <MdAddChart />
                   </button>
-                  <button type="button" className="btn btn-sm download-btn">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn btn-sm download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
 
@@ -381,16 +404,30 @@ class Signals extends Component {
 }
 
 Signals.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  provider: PropTypes.object.isRequired,
+  providerSearch: PropTypes.object,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
-  auth: PropTypes.object.isRequired,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  landingLoad: PropTypes.func,
+  renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
+  setSearchParams: PropTypes.func,
   clearCurrency: PropTypes.func,
+  getCurrency: PropTypes.func,
+  addSignal: PropTypes.func,
+  clearSignal: PropTypes.func,
+  editSignal: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   provider: state.provider,
   providerSearch: state.providerSearch,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   clearActions,
