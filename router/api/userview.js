@@ -15,7 +15,9 @@ const express = require("express"),
   Premium = require("../../db/models/Premium"),
   Payment = require("../../db/models/Payment"),
   Subscription = require("../../db/models/Subscription"),
+  Preference = require("../../db/models/Preference"),
   Bonus = require("../../db/models/Bonus"),
+  Signal = require("../../db/models/Signal"),
   Withdrawal = require("../../db/models/Withdrawal"),
   ForumReply = require("../../db/models/ForumReply"),
   Announcement = require("../../db/models/Announcement"),
@@ -38,7 +40,7 @@ const express = require("express"),
 @route GET api/view/payments
 @desc User View Payments
 @access private
-*/
+
 
 router.get(
   "/payments",
@@ -75,7 +77,7 @@ router.get(
 @route GET api/view/subscriptions
 @desc User View subscriptions
 @access private
-*/
+
 
 router.get(
   "/subscriptions",
@@ -112,7 +114,7 @@ router.get(
 @route GET api/userview/bonus
 desc User View bonus
 @access private
-*/
+
 
 router.get(
   "/bonus",
@@ -138,7 +140,7 @@ router.get(
 @route GET api/user/transactions
 desc User View transactions
 @access private
-*/
+
 
 router.get(
   "/transactions",
@@ -167,7 +169,7 @@ router.get(
       })
       .catch((err) => res.status(404).json(err));
   }
-);
+);*/
 
 /*
 @route GET api/userview/signals
@@ -183,17 +185,19 @@ router.post(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-
-    let limit = null,
-      offset = 0;
+    let UserId = req.user.id,
+      limit = null,
+      search = null,
+      offset = 0,
+      where = {},
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
+    if (req.body.search) search = req.body.search;
 
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -213,63 +217,90 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        where = {
-          [Op.and]: newSearchArray,
-        };
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-
+        let searchTerms = searchArray[0];
         where = {
-          [Op.or]: [
-            { provider: { [Op.substring]: search } },
-            { firstcurrency: { [Op.substring]: search } },
-            { secondcurrency: { [Op.substring]: search } },
-          ],
+          ...where,
+          ...{
+            [Op.or]: [
+              {
+                provider: { [Op.substring]: searchTerms },
+              },
+              {
+                firstcurrency: { [Op.substring]: searchTerms },
+              },
+              {
+                secondcurrency: { [Op.substring]: searchTerms },
+              },
+            ],
+          },
         };
       }
     }
 
-    const query = {
-      order: [["signalid", "DESC"]],
-      limit,
-      offset,
-      attributes: [
-        "signalid",
-        "firstcurrency",
-        "secondcurrency",
-        "takeprofit",
-        "stoploss",
-        "pip",
-        "createdAt",
-        "updatedAt",
-        "provider",
-        "providerid",
-        [
-          Sequelize.literal(
-            `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `
-          ),
-          "signaloption",
-        ],
-        [
-          Sequelize.literal(
-            `CASE WHEN status = 'f' THEN 'Filled' WHEN status = 'c' THEN 'Cancelled' END `
-          ),
-          "status",
-        ],
-        [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
-      ],
-      where,
-      distinct: true,
-      col: "CurrencyId",
-      raw: true,
-    };
-    let result = [];
-    SignalView.findAndCountAll(query)
-      .then((entries) => {
-        const { count, rows } = entries;
-        result = [...[count], ...rows];
-        res.json(result);
+    Preference.findOne({
+      where: { UserId },
+      attributes: ["providers", "currencies"],
+    })
+      .then((pref) => {
+        let currencies = pref.currencies;
+        providers = pref.providers;
+        if (currencies !== null) {
+          where = { ...where, ...{ CurrencyId: currencies } };
+        }
+        if (providers !== null) {
+          where = { ...where, ...{ providerid: providers } };
+        }
+        SignalView.findAll({
+          attributes: [
+            [Sequelize.fn("MAX", Sequelize.col("signalid")), "signalid"],
+          ],
+          group: ["CurrencyId"],
+        })
+          .then((cur) => {
+            idArray = [];
+            for (let i = 0; i < cur.length; i++) {
+              idArray.push(cur[i].dataValues.signalid);
+            }
+            where = { ...where, ...{ signalid: idArray } };
+
+            const query = {
+              order: [["signalid", "DESC"]],
+              limit,
+              offset,
+              attributes: [
+                "signalid",
+                "firstcurrency",
+                "secondcurrency",
+                "takeprofit",
+                "stoploss",
+                "pip",
+                "createdAt",
+                "updatedAt",
+                "provider",
+                "providerid",
+                "signaloption",
+                "status",
+                "CurrencyId",
+                [
+                  Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`),
+                  "range",
+                ],
+              ],
+              where,
+              raw: true,
+            };
+
+            SignalView.findAndCountAll(query)
+              .then((entries) => {
+                const { count, rows } = entries;
+                result = [...[count], ...rows];
+                return res.json(result);
+              })
+              .catch((err) => res.status(404).json(err));
+          })
+          .catch((err) => res.status(404).json(err));
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -293,16 +324,24 @@ router.post(
     let referralId = req.user.id;
 
     let limit = null,
-      offset = 0;
+      offset = 0,
+      status = null,
+      search = null,
+      where = { referralId },
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
+    if (req.body.status) status = req.body.status;
+    if (req.body.gateway) gateway = req.body.gateway;
+    if (req.body.search) search = req.body.search;
 
-    let where = {};
-    if (req.body.search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
 
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -312,51 +351,18 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.status !== undefined) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status: req.body.status },
-              { referralId },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: [{ [Op.and]: newSearchArray }, { referral }],
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.status !== undefined) {
-          where = {
-            [Op.and]: [
-              { referred: { [Op.substring]: search } },
-              { status: req.body.status },
-              { referralId },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: [
-              { referred: { [Op.substring]: search } },
-              { referralId },
-            ],
-          };
-        }
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
+            [Op.or]: [{ referred: { [Op.substring]: searchTerms } }],
+          },
+        };
       }
-    } else if (req.body.status) {
-      where = {
-        [Op.and]: [{ status: req.body.status }, { referralId }],
-      };
-    } else {
-      where = {
-        referralId,
-      };
     }
-    let result = [];
+
     ReferralView.findAndCountAll({
       where,
       order: [["id", "desc"]],
@@ -511,22 +517,27 @@ router.post(
     let UserId = req.user.id;
 
     let limit = null,
-      gateway = null,
+      offset = 0,
       status = null,
+      gateway = null,
       search = null,
-      offset = 0;
+      where = { UserId },
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
-    if (req.body.gateway) gateway = req.body.gateway;
     if (req.body.status) status = req.body.status;
+    if (req.body.gateway) gateway = req.body.gateway;
     if (req.body.search) search = req.body.search;
 
-    let where = {};
-    if (search) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
-
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (gateway !== null) {
+      where = { ...where, ...{ gateway } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -536,84 +547,18 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (status && gateway === null) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { status },
-              { UserId },
-            ],
-          };
-        } else if (status === null && gateway) {
-          where = {
-            [Op.and]: [
-              {
-                [Op.and]: newSearchArray,
-              },
-              { gateway },
-              { UserId },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: [{ [Op.and]: newSearchArray }, { UserId }],
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (status && gateway !== null) {
-          where = {
-            [Op.and]: [
-              { reference: { [Op.substring]: search } },
-              { status },
-              { UserId },
-            ],
-          };
-        }
-        if (status !== null && gateway) {
-          where = {
-            [Op.and]: [
-              { reference: { [Op.substring]: search } },
-              { gateway },
-              { UserId },
-            ],
-          };
-        } else if (status && gateway) {
-          where = {
-            [Op.and]: [
-              { reference: { [Op.substring]: search } },
-              { gateway },
-              { status },
-              { UserId },
-            ],
-          };
-        } else {
-          where = {
-            [Op.and]: [{ reference: { [Op.substring]: search } }, { UserId }],
-          };
-        }
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
+            [Op.or]: [{ reference: { [Op.substring]: searchTerms } }],
+          },
+        };
       }
-    } else if (status && gateway === null) {
-      where = {
-        [Op.and]: [{ status }, { UserId }],
-      };
-    } else if (status === null && gateway) {
-      where = {
-        [Op.and]: [{ gateway }, { UserId }],
-      };
-    } else if (status && gateway) {
-      where = {
-        [Op.and]: [{ status }, { gateway }, { UserId }],
-      };
-    } else {
-      where = {
-        UserId,
-      };
     }
-    let result = [];
+
     Payment.findAndCountAll({
       where,
       order: [["id", "desc"]],
@@ -656,23 +601,18 @@ router.post(
 
     let limit = null,
       offset = 0,
-      status = null;
+      status = null,
+      where = { UserId },
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
     if (req.body.status) status = req.body.status;
 
-    let where = {};
-    if (status) {
-      where = {
-        [Op.and]: [{ status }, { UserId }],
-      };
-    } else {
-      where = {
-        UserId,
-      };
+    if (status !== null) {
+      where = { ...where, ...{ status } };
     }
-    let result = [];
+
     WithdrawalView.findAndCountAll({
       where,
       order: [["withdrawalid", "desc"]],
@@ -715,23 +655,18 @@ router.post(
 
     let limit = null,
       offset = 0,
-      status = null;
+      status = null,
+      where = { UserId },
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
     if (req.body.status) status = req.body.status;
 
-    let where = {};
-    if (status) {
-      where = {
-        [Op.and]: [{ status }, { UserId }],
-      };
-    } else {
-      where = {
-        UserId,
-      };
+    if (status !== null) {
+      where = { ...where, ...{ status } };
     }
-    let result = [];
+
     BonusView.findAndCountAll({
       where,
       order: [["bonusid", "desc"]],
@@ -859,25 +794,19 @@ router.get(
                                   details.ann = ann;
                                   return res.json(details);
                                 })
-                                .catch((err) =>
-                                  res.status(404).json(`ann ${err.response}`)
-                                );
+                                .catch((err) => res.status(404).json(err));
                             })
-                            .catch((err) =>
-                              res.status(404).json(`s ${err.response}`)
-                            );
+                            .catch((err) => res.status(404).json(err));
                         })
-                        .catch((err) =>
-                          res.status(404).json(`f ${err.response}`)
-                        );
+                        .catch((err) => res.status(404).json(err));
                     })
-                    .catch((err) => res.status(404).json(`b ${err.response}`));
+                    .catch((err) => res.status(404).json(err));
                 })
-                .catch((err) => res.status(404).json(`count ${err.response}`));
+                .catch((err) => res.status(404).json(err));
             })
-            .catch((err) => res.status(404).json(`d ${err.response}`));
+            .catch((err) => res.status(404).json(err));
         })
-        .catch((err) => res.status(404).json(`c ${err.response}`)),
+        .catch((err) => res.status(404).json(err)),
     ]);
   }
 );
@@ -1010,21 +939,26 @@ router.post(
     let UserId = req.user.id;
 
     let limit = null,
-      gateway = null,
       status = null,
       search = null,
-      offset = 0;
+      offset = 0,
+      where = { UserId },
+      result = [];
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
-    if (req.body.right) right = req.body.right;
     if (req.body.status) status = req.body.status;
     if (req.body.search) search = req.body.search;
-    let where = {};
-    if (req.body.search !== undefined) {
-      const searchTerms = req.body.search;
-      let searchArray = searchTerms.split("+");
+    if (req.body.right) right = req.body.right;
 
+    if (status !== null) {
+      where = { ...where, ...{ status } };
+    }
+    if (right !== null) {
+      where = { ...where, ...{ right } };
+    }
+    if (search !== null) {
+      const searchArray = search.split("+");
       if (searchArray.length > 1) {
         let newSearchArray = [],
           newSearchObj = {};
@@ -1045,115 +979,29 @@ router.post(
           };
           newSearchArray.push(newSearchObj);
         }
-
-        if (req.body.right && req.body.status === undefined) {
-          where = {
-            [Op.and]: newSearchArray,
-
-            status: req.body.status,
-          };
-        } else if (req.body.status === undefined && req.body.right) {
-          where = {
-            [Op.and]: newSearchArray,
-
-            right: req.body.right,
-          };
-        } else if (req.body.status && req.body.right) {
-          where = {
-            [Op.and]: newSearchArray,
-
-            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
-          };
-        } else {
-          where = {
-            [Op.and]: newSearchArray,
-          };
-        }
+        where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
-        let search = searchArray[0];
-        if (req.body.status && req.body.right === undefined) {
-          where = {
+        let searchTerms = searchArray[0];
+        where = {
+          ...where,
+          ...{
             [Op.or]: [
               {
-                title: { [Op.substring]: search },
+                title: { [Op.substring]: searchTerms },
               },
               {
-                creator: { [Op.substring]: search },
+                creator: { [Op.substring]: searchTerms },
               },
 
               {
-                text: { [Op.substring]: search },
+                text: { [Op.substring]: searchTerms },
               },
             ],
-            status: req.body.status,
-          };
-        } else if (req.body.status === undefined && req.body.right) {
-          where = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: search },
-              },
-              {
-                creator: { [Op.substring]: search },
-              },
-
-              {
-                text: { [Op.substring]: search },
-              },
-            ],
-            right: req.body.right,
-          };
-        } else if (req.body.status && req.body.right) {
-          where = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: search },
-              },
-              {
-                creator: { [Op.substring]: search },
-              },
-
-              {
-                text: { [Op.substring]: search },
-              },
-            ],
-
-            [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
-          };
-        } else {
-          where = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: search },
-              },
-              {
-                creator: { [Op.substring]: search },
-              },
-
-              {
-                text: { [Op.substring]: search },
-              },
-            ],
-          };
-        }
+          },
+        };
       }
-    } else if (req.body.status && req.body.right === undefined) {
-      where = {
-        status: req.body.status,
-      };
-    } else if (req.body.status === undefined && req.body.right) {
-      where = {
-        right: req.body.right,
-      };
-    } else if (req.body.status && req.body.right) {
-      where = {
-        [Op.and]: [{ status: req.body.status }, { right: req.body.right }],
-      };
-    } else {
-      where = {};
     }
 
-    let result = [];
     ForumView.findAndCountAll({
       order: [
         ["id", "Desc"],
@@ -1161,21 +1009,7 @@ router.post(
       ],
       limit,
       offset,
-      where: {
-        [Op.and]: [
-          {
-            [Op.or]: [
-              {
-                UserId,
-              },
-              {
-                right: "p",
-              },
-            ],
-          },
-          where,
-        ],
-      },
+      where,
     })
       .then((entries) => {
         const { count, rows } = entries;

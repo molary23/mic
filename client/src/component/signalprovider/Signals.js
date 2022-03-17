@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 import {
   getContent,
@@ -16,6 +17,7 @@ import {
   searchContent,
   clearSearchActions,
 } from "../../action/providerSearchAction";
+import { download, clearDownload } from "../../action/downloadAction";
 
 import {
   getMore,
@@ -231,8 +233,23 @@ class Signals extends Component {
   };
 
   downloadHandler = () => {
-    console.log("first");
+    axios
+      .get("/api/download/provider", {
+        responseType: "blob",
+      })
+      .then((response) => {
+        let url = window.URL.createObjectURL(response.data);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "my-signals.csv";
+        a.click();
+      });
   };
+  /*
+  downloadHandler = () => {
+    const { sender } = this.state;
+    this.props.download(sender);
+  };*/
 
   render() {
     const {
@@ -421,6 +438,8 @@ Signals.propTypes = {
   addSignal: PropTypes.func,
   clearSignal: PropTypes.func,
   editSignal: PropTypes.func,
+  download: PropTypes.func,
+  clearDownload: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -428,6 +447,7 @@ const mapStateToProps = (state) => ({
   provider: state.provider,
   providerSearch: state.providerSearch,
   errors: state.errors,
+  download: state.download,
 });
 export default connect(mapStateToProps, {
   clearActions,
@@ -439,4 +459,6 @@ export default connect(mapStateToProps, {
   clearSignal,
   editSignal,
   clearCurrency,
+  download,
+  clearDownload,
 })(Signals);

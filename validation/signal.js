@@ -15,7 +15,6 @@ module.exports = function validateSignalInput(data) {
   if (validator.isEmpty(data.currencypair)) {
     errors.currencypair = "Currency Pair Field must be selected!";
   }
-
   if (validator.isEmpty(data.signaloption)) {
     errors.signaloption = "Signal Option Field must be selected!";
   }
