@@ -162,6 +162,7 @@ export const renderArrange = ({
       loader = true;
     } else {
       load = false;
+      loader = false;
       emptyRecord = true;
       main = [];
     }
@@ -338,4 +339,68 @@ export const landingLoad = ({ limit, offset, self, content, searchParams }) => {
     };
     self.props.getContent(content, paginate);
   }
+};
+
+export const downloadFile = ({ sender, self }) => {
+  let filename,
+    url = "/api/download/";
+  if (sender === "provider-signals") {
+    url = `${url}provider`;
+    filename = "my-signals";
+  } else if (sender === "user-subscriptions") {
+    url = `${url}user/:subscriptions`;
+    filename = "my-subscriptions";
+  } else if (sender === "user-transactions") {
+    url = `${url}user/:transactions`;
+    filename = "my-transactions";
+  } else if (sender === "user-referrals") {
+    url = `${url}user/:referrals`;
+    filename = "my-referrals";
+  } else if (sender === "user-bonus") {
+    url = `${url}user/:bonus`;
+    filename = "my-bonus";
+  } else if (sender === "user-payments") {
+    url = `${url}user/:payments`;
+    filename = "my-payments";
+  } else if (sender === "user-withdrawals") {
+    url = `${url}user/:withdrawals`;
+    filename = "my-withdrawals";
+  } else if (sender === "admin-signals") {
+    url = `${url}admin/:signals`;
+    filename = "all-signals";
+  } else if (sender === "admin-currencies") {
+    url = `${url}admin/:currencies`;
+    filename = "all-currencies";
+  } else if (sender === "admin-users") {
+    url = `${url}admin/:users`;
+    filename = "all-users";
+  } else if (sender === "admin-admins") {
+    url = `${url}admin/:admins`;
+    filename = "all-admins";
+  } else if (sender === "admin-providers") {
+    url = `${url}admin/:providers`;
+    filename = "all-providers";
+  } else if (sender === "admin-transactions") {
+    url = `${url}admin/:transactions`;
+    filename = "all-transactions";
+  }
+
+  self.setState({
+    isLoading: true,
+  });
+  axios
+    .get(url, {
+      responseType: "blob",
+    })
+    .then((response) => {
+      let url = window.URL.createObjectURL(response.data);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = `${filename}.csv`;
+      a.click();
+      self.setState({
+        isLoading: false,
+      });
+    })
+    .catch((error) => console.log(error.response));
 };

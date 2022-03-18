@@ -74,16 +74,10 @@ router.post(
       return res.status(400).json(error);
     }
 
-    if (
-      req.body.firstcurrencypair === "" ||
-      req.body.firstcurrencypair === undefined
-    ) {
+    if (req.body.firstcurrencypair.length <= 0) {
       error.currency = "First Currency Field can't be Empty";
       return res.status(400).json(error);
-    } else if (
-      req.body.secondcurrencypair === "" ||
-      req.body.secondcurrencypair === undefined
-    ) {
+    } else if (req.body.secondcurrencypair.length <= 0) {
       error.currency = "Second Currency Field can't be Empty";
       return res.status(400).json(error);
     }

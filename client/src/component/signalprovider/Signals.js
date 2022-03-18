@@ -17,13 +17,13 @@ import {
   searchContent,
   clearSearchActions,
 } from "../../action/providerSearchAction";
-import { download, clearDownload } from "../../action/downloadAction";
 
 import {
   getMore,
   setSearchParams,
   renderArrange,
   landingLoad,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -44,8 +44,9 @@ class Signals extends Component {
     sender: "provider-signals",
     statusOpt: [
       { value: "", option: "Filter by Status" },
-      { value: "f", option: "Filled" },
+      { value: "f", option: "Failed" },
       { value: "c", option: "Cancelled" },
+      { value: "s", option: "Successful" },
     ],
     signalOpt: [
       { value: "", option: "Filter by Signal Option" },
@@ -74,6 +75,7 @@ class Signals extends Component {
     toasttext: "",
     modalsignaldetails: [],
     error: {},
+    isLoading: false,
   };
 
   componentDidMount() {
@@ -231,25 +233,10 @@ class Signals extends Component {
     }
     // this.props.addSignal(addSignal);
   };
-
-  downloadHandler = () => {
-    axios
-      .get("/api/download/provider", {
-        responseType: "blob",
-      })
-      .then((response) => {
-        let url = window.URL.createObjectURL(response.data);
-        let a = document.createElement("a");
-        a.href = url;
-        a.download = "my-signals.csv";
-        a.click();
-      });
-  };
-  /*
   downloadHandler = () => {
     const { sender } = this.state;
-    this.props.download(sender);
-  };*/
+    downloadFile({ sender, self: this });
+  };
 
   render() {
     const {
@@ -268,6 +255,7 @@ class Signals extends Component {
       toasttext,
       modalsignaldetails,
       error,
+      isLoading,
     } = this.state;
 
     const { provider, providerSearch } = this.props;
@@ -303,16 +291,10 @@ class Signals extends Component {
       getLoad,
       signalcount,
     });
-    /*  let joinsignal = {};
-    joinsignal = newsignal;
-    if (Object.keys(joinsignal).length > 0) {
-      //main.unshift(joinsignal);
-      main.splice(0, 0, joinsignal);
-    }*/
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -430,6 +412,7 @@ Signals.propTypes = {
   clearActions: PropTypes.func,
   clearSearchActions: PropTypes.func,
   landingLoad: PropTypes.func,
+  downloadFile: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
@@ -438,8 +421,6 @@ Signals.propTypes = {
   addSignal: PropTypes.func,
   clearSignal: PropTypes.func,
   editSignal: PropTypes.func,
-  download: PropTypes.func,
-  clearDownload: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -459,6 +440,4 @@ export default connect(mapStateToProps, {
   clearSignal,
   editSignal,
   clearCurrency,
-  download,
-  clearDownload,
 })(Signals);

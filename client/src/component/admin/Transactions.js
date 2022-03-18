@@ -9,8 +9,9 @@ import { searchContent, clearSearchActions } from "../../action/searchAction";
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -19,6 +20,8 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import Pagination from "../../util/Pagination";
 export class Transactions extends Component {
@@ -43,12 +46,15 @@ export class Transactions extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
     transcount:
       JSON.parse(localStorage.getItem("counts")).transactions ??
       this.props.auth.allCounts.transactions,
     startLoad: false,
     getLoad: true,
+    isLoading: false,
     content: "transactions",
   };
 
@@ -56,15 +62,7 @@ export class Transactions extends Component {
     const { limit, offset, transcount, content } = this.state;
 
     let searchParams = window.location.search;
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
 
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
@@ -75,25 +73,36 @@ export class Transactions extends Component {
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
   };
 
   changeHandler = (e) => {
@@ -113,6 +122,11 @@ export class Transactions extends Component {
     });
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -123,6 +137,7 @@ export class Transactions extends Component {
       search,
       startLoad,
       getLoad,
+      isLoading,
       transcount,
     } = this.state;
 
@@ -161,7 +176,7 @@ export class Transactions extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -199,8 +214,12 @@ export class Transactions extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-2">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-3 mb-2">
@@ -235,16 +254,24 @@ export class Transactions extends Component {
 }
 
 Transactions.propTypes = {
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
+  clearSearchActions: PropTypes.func,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
-  loadFromParams: PropTypes.func,
-  setSearchParams: PropTypes.func,
+  getMore: PropTypes.func,
+  downloadFile: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   admin: state.admin,
   searchTerms: state.searchTerms,
+  errors: state.errors,
 });
 export default connect(mapStateToProps, {
   getContent,

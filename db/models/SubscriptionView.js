@@ -40,6 +40,9 @@ SubscriptionView.init(
     PayId: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
   },
   {
     // don't forget to enable timestamps!

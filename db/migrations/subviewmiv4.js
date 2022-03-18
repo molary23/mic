@@ -7,7 +7,7 @@ const view_name = "SubscriptionViews";
 const original_query = [
   "SELECT ",
   " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Subscriptions.UserId AS UserId, Users.username AS username, Subscriptions.PayID AS PayId,",
-  " Subscriptions.createdAt AS subscriptiondate ",
+  " Subscriptions.createdAt AS createdAt ",
   " FROM Subscriptions ",
   " LEFT JOIN Users ",
   " ON Subscriptions.UserId = Users.id ",
@@ -16,7 +16,7 @@ const original_query = [
 const new_query = [
   "SELECT ",
   " Subscriptions.id AS subscriptionid, Subscriptions.amount, Subscriptions.type, Subscriptions.duration, Subscriptions.package, Subscriptions.plan,Subscriptions.status,Subscriptions.UserId AS UserId, Users.username AS username,Subscriptions.PayID AS PayId,",
-  " Subscriptions.createdAt AS subscriptiondate ",
+  " Subscriptions.createdAt AS createdAt ",
   " FROM Subscriptions ",
   " LEFT JOIN Users ",
   " ON Subscriptions.UserId = Users.id ",

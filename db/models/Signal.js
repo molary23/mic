@@ -32,8 +32,7 @@ Signal.init(
       type: DataTypes.DOUBLE,
     },
     status: {
-      type: DataTypes.ENUM("f", "c"),
-      defaultValue: "f",
+      type: DataTypes.ENUM("f", "c", "s"), //failed, cancelled, success
     },
   },
   {

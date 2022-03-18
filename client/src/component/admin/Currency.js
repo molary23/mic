@@ -14,8 +14,9 @@ import { searchContent, clearSearchActions } from "../../action/searchAction";
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -26,6 +27,8 @@ import SearchInput from "../../layout/SearchInput";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
 import Spinner from "../../layout/Spinner";
+
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import Pagination from "../../util/Pagination";
 
@@ -63,15 +66,7 @@ class Currency extends Component {
   componentDidMount() {
     const { limit, offset, currencycount, content } = this.state;
     let searchParams = window.location.search;
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(currencycount / limit),
       startLoad: true,
@@ -80,9 +75,10 @@ class Currency extends Component {
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -117,8 +113,8 @@ class Currency extends Component {
       lastScrollTop,
     } = this.state;
     let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
     if (toTop > lastScrollTop) {
       getMore({
         limit,
@@ -231,6 +227,11 @@ class Currency extends Component {
     }
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -280,12 +281,9 @@ class Currency extends Component {
       currencycount,
     });
 
-    if (isLoading) {
-      //   loader = true; bring a loader here
-    }
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -325,8 +323,12 @@ class Currency extends Component {
                 </div>
 
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn download-btn btn-sm">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn btn-sm"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
 
@@ -389,9 +391,10 @@ Currency.propTypes = {
   updateCurrency: PropTypes.func.isRequired,
   addCurrency: PropTypes.func.isRequired,
   renderArrange: PropTypes.func,
-  loadFromParams: PropTypes.func,
+  landingLoad: PropTypes.func,
   setSearchParams: PropTypes.func,
   getMore: PropTypes.func,
+  downloadFile: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

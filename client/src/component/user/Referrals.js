@@ -13,6 +13,7 @@ import {
   setSearchParams,
   renderArrange,
   landingLoad,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -48,7 +49,8 @@ export class Referrals extends Component {
     refcount:
       JSON.parse(localStorage.getItem("userCounts")).referrals ??
       this.props.auth.userCounts.referrals,
-    upLoad: true,
+    getLoad: true,
+    startLoad: false,
     content: "referrals",
   };
 
@@ -114,6 +116,11 @@ export class Referrals extends Component {
       self: this,
       timer,
     });
+  };
+
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
   };
 
   render() {
@@ -190,7 +197,11 @@ export class Referrals extends Component {
                   />
                 </div>
                 <div className="col-md-3 ">
-                  <button type="button" className="btn download-btn">
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
                     Download <RiFileExcel2Line />
                   </button>
                 </div>
@@ -211,13 +222,7 @@ export class Referrals extends Component {
             )}
             <TableHead
               sender={sender}
-              head={[
-                "S/N",
-                "username",
-                "phone",
-                "premium tatus",
-                "registered date",
-              ]}
+              head={["S/N", "username", "phone", "premium status"]}
             >
               <TableBody
                 sender={sender}
@@ -244,6 +249,7 @@ Referrals.propTypes = {
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
+  downloadFile: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

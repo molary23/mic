@@ -18,8 +18,9 @@ import {
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -53,13 +54,15 @@ export class Transactions extends Component {
       this.props.auth.userCounts.transactions,
     startLoad: false,
     getLoad: true,
+    isLoading: false,
     content: "transactions",
   };
 
   componentDidMount() {
     const { limit, offset, transcount, content } = this.state;
     let searchParams = window.location.search;
-    if (searchParams !== "") {
+    landingLoad({ limit, offset, self: this, content, searchParams });
+    /*  if (searchParams !== "") {
       loadFromParams({ limit, self: this, content, searchParams });
     } else {
       const paginate = {
@@ -67,7 +70,7 @@ export class Transactions extends Component {
         offset,
       };
       this.props.getContent(content, paginate);
-    }
+    }*/
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
     });
@@ -128,6 +131,11 @@ export class Transactions extends Component {
     });
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -138,6 +146,7 @@ export class Transactions extends Component {
       transcount,
       startLoad,
       getLoad,
+      isLoading,
     } = this.state;
 
     const { user, userSearch } = this.props;
@@ -175,7 +184,7 @@ export class Transactions extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -204,7 +213,11 @@ export class Transactions extends Component {
                   />
                 </div>
                 <div className="col-md-2">
-                  <button type="button" className="btn download-btn">
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
                     Download <RiFileExcel2Line />
                   </button>
                 </div>
@@ -248,10 +261,11 @@ Transactions.propTypes = {
   searchContent: PropTypes.func,
   clearActions: PropTypes.func,
   clearSearchActions: PropTypes.func,
-  loadFromParams: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
+  downloadFile: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

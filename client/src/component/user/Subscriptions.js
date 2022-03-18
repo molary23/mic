@@ -18,8 +18,9 @@ import {
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -60,13 +61,15 @@ export class Subscriptions extends Component {
       this.props.auth.userCounts.subscriptions,
     startLoad: false,
     getLoad: true,
+    isLoading: false,
     content: "subscriptions",
   };
 
   componentDidMount() {
     const { limit, offset, subcount, content } = this.state;
     let searchParams = window.location.search;
-    if (searchParams !== "") {
+    landingLoad({ limit, offset, self: this, content, searchParams });
+    /* if (searchParams !== "") {
       loadFromParams({ limit, self: this, content, searchParams });
     } else {
       const paginate = {
@@ -74,7 +77,7 @@ export class Subscriptions extends Component {
         offset,
       };
       this.props.getContent(content, paginate);
-    }
+    }*/
     this.setState({
       numOfPages: Math.ceil(subcount / limit),
     });
@@ -134,6 +137,11 @@ export class Subscriptions extends Component {
     });
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -146,6 +154,7 @@ export class Subscriptions extends Component {
       subcount,
       startLoad,
       getLoad,
+      isLoading,
     } = this.state;
 
     const { user, userSearch } = this.props;
@@ -183,7 +192,7 @@ export class Subscriptions extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -222,7 +231,11 @@ export class Subscriptions extends Component {
                 </div>
 
                 <div className="col-md-2">
-                  <button type="button" className="btn download-btn">
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
                     Download <RiFileExcel2Line />
                   </button>
                 </div>
@@ -274,10 +287,11 @@ Subscriptions.propTypes = {
   searchContent: PropTypes.func,
   clearActions: PropTypes.func,
   clearSearchActions: PropTypes.func,
-  loadFromParams: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
+  downloadFile: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

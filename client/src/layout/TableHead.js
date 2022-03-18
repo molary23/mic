@@ -1,7 +1,7 @@
 import React from "react";
 
 function TableHead(props) {
-  const { sender, head } = props;
+  const { head } = props;
 
   return (
     <div>

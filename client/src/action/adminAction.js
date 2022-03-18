@@ -145,7 +145,7 @@ export const getContent = (content, paginate) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 
@@ -442,7 +442,7 @@ export const getAdminSettings = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: GET_ADMIN_SETTINGS, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 

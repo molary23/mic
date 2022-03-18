@@ -19,7 +19,8 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
-  loadFromParams,
+  landingLoad,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -43,11 +44,12 @@ export class Earnings extends Component {
     timer: Pagination.timer,
     lastScrollTop: 0,
     url: new URL(window.location),
-    isLoading: false,
     bonuscount:
       JSON.parse(localStorage.getItem("userCounts")).bonus ??
       this.props.auth.userCounts.bonus,
-    upLoad: true,
+    isLoading: false,
+    startLoad: false,
+    getLoad: true,
     content: "bonus",
   };
 
@@ -55,15 +57,7 @@ export class Earnings extends Component {
     const { limit, offset, bonuscount, content } = this.state;
 
     let searchParams = window.location.search;
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(bonuscount / limit),
     });
@@ -80,9 +74,9 @@ export class Earnings extends Component {
       content,
       lastScrollTop,
     } = this.state;
-    let searchParams = window.location.search;
-    let winScroll = window.scrollY;
-    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
     if (toTop > lastScrollTop) {
       getMore({
         limit,
@@ -125,11 +119,21 @@ export class Earnings extends Component {
     });
   };
 
-  clickHandler = (value) => {};
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
 
   render() {
-    const { sender, statusOptions, status, startLoad, getLoad, bonuscount } =
-      this.state;
+    const {
+      sender,
+      statusOptions,
+      status,
+      startLoad,
+      getLoad,
+      bonuscount,
+      isLoading,
+    } = this.state;
 
     const { user, userSearch } = this.props;
     const { loading, fetching } = user;
@@ -165,7 +169,7 @@ export class Earnings extends Component {
     });
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -185,7 +189,11 @@ export class Earnings extends Component {
                   />
                 </div>
                 <div className="col-md-2">
-                  <button type="button" className="btn download-btn">
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
                     Download <RiFileExcel2Line />
                   </button>
                 </div>
@@ -241,6 +249,7 @@ Earnings.propTypes = {
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
+  downloadFile: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

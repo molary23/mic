@@ -7,7 +7,7 @@ const view_name = "TransactionViews";
 const original_query = [
   "SELECT ",
   " Transactions.id AS transactionid, Transactions.amount, Transactions.type, Transactions.method,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.username as username, Transactions.createdAt AS transactiondate, Profiles.UserId AS UserId",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.username as username, Transactions.createdAt AS createdAt, Profiles.UserId AS UserId",
   " FROM Transactions ",
   " LEFT JOIN Profiles ",
   " ON Transactions.UserId = Profiles.UserId ",
@@ -18,7 +18,7 @@ const original_query = [
 const new_query = [
   "SELECT ",
   " Transactions.id AS transactionid, Transactions.amount, Transactions.type, Transactions.method,",
-  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.username as username, Transactions.createdAt AS transactiondate, Profiles.UserId AS UserId",
+  "CONCAT(Profiles.firstname, ' ' , Profiles.lastname) AS fullname, Users.username as username, Transactions.createdAt AS createdAt, Profiles.UserId AS UserId",
   " FROM Transactions ",
   " LEFT JOIN Profiles ",
   " ON Transactions.UserId = Profiles.UserId ",

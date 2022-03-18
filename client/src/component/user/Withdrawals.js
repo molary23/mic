@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { MdOutlineRequestPage } from "react-icons/md";
+import { GiReceiveMoney } from "react-icons/gi";
 
 import TableBody from "../../layout/TableBody";
 import TableHead from "../../layout/TableHead";
@@ -10,6 +10,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import {
   getContent,
@@ -27,6 +28,8 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  landingLoad,
+  downloadFile,
   roundUp,
 } from "../../util/LoadFunction";
 
@@ -63,14 +66,13 @@ export class Withdrawals extends Component {
     const { limit, offset, withcount, content } = this.state;
     this.props.getBalance();
     this.props.getAccount();
-    const paginate = {
-      limit,
-      offset,
-    };
+
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(withcount / limit),
     });
-    this.props.getContent(content, paginate);
+
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
   componentWillUnmount() {
@@ -180,6 +182,11 @@ export class Withdrawals extends Component {
     this.props.requestWithdrawal(value);
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -231,7 +238,7 @@ export class Withdrawals extends Component {
     let accountList = user.useraccount;
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <div className="loader">
             <i className="fas fa-circle-notch fa-2x fa-spin" />
@@ -269,13 +276,17 @@ export class Withdrawals extends Component {
                       className="btn add-btn"
                       onClick={this.openModal}
                     >
-                      Withdraw <MdOutlineRequestPage />
+                      Withdraw <GiReceiveMoney />
                     </button>
                   </div>
                 )}
                 <div className="col-md-2">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-2">

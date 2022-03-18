@@ -13,9 +13,9 @@ function Signal(props) {
   if (signal.pip >= 1) {
     result = <IoIosTrendingUp />;
   } else if (signal.pip === 0) {
-    result = <IoIosTrendingDown />;
-  } else if (signal.pip < 0) {
     result = <MdOutlineTrendingFlat />;
+  } else if (signal.pip < 0) {
+    result = <IoIosTrendingDown />;
   }
   return (
     <div className="signal-content card">
@@ -82,10 +82,11 @@ function Signal(props) {
             );
           })}
         </div>
-
         <div className="signal-status">
           <div className="signal-stat">
-            {signal.status === "f" ? "fulfilled" : "cancelled"}
+            {signal.status === "f" && "failed"}
+            {signal.status === "c" && "cancelled"}
+            {signal.status === "s" && "successful"}
           </div>
         </div>
         <div className="signal-stop-loss">
@@ -102,15 +103,13 @@ function Signal(props) {
             );
           })}
         </div>
-
         <div className="signal-provider">
           <div className="signal-pip-title signal-title">Profit, Pip</div>
           <div className="signal-pip-value signal-align-right">
             {signal.pip}
           </div>
         </div>
-
-        {sender !== "provider" && (
+        {sender === "admin" && (
           <div className="signal-provider">
             <div className="signal-provider-title signal-title">Provider</div>
             <div className="signal-provider-value signal-align-right">
@@ -122,6 +121,14 @@ function Signal(props) {
               >
                 {signal.provider}
               </Link>
+            </div>
+          </div>
+        )}
+        {sender === "user" && (
+          <div className="signal-provider">
+            <div className="signal-provider-title signal-title">Provider</div>
+            <div className="signal-provider-value signal-align-right">
+              {signal.provider}
             </div>
           </div>
         )}

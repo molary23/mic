@@ -218,7 +218,7 @@ router.post(
         "plan",
         "username",
         "userId",
-        "subscriptiondate",
+        "createdAt",
       ],
       where,
       raw: true,
@@ -676,10 +676,10 @@ router.post(
           newSearchObj = {
             [Op.or]: [
               {
-                firstcurrency: { [Op.substring]: searchArray[i] },
+                firstcurrency: { [Op.regexp]: searchArray[i] },
               },
               {
-                secondcurrency: { [Op.substring]: searchArray[i] },
+                secondcurrency: { [Op.regexp]: searchArray[i] },
               },
             ],
           };
@@ -693,10 +693,10 @@ router.post(
           ...{
             [Op.or]: [
               {
-                firstcurrency: { [Op.substring]: searchTerms },
+                firstcurrency: { [Op.regexp]: searchTerms },
               },
               {
-                secondcurrency: { [Op.substring]: searchTerms },
+                secondcurrency: { [Op.regexp]: searchTerms },
               },
             ],
           },
@@ -835,7 +835,7 @@ router.post(
         "fullname",
         "UserId",
         "username",
-        "transactiondate",
+        "createdAt",
         "type",
         "method",
       ],

@@ -9,7 +9,8 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
-  loadFromParams,
+  landingLoad,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -18,14 +19,19 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import AddModal from "../../layout/AddModal";
+import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
+
+import Pagination from "../../util/Pagination";
 
 class Signals extends Component {
   state = {
     sender: "admin-signals",
     statusOpt: [
       { value: "", option: "Filter by Status" },
-      { value: "f", option: "Filled" },
+      { value: "f", option: "Failed" },
       { value: "c", option: "Cancelled" },
+      { value: "s", option: "Successful" },
     ],
     signalOpt: [
       { value: "", option: "Filter by Signal Option" },
@@ -35,17 +41,22 @@ class Signals extends Component {
     search: "",
     status: "",
     signaloption: "",
-    limit: 4,
-    offset: 0,
-    numOfPages: 0,
-    iScrollPos: 10,
-    currentPage: 2,
+    limit: Pagination.limit,
+    offset: Pagination.offset,
+    numOfPages: Pagination.numberofpages,
+    iScrollPos: Pagination.scrollposition,
+    currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
-    signalcount: JSON.parse(localStorage.getItem("counts")).signals,
-    startLoad: false,
-    getLoad: true,
+    signalcount:
+      JSON.parse(localStorage.getItem("counts")).signals ??
+      this.props.auth.counts.signals,
     content: "signals",
     modal: false,
+    isLoading: false,
+    startLoad: false,
+    getLoad: true,
     modalsignaldetails: [],
     purpose: "",
   };
@@ -54,39 +65,47 @@ class Signals extends Component {
     const { limit, offset, signalcount, content } = this.state;
 
     let searchParams = window.location.search;
-    loadFromParams({ limit, self: this, content, searchParams });
-
-    const paginate = {
-      limit,
-      offset,
-    };
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(signalcount / limit),
       startLoad: true,
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
   componentWillUnmount() {
+    const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
@@ -287,6 +306,11 @@ class Signals extends Component {
     });
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -301,6 +325,7 @@ class Signals extends Component {
       modal,
       modalsignaldetails,
       purpose,
+      isLoading,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -338,11 +363,9 @@ class Signals extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -380,8 +403,12 @@ class Signals extends Component {
                 </div>
 
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn download-btn btn-sm">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn btn-sm"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
 
@@ -397,7 +424,9 @@ class Signals extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -440,11 +469,17 @@ Signals.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.any,
   admin: PropTypes.object.isRequired,
-  searchTerms: PropTypes.object,
-  getContent: PropTypes.func.isRequired,
-  searchContent: PropTypes.func.isRequired,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  clearActions: PropTypes.func,
+  clearSearchActions: PropTypes.func,
   loadFromParams: PropTypes.func,
   renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  downloadFile: PropTypes.func,
+  searchTerms: PropTypes.object,
+  landingLoad: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

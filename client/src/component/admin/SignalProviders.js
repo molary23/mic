@@ -15,8 +15,9 @@ import { searchContent, clearSearchActions } from "../../action/searchAction";
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -26,6 +27,9 @@ import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
+import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
+import { MdOutlineAddModerator } from "react-icons/md";
 
 import Pagination from "../../util/Pagination";
 
@@ -45,10 +49,11 @@ class ViewAdmin extends Component {
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
     timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
     isLoading: false,
-    usercount: 9,
-    upLoad: true,
+    startLoad: false,
+    getLoad: true,
     providercount:
       JSON.parse(localStorage.getItem("counts")).providers ??
       this.props.auth.allCounts.providers,
@@ -65,15 +70,7 @@ class ViewAdmin extends Component {
 
     let searchParams = window.location.search;
 
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(providercount / limit),
     });
@@ -150,23 +147,33 @@ class ViewAdmin extends Component {
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
@@ -179,8 +186,8 @@ class ViewAdmin extends Component {
       content,
       limit,
       offset,
-      doneTypingInterval: this.state.doneTypingInterval,
       self: this,
+      timer,
     });
   };
 
@@ -213,6 +220,11 @@ class ViewAdmin extends Component {
     }
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -226,6 +238,7 @@ class ViewAdmin extends Component {
       toast,
       toasttext,
       error,
+      isLoading,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -263,11 +276,9 @@ class ViewAdmin extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -294,8 +305,12 @@ class ViewAdmin extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-2 mb-3">
@@ -304,7 +319,7 @@ class ViewAdmin extends Component {
                     className="btn add-btn"
                     onClick={this.openModal}
                   >
-                    Add SP <i className="fas fa-user-plus" />
+                    Add SP <MdOutlineAddModerator />
                   </button>
                 </div>
                 <div className="col-md-3 mb-2">
@@ -360,11 +375,15 @@ ViewAdmin.propTypes = {
   errors: PropTypes.any,
   admin: PropTypes.object.isRequired,
   searchTerms: PropTypes.object,
+  clearSearchActions: PropTypes.func,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
-  clearAdminAction: PropTypes.func,
+  getMore: PropTypes.func,
+  downloadFile: PropTypes.func,
   addNewAdmin: PropTypes.func,
+  clearAdminAction: PropTypes.func,
   updateAdmin: PropTypes.func,
 };
 

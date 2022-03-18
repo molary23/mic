@@ -366,7 +366,7 @@ router.post(
     ReferralView.findAndCountAll({
       where,
       order: [["id", "desc"]],
-      attributes: ["referredId", "referred", "phone", "status", "enddate"],
+      attributes: ["referredId", "referred", "phone", "status"],
       limit,
       offset,
     })
@@ -431,7 +431,6 @@ router.post(
         "status",
         "package",
         "duration",
-        "plan",
         "payID",
         "createdAt",
       ],
@@ -941,6 +940,7 @@ router.post(
     let limit = null,
       status = null,
       search = null,
+      right = null,
       offset = 0,
       where = { UserId },
       result = [];

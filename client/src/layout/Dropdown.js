@@ -7,9 +7,6 @@ import { clearSearchActions } from "../action/searchAction";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import logo from "../asset/images/logo.png";
-import DropdownItem from "./DropdownItem";
-
 function Dropdown(props) {
   const { avatar, username } = props;
 
@@ -24,12 +21,22 @@ function Dropdown(props) {
     navigate("/", { replace: true });
   };
 
+  const toProfile = () => {
+    navigate(
+      `/${
+        (props.auth.user.level === 3 && "admin") ||
+        (props.auth.user.level === 2 && "sp") ||
+        (props.auth.user.level === 1 && "user")
+      }/settings`,
+      { replace: false }
+    );
+  };
   return (
     <div className="Dropdown">
       <Link
-        //className='nav-link dropdown-toggle'
+        // className="nav-link dropdown-toggle"
         to="#"
-        role="button"
+        // role="button"
         data-bs-toggle="dropdown"
         onClick={() => {
           setDisplay(!display);
@@ -50,16 +57,14 @@ function Dropdown(props) {
 
       <ul className={`dropdown-menu ${display ? "show" : ""}`}>
         <li className="dropdown-item">
-          <DropdownItem
-            {...{
-              title: "profile",
-              url: `/${
-                (props.auth.user.level === 3 && "admin") ||
-                (props.auth.user.level === 2 && "sp") ||
-                (props.auth.user.level === 1 && "user")
-              }/settings`,
-            }}
-          />
+          <a
+            href="/sp/settings"
+            className="nav-link"
+            role="button"
+            onMouseDown={toProfile}
+          >
+            Profile
+          </a>
         </li>
         <li className="dropdown-item">
           <Link

@@ -25,7 +25,7 @@ const express = require("express"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck"),
   checkPr = require("../../validation/checkPr"),
-  userCheck = require("../../validation/checkUser");
+  checkUser = require("../../validation/checkUser");
 
 /*
 @route GET api/count/:table
@@ -143,7 +143,7 @@ router.get(
   "/user/all",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const { error, isLevel } = userCheck(req.user.level);
+    const { error, isLevel } = checkUser(req.user.level);
     if (!isLevel) {
       return res.status(400).json(error);
     }

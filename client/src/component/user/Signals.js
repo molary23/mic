@@ -64,18 +64,28 @@ export class Signals extends Component {
       startLoad: true,
     });
 
-    window.addEventListener("scroll", this.loadMore, { passive: true });
-
     interval = setInterval(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
       this.setState({
         autoRefresh: true,
       });
-      this.props.clearActions(content);
-      this.props.clearSearchActions(content);
-      landingLoad({ limit, offset, self: this, content, searchParams });
+      this.refreshGet();
       console.log("first");
     }, 300000);
+
+    window.addEventListener("scroll", this.loadMore, { passive: true });
   }
+
+  refreshGet = () => {
+    const { limit, content } = this.state;
+    let searchParams = window.location.search;
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
+  };
 
   componentWillUnmount() {
     const { content } = this.state;
@@ -92,6 +102,8 @@ export class Signals extends Component {
     ) {
       this.setState({
         autoRefresh: false,
+        currentPage: Pagination.currentpage,
+        offset: 0,
       });
     }
   }

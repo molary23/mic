@@ -386,8 +386,8 @@ router.get(
 );
 
 /*
-@route POST api/user/settings/provider
-@desc User post settings 
+@route POST api/user/Preference/provider
+@desc User post Preference 
 @access private
 */
 
@@ -405,13 +405,13 @@ router.post(
       providers = req.body;
     }
 
-    Settings.findOne({ where: { UserId: id }, attributes: ["providers"] })
+    Preference.findOne({ where: { UserId: id }, attributes: ["providers"] })
       .then((prList) => {
         if (prList.providers !== null) {
           providers = [...providers, ...prList.providers];
         }
         providers = [...new Set(providers)];
-        Settings.update({ providers }, { where: { UserId: id } })
+        Preference.update({ providers }, { where: { UserId: id } })
           .then(() => {
             res.json(true);
           })
@@ -422,8 +422,8 @@ router.post(
 );
 
 /*
-@route POST api/user/settings/reset/provider
-@desc User reset provider settings 
+@route POST api/user/Preference/reset/provider
+@desc User reset provider Preference 
 @access private
 */
 
@@ -444,7 +444,7 @@ router.post(
     if (providers.length <= 0) {
       providers = null;
     }
-    Settings.update({ providers }, { where: { UserId: id } })
+    Preference.update({ providers }, { where: { UserId: id } })
       .then(() => {
         res.json(true);
       })
@@ -453,8 +453,8 @@ router.post(
 );
 
 /*
-@route POST api/user/settings/currency
-@desc User post settings 
+@route POST api/user/Preference/currency
+@desc User post Preference 
 @access private
 */
 
@@ -472,13 +472,13 @@ router.post(
       currencies = req.body;
     }
 
-    Settings.findOne({ where: { UserId: id }, attributes: ["currencies"] })
+    Preference.findOne({ where: { UserId: id }, attributes: ["currencies"] })
       .then((curList) => {
         if (curList.currencies !== null) {
           currencies = [...currencies, ...curList.currencies];
         }
         currencies = [...new Set(currencies)];
-        Settings.update({ currencies }, { where: { UserId: id } })
+        Preference.update({ currencies }, { where: { UserId: id } })
           .then(() => {
             res.json(true);
           })
@@ -489,8 +489,8 @@ router.post(
 );
 
 /*
-@route POST api/user/settings/reset/currency
-@desc User post settings 
+@route POST api/user/Preference/reset/currency
+@desc User post Preference 
 @access private
 */
 
@@ -512,7 +512,7 @@ router.post(
       currencies = null;
     }
 
-    Settings.update({ currencies }, { where: { UserId: id } })
+    Preference.update({ currencies }, { where: { UserId: id } })
       .then(() => {
         res.json(true);
       })

@@ -167,7 +167,7 @@ export const getPremium = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: GET_PREMIUM_STATUS, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 
@@ -184,7 +184,7 @@ export const getUserDetails = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: GET_DASHBOARD_DETAILS, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 
@@ -206,7 +206,7 @@ export const getUserSettings = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: GET_USER_SETTINGS, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 
@@ -223,7 +223,7 @@ export const getBalance = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: USER_GET_BALANCE, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 
@@ -240,7 +240,7 @@ export const getAccount = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: USER_GET_ACCOUNT, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 
@@ -370,7 +370,7 @@ export const getList = (list) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 

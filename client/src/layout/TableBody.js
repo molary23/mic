@@ -148,9 +148,6 @@ function TableBody(props) {
               </span>
             )}
           </td>
-          <td>
-            <DateFormat date={item.enddate} />
-          </td>
         </tr>
       );
     });
@@ -352,7 +349,7 @@ function TableBody(props) {
           </td>
           <td>{item.type === "d" ? "debit" : "credit"}</td>
           <td>
-            <DateFormat date={item.transactiondate}></DateFormat>
+            <DateFormat date={item.createdAt}></DateFormat>
           </td>
         </tr>
       );
@@ -609,7 +606,7 @@ function TableBody(props) {
           <td>{item.plan === "m" ? "monthly" : "annually"}</td>
           <td>{item.package}</td>
           <td>
-            <DateFormat date={item.subscriptiondate} />
+            <DateFormat date={item.createdAt} />
           </td>
         </tr>
       );
@@ -706,7 +703,7 @@ function TableBody(props) {
               className=""
               data-id={i}
               title={`View ${adm}`}
-              to={`/admin/admin/:${item.UserId}`}
+              to={`/admin/admin/:${item.userid}`}
             >
               {item.username}
             </Link>
@@ -735,7 +732,7 @@ function TableBody(props) {
                   className="btn btn-danger btn-sm"
                   data-id={item.id}
                   title={`Deactivate ${adm}`}
-                  onClick={() => onClick(["delete", item.UserId])}
+                  onClick={() => onClick(["delete", item.userid])}
                 >
                   <MdOutlineDeleteForever />
                 </button>
@@ -747,7 +744,7 @@ function TableBody(props) {
                   className="btn btn-success btn-sm"
                   data-id={item.id}
                   title={`Activate ${adm}`}
-                  onClick={() => onClick(["reactivate", item.UserId])}
+                  onClick={() => onClick(["reactivate", item.userid])}
                 >
                   <RiRefreshLine />
                 </button>
@@ -930,8 +927,8 @@ function TableBody(props) {
           <td>{item.signaloption === "s" ? "sell" : "buy"}</td>
           <td>
             {item.status === "c" && "cancelled"}
-            {item.status === "f" && "fulfilled"}
-            {item.status === null && ""}
+            {item.status === "f" && "failed"}
+            {item.status === "s" && "successful"}
           </td>
           <td>
             {item.takeprofit.map((tp, i) => {

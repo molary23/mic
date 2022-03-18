@@ -37,15 +37,15 @@ export class SubNav extends Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.errors !== this.props.errors &&
-      this.props.errors === "Unauthorized"
+      Object.keys(this.props.errors).length >= 1
     ) {
       console.log(this.props.errors);
-      this.props.logoutUser();
+      /* this.props.logoutUser();
       // props.clearActions();
       this.props.clearCurrentProfile();
       this.setState({
         navigate: true,
-      });
+      });*/
     }
   }
 
@@ -90,15 +90,13 @@ export class SubNav extends Component {
                     username={userinfo.username}
                   />
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="/">
-                    <span className="nav-user-name">{userinfo.username}</span>
-                    {this.props.auth.user.level === 3 && (
-                      <span className="nav-sub-icon">
-                        {premiuminfo.status === "n" && <HiBadgeCheck />}
-                      </span>
-                    )}
-                  </a>
+                <li className="nav-item nav-user-item">
+                  <span className="nav-user-name">{userinfo.username}</span>
+                  {this.props.auth.user.level === 3 && (
+                    <span className="nav-sub-icon">
+                      {premiuminfo.status === "n" && <HiBadgeCheck />}
+                    </span>
+                  )}
                 </li>
 
                 {(auth.user.level === 3 || auth.user.level === 1) && (

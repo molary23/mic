@@ -9,8 +9,9 @@ import { searchContent, clearSearchActions } from "../../action/searchAction";
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -20,6 +21,7 @@ import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
 import Pagination from "../../util/Pagination";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 class Users extends Component {
   state = {
@@ -37,11 +39,13 @@ class Users extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    lastScrollTop: 0,
     url: new URL(window.location),
     usercount:
       JSON.parse(localStorage.getItem("counts")).users ??
       this.props.auth.allCounts.users,
     startLoad: false,
+    isLoading: false,
     getLoad: true,
     content: "users",
   };
@@ -50,15 +54,7 @@ class Users extends Component {
     const { limit, offset, usercount, content } = this.state;
     let searchParams = window.location.search;
 
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(usercount / limit),
       startLoad: true,
@@ -75,19 +71,29 @@ class Users extends Component {
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
   };
 
   changeHandler = (e) => {
@@ -107,6 +113,11 @@ class Users extends Component {
     });
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -116,6 +127,7 @@ class Users extends Component {
       startLoad,
       getLoad,
       search,
+      isLoading,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -153,7 +165,7 @@ class Users extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -183,8 +195,12 @@ class Users extends Component {
                 </div>
 
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-4 mb-2">
@@ -232,9 +248,10 @@ Users.propTypes = {
   clearSearchActions: PropTypes.func,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
-  loadFromParams: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
+  downloadFile: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

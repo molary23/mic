@@ -171,12 +171,6 @@ class Bonus extends Component {
                           value: bonusinfo.amount,
                         }}
                       />
-                      <CardDetails
-                        {...{
-                          label: "Amount",
-                          value: bonusinfo.amount,
-                        }}
-                      />
 
                       {bonusinfo.status === "p" && (
                         <CardDetails
@@ -228,15 +222,6 @@ class Bonus extends Component {
                         {...{
                           label: "date created",
                           value: <DateFormat date={bonusinfo.createdAt} />,
-                        }}
-                      />
-
-                      <CardDetails
-                        {...{
-                          label: `date ${
-                            bonusinfo.status === "a" ? "approved" : "rejected"
-                          }`,
-                          value: <DateFormat date={bonusinfo.updatedAt} />,
                         }}
                       />
                       {bonusinfo.status !== "p" && (

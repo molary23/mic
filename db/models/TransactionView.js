@@ -27,7 +27,7 @@ TransactionView.init(
     username: {
       type: DataTypes.STRING(50),
     },
-    transactiondate: {
+    createdAt: {
       type: DataTypes.DATE,
     },
     UserId: {
