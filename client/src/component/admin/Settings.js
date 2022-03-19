@@ -252,7 +252,7 @@ Settings.propTypes = {
   saveSettings: PropTypes.func.isRequired,
   auth: PropTypes.object,
   admin: PropTypes.object,
-  errors: PropTypes.object,
+  errors: PropTypes.any,
 };
 
 const mapStateToProps = (state) => ({

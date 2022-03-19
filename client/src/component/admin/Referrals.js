@@ -11,13 +11,15 @@ import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 
 import Spinner from "../../layout/Spinner";
-
+import { RiFileExcel2Line } from "react-icons/ri";
 import {
   getMore,
   setSearchParams,
+  landingLoad,
   renderArrange,
-  loadFromParams,
+  downloadFile,
 } from "../../util/LoadFunction";
+
 import Pagination from "../../util/Pagination";
 export class Referrals extends Component {
   state = {
@@ -29,8 +31,11 @@ export class Referrals extends Component {
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
     url: new URL(window.location),
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     startLoad: false,
     getLoad: true,
+    isLoading: false,
     refcount:
       JSON.parse(localStorage.getItem("counts")).referrals ??
       this.props.auth.allCounts.referrals,
@@ -42,15 +47,7 @@ export class Referrals extends Component {
     const { limit, offset, refcount, content } = this.state;
     let searchParams = window.location.search;
 
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(refcount / limit),
     });
@@ -65,19 +62,29 @@ export class Referrals extends Component {
     this.props.clearSearchActions(content);
   }
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
   };
   changeHandler = (e) => {
     const { url, content, limit, offset } = this.state;
@@ -96,8 +103,14 @@ export class Referrals extends Component {
     });
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
-    const { sender, search, refcount, startLoad, getLoad } = this.state;
+    const { sender, search, refcount, startLoad, getLoad, isLoading } =
+      this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -135,11 +148,9 @@ export class Referrals extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
-          </div>
+          <Spinner />
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
@@ -156,9 +167,13 @@ export class Referrals extends Component {
                     onChange={this.changeHandler}
                   />
                 </div>
-                <div className="col-md-4 mb-2">
-                  <button type="button" className="btn btn-outline-primary">
-                    Download <i className="far fa-file-excel" />
+                <div className="col-md-2 mb-3">
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-3 mb-2">
@@ -173,7 +188,9 @@ export class Referrals extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={["S/N", "Referred Username", "Referral Username"]}
@@ -195,13 +212,15 @@ Referrals.propTypes = {
   errors: PropTypes.any,
   admin: PropTypes.object.isRequired,
   searchTerms: PropTypes.object,
-  getContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func,
-  searchContent: PropTypes.func,
   clearSearchActions: PropTypes.func,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
+  downloadFile: PropTypes.func,
+  clearActions: PropTypes.func,
   setSearchParams: PropTypes.func,
-  loadFromParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

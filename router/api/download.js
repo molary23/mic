@@ -2,7 +2,9 @@ const express = require("express"),
   router = express.Router(),
   passport = require("passport"),
   Sequelize = require("sequelize"),
-  Json2csvParser = require("json2csv").Parser,
+  // Json2csvParser = require("json2csv").Parser,
+  //{ parse } = require("json2csv"),
+  { Parser } = require("json2csv"),
   fs = require("fs"),
   { Op } = require("sequelize"),
   Payment = require("../../db/models/Payment"),
@@ -21,6 +23,7 @@ const express = require("express"),
   TransactionView = require("../../db/models/TransactionView"),
   ProviderView = require("../../db/models/ProviderView"),
   ReferralView = require("../../db/models/ReferralView"),
+  PaymentView = require("../../db/models/PaymentView"),
   SignalView = require("../../db/models/SignalView"),
   BonusView = require("../../db/models/BonusView"),
   UserView = require("../../db/models/UserView"),
@@ -380,9 +383,9 @@ router.get(
       ];
     } else if (table === "referrals") {
       view = ReferralView;
-      attributes = ["referred", "phone"];
+      attributes = ["referred", "phone", "referral"];
       order = [["id", "desc"]];
-      csvFields = ["referred", "phone"];
+      csvFields = ["referred", "phone", "referral"];
     } else if (table === "bonus") {
       view = BonusView;
       attributes = [
@@ -393,14 +396,22 @@ router.get(
           ),
           "status",
         ],
+        "username",
         "payer",
         "createdAt",
         "updatedAt",
       ];
       order = [["bonusid", "desc"]];
-      csvFields = ["amount", "status", "payer", "createdAt", "updatedAt"];
+      csvFields = [
+        "amount",
+        "status",
+        "receiver",
+        "payer",
+        "createdAt",
+        "updatedAt",
+      ];
     } else if (table === "payments") {
-      view = Payment;
+      view = PaymentView;
       attributes = [
         "amount",
         "reference",
@@ -416,21 +427,26 @@ router.get(
           ),
           "status",
         ],
+        "username",
         "createdAt",
         "updatedAt",
       ];
-      order = [["id", "desc"]];
+      order = [["payid", "desc"]];
       csvFields = [
-        "amount",
-        "reference",
-        "gateway",
-        "status",
-        "createdAt",
-        "updatedAt",
+        "Amount",
+        "Reference",
+        "Gateway",
+        "Status",
+        "Username",
+        "Created At",
+        "Updated At",
       ];
     } else if (table === "withdrawals") {
       view = WithdrawalView;
+
       attributes = [
+        "fullname",
+        "username",
         "amount",
         "accountnumber",
         "wallet",
@@ -445,6 +461,8 @@ router.get(
       ];
       order = [["withdrawalid", "desc"]];
       csvFields = [
+        "fullname",
+        "username",
         "amount",
         "accountnumber",
         "wallet",
@@ -545,6 +563,40 @@ router.get(
       ];
       order = [["userid", "desc"]];
       csvFields = ["username", "email", "fullname", "status"];
+    } else if (table === "accounts") {
+      view = AccountView;
+      attributes = [
+        "username",
+        "fullname",
+        "wallet",
+        "accountnumber",
+        "createdAt",
+        "updatedAt",
+      ];
+      order = [["accountid", "desc"]];
+      csvFields = [
+        "Username",
+        "Fullname",
+        "Wallet",
+        "Account Number",
+        "createdAt",
+        "updatedAt",
+      ];
+    } else if (table === "wallets") {
+      view = Wallet;
+      attributes = [
+        "wallet",
+        [
+          Sequelize.literal(
+            `CASE WHEN Wallet.status = 'a' THEN 'active' WHEN Wallet.status = 'i' THEN 'inactive' END `
+          ),
+          "status",
+        ],
+        "createdAt",
+      ];
+      order = [["id", "desc"]];
+      include = [{ model: User, attributes: ["username"] }];
+      csvFields = ["wallet", "status", "createdAt", "Creator"];
     }
 
     view
@@ -554,14 +606,14 @@ router.get(
         include,
       })
       .then((entries) => {
-        const jsonUsers = JSON.parse(JSON.stringify(entries));
+        const tabeldata = JSON.parse(JSON.stringify(entries));
 
-        const json2csvParser = new Json2csvParser({ csvFields });
-        const csv = json2csvParser.parse(jsonUsers);
+        const parser = new Parser({ csvFields });
+        const csv = parser.parse(tabeldata);
         res.setHeader("Content-Disposition", "attachment;filename=signals.csv");
         res.setHeader("Content-Type", "application/octet-stream");
 
-        res.attachment("subscriptions.csv");
+        // res.attachment("subscriptions.csv");
         res.status(200).end(csv);
       })
       .catch((err) => res.status(404).json(`E ${err.response}`));

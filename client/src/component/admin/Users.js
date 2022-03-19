@@ -39,6 +39,7 @@ class Users extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
     lastScrollTop: 0,
     url: new URL(window.location),
     usercount:
@@ -215,7 +216,9 @@ class Users extends Component {
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && "No Record(s) found"}
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
             <TableHead
               sender={sender}
               head={[
@@ -252,6 +255,8 @@ Users.propTypes = {
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   downloadFile: PropTypes.func,
+  clearActions: PropTypes.func,
+  setSearchParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

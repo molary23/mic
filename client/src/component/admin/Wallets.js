@@ -20,11 +20,15 @@ import Toast from "../../layout/Toast";
 import AddModal from "../../layout/AddModal";
 import Spinner from "../../layout/Spinner";
 
+import { RiFileExcel2Line } from "react-icons/ri";
+import { MdOutlinePostAdd } from "react-icons/md";
+
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -47,6 +51,8 @@ export class Wallets extends Component {
       numOfPages: Pagination.numberofpages,
       iScrollPos: Pagination.scrollposition,
       currentPage: Pagination.currentpage,
+      timer: Pagination.timer,
+      lastScrollTop: 0,
       url: new URL(window.location),
       walletcount:
         JSON.parse(localStorage.getItem("counts")).wallets ??
@@ -59,6 +65,7 @@ export class Wallets extends Component {
       toast: false,
       toasttext: "",
       isLoading: false,
+      servererror: null,
     };
   }
 
@@ -66,17 +73,10 @@ export class Wallets extends Component {
     const { limit, offset, walletcount, content } = this.state;
     let searchParams = window.location.search;
 
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    }
-    const paginate = {
-      limit,
-      offset,
-    };
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(walletcount / limit),
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
@@ -149,18 +149,31 @@ export class Wallets extends Component {
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY;
+    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
@@ -176,7 +189,7 @@ export class Wallets extends Component {
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
@@ -190,6 +203,7 @@ export class Wallets extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
 
@@ -207,6 +221,11 @@ export class Wallets extends Component {
 
   submitHandler = (value) => {
     this.props.addWallet(value);
+  };
+
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
   };
 
   render() {
@@ -260,7 +279,7 @@ export class Wallets extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -294,12 +313,16 @@ export class Wallets extends Component {
                     className="btn add-btn btn-sm"
                     onClick={this.openModal}
                   >
-                    Add New <i className="fas fa-folder-plus" />
+                    Add New <MdOutlinePostAdd />
                   </button>
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
 
@@ -351,17 +374,24 @@ export class Wallets extends Component {
 }
 
 Wallets.propTypes = {
-  getContent: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
+  admin: PropTypes.object.isRequired,
+  searchTerms: PropTypes.object,
+  getContent: PropTypes.func,
   searchContent: PropTypes.func,
+  clearAdminAction: PropTypes.func,
+  landingLoad: PropTypes.func,
+  renderArrange: PropTypes.func,
+  updateBonus: PropTypes.func,
+  clearActions: PropTypes.func,
+  setSearchParams: PropTypes.func,
+  clearSearchActions: PropTypes.func,
+  updateWithdrawals: PropTypes.func,
+  getMore: PropTypes.func,
   updateWallet: PropTypes.func,
   addWallet: PropTypes.func,
-  clearActions: PropTypes.func,
-  clearAdminAction: PropTypes.func,
-  loadFromParams: PropTypes.func,
-  renderArrange: PropTypes.func,
   updateAdmin: PropTypes.func,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({

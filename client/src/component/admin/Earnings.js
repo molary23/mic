@@ -17,12 +17,14 @@ import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Toast from "../../layout/Toast";
 import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import {
   getMore,
   setSearchParams,
-  loadFromParams,
+  landingLoad,
   renderArrange,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -46,6 +48,8 @@ export class Earnings extends Component {
       numOfPages: Pagination.numberofpages,
       iScrollPos: Pagination.scrollposition,
       currentPage: Pagination.currentpage,
+      timer: Pagination.timer,
+      lastScrollTop: 0,
       url: new URL(window.location),
       isLoading: false,
       bonuscount:
@@ -57,6 +61,7 @@ export class Earnings extends Component {
       error: {},
       toast: false,
       toasttext: "",
+      servererror: {},
     };
   }
 
@@ -64,15 +69,7 @@ export class Earnings extends Component {
     const { limit, offset, bonuscount, content } = this.state;
     let searchParams = window.location.search;
 
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(bonuscount / limit),
     });
@@ -89,7 +86,7 @@ export class Earnings extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.errors) {
-      update.error = nextProps.errors;
+      update.servererror = nextProps.errors;
     }
     return update;
   }
@@ -135,18 +132,31 @@ export class Earnings extends Component {
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
@@ -162,7 +172,7 @@ export class Earnings extends Component {
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
       loading: true,
@@ -175,7 +185,13 @@ export class Earnings extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
+  };
+
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
   };
 
   render() {
@@ -190,6 +206,8 @@ export class Earnings extends Component {
       toast,
       toasttext,
       error,
+      isLoading,
+      servererror,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -227,7 +245,7 @@ export class Earnings extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -257,8 +275,12 @@ export class Earnings extends Component {
                 </div>
 
                 <div className="col-md-3 mb-3">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
 
@@ -313,9 +335,11 @@ Earnings.propTypes = {
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
   clearAdminAction: PropTypes.func,
-  loadFromParams: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
   updateBonus: PropTypes.func,
+  clearActions: PropTypes.func,
+  setSearchParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

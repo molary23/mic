@@ -265,6 +265,8 @@ Transactions.propTypes = {
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   downloadFile: PropTypes.func,
+  clearActions: PropTypes.func,
+  setSearchParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

@@ -21,6 +21,10 @@ Profile.init(
     avatar: {
       type: DataTypes.STRING,
     },
+    phone: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
   },
   {
     // don't forget to enable timestamps!

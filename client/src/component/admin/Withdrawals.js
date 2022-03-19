@@ -17,12 +17,14 @@ import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Toast from "../../layout/Toast";
 import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import {
   getMore,
   setSearchParams,
+  landingLoad,
   renderArrange,
-  loadFromParams,
+  downloadFile,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -49,6 +51,7 @@ export class Withdrawals extends Component {
       JSON.parse(localStorage.getItem("counts")).withdrawals ??
       this.props.auth.allCounts.withdrawals,
     startLoad: false,
+    isLoading: false,
     getLoad: true,
     content: "withdrawals",
     toast: false,
@@ -59,16 +62,7 @@ export class Withdrawals extends Component {
     const { limit, offset, withcount, content } = this.state;
 
     let searchParams = window.location.search;
-
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(withcount / limit),
     });
@@ -190,6 +184,11 @@ export class Withdrawals extends Component {
     }
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -202,6 +201,7 @@ export class Withdrawals extends Component {
       toast,
       toasttext,
       error,
+      isLoading,
     } = this.state;
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -239,7 +239,7 @@ export class Withdrawals extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -268,15 +268,19 @@ export class Withdrawals extends Component {
                     value={status}
                   />
                 </div>
-                <div className="col-md-2 mb-2">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
+                <div className="col-md-2 mb-3">
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-4 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
-                      {totalText} Withdrawals
+                      {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>
@@ -324,14 +328,15 @@ Withdrawals.propTypes = {
   searchTerms: PropTypes.object,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
-  clearActions: PropTypes.func,
   clearAdminAction: PropTypes.func,
+  landingLoad: PropTypes.func,
+  renderArrange: PropTypes.func,
+  updateBonus: PropTypes.func,
+  clearActions: PropTypes.func,
+  setSearchParams: PropTypes.func,
   clearSearchActions: PropTypes.func,
   updateWithdrawals: PropTypes.func,
-  loadFromParams: PropTypes.func,
-  renderArrange: PropTypes.func,
   getMore: PropTypes.func,
-  setSearchParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

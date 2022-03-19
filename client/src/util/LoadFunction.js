@@ -383,6 +383,24 @@ export const downloadFile = ({ sender, self }) => {
   } else if (sender === "admin-transactions") {
     url = `${url}admin/:transactions`;
     filename = "all-transactions";
+  } else if (sender === "admin-referrals") {
+    url = `${url}admin/:referrals`;
+    filename = "all-referrals";
+  } else if (sender === "admin-bonus") {
+    url = `${url}admin/:bonus`;
+    filename = "all-bonus";
+  } else if (sender === "admin-accounts") {
+    url = `${url}admin/:accounts`;
+    filename = "all-accounts";
+  } else if (sender === "admin-payments") {
+    url = `${url}admin/:payments`;
+    filename = "all-payments";
+  } else if (sender === "admin-withdrawals") {
+    url = `${url}admin/:withdrawals`;
+    filename = "all-withdrawals";
+  } else if (sender === "admin-wallets") {
+    url = `${url}admin/:wallets`;
+    filename = "all-wallets";
   }
 
   self.setState({

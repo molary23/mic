@@ -17,8 +17,9 @@ import Spinner from "../../layout/Spinner";
 import {
   getMore,
   setSearchParams,
+  landingLoad,
   renderArrange,
-  loadFromParams,
+  downloadFile,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -31,10 +32,15 @@ class Accounts extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
-    accountcount: JSON.parse(localStorage.getItem("counts")).accounts,
+    accountcount:
+      JSON.parse(localStorage.getItem("counts")).accounts ??
+      this.props.auth.allCounts.accounts,
     startLoad: false,
     getLoad: true,
+    isLoading: false,
     content: "accounts",
   };
 
@@ -43,15 +49,7 @@ class Accounts extends Component {
 
     let searchParams = window.location.search;
 
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(accountcount / limit),
       startLoad: true,
@@ -68,23 +66,33 @@ class Accounts extends Component {
   }
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
-    });
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
   };
 
   changeHandler = (e) => {
-    const { url, content, limit, offset } = this.state;
+    const { url, content, limit, offset, timer } = this.state;
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -97,11 +105,16 @@ class Accounts extends Component {
       limit,
       offset,
       self: this,
+      timer,
     });
   };
-
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
   render() {
-    const { sender, accountcount, search, startLoad, getLoad } = this.state;
+    const { sender, accountcount, search, startLoad, getLoad, isLoading } =
+      this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -139,7 +152,7 @@ class Accounts extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -159,14 +172,18 @@ class Accounts extends Component {
                   />
                 </div>
                 <div className="col-md-4 mb-3">
-                  <button type="button" className="btn download-btn">
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
                     Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-4 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
-                      {totalText} Accounts
+                      {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>
@@ -207,13 +224,15 @@ Accounts.propTypes = {
   errors: PropTypes.any,
   admin: PropTypes.object.isRequired,
   searchTerms: PropTypes.object,
-  getContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func,
-  searchContent: PropTypes.func,
   clearSearchActions: PropTypes.func,
+  getContent: PropTypes.func,
+  searchContent: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
+  getMore: PropTypes.func,
+  downloadFile: PropTypes.func,
+  clearActions: PropTypes.func,
   setSearchParams: PropTypes.func,
-  loadFromParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

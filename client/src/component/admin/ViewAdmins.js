@@ -383,6 +383,8 @@ ViewAdmins.propTypes = {
   addNewAdmin: PropTypes.func,
   clearAdminAction: PropTypes.func,
   updateAdmin: PropTypes.func,
+  clearActions: PropTypes.func,
+  setSearchParams: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

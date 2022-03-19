@@ -11,12 +11,14 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
+import { RiFileExcel2Line } from "react-icons/ri";
 
 import {
   getMore,
   setSearchParams,
+  landingLoad,
   renderArrange,
-  loadFromParams,
+  downloadFile,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -42,6 +44,7 @@ export class Payments extends Component {
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
     timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
     startLoad: false,
     getLoad: true,
@@ -52,6 +55,7 @@ export class Payments extends Component {
     content: "payments",
     toast: false,
     toasttext: "",
+    servererror: null,
   };
 
   componentDidMount() {
@@ -59,15 +63,7 @@ export class Payments extends Component {
 
     let searchParams = window.location.search;
 
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(paymentcount / limit),
     });
@@ -129,18 +125,31 @@ export class Payments extends Component {
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
     });
   };
 
@@ -162,6 +171,11 @@ export class Payments extends Component {
     });
   };
 
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
+  };
+
   render() {
     const {
       sender,
@@ -173,6 +187,9 @@ export class Payments extends Component {
       paymentcount,
       gatewayOptions,
       gateway,
+      isLoading,
+      servererror,
+      error,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -211,7 +228,7 @@ export class Payments extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -249,8 +266,12 @@ export class Payments extends Component {
                   />
                 </div>
                 <div className="col-md-2 mb-3">
-                  <button type="button" className="btn btn-outline-primary">
-                    Download <i className="far fa-file-excel" />
+                  <button
+                    type="button"
+                    className="btn download-btn"
+                    onClick={this.downloadHandler}
+                  >
+                    Download <RiFileExcel2Line />
                   </button>
                 </div>
                 <div className="col-md-3 mb-2">
@@ -299,13 +320,15 @@ Payments.propTypes = {
   errors: PropTypes.any,
   admin: PropTypes.object.isRequired,
   searchTerms: PropTypes.object,
-  getContent: PropTypes.func.isRequired,
-  clearActions: PropTypes.func,
+  getContent: PropTypes.func,
   searchContent: PropTypes.func,
-  clearSearchActions: PropTypes.func,
+  clearAdminAction: PropTypes.func,
+  landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
+  updateBonus: PropTypes.func,
+  clearActions: PropTypes.func,
   setSearchParams: PropTypes.func,
-  loadFromParams: PropTypes.func,
+  clearSearchActions: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
