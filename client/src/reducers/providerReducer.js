@@ -16,6 +16,8 @@ import {
   CLEAR_PROVIDER_UPDATE_PASSWORD,
   GET_PROVIDER_SETTINGS,
   CLEAR_GET_PROVIDER_SETTINGS,
+  PROVIDER_GET_FOLLOWERS,
+  CLEAR_PROVIDER_GET_FOLLOWERS,
 } from "../action/types";
 
 const initialState = {
@@ -30,6 +32,7 @@ const initialState = {
   setmode: false,
   setprofile: false,
   setpass: false,
+  getfollowers: 0,
 };
 
 export default function providerReducer(state = initialState, action) {
@@ -92,6 +95,12 @@ export default function providerReducer(state = initialState, action) {
         setpass: action.payload,
         loading: false,
       };
+    case PROVIDER_GET_FOLLOWERS:
+      return {
+        ...state,
+        getfollowers: action.payload,
+        loading: false,
+      };
     case CLEAR_PROVIDER_SIGNALS_ACTION: {
       return { ...state, signals: [], signalcount: 0, fetching: false };
     }
@@ -112,6 +121,9 @@ export default function providerReducer(state = initialState, action) {
     }
     case CLEAR_PROVIDER_UPDATE_PASSWORD: {
       return { ...state, setpass: false };
+    }
+    case CLEAR_PROVIDER_GET_FOLLOWERS: {
+      return { ...state, getfollowers: false };
     }
     default:
       return state;

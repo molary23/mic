@@ -610,7 +610,7 @@ span.nav-sub-icon {
   .toast-header {
     color: #fff;
     background: inherit;
-    border-bottom: 1px solid #fff;
+    border-bottom: 0.1px solid #fff;
   }
   svg {
     font-size: 20px;
@@ -795,5 +795,31 @@ ul.list-group.list-group-horizontal {
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
+  }
+}
+
+/* Scroller */
+.scroll-up {
+  bottom: 60px;
+  position: fixed;
+  z-index: 9999;
+  font-size: 40px;
+  right: 10px;
+  cursor: pointer;
+  display: none;
+  color: rgba($color: #8dbff8, $alpha: 0.8);
+}
+
+.showscroller {
+  display: block;
+  animation: scroller 1s;
+}
+
+@keyframes scroller {
+  0% {
+    margin-bottom: 10px;
+  }
+  100% {
+    margin-bottom: 40px;
   }
 }

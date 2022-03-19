@@ -449,12 +449,16 @@ router.post(
       offset = 0,
       premiumstatus = null,
       search = null,
+      sp = null,
+      ref = null,
       where = {};
 
     if (req.body.limit) limit = req.body.limit;
     if (req.body.offset) offset = req.body.offset;
     if (req.body.search) search = req.body.search;
     if (req.body.premiumstatus) premiumstatus = req.body.premiumstatus;
+    if (req.body.sp) sp = parseInt(req.body.sp);
+    if (req.body.ref) ref = req.body.ref;
 
     if (premiumstatus !== null) {
       where = { ...where, ...{ premiumstatus } };
@@ -490,29 +494,75 @@ router.post(
       }
     }
 
-    const query = {
-      order: [["userid", "DESC"]],
-      limit,
-      offset,
-      attributes: [
-        "userid",
-        "username",
-        "email",
-        "fullname",
-        "userstatus",
-        "premiumstatus",
-      ],
-      where,
-      raw: true,
-    };
     let result = [];
-    UserView.findAndCountAll(query)
-      .then((entries) => {
-        const { count, rows } = entries;
-        result = [...[count], ...rows];
-        res.json(result);
+    if ((sp !== null) & (ref !== null)) {
+      const userid = Preference.findAll({
+        where: {
+          [Op.or]: [
+            { providers: null },
+            {
+              providers: { [Op.regexp]: sp },
+            },
+          ],
+        },
+        attributes: ["UserId"],
+        raw: true,
       })
-      .catch((err) => res.status(404).json(err));
+        .then((pr) => {
+          let UserId = pr.UserId,
+            idArray = [];
+          for (let i = 0; i < pr.length; i++) {
+            idArray.push(pr[i].UserId);
+          }
+          where = { ...where, ...{ UserId: idArray } };
+          const query = {
+            order: [["userid", "DESC"]],
+            limit,
+            offset,
+            attributes: [
+              "userid",
+              "username",
+              "email",
+              "fullname",
+              "userstatus",
+              "premiumstatus",
+            ],
+            where,
+            raw: true,
+          };
+          UserView.findAndCountAll(query)
+            .then((entries) => {
+              const { count, rows } = entries;
+              result = [...[count], ...rows];
+              return res.json(result);
+            })
+            .catch((err) => res.status(404).json(err));
+        })
+        .catch((err) => res.status(404).json(err));
+    } else {
+      const query = {
+        order: [["userid", "DESC"]],
+        limit,
+        offset,
+        attributes: [
+          "userid",
+          "username",
+          "email",
+          "fullname",
+          "userstatus",
+          "premiumstatus",
+        ],
+        where,
+        raw: true,
+      };
+      UserView.findAndCountAll(query)
+        .then((entries) => {
+          const { count, rows } = entries;
+          result = [...[count], ...rows];
+          return res.json(result);
+        })
+        .catch((err) => res.status(404).json(err));
+    }
   }
 );
 
@@ -1835,16 +1885,10 @@ router.get(
     let info = {};
     return Promise.all([
       User.findByPk(adminid, {
-        attributes: [
-          "id",
-          "email",
-          "username",
-          "level",
-          "phone",
-          "createdAt",
-          "status",
+        attributes: ["id", "email", "username", "level", "createdAt", "status"],
+        include: [
+          { model: Profile, attributes: ["firstname", "lastname", "phone"] },
         ],
-        include: [{ model: Profile, attributes: ["firstname", "lastname"] }],
       })
         .then((user) => {
           if (user === null) {
@@ -1916,16 +1960,10 @@ router.get(
     let info = {};
     return Promise.all([
       User.findByPk(UserId, {
-        attributes: [
-          "id",
-          "email",
-          "username",
-          "level",
-          "phone",
-          "createdAt",
-          "status",
+        attributes: ["id", "email", "username", "level", "createdAt", "status"],
+        include: [
+          { model: Profile, attributes: ["firstname", "lastname", "phone"] },
         ],
-        include: [{ model: Profile, attributes: ["firstname", "lastname"] }],
       })
         .then((user) => {
           if (user === null) {

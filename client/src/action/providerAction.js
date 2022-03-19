@@ -20,6 +20,8 @@ import {
   CLEAR_ERRORS,
   GET_PROVIDER_SETTINGS,
   CLEAR_GET_PROVIDER_SETTINGS,
+  PROVIDER_GET_FOLLOWERS,
+  CLEAR_PROVIDER_GET_FOLLOWERS,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -52,6 +54,11 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_PROVIDER_SIGNALS_ACTION };
   } else if (actionToClear === "provider-settings") {
     return { type: CLEAR_GET_PROVIDER_SETTINGS };
+  } else if (actionToClear === "provider-followers") {
+    return { type: CLEAR_PROVIDER_GET_FOLLOWERS };
+  } else if (actionToClear === "provider-currencies") {
+    localStorage.removeItem("currencies");
+    return { type: CLEAR_GET_ALL_CURRENCY_PAIR };
   }
 };
 
@@ -73,9 +80,21 @@ export const getCurrency = () => async (dispatch) => {
   }
 };
 
-export const clearCurrency = () => {
-  localStorage.removeItem("currencies");
-  return { type: CLEAR_GET_ALL_CURRENCY_PAIR };
+export const getFollowers = () => async (dispatch) => {
+  dispatch(setLoading());
+  let url = "/api/signals/followers",
+    type = PROVIDER_GET_FOLLOWERS;
+  try {
+    let response = await axios.get(url);
+    const result = await dispatch({
+      type,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
+  }
 };
 
 export const addSignal = (signal) => async (dispatch) => {

@@ -191,13 +191,18 @@ class ViewAdmin extends Component {
                         }}
                       />
                       <CardDetails
-                        {...{ label: "Email", value: admininfo.email }}
+                        {...{
+                          label: "Email",
+                          value: (
+                            <span className="lower">{admininfo.email}</span>
+                          ),
+                        }}
                       />
                       <CardDetails
                         {...{ label: "Username", value: admininfo.username }}
                       />
                       <CardDetails
-                        {...{ label: "Phone", value: admininfo.phone }}
+                        {...{ label: "Phone", value: admininfo.Profile.phone }}
                       />
                       {admininfo.status === "a" ? (
                         <CardDetails
@@ -255,7 +260,16 @@ class ViewAdmin extends Component {
                         <CardDetails
                           {...{
                             label: "currency pair created",
-                            value: currencycount,
+                            value:
+                              currencycount !== 0 ? (
+                                <Link
+                                  to={`/admin/currencies?ref=true&sa=${admininfo.id}`}
+                                >
+                                  {currencycount}
+                                </Link>
+                              ) : (
+                                currencycount
+                              ),
                           }}
                         />
                       )}
@@ -264,13 +278,31 @@ class ViewAdmin extends Component {
                           <CardDetails
                             {...{
                               label: "signals created",
-                              value: signalcount,
+                              value:
+                                signalcount !== 0 ? (
+                                  <Link
+                                    to={`/admin/signals?ref=true&sp=${admininfo.id}`}
+                                  >
+                                    {signalcount}
+                                  </Link>
+                                ) : (
+                                  signalcount
+                                ),
                             }}
                           />
                           <CardDetails
                             {...{
                               label: "number of followers",
-                              value: followerscount,
+                              value:
+                                followerscount !== 0 ? (
+                                  <Link
+                                    to={`/admin/users?ref=true&sp=${admininfo.id}`}
+                                  >
+                                    {followerscount}
+                                  </Link>
+                                ) : (
+                                  followerscount
+                                ),
                             }}
                           />
                         </div>

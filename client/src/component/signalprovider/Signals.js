@@ -9,7 +9,7 @@ import {
   addSignal,
   clearSignal,
   editSignal,
-  clearCurrency,
+  getFollowers,
 } from "../../action/providerAction";
 
 import {
@@ -38,6 +38,8 @@ import Spinner from "../../layout/Spinner";
 import { RiFileExcel2Line } from "react-icons/ri";
 import { BiGroup } from "react-icons/bi";
 import { MdAddChart } from "react-icons/md";
+import { CgSignal } from "react-icons/cg";
+import { BsCurrencyExchange } from "react-icons/bs";
 
 class Signals extends Component {
   state = {
@@ -71,8 +73,9 @@ class Signals extends Component {
     content: "signals",
     modal: false,
     purpose: "",
-    toast: true,
-    toasttext: "go on",
+    toast: false,
+    toasttext: "",
+    toastcategory: "",
     modalsignaldetails: [],
     error: {},
     isLoading: false,
@@ -87,6 +90,7 @@ class Signals extends Component {
       startLoad: true,
     });
     this.props.getCurrency();
+    this.props.getFollowers();
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
@@ -95,7 +99,7 @@ class Signals extends Component {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.clearCurrency();
+    this.props.clearActions("provider-currencies");
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -122,7 +126,7 @@ class Signals extends Component {
   }
 
   afterUpdate = (text) => {
-    const { limit, content, signalcount } = this.state;
+    const { limit, content, signalcount, timer } = this.state;
     if (text === "added") {
       this.setState({
         numOfPages: Math.ceil((signalcount + 1) / limit),
@@ -136,6 +140,7 @@ class Signals extends Component {
       modal: false,
       toast: true,
       toasttext: `Signal ${text} successfully`,
+      toastcategory: "success",
     });
     const paginate = {
       limit,
@@ -154,7 +159,7 @@ class Signals extends Component {
         toast: false,
         newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
@@ -253,6 +258,7 @@ class Signals extends Component {
       purpose,
       toast,
       toasttext,
+      toastcategory,
       modalsignaldetails,
       error,
       isLoading,
@@ -268,7 +274,8 @@ class Signals extends Component {
       searchlist = providerSearch.signals,
       searchloading = providerSearch.loading;
 
-    const currencies = provider.currencies;
+    const currencies = provider.currencies,
+      followers = provider.getfollowers;
 
     const {
       showSearch,
@@ -306,15 +313,19 @@ class Signals extends Component {
                 <div className="col-md-3">
                   <h1>Signals</h1>
                 </div>
-                <div className="col-md-3">
-                  <p className="mb-1">
+                <div className="col-md-3 mt-3">
+                  <h6>
                     <BiGroup />
-                    {22} Followers
-                  </p>
+                    Followers{" "}
+                    <span className="badge rounded-pill bg-success">
+                      {followers}
+                    </span>
+                  </h6>
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-3 mt-3">
                   <div className="transactions-total table-figure">
                     <h6>
+                      <CgSignal />
                       {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
@@ -322,10 +333,10 @@ class Signals extends Component {
                     </h6>
                   </div>
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-3 mt-3">
                   <div className="transactions-total table-figure">
                     <h6>
-                      Currency Pair
+                      <BsCurrencyExchange /> Currency Pair
                       <span className="badge rounded-pill bg-success">
                         {currencies.length}
                       </span>
@@ -417,7 +428,7 @@ class Signals extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }
@@ -442,6 +453,7 @@ Signals.propTypes = {
   addSignal: PropTypes.func,
   clearSignal: PropTypes.func,
   editSignal: PropTypes.func,
+  getFollowers: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -460,5 +472,5 @@ export default connect(mapStateToProps, {
   addSignal,
   clearSignal,
   editSignal,
-  clearCurrency,
+  getFollowers,
 })(Signals);

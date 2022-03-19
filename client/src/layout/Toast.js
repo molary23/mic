@@ -14,8 +14,8 @@ function Toast(props) {
         aria-live="assertive"
         aria-atomic="true"
       >
-        <div class="toast-header">
-          <strong class="me-auto">
+        <div className="toast-header">
+          <strong className="me-auto">
             {category === "success" ? "Success" : "Error"}
           </strong>
           <small>
@@ -26,8 +26,8 @@ function Toast(props) {
             )}
           </small>
         </div>
-        <div class="d-flex">
-          <div class="toast-body">{text}</div>
+        <div className="d-flex">
+          <div className="toast-body">{text}</div>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+const Preference = require("../../db/models/Preference");
+
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -331,4 +333,37 @@ router.post(
   }
 );
 
+/*
+@route GET api/signals/currency/delete/:id
+@desc Admin Delete currency
+@access private
+*/
+
+router.get(
+  "/followers",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkPr(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    Preference.count({
+      where: {
+        [Op.or]: [
+          { providers: null },
+          {
+            providers: { [Op.regexp]: UserId },
+          },
+        ],
+      },
+    })
+      .then((count) => {
+        res.json(count);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
 module.exports = router;
