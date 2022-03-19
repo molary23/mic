@@ -49,7 +49,7 @@ router.post("/register", (req, res) => {
   verifyFields.verify = Math.random()
     .toString(36)
     .substring(2, 8)
-    .toUpperCase();
+    .toLowerCase();
   verifyFields.confirm = "n";
   if (referral) {
     return Promise.all([
@@ -202,7 +202,12 @@ router.post("/register", (req, res) => {
 @access public
 */
 router.post("/verify", (req, res) => {
-  const { username, code } = req.body;
+  const { errors, isValid } = validateConfirmInput(req.body.userverify);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+  const { username, code } = req.body.userverify;
+
   User.findOne({
     where: {
       [Op.or]: [{ username }, { email: username }],
@@ -222,34 +227,70 @@ router.post("/verify", (req, res) => {
         attributes: ["verify", "updatedAt", "confirm"],
       })
         .then((pass) => {
-          if (pass.confirm !== "n") {
+          if (!pass) {
+            errors.username = "You have entered a wrong Username/Email Address";
+            return res.status(400).json(errors);
+          } else if (pass.confirm !== "n") {
             errors.code = "You are yet to request for a Verification Code";
             return res.status(400).json(errors);
-          } else if (code !== pass.verify) {
-            errors.code = "You have entered the wrong Verification Code";
+          } else if (code !== pass.verify.toLowerCase()) {
+            errors.code =
+              "You have entered the wrong Verification Code" + pass.verify;
             return res.status(400).json(errors);
           } else if (pass.updatedAt.getTime() < now) {
             errors.code =
               "Your Verification Code has expired. Kindly request for a new one";
             return res.status(400).json(errors);
           } else {
-            Verify.update(
-              {
-                confirm: "y",
-                verify: null,
-              },
-              {
-                where: {
-                  UserId: user.id,
-                },
-              }
-            )
-              .then(() => {
-                res.json({
-                  UserId: user.id,
-                });
-              })
-              .catch((err) => res.json(err));
+            return Promise.all([
+              User.update(
+                { status: "a" },
+                {
+                  where: {
+                    id: UserId,
+                  },
+                }
+              )
+                .then(() => {
+                  Premium.create({ UserId })
+                    .then(() => {
+                      Settings.create({
+                        UserId,
+                      })
+                        .then(() => {
+                          Preference.update(
+                            { verify: "y" },
+                            {
+                              where: {
+                                UserId,
+                              },
+                            }
+                          )
+                            .then(() => {
+                              Verify.update(
+                                {
+                                  confirm: "y",
+                                  verify: null,
+                                },
+                                {
+                                  where: {
+                                    UserId,
+                                  },
+                                }
+                              )
+                                .then(() => {
+                                  return res.json(1);
+                                })
+                                .catch((err) => res.json(err));
+                            })
+                            .catch((err) => res.json(err));
+                        })
+                        .catch((err) => res.json(err));
+                    })
+                    .catch((err) => res.json(err));
+                })
+                .catch((err) => res.json(err)),
+            ]);
           }
         })
         .catch((err) => res.json(err));
@@ -407,7 +448,7 @@ router.post("/login", (req, res) => {
                   let code = Math.random()
                     .toString(36)
                     .substring(2, 8)
-                    .toUpperCase();
+                    .toLowerCase();
                   Verify.update(
                     {
                       verify: code,
@@ -465,7 +506,7 @@ router.post("/forgot", (req, res) => {
   }
 
   const verifyField = {};
-  verifyField.reset = Math.random().toString(36).substring(2, 8).toUpperCase();
+  verifyField.reset = Math.random().toString(36).substring(2, 8).toLowerCase();
 
   User.findOne({
     where: {

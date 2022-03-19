@@ -8,7 +8,7 @@ import TextAreaField from "../layout/TextAreaField";
 
 import { countrycodes } from "../util/countrycodes";
 
-import { checkEmptyInput, checkHandler } from "../util/LoadFunction";
+import { checkHandler } from "../util/LoadFunction";
 
 function AddModal(props) {
   const {
@@ -41,9 +41,10 @@ function AddModal(props) {
     editpair: sentDetails.CurrencyId,
     editsignaloption: sentDetails.signaloption,
     editsignalstatus: sentDetails.status,
+    editstartrange: sentDetails.startrange,
+    editendrange: sentDetails.endrange,
     edittakeprofit: sentDetails.takeprofit,
     editstoploss: sentDetails.stoploss,
-    editrange: sentDetails.range,
     editpip: sentDetails.pip,
   });
   const [anns, setAnns] = useState({
@@ -56,15 +57,11 @@ function AddModal(props) {
   let pattern = new RegExp("^[a-zA-Z0-9._-]+$");
 
   const signalOpt = [
-      { value: "", option: "Select Signal Option" },
-      { value: "b", option: "Buy" },
-      { value: "s", option: "Sell" },
-    ],
-    statusOpt = [
-      { value: "", option: "Select Signal Status" },
-      { value: "c", option: "Cancelled" },
-      { value: "f", option: "Filled" },
-    ];
+    { value: "", option: "Select Signal Option" },
+    { value: "b", option: "Buy" },
+    { value: "s", option: "Sell" },
+  ];
+
   const closeModal = () => {
     setOpen(false);
     props.onClick(false);
@@ -102,9 +99,9 @@ function AddModal(props) {
       optObj = {
         value: currencies[i].id,
         option: `${
-          JSON.parse(currencies[i].firstcurrency.split(", "))[1].toUpperCase() +
+          currencies[i].firstcurrency[1].toUpperCase() +
           "/" +
-          JSON.parse(currencies[i].secondcurrency.split(", "))[1].toUpperCase()
+          currencies[i].secondcurrency[1].toUpperCase()
         }`,
       };
       optArray.push(optObj);
@@ -114,22 +111,67 @@ function AddModal(props) {
       // Submit Add Signal
       const submitNewHandler = (e) => {
         e.preventDefault();
+        if (!Object.keys(inputs).includes("addpair") || inputs.addpair === "") {
+          setErrors({
+            addpair: "Currency Pair Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addsignaloption") ||
+          inputs.addsignaloption === ""
+        ) {
+          setErrors({
+            addsignaloption: "Signal Option Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addtakeprofit") ||
+          inputs.addtakeprofit === ""
+        ) {
+          setErrors({
+            addtakeprofit: "Take Profit Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addstoploss") ||
+          inputs.addstoploss === ""
+        ) {
+          setErrors({
+            addstoploss: "Stop Loss Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addstartrange") ||
+          inputs.addstartrange === ""
+        ) {
+          setErrors({
+            addstartrange: "Start Range Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addendrange") ||
+          inputs.addendrange === ""
+        ) {
+          setErrors({
+            addendrange: "End Range Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addpip") ||
+          inputs.addpip === ""
+        ) {
+          setErrors({
+            addpip: "Pip Field can't be empty",
+          });
+        } else {
+          setLoading(true);
+          let takeprofit = inputs.addtakeprofit.split(","),
+            stoploss = inputs.addstoploss.split(",");
 
-        const signal = checkEmptyInput({
-          inputs,
-          setErrors,
-          setLoading,
-          pair: "addpair",
-          option: "addsignaloption",
-          status: "addsignalstatus",
-          takeprofit: "addtakeprofit",
-          stoploss: "addstoploss",
-          startrange: "addstartrange",
-          endrange: "addendrange",
-          pip: "addpip",
-        });
+          const signal = {
+            pair: parseInt(inputs.addpair),
+            signaloption: inputs.addsignaloption,
+            takeprofit: takeprofit,
+            stoploss: stoploss,
+            startrange: inputs.addstartrange,
+            endrange: inputs.addendrange,
+            pip: inputs.addpip,
+          };
 
-        if (signal !== false) {
           setErrors({});
           onSubmit(["new", signal]);
         }
@@ -151,13 +193,6 @@ function AddModal(props) {
               name="addsignaloption"
               value={inputs.addsignaloption || ""}
               error={errors.addsignaloption}
-            />
-            <Select
-              options={statusOpt}
-              onChange={changeHandler}
-              name="addsignalstatus"
-              value={inputs.addsignalstatus || ""}
-              error={errors.addsignalstatus}
             />
             <TextInputField
               id="add-new-takeprofit"
@@ -223,6 +258,12 @@ function AddModal(props) {
         </div>
       );
     } else if (purpose === "edit") {
+      const statusOpt = [
+        { value: "", option: "Select Signal Status" },
+        { value: "c", option: "Cancelled" },
+        { value: "f", option: "Failed" },
+        { value: "s", option: "Successful" },
+      ];
       // Submit Edit Signal
       const submitEditHandler = (e) => {
         e.preventDefault();
@@ -256,18 +297,15 @@ function AddModal(props) {
           });
         } else {
           setLoading(true);
-          let tp = edits.edittakeprofit.split(",").map((element) => {
-            return parseFloat(element.trim());
-          });
-          let sl = edits.editstoploss.split(",").map((element) => {
-            return parseFloat(element.trim());
-          });
+          console.log(edits.edittakeprofit, edits.editstoploss);
+          let takeprofit = edits.edittakeprofit.toString().split(","),
+            stoploss = edits.editstoploss.toString().split(",");
           const signal = {
             pair: parseInt(edits.editpair),
             option: edits.editsignaloption,
             status: edits.editsignalstatus,
-            takeprofit: tp,
-            stoploss: sl,
+            takeprofit: takeprofit,
+            stoploss: stoploss,
             startrange: parseFloat(edits.editstartrange),
             endrange: parseFloat(edits.editendrange),
             pip: parseFloat(edits.editpip),
@@ -288,16 +326,14 @@ function AddModal(props) {
               options={optArray}
               onChange={changeEditHandler}
               name="editpair"
-              value={edits.editpair}
+              value={edits.editpair || ""}
               error={errors.editpair}
             />
             <Select
               options={signalOpt}
               onChange={changeEditHandler}
               name="editsignaloption"
-              value={
-                edits.editsignaloption.toLowerCase() === "sell" ? "s" : "b"
-              }
+              value={edits.editsignaloption.toLowerCase() || ""}
               error={errors.editsignaloption}
             />
             <Select
@@ -305,7 +341,9 @@ function AddModal(props) {
               onChange={changeEditHandler}
               name="editsignalstatus"
               value={
-                edits.editsignalstatus.toLowerCase() === "filled" ? "f" : "c"
+                edits.editsignalstatus !== null
+                  ? edits.editsignalstatus.toLowerCase()
+                  : ""
               }
               error={errors.editsignalstatus}
             />
@@ -315,7 +353,7 @@ function AddModal(props) {
               label="Take Profit *Separate multiple Take Profits with Comma (,)*"
               type="text"
               name="edittakeprofit"
-              value={edits.edittakeprofit.toString()}
+              value={edits.edittakeprofit.toString() || ""}
               onChange={changeEditHandler}
               error={errors.edittakeprofit}
             />
@@ -325,7 +363,7 @@ function AddModal(props) {
               label="Stop Loss *Separate multiple Stop Loss with Comma (,)*"
               type="text"
               name="editstoploss"
-              value={edits.editstoploss.toString()}
+              value={edits.editstoploss.toString() || ""}
               onChange={changeEditHandler}
               error={errors.editstoploss}
             />
@@ -335,9 +373,7 @@ function AddModal(props) {
               label="Start Range"
               type="text"
               name="editstartrange"
-              value={
-                (edits.editstartrange = edits.editrange.split("-")[0].trim())
-              }
+              value={edits.editstartrange.toString() || ""}
               onChange={changeEditHandler}
               error={errors.editstartrange}
             />
@@ -347,9 +383,7 @@ function AddModal(props) {
               label="End Range"
               type="text"
               name="editendrange"
-              value={
-                (edits.editendrange = edits.editrange.split("-")[1].trim())
-              }
+              value={edits.editendrange.toString() || ""}
               onChange={changeEditHandler}
               error={errors.editendrange}
             />
@@ -359,7 +393,7 @@ function AddModal(props) {
               label="Profit/Loss, Pip"
               type="text"
               name="editpip"
-              value={edits.editpip.toString()}
+              value={edits.editpip.toString() || ""}
               onChange={changeEditHandler}
               error={errors.editpip}
             />
@@ -398,9 +432,10 @@ function AddModal(props) {
         setErrors({
           addfirstcurrencyname: "First Currency Name Field can't be empty",
         });
-      } else if (inputs.addfirstcurrencyname.length > 3) {
+      } else if (inputs.addfirstcurrencyname.length > 12) {
         setErrors({
-          addfirstcurrencyname: "Currency Name can't be more than 3 characters",
+          addfirstcurrencyname:
+            "Currency Name can't be more than 12 characters",
         });
       } else if (
         !Object.keys(inputs).includes("addfirstcurrencycode") ||
@@ -416,10 +451,10 @@ function AddModal(props) {
         setErrors({
           addsecondcurrencyname: "Second Currency Name Field can't be empty",
         });
-      } else if (inputs.addsecondcurrencyname.length > 3) {
+      } else if (inputs.addsecondcurrencyname.length > 12) {
         setErrors({
           addsecondcurrencyname:
-            "Currency Name can't be more than 3 characters",
+            "Currency Name can't be more than 12 characters",
         });
       } else if (
         !Object.keys(inputs).includes("addsecondcurrencycode") ||
@@ -431,14 +466,14 @@ function AddModal(props) {
       } else {
         setErrors({});
         const currency = {
-          firstcurrencypair: JSON.stringify([
+          firstcurrencypair: [
             inputs.addfirstcurrencycode.toLowerCase(),
             inputs.addfirstcurrencyname.toLowerCase(),
-          ]),
-          secondcurrencypair: JSON.stringify([
+          ],
+          secondcurrencypair: [
             inputs.addsecondcurrencycode.toLowerCase(),
             inputs.addsecondcurrencyname.toLowerCase(),
-          ]),
+          ],
         };
         onSubmit(["add", currency]);
       }

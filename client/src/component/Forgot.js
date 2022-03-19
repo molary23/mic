@@ -20,6 +20,12 @@ export class Forgot extends Component {
     });
   };
 
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
   submitHandler = async (e) => {
     e.preventDefault();
 

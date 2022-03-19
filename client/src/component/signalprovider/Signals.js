@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import axios from "axios";
 
 import {
   getContent,
@@ -37,6 +36,7 @@ import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
 import Spinner from "../../layout/Spinner";
 import { RiFileExcel2Line } from "react-icons/ri";
+import { BiGroup } from "react-icons/bi";
 import { MdAddChart } from "react-icons/md";
 
 class Signals extends Component {
@@ -71,8 +71,8 @@ class Signals extends Component {
     content: "signals",
     modal: false,
     purpose: "",
-    toast: false,
-    toasttext: "",
+    toast: true,
+    toasttext: "go on",
     modalsignaldetails: [],
     error: {},
     isLoading: false,
@@ -268,6 +268,8 @@ class Signals extends Component {
       searchlist = providerSearch.signals,
       searchloading = providerSearch.loading;
 
+    const currencies = provider.currencies;
+
     const {
       showSearch,
       main,
@@ -300,21 +302,51 @@ class Signals extends Component {
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Currencies</h1>
+              <div className="row">
+                <div className="col-md-3">
+                  <h1>Signals</h1>
+                </div>
+                <div className="col-md-3">
+                  <p className="mb-1">
+                    <BiGroup />
+                    {22} Followers
+                  </p>
+                </div>
+                <div className="col-md-3">
+                  <div className="transactions-total table-figure">
+                    <h6>
+                      {totalText}
+                      <span className="badge rounded-pill bg-success">
+                        {totalCount}
+                      </span>
+                    </h6>
+                  </div>
+                </div>
+                <div className="col-md-3">
+                  <div className="transactions-total table-figure">
+                    <h6>
+                      Currency Pair
+                      <span className="badge rounded-pill bg-success">
+                        {currencies.length}
+                      </span>
+                    </h6>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
                 <div className="col-md-3 mb-2">
                   <SearchInput
                     sender={sender}
-                    placeholder="Search by Name, Email, Username"
+                    placeholder="Search by Signals, Currency Pair"
                     onChange={this.changeHandler}
                     onKeyUp={this.keyHandler}
                     name="search"
                     value={search}
                   />
                 </div>
-                <div className="col-md-2 mb-2">
+                <div className="col-md-3 mb-2">
                   <Select
                     sender={sender}
                     options={statusOpt}
@@ -323,7 +355,7 @@ class Signals extends Component {
                     value={status}
                   />
                 </div>
-                <div className="col-md-2">
+                <div className="col-md-3 mb-2">
                   <Select
                     sender={sender}
                     options={signalOpt}
@@ -348,17 +380,6 @@ class Signals extends Component {
                   >
                     Download <RiFileExcel2Line />
                   </button>
-                </div>
-
-                <div className="col-md-2 mb-2">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText} Signals
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
                 </div>
               </div>
             </div>

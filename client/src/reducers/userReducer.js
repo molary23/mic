@@ -112,7 +112,7 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         signalcount: action.payload.shift(),
-        signals: [...state.signals, ...action.payload],
+        signals: action.payload,
         loading: false,
         fetching: true,
       };

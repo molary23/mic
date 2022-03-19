@@ -8,10 +8,12 @@ import { FaRegEye } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
 import { FiCheckCircle } from "react-icons/fi";
 import { VscCircleFilled } from "react-icons/vsc";
+import { FcCurrencyExchange } from "react-icons/fc";
 
 import Flag from "react-flagpack";
 
 import DateFormat from "./DateFormat";
+import { countrycodes } from "../util/countrycodes";
 
 function TableBody(props) {
   const { sender, tablebody, onClick } = props;
@@ -810,26 +812,39 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>
-            {JSON.parse(item.firstcurrency.split(", "))[1].toUpperCase() +
-              "/" +
-              JSON.parse(item.secondcurrency.split(", "))[1].toUpperCase()}
+          <td className="currency-name">
+            {`${item.firstcurrency[1]} /
+              ${item.secondcurrency[1]}`}
           </td>
           <td>
             {
               <>
-                <Flag
-                  code={JSON.parse(
-                    item.firstcurrency.split(", ")
-                  )[0].toUpperCase()}
-                  size="M"
-                />
-                <Flag
-                  code={JSON.parse(
-                    item.secondcurrency.split(", ")
-                  )[0].toUpperCase()}
-                  size="M"
-                />
+                <span className="currency-flag">
+                  {countrycodes.includes(
+                    item.firstcurrency[0].toUpperCase()
+                  ) ? (
+                    <Flag
+                      code={item.firstcurrency[0].toUpperCase()}
+                      size="L"
+                      border="NONE"
+                    />
+                  ) : (
+                    <FcCurrencyExchange />
+                  )}
+                </span>
+                <span className="currency-flag">
+                  {countrycodes.includes(
+                    item.secondcurrency[0].toUpperCase()
+                  ) ? (
+                    <Flag
+                      code={item.secondcurrency[0].toUpperCase()}
+                      size="L"
+                      border="NONE"
+                    />
+                  ) : (
+                    <FcCurrencyExchange />
+                  )}
+                </span>
               </>
             }
           </td>
@@ -901,26 +916,38 @@ function TableBody(props) {
       return (
         <tr key={i}>
           <td>{i + 1}</td>
-          <td>
-            {JSON.parse(item.firstcurrency.split(", "))[1] +
-              "/" +
-              JSON.parse(item.secondcurrency.split(", "))[1]}
+          <td className="currency-name">
+            {item.firstcurrency[1]} / {item.secondcurrency[1]}
           </td>
           <td>
             {
               <>
-                <Flag
-                  code={JSON.parse(
-                    item.firstcurrency.split(", ")
-                  )[0].toUpperCase()}
-                  size="M"
-                />
-                <Flag
-                  code={JSON.parse(
-                    item.secondcurrency.split(", ")
-                  )[0].toUpperCase()}
-                  size="M"
-                />
+                <span className="currency-flag">
+                  {countrycodes.includes(
+                    item.firstcurrency[0].toUpperCase()
+                  ) ? (
+                    <Flag
+                      code={item.firstcurrency[0].toUpperCase()}
+                      size="L"
+                      border="NONE"
+                    />
+                  ) : (
+                    <FcCurrencyExchange />
+                  )}
+                </span>
+                <span className="currency-flag">
+                  {countrycodes.includes(
+                    item.secondcurrency[0].toUpperCase()
+                  ) ? (
+                    <Flag
+                      code={item.secondcurrency[0].toUpperCase()}
+                      size="L"
+                      border="NONE"
+                    />
+                  ) : (
+                    <FcCurrencyExchange />
+                  )}
+                </span>
               </>
             }
           </td>
@@ -952,7 +979,9 @@ function TableBody(props) {
               return loss;
             })}
           </td>
-          <td>{item.range}</td>
+          <td>
+            {item.startrange} - {item.endrange}
+          </td>
           <td>{item.pip}</td>
           <td>
             <DateFormat date={item.createdAt} />

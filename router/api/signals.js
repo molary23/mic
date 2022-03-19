@@ -45,12 +45,13 @@ router.post(
     signalFields.CurrencyId = req.body.pair;
     if (req.body.pair) signalFields.CurrencyId = req.body.pair;
     if (req.body.option) signalFields.signaloption = req.body.option;
-    if (req.body.status) signalFields.status = req.body.status;
     if (req.body.takeprofit) signalFields.takeprofit = req.body.takeprofit;
     if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
-    if (req.body.startrange) signalFields.startrange = req.body.startrange;
-    if (req.body.endrange) signalFields.endrange = req.body.endrange;
-    if (req.body.pip) signalFields.pip = req.body.pip;
+    if (req.body.startrange)
+      signalFields.startrange = parseFloat(req.body.startrange);
+    if (req.body.endrange)
+      signalFields.endrange = parseFloat(req.body.endrange);
+    if (req.body.pip) signalFields.pip = parseFloat(req.body.pip);
 
     Signal.create(signalFields)
       .then(() => {
@@ -246,7 +247,8 @@ router.post(
         "signaloption",
         "status",
         "CurrencyId",
-        [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
+        "startrange",
+        "endrange",
       ],
       where,
       raw: true,

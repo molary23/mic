@@ -92,9 +92,9 @@ export class SubNav extends Component {
                 </li>
                 <li className="nav-item nav-user-item">
                   <span className="nav-user-name">{userinfo.username}</span>
-                  {this.props.auth.user.level === 3 && (
+                  {this.props.auth.user.level === 1 && (
                     <span className="nav-sub-icon">
-                      {premiuminfo.status === "n" && <HiBadgeCheck />}
+                      {premiuminfo.status === "a" && <HiBadgeCheck />}
                     </span>
                   )}
                 </li>

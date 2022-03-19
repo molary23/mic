@@ -12,19 +12,16 @@ module.exports = function validateSignalInput(data) {
   data.endrange = !isEmpty(data.endrange) ? data.endrange : "";
   data.pip = !isEmpty(data.pip) ? data.pip : "";
 
-  if (validator.isEmpty(data.currencypair)) {
+  if (isNaN(data.currencypair) || data.currencypair === "") {
     errors.currencypair = "Currency Pair Field must be selected!";
   }
   if (validator.isEmpty(data.signaloption)) {
     errors.signaloption = "Signal Option Field must be selected!";
   }
-  if (validator.isEmpty(data.currencypair)) {
-    errors.currencypair = "Currency Pair Field must be selected!";
-  }
-  if (validator.isEmpty(data.takeprofit)) {
+  if (data.takeprofit.length <= 0) {
     errors.takeprofit = "Take Profit Field must be selected!";
   }
-  if (validator.isEmpty(data.stoploss)) {
+  if (data.stoploss.length <= 0) {
     errors.stoploss = "Stop Loss Field must be selected!";
   }
   if (validator.isEmpty(data.startrange)) {

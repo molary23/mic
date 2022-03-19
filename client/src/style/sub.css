@@ -527,6 +527,14 @@ span.nav-sub-icon svg {
   color: #fff;
 }
 
+.dashboard-content .premium-new {
+  background: #00c6ff;
+  /* fallback for old browsers */
+  background: -webkit-gradient(linear, left top, right top, from(#0072ff), to(#00c6ff)) no-repeat;
+  background: linear-gradient(to right, #0072ff, #00c6ff) no-repeat;
+  color: #fff;
+}
+
 .dashboard-content .premium-inactive {
   background: #f45691;
   background: linear-gradient(125deg, #f45691 34%, #d62869 63%, #dd0556 95%) no-repeat;
@@ -731,6 +739,22 @@ span.nav-sub-icon svg {
   margin-right: 5px;
 }
 
+.signal-detail .signal-value {
+  text-transform: capitalize;
+}
+
+.currency-flag {
+  margin-right: 5px;
+}
+
+.currency-flag svg {
+  font-size: 30px;
+}
+
+.currency-name {
+  text-transform: uppercase;
+}
+
 /* Loader */
 .progress {
   height: 2.5px;
@@ -820,7 +844,24 @@ span.nav-sub-icon svg {
   position: fixed;
   z-index: 9999;
   margin-bottom: 60px;
-  background: #314297;
+}
+
+.toast .toast-header {
+  color: #fff;
+  background: inherit;
+  border-bottom: 1px solid #fff;
+}
+
+.toast svg {
+  font-size: 20px;
+}
+
+.toast-error {
+  background: #f45691;
+}
+
+.toast-success {
+  background: #2eba61;
 }
 
 /* Tooltip */

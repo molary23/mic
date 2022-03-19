@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import isEmpty from "../validation/emptyChecker";
 
@@ -23,6 +24,12 @@ export class VerifyEmail extends Component {
     });
   };
 
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
   submitHandler = async (e) => {
     e.preventDefault();
     const { username, code } = this.state;
@@ -41,11 +48,40 @@ export class VerifyEmail extends Component {
     } else {
       this.setState({
         loading: true,
+        error: {},
       });
       const userverify = {
         username: username.trim(),
-        code: code,
+        code: code.toLowerCase(),
       };
+
+      try {
+        let response = await axios.post(
+          "/api/public/verify/",
+          {
+            userverify,
+          },
+          {}
+        );
+        if (response.data === 1) {
+          this.setState({
+            modal: true,
+            loading: false,
+            username: "",
+            code: "",
+            error: {},
+          });
+        }
+      } catch (error) {
+        this.setState({
+          loading: false,
+        });
+        console.log(error);
+        let err = error.response;
+        this.setState({
+          error: err.data,
+        });
+      }
     }
   };
 
@@ -94,7 +130,7 @@ export class VerifyEmail extends Component {
             New to MIC? <Link to="/register">Join</Link>
           </p>
         </div>
-        {modal ? <Modal {...{ modal, sender: "confirm" }} /> : null}
+        {modal ? <Modal {...{ modal, sender: "verify" }} /> : null}
       </div>
     );
   }

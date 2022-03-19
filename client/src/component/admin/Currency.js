@@ -27,8 +27,9 @@ import SearchInput from "../../layout/SearchInput";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
 import Spinner from "../../layout/Spinner";
+import ConfirmModal from "../../layout/ConfirmModal";
 
-import { RiFileExcel2Line } from "react-icons/ri";
+import { RiFileExcel2Line, RiCurrencyLine } from "react-icons/ri";
 
 import Pagination from "../../util/Pagination";
 
@@ -61,6 +62,7 @@ class Currency extends Component {
     error: {},
     toast: false,
     toasttext: "",
+    check: false,
   };
 
   componentDidMount() {
@@ -192,18 +194,37 @@ class Currency extends Component {
     let action = value[0],
       cur = value[1];
 
-    let check = window.confirm(
-      `Are you sure you want to ${action} ${
-        JSON.parse(cur.firstcurrency.split(", "))[1].toUpperCase() +
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${action} ${
+        cur.firstcurrency[1].toUpperCase() +
         "/" +
-        JSON.parse(cur.secondcurrency.split(", "))[1].toUpperCase()
+        cur.secondcurrency[1].toUpperCase()
+      } pair?`,
+      checktitle: "Confirm Delete",
+    });
+
+    this.confirmHandler = (value) => {
+      if (value) {
+        this.props.updateCurrency(action, cur["id"]);
+      }
+      this.setState({
+        check: false,
+      });
+    };
+
+    /*  let check = window.confirm(
+      `Are you sure you want to ${action} ${
+        cur.firstcurrency[1].toUpperCase() +
+        "/" +
+        cur.secondcurrency[1].toUpperCase()
       } pair?`
     );
     if (check) {
-      this.props.updateCurrency(action, cur["id"]);
+      
     } else {
       return false;
-    }
+    }*/
   };
 
   openModal = () => {
@@ -246,6 +267,9 @@ class Currency extends Component {
       toast,
       toasttext,
       isLoading,
+      checktext,
+      checktitle,
+      check,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -318,7 +342,7 @@ class Currency extends Component {
                     className="btn add-btn btn-sm"
                     onClick={this.openModal}
                   >
-                    Add New <i className="fas fa-folder-plus" />
+                    Add New <RiCurrencyLine />
                   </button>
                 </div>
 
@@ -368,13 +392,19 @@ class Currency extends Component {
             </TableHead>
           </div>
         )}
-        {modal ? (
+        {modal && (
           <AddModal
             {...{ modal, sender, error }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />
-        ) : null}
+        )}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
+        )}
         {toast && <Toast text={toasttext} />}
       </div>
     );

@@ -13,13 +13,13 @@ function Modal(props) {
   if (sender === "register") {
     text = (
       <div>
-        <p>Your have Successfully Registered! </p>
+        <p>Your are almost there. Next step is to Verify your Email Address </p>
         <p>
           Click{" "}
-          <Link to="/" className="default-anchor">
+          <Link to="/verify" className="default-anchor">
             Here
           </Link>{" "}
-          to Login
+          to Verify your Email Address
         </p>
       </div>
     );
@@ -89,7 +89,23 @@ function Modal(props) {
         </p>
       </div>
     );
-    title = "Registration Successful!";
+    title = "Verify Email Address!";
+  }
+
+  if (sender === "verify") {
+    text = (
+      <div>
+        <p>You are all done creating your Profile. </p>
+        <p>
+          Click{" "}
+          <Link to="/" className="default-anchor">
+            Here
+          </Link>{" "}
+          to Login into your Profile.
+        </p>
+      </div>
+    );
+    title = "Verification Successful!";
   }
   return (
     <div>

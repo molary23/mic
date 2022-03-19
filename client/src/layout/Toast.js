@@ -1,17 +1,33 @@
 import React from "react";
+import { BsCheckCircle } from "react-icons/bs";
+import { MdReportGmailerrorred } from "react-icons/md";
 
 function Toast(props) {
-  const { text } = props;
+  const { text, category } = props;
   return (
     <div>
       <div
-        className="toast show bottom-0 start-10 text-white"
+        className={`toast show bottom-0 start-10 text-white ${
+          category === "success" ? "toast-success" : "toast-error"
+        }`}
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
       >
-        <div className="d-flex">
-          <div className="toast-body">{text}</div>
+        <div class="toast-header">
+          <strong class="me-auto">
+            {category === "success" ? "Success" : "Error"}
+          </strong>
+          <small>
+            {category === "success" ? (
+              <BsCheckCircle />
+            ) : (
+              <MdReportGmailerrorred />
+            )}
+          </small>
+        </div>
+        <div class="d-flex">
+          <div class="toast-body">{text}</div>
         </div>
       </div>
     </div>

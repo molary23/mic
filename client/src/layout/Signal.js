@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Flag from "react-flagpack";
 
+import { FcCurrencyExchange } from "react-icons/fc";
+import { countrycodes } from "../util/countrycodes";
+
 import { IoIosTrendingUp, IoIosTrendingDown } from "react-icons/io";
 
 import { MdOutlineTrendingFlat } from "react-icons/md";
@@ -25,25 +28,39 @@ function Signal(props) {
             <div className="currency-image">
               {
                 <>
-                  <Flag
-                    code={JSON.parse(
-                      signal.firstcurrency.split(", ")
-                    )[0].toUpperCase()}
-                    size="M"
-                  />
-                  <Flag
-                    code={JSON.parse(
-                      signal.secondcurrency.split(", ")
-                    )[0].toUpperCase()}
-                    size="M"
-                  />
+                  <span className="currency-flag">
+                    {countrycodes.includes(
+                      signal.firstcurrency[0].toUpperCase()
+                    ) ? (
+                      <Flag
+                        code={signal.firstcurrency[0].toUpperCase()}
+                        size="L"
+                        border="NONE"
+                      />
+                    ) : (
+                      <FcCurrencyExchange />
+                    )}
+                  </span>
+                  <span className="currency-flag">
+                    {countrycodes.includes(
+                      signal.secondcurrency[0].toUpperCase()
+                    ) ? (
+                      <Flag
+                        code={signal.secondcurrency[0].toUpperCase()}
+                        size="L"
+                        border="NONE"
+                      />
+                    ) : (
+                      <FcCurrencyExchange />
+                    )}
+                  </span>
                 </>
               }
             </div>
             <div className="currency-name">
-              {JSON.parse(signal.firstcurrency.split(", "))[1] +
-                "/" +
-                JSON.parse(signal.secondcurrency.split(", "))[1]}
+              {`${signal.firstcurrency[1]}
+                /
+                ${signal.secondcurrency[1]}`}
             </div>
             <div className="currency-return signal-align-right">{result}</div>
           </div>
@@ -59,15 +76,15 @@ function Signal(props) {
           <div className="signal-days-ago signal-align-right">2 days ago</div>
         </div>
         <div className="signal-from">
-          <div className="signal-from-title signal-title">From</div>
+          <div className="signal-from-title signal-title">Start</div>
           <div className="signal-from-value signal-align-right">
-            <span className="signal-timezone">UTC+1</span>
+            <span className="signal-timezone">{signal.startrange}</span>
           </div>
         </div>
         <div className="signal-to">
-          <div className="signal-to-title signal-title">To</div>
+          <div className="signal-to-title signal-title">End</div>
           <div className="signal-to-value signal-align-right">
-            <span className="signal-timezone">UTC+1</span>
+            <span className="signal-timezone">{signal.endrange}</span>
           </div>
         </div>
         <div className="signal-take-profit">
@@ -77,18 +94,20 @@ function Signal(props) {
                 <div className="signal-sold-title signal-title">
                   Take Profit {i + 1}
                 </div>
-                <div className="signal-sold-value signal-align-right">{tp}</div>
+                <div className="signal-value signal-align-right">{tp}</div>
               </div>
             );
           })}
         </div>
-        <div className="signal-status">
-          <div className="signal-stat">
-            {signal.status === "f" && "failed"}
-            {signal.status === "c" && "cancelled"}
-            {signal.status === "s" && "successful"}
+        {signal.status !== null && (
+          <div className="signal-status">
+            <div className="signal-stat">
+              {signal.status === "f" && "failed"}
+              {signal.status === "c" && "cancelled"}
+              {signal.status === "s" && "successful"}
+            </div>
           </div>
-        </div>
+        )}
         <div className="signal-stop-loss">
           {signal.stoploss.map((sl, i) => {
             return (
@@ -96,9 +115,7 @@ function Signal(props) {
                 <div className="signal-bought-title signal-title">
                   Stop Loss {i + 1}
                 </div>
-                <div className="signal-bought-value signal-align-right">
-                  {sl}
-                </div>
+                <div className="signal-value signal-align-right">{sl}</div>
               </div>
             );
           })}

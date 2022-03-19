@@ -39,7 +39,7 @@ export const getContent = (content, paginate) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 
@@ -69,7 +69,7 @@ export const getCurrency = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };
 

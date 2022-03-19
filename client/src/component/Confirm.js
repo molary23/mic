@@ -45,6 +45,12 @@ export class Confirm extends Component {
     });
   };
 
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
   submitHandler = async (e) => {
     e.preventDefault();
     const { username, code } = this.state;
@@ -66,7 +72,7 @@ export class Confirm extends Component {
       });
       const usercode = {
         username: username.trim(),
-        code: code,
+        code: code.toLowerCase(),
       };
 
       this.props.confirmCode(usercode);

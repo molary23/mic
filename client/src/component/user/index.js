@@ -33,17 +33,21 @@ export class Index extends Component {
       userinfo:
         this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
       daysleft: 0,
+      premiumstatus: null,
     };
   }
 
   componentDidMount() {
-    const { premiuminfo } = this.state;
-    this.props.getUserProfile();
-    let curDate = Date.now() / 1000,
+    const { premiuminfo, premiumstatus } = this.state;
+    // this.props.getUserProfile();
+    let dateOnly = new Date().toDateString(),
+      curDate = new Date(dateOnly).getTime() / 1000,
       expDate = new Date(premiuminfo.enddate).getTime() / 1000;
+    let status = premiuminfo.status;
 
     this.setState({
-      daysleft: Math.floor((expDate - curDate) / (24 * 3600)),
+      daysleft: Math.round((expDate - curDate) / (24 * 3600)),
+      premiumstatus: status,
     });
     this.props.getUserDetails();
   }
@@ -110,7 +114,7 @@ export class Index extends Component {
   };
 
   render() {
-    const { copy, userinfo, daysleft } = this.state;
+    const { copy, userinfo, daysleft, premiumstatus } = this.state;
     const { loading, user } = this.props;
 
     let load = true,
@@ -159,7 +163,9 @@ export class Index extends Component {
                 <div className="col-md-3 col-xs-12">
                   <div
                     className={`dash-premium dash-info-card dash-card ${
-                      daysleft >= 1 ? "premium-active" : "premium-inactive"
+                      (premiumstatus === "a" && "premium-active") ||
+                      (premiumstatus === "n" && "premium-new") ||
+                      (premiumstatus === "i" && "premium-inactive")
                     }`}
                   >
                     <p className="mb-1">

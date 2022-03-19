@@ -291,6 +291,13 @@ span.nav-sub-icon {
     color: #fff;
   }
 
+  .premium-new {
+    background: #00c6ff; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
+    background: linear-gradient(to right, #0072ff, #00c6ff) no-repeat;
+    color: #fff;
+  }
+
   .premium-inactive {
     background: rgb(244, 86, 145);
     background: linear-gradient(
@@ -496,6 +503,19 @@ span.nav-sub-icon {
     font-size: 22px;
     margin-right: 5px;
   }
+  .signal-value {
+    text-transform: capitalize;
+  }
+}
+
+.currency-flag {
+  margin-right: 5px;
+  svg {
+    font-size: 30px;
+  }
+}
+.currency-name {
+  text-transform: uppercase;
 }
 
 /* Loader */
@@ -587,7 +607,20 @@ span.nav-sub-icon {
   position: fixed;
   z-index: 9999;
   margin-bottom: 60px;
-  background: $bg-dark;
+  .toast-header {
+    color: #fff;
+    background: inherit;
+    border-bottom: 1px solid #fff;
+  }
+  svg {
+    font-size: 20px;
+  }
+}
+.toast-error {
+  background: $danger;
+}
+.toast-success {
+  background: $success;
 }
 
 /* Tooltip */

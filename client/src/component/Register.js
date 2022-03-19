@@ -32,7 +32,6 @@ class Register extends Component {
       "Content-Type": "application/json",
     },
     typingTimer: null,
-    doneTypingInterval: 5000,
   };
 
   componentDidMount() {
@@ -81,7 +80,7 @@ class Register extends Component {
             });
           })
           .catch((error) => console.log(error.response));
-      }, this.state.doneTypingInterval);
+      }, 5000);
     }
   };
 
@@ -105,6 +104,12 @@ class Register extends Component {
         pass2: !this.state.pass2,
       });
     }
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
   };
 
   submitHandler = async (e) => {
@@ -171,6 +176,7 @@ class Register extends Component {
     } else {
       this.setState({
         loading: true,
+        error: {},
       });
       const user = {
         referral: referral.trim(),

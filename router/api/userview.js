@@ -208,10 +208,10 @@ router.post(
                 provider: { [Op.substring]: searchArray[i] },
               },
               {
-                firstcurrency: { [Op.substring]: searchArray[i] },
+                firstcurrency: { [Op.regexp]: searchArray[i] },
               },
               {
-                secondcurrency: { [Op.substring]: searchArray[i] },
+                secondcurrency: { [Op.regexp]: searchArray[i] },
               },
             ],
           };
@@ -228,10 +228,10 @@ router.post(
                 provider: { [Op.substring]: searchTerms },
               },
               {
-                firstcurrency: { [Op.substring]: searchTerms },
+                firstcurrency: { [Op.regexp]: searchTerms },
               },
               {
-                secondcurrency: { [Op.substring]: searchTerms },
+                secondcurrency: { [Op.regexp]: searchTerms },
               },
             ],
           },
@@ -252,53 +252,36 @@ router.post(
         if (providers !== null) {
           where = { ...where, ...{ providerid: providers } };
         }
-        SignalView.findAll({
+        const query = {
+          order: [["signalid", "DESC"]],
+          limit,
+          offset,
           attributes: [
-            [Sequelize.fn("MAX", Sequelize.col("signalid")), "signalid"],
+            "signalid",
+            "firstcurrency",
+            "secondcurrency",
+            "takeprofit",
+            "stoploss",
+            "pip",
+            "createdAt",
+            "updatedAt",
+            "provider",
+            "providerid",
+            "signaloption",
+            "status",
+            "CurrencyId",
+            "startrange",
+            "endrange",
           ],
-          group: ["CurrencyId"],
-        })
-          .then((cur) => {
-            idArray = [];
-            for (let i = 0; i < cur.length; i++) {
-              idArray.push(cur[i].dataValues.signalid);
-            }
-            where = { ...where, ...{ signalid: idArray } };
+          where,
+          raw: true,
+        };
 
-            const query = {
-              order: [["signalid", "DESC"]],
-              limit,
-              offset,
-              attributes: [
-                "signalid",
-                "firstcurrency",
-                "secondcurrency",
-                "takeprofit",
-                "stoploss",
-                "pip",
-                "createdAt",
-                "updatedAt",
-                "provider",
-                "providerid",
-                "signaloption",
-                "status",
-                "CurrencyId",
-                [
-                  Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`),
-                  "range",
-                ],
-              ],
-              where,
-              raw: true,
-            };
-
-            SignalView.findAndCountAll(query)
-              .then((entries) => {
-                const { count, rows } = entries;
-                result = [...[count], ...rows];
-                return res.json(result);
-              })
-              .catch((err) => res.status(404).json(err));
+        SignalView.findAndCountAll(query)
+          .then((entries) => {
+            const { count, rows } = entries;
+            result = [...[count], ...rows];
+            return res.json(result);
           })
           .catch((err) => res.status(404).json(err));
       })
@@ -708,7 +691,7 @@ router.get(
       where: {
         UserId,
       },
-      attributes: ["startdate", "enddate", "status", "UserId", "subid"],
+      attributes: ["enddate", "status"],
     })
       .then((premium) => {
         res.json(premium);
