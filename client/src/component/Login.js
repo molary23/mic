@@ -8,6 +8,7 @@ import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "../layout/TextPasswordField";
 import ProgressBar from "../layout/ProgressBar";
 import LoadCount from "../layout/LoadCount";
+import Modal from "../layout/Modal";
 
 import Box from "../layout/Box";
 
@@ -22,6 +23,8 @@ class Login extends Component {
     viewer: "",
     move: false,
     level: 0,
+    servererror: {},
+    modal: false,
   };
 
   componentDidMount() {
@@ -61,8 +64,8 @@ class Login extends Component {
       update.move = true;
     }
 
-    if (nextProps.errors && Object.keys(prevState.error).length <= 0) {
-      update.error = nextProps.errors;
+    if (nextProps.errors) {
+      update.servererror = nextProps.errors;
       update.loading = false;
     }
 
@@ -77,6 +80,18 @@ class Login extends Component {
     }
 
     return update;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.errors !== this.props.errors &&
+      Object.keys(this.props.errors).includes("verify")
+    ) {
+      this.setState({
+        modal: true,
+      });
+      this.props.clearErrors();
+    }
   }
 
   changeHandler = (e) => {
@@ -120,6 +135,12 @@ class Login extends Component {
     }
   };
 
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
   render() {
     const {
       username,
@@ -131,6 +152,8 @@ class Login extends Component {
       viewer,
       move,
       level,
+      servererror,
+      modal,
     } = this.state;
 
     return (
@@ -150,7 +173,7 @@ class Login extends Component {
               name="username"
               value={username}
               onChange={this.changeHandler}
-              error={error.username}
+              error={error.username || servererror.username}
             />
             <TextPasswordField
               id="login-form-password"
@@ -162,7 +185,7 @@ class Login extends Component {
               value={password}
               onChange={this.changeHandler}
               onClick={this.checkPassHandler}
-              error={error.password}
+              error={error.password || servererror.password}
             />
             <div className="d-grid">
               <button
@@ -186,6 +209,12 @@ class Login extends Component {
           </p>
         </div>
         {navigate && <Navigate to={`${viewer}`} replace={true} />}
+        {modal ? (
+          <Modal
+            {...{ modal, sender: "not verified" }}
+            onClick={this.modalHandler}
+          />
+        ) : null}
       </div>
     );
   }

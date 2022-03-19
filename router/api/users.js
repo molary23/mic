@@ -65,11 +65,13 @@ router.post(
 
     if (req.body.firstname) profileFields.firstname = req.body.firstname;
     if (req.body.lastname) profileFields.lastname = req.body.lastname;
+    if (req.body.phone) profileFields.phone = req.body.phone;
 
     Profile.update(
       {
         firstname: profileFields.firstname,
         lastname: profileFields.lastname,
+        phone: profileFields.phone,
       },
       {
         where: { UserId },
@@ -240,7 +242,7 @@ router.get(
                   info.accounts = accounts;
                   Profile.findOne({
                     where: { UserId },
-                    attributes: ["firstname", "lastname"],
+                    attributes: ["firstname", "lastname", "phone"],
                   })
                     .then((profile) => {
                       info.profile = profile;

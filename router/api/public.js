@@ -9,7 +9,7 @@ const express = require("express"),
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
   User = require("../../db/models/User"),
-  Pass = require("../../db/models/Pass"),
+  Verify = require("../../db/models/Verify"),
   Referral = require("../../db/models/Referral"),
   Profile = require("../../db/models/Profile"),
   Premium = require("../../db/models/Premium"),
@@ -25,58 +25,6 @@ const express = require("express"),
   validatePassInput = require("../../validation/password");
 
 /*
-@route POST api/public/test
-@desc Add new user
-@access public
-*/
-
-router.get("/finder", async (req, res) => {
-  let limit = 18,
-    offset = 0,
-    where = {};
-  const query = {
-    order: [["signalid", "DESC"]],
-    limit,
-    offset,
-    attributes: [
-      "signalid",
-      "firstcurrency",
-      "secondcurrency",
-      "takeprofit",
-      "stoploss",
-      "pip",
-      "createdAt",
-      "updatedAt",
-      "provider",
-      "providerid",
-      [
-        Sequelize.literal(
-          `CASE WHEN signaloption = 'b' THEN 'Buy' WHEN signaloption = 's' THEN 'Sell' END `
-        ),
-        "signaloption",
-      ],
-      [
-        Sequelize.literal(
-          `CASE WHEN status = 'f' THEN 'Filled' WHEN status = 'c' THEN 'Cancelled' END `
-        ),
-        "status",
-      ],
-      [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
-    ],
-    where,
-    distinct: true,
-    col: "CurrencyId",
-    raw: true,
-  };
-
-  SignalView.findAndCountAll(query)
-    .then((signals) => {
-      res.json(signals);
-    })
-    .catch((err) => res.status(404).json(err));
-});
-
-/*
 @route POST api/public/register
 @desc Add new user
 @access public
@@ -89,13 +37,20 @@ router.post("/register", (req, res) => {
   }
 
   const { referral, username, email, phone, password } = req.body.user;
-  const userField = {};
+  const userField = {},
+    profileFields = {};
 
   if (email) userField.email = email;
   if (username) userField.username = username;
-  if (phone) userField.phone = phone;
+  if (phone) profileFields.phone = phone;
   if (password) userField.password = password;
 
+  const verifyFields = {};
+  verifyFields.verify = Math.random()
+    .toString(36)
+    .substring(2, 8)
+    .toUpperCase();
+  verifyFields.confirm = "n";
   if (referral) {
     return Promise.all([
       User.findOne({
@@ -131,35 +86,33 @@ router.post("/register", (req, res) => {
                     bcrypt.hash(userField.password, salt, (err, hash) => {
                       if (err) throw err;
                       userField.password = hash;
+                      userField.status = "i";
                       User.create(userField)
                         .then((user) => {
-                          const UserId = user.id,
-                            avatar = gravatar.url(userField.email, {
-                              s: "200",
-                              r: "pg",
-                              d: "mm",
-                            });
-                          Profile.create({
-                            UserId,
-                            avatar,
-                          })
+                          let UserId = user.id;
+                          profileFields.UserId = UserId;
+                          profileFields.avatar = gravatar.url(userField.email, {
+                            s: "200",
+                            r: "pg",
+                            d: "mm",
+                          });
+                          Profile.create(profileFields)
                             .then(() => {
-                              Premium.create({ UserId })
+                              Preference.create({
+                                UserId,
+                                verify: "n",
+                              })
                                 .then(() => {
-                                  Settings.create({
+                                  Referral.create({
+                                    referral: userField.referralId,
                                     UserId,
                                   })
                                     .then(() => {
-                                      Preference.create({
-                                        UserId,
-                                      })
+                                      verifyFields.UserId = UserId;
+                                      Verify.create(verifyFields)
                                         .then(() => {
-                                          Referral.create({
-                                            referral: userField.referralId,
-                                            UserId: user.id,
-                                          })
-                                            .then(() => res.json(1))
-                                            .catch((err) => res.json(err));
+                                          // send mail to user
+                                          return res.json(1);
                                         })
                                         .catch((err) => res.json(err));
                                     })
@@ -204,37 +157,28 @@ router.post("/register", (req, res) => {
               bcrypt.hash(userField.password, salt, (err, hash) => {
                 if (err) throw err;
                 userField.password = hash;
+                userField.status = "i";
                 User.create(userField)
                   .then((user) => {
-                    const UserId = user.id,
-                      avatar = gravatar.url(userField.email, {
-                        s: "200",
-                        r: "pg",
-                        d: "mm",
-                      });
-                    Profile.create({
-                      UserId,
-                      avatar,
-                    })
+                    let UserId = user.id;
+                    profileFields.UserId = UserId;
+                    profileFields.avatar = gravatar.url(userField.email, {
+                      s: "200",
+                      r: "pg",
+                      d: "mm",
+                    });
+                    Profile.create(profileFields)
                       .then(() => {
-                        Premium.create({ UserId })
+                        Preference.create({
+                          UserId,
+                          verify: "n",
+                        })
                           .then(() => {
-                            Settings.create({
-                              UserId,
-                            })
+                            verifyFields.UserId = UserId;
+                            Verify.create(verifyFields)
                               .then(() => {
-                                Preference.create({
-                                  UserId,
-                                })
-                                  .then(() => {
-                                    Referral.create({
-                                      referral: userField.referralId,
-                                      UserId: user.id,
-                                    })
-                                      .then(() => res.json(1))
-                                      .catch((err) => res.json(err));
-                                  })
-                                  .catch((err) => res.json(err));
+                                // send mail to user
+                                return res.json(1);
                               })
                               .catch((err) => res.json(err));
                           })
@@ -250,6 +194,67 @@ router.post("/register", (req, res) => {
         .catch((err) => res.status(400).json(err)),
     ]);
   }
+});
+
+/*
+@route POST api/public/verify
+@desc  User verify email address
+@access public
+*/
+router.post("/verify", (req, res) => {
+  const { username, code } = req.body;
+  User.findOne({
+    where: {
+      [Op.or]: [{ username }, { email: username }],
+    },
+  })
+    .then((user) => {
+      if (!user) {
+        errors.username = "User doesn't exist!";
+        return res.status(400).json(errors);
+      }
+      let UserId = user.id;
+      const now = Date.now() - 3600000;
+      Verify.findOne({
+        where: {
+          UserId,
+        },
+        attributes: ["verify", "updatedAt", "confirm"],
+      })
+        .then((pass) => {
+          if (pass.confirm !== "n") {
+            errors.code = "You are yet to request for a Verification Code";
+            return res.status(400).json(errors);
+          } else if (code !== pass.verify) {
+            errors.code = "You have entered the wrong Verification Code";
+            return res.status(400).json(errors);
+          } else if (pass.updatedAt.getTime() < now) {
+            errors.code =
+              "Your Verification Code has expired. Kindly request for a new one";
+            return res.status(400).json(errors);
+          } else {
+            Verify.update(
+              {
+                confirm: "y",
+                verify: null,
+              },
+              {
+                where: {
+                  UserId: user.id,
+                },
+              }
+            )
+              .then(() => {
+                res.json({
+                  UserId: user.id,
+                });
+              })
+              .catch((err) => res.json(err));
+          }
+        })
+        .catch((err) => res.json(err));
+    })
+    .catch((err) => res.json(err));
 });
 
 /*
@@ -373,14 +378,67 @@ router.post("/login", (req, res) => {
             mode: user.Settings[0],
             avatar: user.Profile.avatar,
           };
-          jwt.sign(
-            payload,
-            keys.secretOrKey,
-            { expiresIn: 3600 },
-            (_err, token) => {
-              res.json({ message: "Success", token: `Bearer ${token}` });
+          if (user.level >= 2) {
+            if (user.status === "a") {
+              jwt.sign(
+                payload,
+                keys.secretOrKey,
+                { expiresIn: 3600 },
+                (_err, token) => {
+                  return res.json({
+                    message: "Success",
+                    token: `Bearer ${token}`,
+                  });
+                }
+              );
+            } else {
+              errors.username = "Your Administrative Rights has been revoked!";
+              return res.status(404).json(errors);
             }
-          );
+          } else {
+            Preference.findOne({
+              where: {
+                UserId: user.id,
+              },
+              attributes: ["verify"],
+            })
+              .then((verify) => {
+                if (verify.verify === "n") {
+                  let code = Math.random()
+                    .toString(36)
+                    .substring(2, 8)
+                    .toUpperCase();
+                  Verify.update(
+                    {
+                      verify: code,
+                      confirm: "n",
+                    },
+                    {
+                      where: { UserId: user.id },
+                    }
+                  )
+                    .then(() => {
+                      // Send Mail
+                      errors.verify = 0;
+                      return res.status(404).json(errors);
+                    })
+                    .catch((err) => res.json(err));
+                } else {
+                  jwt.sign(
+                    payload,
+                    keys.secretOrKey,
+                    { expiresIn: 3600 },
+                    (_err, token) => {
+                      return res.json({
+                        message: "Success",
+                        token: `Bearer ${token}`,
+                      });
+                    }
+                  );
+                }
+              })
+              .catch((err) => res.json(err));
+          }
         } else {
           errors.password = "Incorrect Password";
           return res.status(400).json(errors);
@@ -406,6 +464,9 @@ router.post("/forgot", (req, res) => {
     return res.status(400).json(errors);
   }
 
+  const verifyField = {};
+  verifyField.reset = Math.random().toString(36).substring(2, 8).toUpperCase();
+
   User.findOne({
     where: {
       [Op.or]: [{ email: username }, { username }],
@@ -416,44 +477,21 @@ router.post("/forgot", (req, res) => {
         message.error = "User not Found!";
         return res.status(404).json(message);
       }
-      const passField = {};
-      passField.reset = Math.random()
-        .toString(36)
-        .substring(2, 8)
-        .toUpperCase();
-      passField.UserId = user.id;
 
-      Pass.findOrCreate({
-        where: {
-          UserId: user.id,
+      verifyField.UserId = user.id;
+      Verify.update(
+        {
+          confirm: "y",
         },
-        defaults: {
-          reset: passField.reset,
-          UserId: user.id,
-        },
-      })
-        .then(([found, created]) => {
-          if (created) {
-            // Send  Mail to User
-            message.update = 1;
-            res.json(message);
-          } else {
-            Pass.update(
-              {
-                reset: passField.reset,
-                confirm: "n",
-              },
-              {
-                where: {
-                  UserId: user.id,
-                },
-              }
-            ).then(() => {
-              // Send  Mail to User
-              message.update = 1;
-              res.json(message);
-            });
-          }
+        {
+          where: {
+            UserId: user.id,
+          },
+        }
+      )
+        .then(() => {
+          // Send  Mail to User
+          res.json(1);
         })
         .catch((err) => res.json(err));
     })
@@ -484,20 +522,17 @@ router.post("/confirm", (req, res) => {
     }
     let UserId = user.id;
     const now = Date.now() - 3600000;
-    Pass.findOne({
+    Verify.findOne({
       where: {
         UserId,
       },
-      attributes: ["reset", "updatedAt", "confirm"],
+      attributes: ["verify", "updatedAt", "confirm"],
     })
       .then((pass) => {
-        if (!pass) {
+        if (pass.confirm !== "n") {
           errors.code = "You are yet to request for a Password Reset Code";
           return res.status(400).json(errors);
-        } else if (pass.confirm !== "n") {
-          errors.code = "You are yet to request for a Password Reset Code";
-          return res.status(400).json(errors);
-        } else if (code !== pass.reset) {
+        } else if (code !== pass.verify) {
           errors.code = "You have entered the wrong Password Reset Code";
           return res.status(400).json(errors);
         } else if (pass.updatedAt.getTime() < now) {

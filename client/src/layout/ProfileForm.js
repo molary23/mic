@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImHangouts } from "react-icons/im";
+
 import TextInputField from "./TextInputField";
 function ProfileForm(props) {
   const { onSubmit, userinfo } = props;
@@ -24,12 +24,25 @@ function ProfileForm(props) {
       setErrors({
         firstname: "First Name can't be more than 25 characters",
       });
+    } else if (inputs.phone === "") {
+      setErrors({
+        phone: "Phone Number Field can't be empty",
+      });
+    } else if (isNaN(inputs.phone)) {
+      setErrors({
+        addadminphone: "Phone Number can only be a Number",
+      });
+    } else if (inputs.phone.length > 20) {
+      setErrors({
+        phone: "Phone Number can't be more than 20 characters",
+      });
     } else {
       setLoading(true);
       setErrors({});
       const user = {
         lastname: inputs.lastname.toLowerCase(),
         firstname: inputs.firstname.toLowerCase(),
+        phone: inputs.phone,
       };
       onSubmit(user);
     }
@@ -38,6 +51,7 @@ function ProfileForm(props) {
   const [inputs, setInputs] = useState({
     lastname: userinfo.lastname,
     firstname: userinfo.firstname,
+    phone: userinfo.phone,
   });
 
   const changeEditHandler = (e) => {
@@ -52,7 +66,7 @@ function ProfileForm(props) {
           placeholder="Last Name"
           type="text"
           name="lastname"
-          value={inputs.lastname}
+          value={inputs.lastname || ""}
           onChange={changeEditHandler}
           error={errors.lastname}
         />
@@ -61,9 +75,18 @@ function ProfileForm(props) {
           placeholder="First Name"
           type="text"
           name="firstname"
-          value={inputs.firstname}
+          value={inputs.firstname || ""}
           onChange={changeEditHandler}
           error={errors.firstname}
+        />
+        <TextInputField
+          id="profile-form-phone"
+          placeholder="Phone"
+          type="text"
+          name="phone"
+          value={inputs.phone || ""}
+          onChange={changeEditHandler}
+          error={errors.phone}
         />
         <div className="d-grid">
           <button type="submit" className="btn default-btn btn-lg btn-block">

@@ -5,7 +5,7 @@ const Account = require("../db/models/Account"),
   User = require("../db/models/User"),
   Profile = require("../db/models/Profile"),
   Subscription = require("../db/models/Subscription"),
-  Pass = require("../db/models/Pass"),
+  Verify = require("../db/models/Verify"),
   Referral = require("../db/models/Referral"),
   Bonus = require("../db/models/Bonus"),
   Signal = require("../db/models/Signal"),
@@ -29,14 +29,14 @@ User.hasOne(Profile, {
 });
 Profile.belongsTo(User);
 
-User.hasOne(Pass, {
+User.hasOne(Verify, {
   onDelete: "RESTRICT",
   hooks: true,
   foreignKey: {
     allowNull: false,
   },
 });
-Pass.belongsTo(User);
+Verify.belongsTo(User);
 
 User.hasMany(Subscription, {
   onDelete: "RESTRICT",

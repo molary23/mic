@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Modal(props) {
-  const { modal, sender } = props;
+  const { modal, sender, onClick } = props;
   const [open, setOpen] = useState(modal);
 
   const closeModal = () => {
     setOpen(false);
+    onClick(false);
   };
   let text, title;
   if (sender === "register") {
@@ -67,6 +68,24 @@ function Modal(props) {
             Here{" "}
           </Link>{" "}
           to Login.
+        </p>
+      </div>
+    );
+    title = "Registration Successful!";
+  }
+
+  if (sender === "not verified") {
+    text = (
+      <div>
+        <p>You are yet to verify your Email Address. </p>
+        <p>A new Verification Code has been sent to your mail. </p>
+        <p>
+          Click{" "}
+          <Link to="/verify" className="default-anchor">
+            {" "}
+            Here
+          </Link>{" "}
+          to Verify.
         </p>
       </div>
     );

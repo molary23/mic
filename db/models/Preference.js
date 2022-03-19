@@ -22,6 +22,10 @@ Preference.init(
       type: DataTypes.ENUM("y", "n"),
       defaultValue: "y",
     },
+    verify: {
+      type: DataTypes.ENUM("y", "n"),
+      defaultValue: "y",
+    },
   },
 
   {
