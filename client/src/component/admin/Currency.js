@@ -92,7 +92,6 @@ class Currency extends Component {
     ) {
       update.error = nextProps.errors.data;
       update.isLoading = false;
-      console.log(nextProps.errors.data);
     } else if (
       nextProps.errors !== prevState.errors &&
       Object.keys(nextProps.errors).length === 0

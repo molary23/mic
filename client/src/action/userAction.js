@@ -67,6 +67,8 @@ import {
   CLEAR_USER_DELETE_REPLY,
 } from "./types";
 
+import { getAllCounts } from "./authAction";
+
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearErrors());
@@ -263,7 +265,7 @@ export const getForum = (id) => async (dispatch) => {
 
 export const requestWithdrawal = (withdata) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("user-account"));
   try {
     let response = await axios.post("/api/users/withdrawals", withdata);
@@ -280,7 +282,7 @@ export const requestWithdrawal = (withdata) => async (dispatch) => {
 
 export const addForum = (forumData) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("add-forum"));
   try {
     let response = await axios.post("/api/users/add/forum", forumData);
@@ -288,6 +290,7 @@ export const addForum = (forumData) => async (dispatch) => {
       type: USER_ADD_FORUM,
       payload: response.data,
     });
+    dispatch(getAllCounts(2));
     return result;
   } catch (error) {
     console.log(error.response);
@@ -297,7 +300,7 @@ export const addForum = (forumData) => async (dispatch) => {
 
 export const replyForum = (replyData) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("user-reply"));
   try {
     let response = await axios.post("/api/users/forum/reply", replyData);
@@ -314,7 +317,7 @@ export const replyForum = (replyData) => async (dispatch) => {
 
 export const deleteReply = (id) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("delete-reply"));
   try {
     let response = await axios.delete(`/api/users/reply/delete/:${id}`);
@@ -331,7 +334,7 @@ export const deleteReply = (id) => async (dispatch) => {
 
 export const updateForum = (forumData) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("update-forum"));
   try {
     let response = await axios.post("/api/users/update/forum/", forumData);

@@ -24,9 +24,9 @@ function AddModal(props) {
     sender,
     purpose,
     onSubmit,
-    modalsignaldetails,
     error,
     modalAnnDetails,
+    modalsignaldetails,
     walletList,
     isLoading,
     info,
@@ -37,9 +37,6 @@ function AddModal(props) {
   let sentDetails = {};
   if (sender === "admin-announcements" && purpose === "edit") {
     sentDetails = modalAnnDetails;
-  }
-  if (sender === "provider-signals" && purpose === "edit") {
-    sentDetails = modalsignaldetails;
   }
 
   if (sender === "admin-user") {
@@ -53,16 +50,7 @@ function AddModal(props) {
   const [pass1, setPass1] = useState(true);
   const [pass2, setPass2] = useState(true);
   const [errors, setErrors] = useState({});
-  const [edits, setEdits] = useState({
-    editpair: sentDetails.CurrencyId,
-    editsignaloption: sentDetails.signaloption,
-    editsignalstatus: sentDetails.status,
-    editstartrange: sentDetails.startrange,
-    editendrange: sentDetails.endrange,
-    edittakeprofit: sentDetails.takeprofit,
-    editstoploss: sentDetails.stoploss,
-    editpip: sentDetails.pip,
-  });
+
   const [anns, setAnns] = useState({
     editanntitle: sentDetails.title,
     editannlink: sentDetails.link,
@@ -84,8 +72,11 @@ function AddModal(props) {
   ];
 
   const closeModal = () => {
-    if (Object.keys(error).length > 0) {
-      dispatch(clearErrors());
+    if (error !== undefined) {
+      // console.log(error);
+      if (Object.keys(error).length > 0) {
+        dispatch(clearErrors());
+      }
     }
 
     setOpen(false);
@@ -292,136 +283,35 @@ function AddModal(props) {
       // Submit Edit Signal
       const submitEditHandler = (e) => {
         e.preventDefault();
-        if (edits.editpair === "") {
+        if (
+          !Object.keys(inputs).includes("signalstatus") ||
+          inputs.signalstatus === ""
+        ) {
           setErrors({
-            editpair: "Currency Pair Field can't be empty",
-          });
-        } else if (edits.editsignaloption === "") {
-          setErrors({
-            editsignaloption: "Signal Option Field can't be empty",
-          });
-        } else if (edits.edittakeprofit === "") {
-          setErrors({
-            edittakeprofit: "Take Profit Field can't be empty",
-          });
-        } else if (edits.editstoploss === "") {
-          setErrors({
-            editstoploss: "Stop Loss Field can't be empty",
-          });
-        } else if (edits.editstartrange === "") {
-          setErrors({
-            editstartrange: "Start Range Field can't be empty",
-          });
-        } else if (edits.editendrange === "") {
-          setErrors({
-            editendrange: "End Range Field can't be empty",
-          });
-        } else if (edits.editpip === "") {
-          setErrors({
-            editpip: "Pip Field can't be empty",
+            signalstatus: "You have to select Signal Status",
           });
         } else {
           setLoading(true);
-          console.log(edits.edittakeprofit, edits.editstoploss);
-          let takeprofit = edits.edittakeprofit.toString().split(","),
-            stoploss = edits.editstoploss.toString().split(",");
           const signal = {
-            pair: parseInt(edits.editpair),
-            option: edits.editsignaloption,
-            status: edits.editsignalstatus,
-            takeprofit: takeprofit,
-            stoploss: stoploss,
-            startrange: parseFloat(edits.editstartrange),
-            endrange: parseFloat(edits.editendrange),
-            pip: parseFloat(edits.editpip),
+            signalstatus: inputs.signalstatus,
           };
           setErrors({});
           onSubmit(["edit", signal, modalsignaldetails.signalid]);
         }
       };
 
-      const changeEditHandler = (e) => {
-        setEdits({ ...edits, [e.target.name]: e.target.value });
-      };
       title = "Edit Signal";
       text = (
         <div className="edit-signal">
           <form className="edit-signal-form" onSubmit={submitEditHandler}>
             <Select
-              options={optArray}
-              onChange={changeEditHandler}
-              name="editpair"
-              value={edits.editpair || ""}
-              error={errors.editpair}
-            />
-            <Select
-              options={signalOpt}
-              onChange={changeEditHandler}
-              name="editsignaloption"
-              value={edits.editsignaloption.toLowerCase() || ""}
-              error={errors.editsignaloption}
-            />
-            <Select
               options={statusOpt}
-              onChange={changeEditHandler}
-              name="editsignalstatus"
-              value={
-                edits.editsignalstatus !== null
-                  ? edits.editsignalstatus.toLowerCase()
-                  : ""
-              }
-              error={errors.editsignalstatus}
+              onChange={changeHandler}
+              name="signalstatus"
+              value={inputs.signalstatus || ""}
+              error={errors.signalstatus}
             />
-            <TextInputField
-              id="edit-new-takeprofit"
-              placeholder="Take Profit "
-              label="Take Profit *Separate multiple Take Profits with Comma (,)*"
-              type="text"
-              name="edittakeprofit"
-              value={edits.edittakeprofit.toString() || ""}
-              onChange={changeEditHandler}
-              error={errors.edittakeprofit}
-            />
-            <TextInputField
-              id="edit-new-takeprofit"
-              placeholder="Stop Loss"
-              label="Stop Loss *Separate multiple Stop Loss with Comma (,)*"
-              type="text"
-              name="editstoploss"
-              value={edits.editstoploss.toString() || ""}
-              onChange={changeEditHandler}
-              error={errors.editstoploss}
-            />
-            <TextInputField
-              id="edit-new-takeprofit"
-              placeholder="Start Range"
-              label="Start Range"
-              type="text"
-              name="editstartrange"
-              value={edits.editstartrange.toString() || ""}
-              onChange={changeEditHandler}
-              error={errors.editstartrange}
-            />
-            <TextInputField
-              id="edit-new-takeprofit"
-              placeholder="End Range"
-              label="End Range"
-              type="text"
-              name="editendrange"
-              value={edits.editendrange.toString() || ""}
-              onChange={changeEditHandler}
-              error={errors.editendrange}
-            />
-            <TextInputField
-              id="edit-new-takeprofit"
-              placeholder="Profit/Loss, Pip"
-              label="Profit/Loss, Pip"
-              type="text"
-              name="editpip"
-              value={edits.editpip.toString() || ""}
-              onChange={changeEditHandler}
-              error={errors.editpip}
-            />
+
             <div className="d-grid">
               {error.update && (
                 <small className="text-muted">{error.update}</small>

@@ -55,9 +55,25 @@ router.post(
       signalFields.endrange = parseFloat(req.body.endrange);
     if (req.body.pip) signalFields.pip = parseFloat(req.body.pip);
 
-    Signal.create(signalFields)
-      .then(() => {
-        res.json(true);
+    Signal.findOne({
+      where: {
+        CurrencyId: signalFields.CurrencyId,
+        UserId: signalFields.UserId,
+        status: null,
+      },
+    })
+      .then((signal) => {
+        if (signal) {
+          errors.status =
+            "You are yet to release the STATUS of the last Signal you created for this Currency Pair";
+          return res.status(400).json(errors);
+        } else {
+          Signal.create(signalFields)
+            .then(() => {
+              res.json(true);
+            })
+            .catch((err) => res.status(404).json(err));
+        }
       })
       .catch((err) => res.status(404).json(err));
   }
@@ -108,7 +124,7 @@ router.post(
             .then(() => {
               res.json(true);
             })
-            .catch((err) => res.status(400).json(err));
+            .catch((err) => res.status(404).json(err));
         }
       })
       .catch((err) => res.status(404).json(err));
@@ -138,19 +154,10 @@ router.post(
       .then((signal) => {
         if (signal.UserId === userID) {
           const signalFields = {};
-          if (req.body.option) signalFields.signaloption = req.body.option;
-          if (req.body.pair) signalFields.CurrencyId = req.body.pair;
-          if (req.body.takeprofit)
-            signalFields.takeprofit = req.body.takeprofit;
-          if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
-          if (req.body.startrange)
-            signalFields.startrange = req.body.startrange;
-          if (req.body.endrange) signalFields.endrange = req.body.endrange;
           if (req.body.status) signalFields.status = req.body.status;
-          if (req.body.pip) signalFields.pip = req.body.pip;
-
           Signal.update(signalFields, { where: { id: signalID } })
             .then(() => {
+              // Send Mail with Signal ID = signalID
               res.json(true);
             })
             .catch((err) => res.status(404).json(err));

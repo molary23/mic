@@ -97,7 +97,7 @@ router.post(
           );
         }
       })
-      .catch((err) => res.status(400).json(err));
+      .catch((err) => res.status(404).json(err));
   }
 );
 
@@ -652,7 +652,7 @@ router.post(
             .then(() => {
               res.json(true);
             })
-            .catch((err) => res.status(400).json(err));
+            .catch((err) => res.status(404).json(err));
         }
       })
       .catch((err) => res.status(404).json(err));
@@ -811,7 +811,7 @@ router.post(
       .then((user) => {
         if (user) {
           errors.email = "Email addresss has been used!";
-          res.status(404).json(errors);
+          res.status(400).json(errors);
         } else {
           User.update({ email }, { where: { id } })
             .then(() => {

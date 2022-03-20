@@ -23,7 +23,7 @@ Settings.init(
     timestamps: true,
 
     // I want createdAt
-    createdAt: true,
+    createdAt: false,
 
     // I dont want updatedAt
     updatedAt: true,

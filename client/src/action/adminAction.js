@@ -87,6 +87,8 @@ import {
   CLEAR_ADMIN_GET_ANALYTICS,
 } from "./types";
 
+import { getAllCounts } from "./authAction";
+
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearErrors());
@@ -221,7 +223,7 @@ export const setLoading = () => {
 
 export const updateCurrency = (action, id) => async (dispatch) => {
   let url = `/api/signals/currency/update/:${action}/:${id}`;
-  dispatch(setLoading());
+  // dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post(url);
@@ -238,7 +240,7 @@ export const updateCurrency = (action, id) => async (dispatch) => {
 
 export const updateWallet = (action, id) => async (dispatch) => {
   let url = `/api/admin/wallet/update/:${action}/:${id}`;
-  dispatch(setLoading());
+  // dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post(url);
@@ -255,7 +257,7 @@ export const updateWallet = (action, id) => async (dispatch) => {
 
 export const updateWithdrawals = (action, id) => async (dispatch) => {
   let url = `/api/admin/withdrawals/update/:${action}/:${id}`;
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post(url);
@@ -272,7 +274,6 @@ export const updateWithdrawals = (action, id) => async (dispatch) => {
 
 export const addCurrency = (currency) => async (dispatch) => {
   let url = "/api/signals/currency/add/";
-  dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post(url, currency);
@@ -280,6 +281,7 @@ export const addCurrency = (currency) => async (dispatch) => {
       type: ADD_NEW_CURRENCY,
       payload: response.data,
     });
+    dispatch(getAllCounts(3));
     return result;
   } catch (error) {
     console.log(error.response);
@@ -289,7 +291,7 @@ export const addCurrency = (currency) => async (dispatch) => {
 
 export const addWallet = (wallet) => async (dispatch) => {
   let url = "/api/admin/wallet/add/";
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post(url, wallet);
@@ -297,6 +299,7 @@ export const addWallet = (wallet) => async (dispatch) => {
       type: ADMIN_ADD_WALLET,
       payload: response.data,
     });
+    dispatch(getAllCounts(3));
     return result;
   } catch (error) {
     console.log(error.response);
@@ -327,7 +330,7 @@ export const clearAdminAction = (info) => {
 };
 
 export const addNewAdmin = (level, data) => async (dispatch) => {
-  dispatch(setLoading());
+  // dispatch(setLoading());
   dispatch(clearErrors());
   let url = "/api/admin/add",
     type;
@@ -353,7 +356,7 @@ export const addNewAdmin = (level, data) => async (dispatch) => {
 };
 
 export const updateAdmin = (value) => async (dispatch) => {
-  dispatch(setLoading());
+  // dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post("/api/admin/update/", value);
@@ -369,7 +372,7 @@ export const updateAdmin = (value) => async (dispatch) => {
 };
 
 export const updateBonus = (value) => async (dispatch) => {
-  dispatch(setLoading());
+  // dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post("/api/admin/approve/bonus", value);
@@ -385,7 +388,7 @@ export const updateBonus = (value) => async (dispatch) => {
 };
 
 export const deleteAnn = (value) => async (dispatch) => {
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.delete(
@@ -403,7 +406,7 @@ export const deleteAnn = (value) => async (dispatch) => {
 };
 
 export const addAnn = (value) => async (dispatch) => {
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post("/api/admin/add/announcement", value);
@@ -411,6 +414,7 @@ export const addAnn = (value) => async (dispatch) => {
       type: ADD_ANNOUNCEMENT,
       payload: response.data,
     });
+    dispatch(getAllCounts(3));
     return result;
   } catch (error) {
     console.log(error.response);
@@ -419,7 +423,7 @@ export const addAnn = (value) => async (dispatch) => {
 };
 
 export const editAnn = (value) => async (dispatch) => {
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
     let response = await axios.post(
@@ -499,7 +503,7 @@ export const clearSettings = (settings) => {
 
 export const addForum = (forumData) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("add-forum"));
   try {
     let response = await axios.post("/api/admin/add/forum", forumData);
@@ -507,6 +511,7 @@ export const addForum = (forumData) => async (dispatch) => {
       type: ADMIN_ADD_FORUM,
       payload: response.data,
     });
+    dispatch(getAllCounts(3));
     return result;
   } catch (error) {
     console.log(error.response);
@@ -516,7 +521,7 @@ export const addForum = (forumData) => async (dispatch) => {
 
 export const replyForum = (replyData) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("admin-reply"));
   try {
     let response = await axios.post("/api/admin/forum/reply", replyData);
@@ -533,7 +538,7 @@ export const replyForum = (replyData) => async (dispatch) => {
 
 export const deleteReply = (id) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("delete-reply"));
   try {
     let response = await axios.delete(`/api/admin/reply/delete/:${id}`);
@@ -550,7 +555,7 @@ export const deleteReply = (id) => async (dispatch) => {
 
 export const updateForum = (forumData) => async (dispatch) => {
   dispatch(clearErrors());
-  dispatch(setLoading());
+  //  dispatch(setLoading());
   dispatch(clearActions("update-forum"));
   try {
     let response = await axios.post("/api/admin/update/forum/", forumData);

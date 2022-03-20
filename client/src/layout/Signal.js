@@ -72,8 +72,12 @@ function Signal(props) {
           </div>
         </div>
         <div className="signal-about">
-          <div className="signal-type signal-title">Signal Identify</div>
-          <div className="signal-days-ago signal-align-right">ID of Signal</div>
+          <div className="signal-type signal-title">Signal Identifier</div>
+          <div className="signal-days-ago signal-align-right">
+            {signal.signalid.toString().length < 3
+              ? signal.signalid.toString().padStart(3, "0")
+              : signal.signalid.toString()}
+          </div>
         </div>
         <div className="signal-from">
           <div className="signal-from-title signal-title">Start</div>

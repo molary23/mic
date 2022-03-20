@@ -39,15 +39,25 @@ export class SubNav extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    let servererror;
+    console.log(prevProps.errors);
     if (
       prevProps.errors !== this.props.errors &&
-      (this.props.errors.status === 500 ||
-        this.props.errors.status === 400 ||
-        this.props.errors.status === 404)
+      this.props.errors.status !== undefined
     ) {
-      console.log(this.props.errors.status);
-      this.getError();
+      if (
+        this.props.errors.status === 500 ||
+        this.props.errors.status === 404
+      ) {
+        servererror =
+          "There has been a Network Error. Refresh and Try again later.";
+      }
+      if (this.props.errors.status === 400) {
+        servererror = this.props.errors.data;
+      }
+      this.getError(servererror);
     }
+
     if (
       prevProps.errors !== this.props.errors &&
       this.props.errors.status === 401
@@ -61,13 +71,12 @@ export class SubNav extends Component {
     this.props.logoutUser();
   };
 
-  getError = () => {
+  getError = (message) => {
     this.setState({
       isLoading: false,
       toast: true,
-      toasttext:
-        "Oops. There has been a Network Error. Refresh  and Try again.",
       toastcategory: "error",
+      toasttext: message + "hello bro",
     });
 
     setTimeout(() => {

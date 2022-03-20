@@ -1015,7 +1015,7 @@ function TableBody(props) {
               >
                 <FaRegEye />
               </button>
-              {sender === "provider-signals" && (
+              {sender === "provider-signals" && item.status === null && (
                 <button
                   type="button"
                   className="btn btn-success btn-sm"

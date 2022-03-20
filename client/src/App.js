@@ -32,6 +32,7 @@ import Withdrawals from "./component/user/Withdrawals";
 import Settings from "./component/user/Settings";
 import Forum from "./component/user/Forum";
 import Forums from "./component/user/Forums";
+import Payment from "./component/user/Payment";
 
 import Index from "./component/user/Index";
 import Subscriptions from "./component/user/Subscriptions";
@@ -158,6 +159,11 @@ function App() {
             path="/user/pay"
             element={<PrivateRoute Component={Pay} />}
           />
+          <Route
+            exact
+            path="/user/payment"
+            element={<PrivateRoute Component={Payment} />}
+          ></Route>
           <Route
             exact
             path="/user/payments"

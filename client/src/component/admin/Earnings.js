@@ -61,7 +61,6 @@ export class Earnings extends Component {
       error: {},
       toast: false,
       toasttext: "",
-      servererror: {},
     };
   }
 
@@ -81,14 +80,6 @@ export class Earnings extends Component {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let update = {};
-    if (nextProps.errors) {
-      update.servererror = nextProps.errors;
-    }
-    return update;
   }
 
   componentDidUpdate(prevProps) {
@@ -126,9 +117,8 @@ export class Earnings extends Component {
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
-    }, 3000);
+    }, 5000);
   };
 
   loadMore = () => {

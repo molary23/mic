@@ -286,7 +286,7 @@ router.get(
         res.attachment("subscriptions.csv");
         res.status(200).end(csv);
       })
-      .catch((err) => res.status(404).json(`E ${err.response}`));
+      .catch((err) => res.status(404).json(err));
   }
 );
 
@@ -616,7 +616,7 @@ router.get(
         // res.attachment("subscriptions.csv");
         res.status(200).end(csv);
       })
-      .catch((err) => res.status(404).json(`E ${err.response}`));
+      .catch((err) => res.status(404).json(err));
   }
 );
 

@@ -24,6 +24,8 @@ import {
   CLEAR_PROVIDER_GET_FOLLOWERS,
 } from "./types";
 
+import { getAllCounts } from "./authAction";
+
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
   let url = "/api/signals/",
@@ -98,7 +100,6 @@ export const getFollowers = () => async (dispatch) => {
 };
 
 export const addSignal = (signal) => async (dispatch) => {
-  dispatch(setLoading());
   let url = "/api/signals/add",
     type = ADD_NEW_SIGNAL;
   try {
@@ -107,6 +108,7 @@ export const addSignal = (signal) => async (dispatch) => {
       type,
       payload: response.data,
     });
+    dispatch(getAllCounts(2));
     return result;
   } catch (error) {
     console.log(error.response);
@@ -124,7 +126,7 @@ export const clearSignal = (info) => {
 };
 
 export const editSignal = (signal, id) => async (dispatch) => {
-  dispatch(setLoading());
+  // dispatch(setLoading());
   let url = `/api/signals/update/:${id}`,
     type = EDIT_NEW_SIGNAL;
   try {

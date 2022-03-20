@@ -34,8 +34,17 @@ class Settings extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.errors) {
-      update.error = nextProps.errors;
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
     }
     return update;
   }
@@ -89,7 +98,7 @@ class Settings extends Component {
       this.setState({
         toast: false,
       });
-    }, 3000);
+    }, 5000);
   };
 
   moveActive = (nextTab) => {
@@ -183,8 +192,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(2)}
                         >
-                          {" "}
-                          <BiAdjust />
+                          <BiAdjust /> Display Mode
                         </button>
                       </li>
                     </ul>
@@ -201,6 +209,7 @@ class Settings extends Component {
                       <ProfileForm
                         onSubmit={this.submitProfileHandler}
                         userinfo={profile}
+                        error={error}
                       />
                     )}
                   </div>
@@ -226,6 +235,7 @@ class Settings extends Component {
                         sender={sender}
                         display={mode}
                         load={loading}
+                        error={error}
                       />
                     )}
                   </div>

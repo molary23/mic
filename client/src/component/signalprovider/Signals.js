@@ -233,10 +233,8 @@ class Signals extends Component {
     if (act === "new") {
       this.props.addSignal(signaldetail);
     } else if (act === "edit") {
-      //console.log(signaldetail, signalinfo[2]);
       this.props.editSignal(signaldetail, signalinfo[2]);
     }
-    // this.props.addSignal(addSignal);
   };
   downloadHandler = () => {
     const { sender } = this.state;

@@ -1933,9 +1933,9 @@ router.get(
                         info.followerscount = followerscount;
                         return res.json(info);
                       })
-                      .catch((err) => res.status(404).json(`P ${err}`));
+                      .catch((err) => res.status(404).json(err));
                   })
-                  .catch((err) => res.status(404).json(`S ${err}`));
+                  .catch((err) => res.status(404).json(err));
               } else if (level === 3) {
                 Currency.count({
                   where: {
@@ -1946,7 +1946,7 @@ router.get(
                     info.currencycount = currencycount;
                     return res.json(info);
                   })
-                  .catch((err) => res.status(404).json(`C ${err}`));
+                  .catch((err) => res.status(404).json(err));
               }
             }
           }

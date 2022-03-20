@@ -310,7 +310,7 @@ class ViewAdmin extends Component {
                   </div>
                 </div>
 
-                <div className="bonus-action">
+                <div className="admin-action">
                   <div className="row">
                     {admininfo.status === "i" && (
                       <div className="col-6">
@@ -322,7 +322,7 @@ class ViewAdmin extends Component {
                               this.clickHandler(["reactivate", admininfo.id])
                             }
                           >
-                            Approve <FiCheckCircle />
+                            Reactivate <FiCheckCircle />
                             {isLoading.approve && (
                               <span className="spinner-border spinner-border-sm ms-2"></span>
                             )}
@@ -340,7 +340,7 @@ class ViewAdmin extends Component {
                               this.clickHandler(["delete", admininfo.id])
                             }
                           >
-                            Reject <ImCancelCircle />
+                            Delete <ImCancelCircle />
                             {isLoading.reject && (
                               <span className="spinner-border spinner-border-sm ms-2"></span>
                             )}
