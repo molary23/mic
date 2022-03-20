@@ -43,6 +43,7 @@ class Settings extends Component {
     error: {},
     toast: false,
     toasttext: "",
+    toastcategory: "",
     purpose: "",
   };
 
@@ -148,6 +149,7 @@ class Settings extends Component {
       offset: 0,
       toast: true,
       toasttext: words,
+      toastcategory: "success",
       loading: false,
     });
 
@@ -242,8 +244,17 @@ class Settings extends Component {
   };
 
   render() {
-    const { active, sender, loading, modal, error, toast, toasttext, purpose } =
-      this.state;
+    const {
+      active,
+      sender,
+      loading,
+      modal,
+      error,
+      toast,
+      toasttext,
+      purpose,
+      toastcategory,
+    } = this.state;
     const { user } = this.props;
 
     let load = false,
@@ -355,8 +366,7 @@ class Settings extends Component {
                           } `}
                           onClick={() => this.moveActive(6)}
                         >
-                          {" "}
-                          <BiAdjust />
+                          <BiAdjust /> Display Mode
                         </button>
                       </li>
                     </ul>
@@ -500,7 +510,7 @@ class Settings extends Component {
             onSubmit={this.submitAccountHandler}
           />
         ) : null}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

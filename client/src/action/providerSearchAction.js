@@ -22,7 +22,7 @@ export const searchContent = (content, searchData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
+    console.log(error.response);
     dispatch({ type, payload: [] });
   }
 };

@@ -351,6 +351,8 @@ router.post(
       status = null,
       search = null,
       signaloption = null,
+      creator = null,
+      ref = null,
       where = {};
 
     if (req.body.limit) limit = req.body.limit;
@@ -358,6 +360,8 @@ router.post(
     if (req.body.search) search = req.body.search;
     if (req.body.status) status = req.body.status;
     if (req.body.signaloption) signaloption = req.body.signaloption;
+    if (req.body.creator) creator = parseInt(req.body.creator);
+    if (req.body.ref) ref = req.body.ref;
 
     if (status !== null) {
       where = { ...where, ...{ status } };
@@ -394,6 +398,10 @@ router.post(
           },
         };
       }
+    }
+
+    if (creator !== null && ref !== null) {
+      where = { ...where, ...{ providerid: creator } };
     }
 
     const query = {
@@ -449,7 +457,7 @@ router.post(
       offset = 0,
       premiumstatus = null,
       search = null,
-      sp = null,
+      creator = null,
       ref = null,
       where = {};
 
@@ -457,7 +465,7 @@ router.post(
     if (req.body.offset) offset = req.body.offset;
     if (req.body.search) search = req.body.search;
     if (req.body.premiumstatus) premiumstatus = req.body.premiumstatus;
-    if (req.body.sp) sp = parseInt(req.body.sp);
+    if (req.body.creator) creator = parseInt(req.body.creator);
     if (req.body.ref) ref = req.body.ref;
 
     if (premiumstatus !== null) {
@@ -495,13 +503,13 @@ router.post(
     }
 
     let result = [];
-    if ((sp !== null) & (ref !== null)) {
+    if ((creator !== null) & (ref !== null)) {
       const userid = Preference.findAll({
         where: {
           [Op.or]: [
             { providers: null },
             {
-              providers: { [Op.regexp]: sp },
+              providers: { [Op.regexp]: creator },
             },
           ],
         },
@@ -706,6 +714,7 @@ router.post(
       search = null,
       user = null,
       ref = null,
+      creator = null,
       where = {};
 
     if (req.body.limit) limit = req.body.limit;
@@ -713,6 +722,7 @@ router.post(
     if (req.body.search) search = req.body.search;
     if (req.body.status) status = req.body.status;
     if (req.body.user) user = parseInt(req.body.user);
+    if (req.body.creator) creator = parseInt(req.body.creator);
     if (req.body.ref) ref = req.body.ref;
 
     if (status !== null) {
@@ -753,6 +763,10 @@ router.post(
           },
         };
       }
+    }
+
+    if ((creator !== null) & (ref !== null)) {
+      where = { ...where, ...{ UserId: creator } };
     }
     let UserId,
       currencies,

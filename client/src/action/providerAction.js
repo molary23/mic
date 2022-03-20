@@ -41,7 +41,7 @@ export const getContent = (content, paginate) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -76,7 +76,7 @@ export const getCurrency = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -93,7 +93,7 @@ export const getFollowers = () => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -110,7 +110,7 @@ export const addSignal = (signal) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 export const clearSignal = (info) => {
@@ -136,7 +136,7 @@ export const editSignal = (signal, id) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -152,8 +152,8 @@ export const getProviderSettings = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_PROVIDER_SETTINGS, payload: [] });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -183,8 +183,8 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 

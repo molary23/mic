@@ -644,4 +644,17 @@ router.post("/reset", (req, res) => {
     .catch((err) => res.json(err));
 });
 
+/*
+@route POST api/public/contact/
+@desc Viewer sends message
+@access public
+*/
+
+router.post("/contact", (req, res) => {
+  const { name, phone, email, subject, message } = req.body.message;
+  const ourmail = "we@us.com";
+
+  // Send Message here
+});
+
 module.exports = router;

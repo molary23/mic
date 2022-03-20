@@ -51,16 +51,31 @@ class Login extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
+    let location, checklevel;
+    let search = window.location.search;
 
     if (nextProps.auth.isAuthenticated) {
       update.level = nextProps.auth.user.level;
-      if (nextProps.auth.user.level === 1) {
-        update.viewer = "/user";
-      } else if (nextProps.auth.user.level === 2) {
-        update.viewer = "/sp";
-      } else if (nextProps.auth.user.level === 3) {
-        update.viewer = "/admin";
+      if (search !== "") {
+        location = search.split("=")[1];
+        checklevel = location.split("/")[1];
+        if (
+          (nextProps.auth.user.level === 1 && checklevel === "user") ||
+          (nextProps.auth.user.level === 2 && checklevel === "sp") ||
+          (nextProps.auth.user.level === 3 && checklevel === "admin")
+        ) {
+          update.viewer = `${location}`;
+        }
+      } else {
+        if (nextProps.auth.user.level === 1) {
+          update.viewer = "/user";
+        } else if (nextProps.auth.user.level === 2) {
+          update.viewer = "/sp";
+        } else if (nextProps.auth.user.level === 3) {
+          update.viewer = "/admin";
+        }
       }
+
       update.move = true;
     }
 
@@ -224,7 +239,7 @@ Login.propTypes = {
   loginuser: PropTypes.func.isRequired,
   getAllCounts: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.any,
   clearErrors: PropTypes.func.isRequired,
 };
 

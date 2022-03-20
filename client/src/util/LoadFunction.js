@@ -198,89 +198,6 @@ export const renderArrange = ({
   };
 };
 
-export const checkEmptyInput = ({
-  inputs,
-  setErrors,
-  setLoading,
-  pair,
-  option,
-  status,
-  takeprofit,
-  stoploss,
-  startrange,
-  endrange,
-  pip,
-}) => {
-  if (!Object.keys(inputs).includes(pair) || inputs[pair] === "") {
-    setErrors({
-      [pair]: "Currency Pair Field can't be empty",
-    });
-    return false;
-  } else if (!Object.keys(inputs).includes(option) || inputs[option] === "") {
-    setErrors({
-      [option]: "Signal Option Field can't be empty",
-    });
-    return false;
-  } else if (
-    !Object.keys(inputs).includes(takeprofit) ||
-    inputs[takeprofit] === ""
-  ) {
-    setErrors({
-      [takeprofit]: "Take Profit Field can't be empty",
-    });
-    return false;
-  } else if (
-    !Object.keys(inputs).includes(stoploss) ||
-    inputs[stoploss] === ""
-  ) {
-    setErrors({
-      [stoploss]: "Stop Loss Field can't be empty",
-    });
-    return false;
-  } else if (
-    !Object.keys(inputs).includes(startrange) ||
-    inputs[startrange] === ""
-  ) {
-    setErrors({
-      [startrange]: "Start Range Field can't be empty",
-    });
-    return false;
-  } else if (
-    !Object.keys(inputs).includes(endrange) ||
-    inputs[endrange] === ""
-  ) {
-    setErrors({
-      [endrange]: "End Range Field can't be empty",
-    });
-    return false;
-  } else if (!Object.keys(inputs).includes(pip) || inputs[pip] === "") {
-    setErrors({
-      [pip]: "Pip Field can't be empty",
-    });
-  } else {
-    setLoading(true);
-    let tp = inputs[takeprofit].split(",").map((element) => {
-      return parseFloat(element.trim());
-    });
-    let sl = inputs[stoploss].split(",").map((element) => {
-      return parseFloat(element.trim());
-    });
-
-    const signal = {
-      pair: parseInt(inputs[pair]),
-      option: inputs[option],
-      status: inputs[status],
-      takeprofit: tp,
-      stoploss: sl,
-      startrange: parseFloat(inputs[startrange]),
-      endrange: parseFloat(inputs[endrange]),
-      pip: parseFloat(inputs[pip]),
-    };
-
-    return signal;
-  }
-};
-
 export const checkHandler = (input, target, setIcon, setErrors) => {
   let req = {},
     page,
@@ -420,5 +337,13 @@ export const downloadFile = ({ sender, self }) => {
         isLoading: false,
       });
     })
-    .catch((error) => console.log(error.response));
+    .catch((error) => {
+      console.log("main", error);
+
+      console.log("message", error.message);
+      console.log("request", error.request);
+      console.log("data", error.response.data);
+      console.log("status", error.response.status);
+      console.log("header", error.response.headers);
+    });
 };

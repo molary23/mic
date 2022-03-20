@@ -59,16 +59,12 @@ function CurrencyForm(props) {
 
   for (let i = 0; i < currencyList.length; i++) {
     options = {
-      value: `${JSON.parse(
-        currencyList[i].firstcurrency.split(", ")
-      )[1].toUpperCase()}/${JSON.parse(
-        currencyList[i].secondcurrency.split(", ")
-      )[1].toUpperCase()}`,
-      option: `${JSON.parse(
-        currencyList[i].firstcurrency.split(", ")
-      )[1].toUpperCase()}/${JSON.parse(
-        currencyList[i].secondcurrency.split(", ")
-      )[1].toUpperCase()}`,
+      value: `${currencyList[i].firstcurrency[1].toUpperCase()}/${currencyList[
+        i
+      ].secondcurrency[1].toUpperCase()}`,
+      option: `${currencyList[i].firstcurrency[1].toUpperCase()}/${currencyList[
+        i
+      ].secondcurrency[1].toUpperCase()}`,
       data: currencyList[i].id,
     };
 

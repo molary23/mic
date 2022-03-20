@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+
+import { clearErrors } from "../action/authAction";
+
 import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "./TextPasswordField";
 import Select from "../layout/Select";
@@ -9,6 +16,7 @@ import TextAreaField from "../layout/TextAreaField";
 import { countrycodes } from "../util/countrycodes";
 
 import { checkHandler } from "../util/LoadFunction";
+import isEmail from "validator/lib/isEmail";
 
 function AddModal(props) {
   const {
@@ -21,13 +29,21 @@ function AddModal(props) {
     modalAnnDetails,
     walletList,
     isLoading,
+    info,
   } = props;
+
+  const dispatch = useDispatch();
+
   let sentDetails = {};
   if (sender === "admin-announcements" && purpose === "edit") {
     sentDetails = modalAnnDetails;
   }
   if (sender === "provider-signals" && purpose === "edit") {
     sentDetails = modalsignaldetails;
+  }
+
+  if (sender === "admin-user") {
+    sentDetails = info;
   }
 
   const [open, setOpen] = useState(modal);
@@ -54,6 +70,11 @@ function AddModal(props) {
     editannenddate: sentDetails.enddate,
     editannsummary: sentDetails.summary,
   });
+  const [old, setOld] = useState({
+    email: sentDetails.email,
+    id: sentDetails.id,
+  });
+
   let pattern = new RegExp("^[a-zA-Z0-9._-]+$");
 
   const signalOpt = [
@@ -63,6 +84,7 @@ function AddModal(props) {
   ];
 
   const closeModal = () => {
+    dispatch(clearErrors());
     setOpen(false);
     props.onClick(false);
   };
@@ -1097,22 +1119,6 @@ function AddModal(props) {
       };
       optArray.push(accObj);
     }
-    let max;
-
-    if (balance > 1000) {
-      max = 1000;
-    } else {
-      max = balance;
-    }
-    let amtObj = {},
-      amtArray = [{ value: "", option: "Select Amount" }];
-    for (let i = 100; i <= max; i += 100) {
-      amtObj = {
-        value: [i],
-        option: [i],
-      };
-      amtArray.push(amtObj);
-    }
 
     const submitWithdrawHandler = (e) => {
       e.preventDefault();
@@ -1153,12 +1159,14 @@ function AddModal(props) {
           value={inputs.wallet || ""}
           error={errors.wallet}
         />
-        <Select
-          options={amtArray}
-          onChange={changeHandler}
+        <TextInputField
+          id="withdraw-form-amount"
+          placeholder="Wallet Name"
+          type="text"
           name="amount"
           value={inputs.amount || ""}
-          error={errors.amount}
+          onChange={changeHandler}
+          error={errors.amount || error.amount}
         />
         <div className="d-grid">
           <button type="submit" className="btn default-btn btn-lg btn-block">
@@ -1171,7 +1179,7 @@ function AddModal(props) {
       </form>
     );
   } else if (sender === "user-forums" || sender === "admin-forums") {
-    const submitWithdrawHandler = (e) => {
+    const submitForumHandler = (e) => {
       e.preventDefault();
       if (
         !Object.keys(inputs).includes("forumtitle") ||
@@ -1204,7 +1212,7 @@ function AddModal(props) {
     };
     title = "Create a Discussion";
     text = (
-      <form className="withdraw-form" onSubmit={submitWithdrawHandler}>
+      <form className="withdraw-form" onSubmit={submitForumHandler}>
         <TextInputField
           id="create-forum-title"
           placeholder="Discussion Title"
@@ -1212,7 +1220,7 @@ function AddModal(props) {
           name="forumtitle"
           value={inputs.forumtitle || ""}
           onChange={changeHandler}
-          error={errors.forumtitle || error.wallet}
+          error={errors.forumtitle || error.forumtitle}
         />
         <TextAreaField
           id="create-forum-text"
@@ -1226,6 +1234,62 @@ function AddModal(props) {
         <div className="d-grid">
           <button type="submit" className="btn default-btn btn-lg btn-block">
             Create
+            {loading && (
+              <span className="spinner-border spinner-border-sm ms-2"></span>
+            )}
+          </button>
+        </div>
+      </form>
+    );
+  } else if (sender === "admin-user") {
+    const changeEditHandler = (e) => {
+      setOld({ ...old, [e.target.name]: e.target.value });
+    };
+    const submitNewEmail = (e) => {
+      e.preventDefault();
+      if (!Object.keys(old).includes("email") || old.email === "") {
+        setErrors({
+          email: "Email Address Field can't be empty",
+        });
+      } else if (!isEmail(old.email)) {
+        setErrors({
+          email: "Only Email Address is allowed",
+        });
+      } else if (old.email.length > 50) {
+        setErrors({
+          email: "Email Address can't be more than 50 characters",
+        });
+      } else if (old.email === props.info.email) {
+        setErrors({
+          email: "New Email Address can't be same with the Old Email Address",
+        });
+      } else {
+        setErrors({});
+        setLoading(true);
+        const email = {
+          email: old.email.toLowerCase(),
+          id: old.id,
+        };
+        onSubmit(email);
+        setLoading(isLoading);
+      }
+    };
+    title = `Change Email Address`;
+    text = (
+      <form className="withdraw-form" onSubmit={submitNewEmail}>
+        <input type="hidden" value={old.id} readOnly name="id" />
+        <TextInputField
+          id="change-email"
+          placeholder="Email Address"
+          type="text"
+          name="email"
+          value={old.email || ""}
+          onChange={changeEditHandler}
+          error={errors.email || error.email}
+        />
+        <div className="d-grid">
+          <button type="submit" className="btn default-btn btn-lg btn-block">
+            Change Email
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
             )}
@@ -1260,4 +1324,6 @@ function AddModal(props) {
   );
 }
 
-export default AddModal;
+export default connect(null, {
+  clearErrors,
+})(AddModal);

@@ -7,7 +7,7 @@ function Toast(props) {
   return (
     <div>
       <div
-        className={`toast show bottom-0 start-10 text-white ${
+        className={`toast show text-white ${
           category === "success" ? "toast-success" : "toast-error"
         }`}
         role="alert"

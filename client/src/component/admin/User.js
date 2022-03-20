@@ -8,6 +8,7 @@ import ProgressBar from "../../layout/ProgressBar";
 
 import Toast from "../../layout/Toast";
 import CardDetails from "../../layout/CardDetails";
+import AddModal from "../../layout/AddModal";
 
 import { GiWallet } from "react-icons/gi";
 import { BsBell } from "react-icons/bs";
@@ -17,7 +18,7 @@ import { IoReturnUpBackOutline } from "react-icons/io5";
 import { AiOutlineUsergroupAdd, AiOutlineMoneyCollect } from "react-icons/ai";
 
 import { GiMoneyStack, GiReceiveMoney, GiPayMoney } from "react-icons/gi";
-import { RiShieldUserLine } from "react-icons/ri";
+import { RiShieldUserLine, RiFindReplaceLine } from "react-icons/ri";
 
 import {
   MdOutlinePayments,
@@ -31,20 +32,26 @@ import {
   clearActions,
   clearAdminAction,
   getUser,
+  changeEmail,
 } from "../../action/adminAction";
+
+import Pagination from "../../util/Pagination";
 
 class User extends Component {
   state = {
     text: "",
-    sender: "admin-admin",
+    sender: "admin-user",
     error: {},
     url: new URL(window.location),
+    timer: Pagination.timer,
     userid: null,
     toast: null,
     toasttext: null,
+    toastcategory: null,
     isLoading: {},
     servererror: {},
     adminaction: null,
+    modal: false,
   };
   componentDidMount() {
     const { url } = this.state;
@@ -52,20 +59,19 @@ class User extends Component {
     this.setState({
       userid: id,
     });
-
     this.props.clearErrors();
-    this.props.clearActions("get-admin");
     this.props.getUser(id);
   }
 
   componentWillUnmount() {
-    this.props.clearActions("get-admin");
+    this.props.clearActions("get-user");
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.errors) {
       update.servererror = nextProps.errors;
+      update.isLoading = false;
     }
 
     return update;
@@ -78,12 +84,66 @@ class User extends Component {
     ) {
       // console.log(this.props.errors);
     }
+
+    if (
+      prevProps.admin.changeemail !== this.props.admin.changeemail &&
+      this.props.admin.changeemail
+    ) {
+      this.afterUpdate();
+    }
   }
+
+  afterUpdate = () => {
+    const { userid, timer } = this.state;
+
+    this.setState({
+      isLoading: false,
+      modal: false,
+      toast: true,
+      toasttext: `Email changed successfully`,
+      toastcategory: "success",
+    });
+
+    this.props.clearActions("get-user");
+    this.props.getUser(userid);
+
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+      });
+    }, timer);
+  };
+
+  openModal = () => {
+    this.setState({
+      modal: true,
+      purpose: "change-email",
+    });
+  };
+
+  modalHandler = (close) => {
+    this.setState({
+      modal: close,
+    });
+  };
+
+  submitHandler = (value) => {
+    this.props.changeEmail(value);
+  };
 
   errorUpdate = () => {};
 
   render() {
-    const { toasttext, toast, isLoading } = this.state;
+    const {
+      toasttext,
+      toast,
+      isLoading,
+      modal,
+      sender,
+      purpose,
+      servererror,
+      toastcategory,
+    } = this.state;
     let loader = false,
       load = false,
       noRecord = false,
@@ -501,11 +561,36 @@ class User extends Component {
                     />
                   </div>
                 </div>
+
+                <div className="mt-3 admin-change-email-btn">
+                  <button
+                    type="button"
+                    className="btn add-btn btn-lg btn-block"
+                    onClick={this.openModal}
+                  >
+                    Change Email <RiFindReplaceLine />
+                  </button>
+                </div>
               </div>
             )}
           </div>
         )}
-        {toast && <Toast text={toasttext} />}
+        {modal ? (
+          <AddModal
+            {...{
+              modal,
+              sender,
+              purpose,
+              error: servererror,
+              user: user.username,
+              info: { email: user.email, id: user.id },
+              isLoading,
+            }}
+            onClick={this.modalHandler}
+            onSubmit={this.submitHandler}
+          />
+        ) : null}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }
@@ -519,6 +604,7 @@ User.propTypes = {
   auth: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
   errors: PropTypes.any,
+  changeEmail: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -531,4 +617,5 @@ export default connect(mapStateToProps, {
   clearActions,
   clearAdminAction,
   getUser,
+  changeEmail,
 })(User);

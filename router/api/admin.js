@@ -19,6 +19,7 @@ const express = require("express"),
   Wallet = require("../../db/models/Wallet"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
+  validateEmailInput = require("../../validation/email"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck");
 
@@ -783,6 +784,41 @@ router.delete(
     ForumReply.destroy({ where: { id: replyid } })
       .then(() => {
         return res.json(true);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/aadmin/change-email
+@desc Admin change email
+@access private
+*/
+
+router.post(
+  "/change-email",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateEmailInput(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    const id = req.body.id,
+      email = req.body.email;
+
+    User.findOne({ where: { email } })
+      .then((user) => {
+        if (user) {
+          errors.email = "Email addresss has been used!";
+          res.status(404).json(errors);
+        } else {
+          User.update({ email }, { where: { id } })
+            .then(() => {
+              res.json(1);
+            })
+            .catch((err) => res.status(404).json(err));
+        }
       })
       .catch((err) => res.status(404).json(err));
   }

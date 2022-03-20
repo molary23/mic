@@ -81,6 +81,8 @@ import {
   CLEAR_ADMIN_GET_AN_ADMIN,
   ADMIN_GET_A_USER,
   CLEAR_ADMIN_GET_A_USER,
+  ADMIN_CHANGE_EMAIL,
+  CLEAR_ADMIN_CHANGE_EMAIL,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -145,7 +147,7 @@ export const getContent = (content, paginate) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -204,6 +206,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ADMIN_GET_AN_ADMIN };
   } else if (actionToClear === "get-user") {
     return { type: CLEAR_ADMIN_GET_A_USER };
+  } else if (actionToClear === "change-email") {
+    return { type: CLEAR_ADMIN_CHANGE_EMAIL };
   }
 };
 
@@ -224,7 +228,7 @@ export const updateCurrency = (action, id) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -241,7 +245,7 @@ export const updateWallet = (action, id) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -258,7 +262,7 @@ export const updateWithdrawals = (action, id) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -275,7 +279,7 @@ export const addCurrency = (currency) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -292,7 +296,7 @@ export const addWallet = (wallet) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -340,7 +344,7 @@ export const addNewAdmin = (level, data) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -356,7 +360,7 @@ export const updateAdmin = (value) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -372,7 +376,7 @@ export const updateBonus = (value) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -390,7 +394,7 @@ export const deleteAnn = (value) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -406,7 +410,7 @@ export const addAnn = (value) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -425,7 +429,7 @@ export const editAnn = (value) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -441,8 +445,8 @@ export const getAdminSettings = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -472,8 +476,8 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -501,8 +505,8 @@ export const addForum = (forumData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -518,8 +522,8 @@ export const replyForum = (replyData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -535,8 +539,8 @@ export const deleteReply = (id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -552,8 +556,8 @@ export const updateForum = (forumData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 export const getForum = (id) => async (dispatch) => {
@@ -568,8 +572,8 @@ export const getForum = (id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -584,8 +588,8 @@ export const getBonus = (id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -600,8 +604,8 @@ export const getAdmin = (id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -616,7 +620,24 @@ export const getUser = (id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
+  }
+};
+
+export const changeEmail = (emailData) => async (dispatch) => {
+  dispatch(clearErrors());
+  //  dispatch(setLoading());
+  dispatch(clearActions("change-email"));
+  try {
+    let response = await axios.post("/api/admin/change-email/", emailData);
+    const result = await dispatch({
+      type: ADMIN_CHANGE_EMAIL,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };

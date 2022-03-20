@@ -8,6 +8,7 @@ import {
   updateCurrency,
   clearAdminAction,
   addCurrency,
+  clearErrors,
 } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
@@ -234,6 +235,7 @@ class Currency extends Component {
   };
 
   modalHandler = (close) => {
+    this.props.clearErrors();
     this.setState({
       modal: close,
     });
@@ -420,6 +422,7 @@ Currency.propTypes = {
   searchContent: PropTypes.func.isRequired,
   updateCurrency: PropTypes.func.isRequired,
   addCurrency: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   renderArrange: PropTypes.func,
   landingLoad: PropTypes.func,
   setSearchParams: PropTypes.func,
@@ -441,4 +444,5 @@ export default connect(mapStateToProps, {
   updateCurrency,
   clearAdminAction,
   addCurrency,
+  clearErrors,
 })(Currency);

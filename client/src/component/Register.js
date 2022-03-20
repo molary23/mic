@@ -124,6 +124,12 @@ class Register extends Component {
           email: "Email Address Field can't be Empty",
         },
       });
+    } else if (!isEmail(email)) {
+      this.setState({
+        error: {
+          email: "Only Email Address is allowed",
+        },
+      });
     } else if (phone.length < 12) {
       this.setState({
         error: {

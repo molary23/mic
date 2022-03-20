@@ -269,7 +269,7 @@ export class Withdrawals extends Component {
                     </h6>
                   </div>
                 </div>
-                {balance > 100 && (
+                {balance > 10 && (
                   <div className="col-md-2">
                     <button
                       type="button"

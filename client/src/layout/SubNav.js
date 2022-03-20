@@ -11,6 +11,7 @@ import { getUserProfile } from "../action/profileAction";
 import logo from "../asset/images/logo.png";
 
 import Dropdown from "./Dropdown";
+import Toast from "../layout/Toast";
 
 import { logoutUser } from "../action/authAction";
 import { clearCurrentProfile } from "../action/profileAction";
@@ -22,6 +23,9 @@ export class SubNav extends Component {
     userinfo:
       this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
     navigate: false,
+    toast: null,
+    toasttext: null,
+    toastcategory: null,
   };
 
   componentDidMount() {
@@ -37,17 +41,39 @@ export class SubNav extends Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.errors !== this.props.errors &&
-      Object.keys(this.props.errors).length >= 1
+      this.props.errors.status === 500
     ) {
-      console.log(this.props.errors);
-      /* this.props.logoutUser();
-      // props.clearActions();
-      this.props.clearCurrentProfile();
-      this.setState({
-        navigate: true,
-      });*/
+      console.log(this.props.errors.status);
+      this.getError();
+    }
+    if (
+      prevProps.errors !== this.props.errors &&
+      this.props.errors.status === 401
+    ) {
+      this.logOut();
     }
   }
+
+  logOut = () => {
+    this.props.clearCurrentProfile();
+    this.props.logoutUser();
+  };
+
+  getError = () => {
+    this.setState({
+      isLoading: false,
+      toast: true,
+      toasttext:
+        "Oops. There has been a Network Error. Refresh  and Try again.",
+      toastcategory: "error",
+    });
+
+    setTimeout(() => {
+      this.setState({
+        toast: false,
+      });
+    }, 5000);
+  };
 
   openNav = () => {
     this.setState({
@@ -62,7 +88,8 @@ export class SubNav extends Component {
   };
 
   render() {
-    const { premiuminfo, userinfo, navigate } = this.state;
+    const { premiuminfo, userinfo, toast, toastcategory, toasttext } =
+      this.state;
     const { auth } = this.props;
 
     return (
@@ -134,7 +161,7 @@ export class SubNav extends Component {
             </div>
           </div>
         </nav>
-        {navigate && <Navigate to={"/"} replace={true} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

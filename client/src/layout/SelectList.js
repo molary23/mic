@@ -41,19 +41,11 @@ function SelectList(props) {
           className="list-group-item d-flex justify-content-between align-items-center"
           key={i}
         >
-          {`${JSON.parse(
-            item.firstcurrency.split(", ")
-          )[1].toUpperCase()}/${JSON.parse(
-            item.secondcurrency.split(", ")
-          )[1].toUpperCase()}`}
+          {`${item.firstcurrency[1].toUpperCase()}/${item.secondcurrency[1].toUpperCase()}`}
           <span className="remove-selected-item">
             <i
               className="fas fa-times"
-              title={`Remove ${JSON.parse(
-                item.firstcurrency.split(", ")
-              )[1].toUpperCase()}/${JSON.parse(
-                item.secondcurrency.split(", ")
-              )[1].toUpperCase()}`}
+              title={`Remove ${item.firstcurrency[1].toUpperCase()}/${item.secondcurrency[1].toUpperCase()}`}
               onClick={() => clickHandler(item.id)}
             />
           </span>

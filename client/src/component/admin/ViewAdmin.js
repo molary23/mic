@@ -41,7 +41,6 @@ class ViewAdmin extends Component {
     this.setState({
       adminid: id,
     });
-
     this.props.clearErrors();
     this.props.getAdmin(id);
   }
@@ -263,7 +262,7 @@ class ViewAdmin extends Component {
                             value:
                               currencycount !== 0 ? (
                                 <Link
-                                  to={`/admin/currencies?ref=true&sa=${admininfo.id}`}
+                                  to={`/admin/currencies?ref=true&creator=${admininfo.id}`}
                                 >
                                   {currencycount}
                                 </Link>
@@ -281,7 +280,7 @@ class ViewAdmin extends Component {
                               value:
                                 signalcount !== 0 ? (
                                   <Link
-                                    to={`/admin/signals?ref=true&sp=${admininfo.id}`}
+                                    to={`/admin/signals?ref=true&creator=${admininfo.id}`}
                                   >
                                     {signalcount}
                                   </Link>
@@ -296,7 +295,7 @@ class ViewAdmin extends Component {
                               value:
                                 followerscount !== 0 ? (
                                   <Link
-                                    to={`/admin/users?ref=true&sp=${admininfo.id}`}
+                                    to={`/admin/users?ref=true&creator=${admininfo.id}`}
                                   >
                                     {followerscount}
                                   </Link>

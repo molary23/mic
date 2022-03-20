@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  GET_ERRORS,
   GET_USER_SEARCH_SIGNALS,
   ACTION_LOADING,
   CLEAR_USERS_SIGNALS_SEARCH,
@@ -50,7 +51,7 @@ export const searchContent = (content, paginate) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response);
-    dispatch({ type, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
