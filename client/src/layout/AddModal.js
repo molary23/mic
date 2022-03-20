@@ -84,7 +84,10 @@ function AddModal(props) {
   ];
 
   const closeModal = () => {
-    dispatch(clearErrors());
+    if (Object.keys(error).length > 0) {
+      dispatch(clearErrors());
+    }
+
     setOpen(false);
     props.onClick(false);
   };
@@ -1161,7 +1164,7 @@ function AddModal(props) {
         />
         <TextInputField
           id="withdraw-form-amount"
-          placeholder="Wallet Name"
+          placeholder="Amount"
           type="text"
           name="amount"
           value={inputs.amount || ""}

@@ -80,6 +80,8 @@ import {
   CLEAR_ADMIN_GET_A_USER,
   ADMIN_CHANGE_EMAIL,
   CLEAR_ADMIN_CHANGE_EMAIL,
+  ADMIN_GET_ANALYTICS,
+  CLEAR_ADMIN_GET_ANALYTICS,
 } from "../action/types";
 
 const initialState = {
@@ -140,6 +142,7 @@ const initialState = {
   getadmin: null,
   getuser: null,
   changeemail: false,
+  getanalytics: null,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -427,6 +430,13 @@ export default function adminReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case ADMIN_GET_ANALYTICS:
+      return {
+        ...state,
+        getanalytics: action.payload,
+        loading: false,
+        fetching: true,
+      };
     case ADMIN_CHANGE_EMAIL:
       return {
         ...state,
@@ -551,6 +561,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ADMIN_CHANGE_EMAIL: {
       return { ...state, changeemail: false };
+    }
+    case CLEAR_ADMIN_GET_ANALYTICS: {
+      return { ...state, getanalytics: null, fetching: false };
     }
     default:
       return state;

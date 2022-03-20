@@ -192,7 +192,7 @@ export const renderArrange = ({
     emptyRecord,
     noRecord,
     totalText,
-    totalCount,
+    totalCount: roundUp(totalCount),
     load,
     loader,
   };

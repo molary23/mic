@@ -220,6 +220,7 @@ class Register extends Component {
         let err = error.response;
         this.setState({
           error: err.data,
+          loading: false,
         });
       }
     }

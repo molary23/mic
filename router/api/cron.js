@@ -14,7 +14,8 @@ const express = require("express"),
   Bonus = require("../../db/models/Bonus"),
   Premium = require("../../db/models/Premium"),
   Settings = require("../../db/models/Settings"),
-  Preference = require("../../db/models/Preference");
+  Preference = require("../../db/models/Preference"),
+  dateformat = require("../../util/dateformat");
 
 /*
 @route GET api/cron/premium/
@@ -47,10 +48,7 @@ router.get("/premium", (req, res) => {
 router.get("/bonus", (req, res) => {
   let removeday = new Date(new Date().setDate(new Date().getDate() - 7));
 
-  let year = removeday.getFullYear(),
-    month = removeday.getMonth() + 1,
-    day = removeday.getDate(),
-    formatttedDate = `${year}-${month}-${day}`;
+  let formattedDate = dateformat(removeday);
 
   Bonus.update(
     { status: "a" },
@@ -58,7 +56,7 @@ router.get("/bonus", (req, res) => {
       where: sequelize.where(
         sequelize.fn("date", sequelize.col("createdAt")),
         "=",
-        formatttedDate
+        formattedDate
       ),
       status: "p",
     }

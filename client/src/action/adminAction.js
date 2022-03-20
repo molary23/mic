@@ -83,6 +83,8 @@ import {
   CLEAR_ADMIN_GET_A_USER,
   ADMIN_CHANGE_EMAIL,
   CLEAR_ADMIN_CHANGE_EMAIL,
+  ADMIN_GET_ANALYTICS,
+  CLEAR_ADMIN_GET_ANALYTICS,
 } from "./types";
 
 export const getContent = (content, paginate) => async (dispatch) => {
@@ -208,6 +210,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ADMIN_GET_A_USER };
   } else if (actionToClear === "change-email") {
     return { type: CLEAR_ADMIN_CHANGE_EMAIL };
+  } else if (actionToClear === "analytics") {
+    return { type: CLEAR_ADMIN_GET_ANALYTICS };
   }
 };
 
@@ -633,6 +637,23 @@ export const changeEmail = (emailData) => async (dispatch) => {
     let response = await axios.post("/api/admin/change-email/", emailData);
     const result = await dispatch({
       type: ADMIN_CHANGE_EMAIL,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
+  }
+};
+
+export const getAnalytics = () => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(setLoading());
+  dispatch(clearActions("analytics"));
+  try {
+    let response = await axios.get("/api/adminview/analytics/");
+    const result = await dispatch({
+      type: ADMIN_GET_ANALYTICS,
       payload: response.data,
     });
     return result;

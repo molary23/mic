@@ -8,7 +8,7 @@ function Toast(props) {
     <div>
       <div
         className={`toast show text-white ${
-          category === "success" ? "toast-success" : "toast-error"
+          category !== "error" ? "toast-success" : "toast-error"
         }`}
         role="alert"
         aria-live="assertive"
@@ -16,10 +16,10 @@ function Toast(props) {
       >
         <div className="toast-header">
           <strong className="me-auto">
-            {category === "success" ? "Success" : "Error"}
+            {category !== "error" ? "Success" : "Error"}
           </strong>
           <small>
-            {category === "success" ? (
+            {category !== "success" ? (
               <BsCheckCircle />
             ) : (
               <MdReportGmailerrorred />

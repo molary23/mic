@@ -23,9 +23,9 @@ export class SubNav extends Component {
     userinfo:
       this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
     navigate: false,
-    toast: null,
+    toast: false,
     toasttext: null,
-    toastcategory: null,
+    toastcategory: "error",
   };
 
   componentDidMount() {
@@ -41,7 +41,9 @@ export class SubNav extends Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.errors !== this.props.errors &&
-      this.props.errors.status === 500
+      (this.props.errors.status === 500 ||
+        this.props.errors.status === 400 ||
+        this.props.errors.status === 404)
     ) {
       console.log(this.props.errors.status);
       this.getError();

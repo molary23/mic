@@ -3,7 +3,7 @@ const Pagination = {
   numberofpages: 0,
   currentpage: 2,
   scrollposition: 10,
-  limit: 4,
+  limit: 2,
   timer: 5000,
 };
 

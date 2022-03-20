@@ -240,12 +240,14 @@ svg {
   background: #023064;
   background: radial-gradient(circle, #023064 0%, #031f3f 35%, #314297 100%) no-repeat;
   padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .home-page .home-box {
   width: 500px;
-  height: 500px;
+  min-height: 500px;
   margin: auto;
+  margin-bottom: 50px;
 }
 
 .home-page .home-box img {

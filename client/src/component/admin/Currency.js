@@ -86,8 +86,18 @@ class Currency extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.errors) {
-      update.error = nextProps.errors;
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+      console.log(nextProps.errors.data);
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
     }
     return update;
   }
@@ -136,10 +146,10 @@ class Currency extends Component {
   };
 
   afterUpdate = (text) => {
-    const { limit, content, signalcount, timer } = this.state;
+    const { limit, content, currencycount, timer } = this.state;
     if (text === "added") {
       this.setState({
-        numOfPages: Math.ceil((signalcount + 1) / limit),
+        numOfPages: Math.ceil((currencycount + 1) / limit),
       });
       this.props.clearAdminAction("add-currency");
     } else {

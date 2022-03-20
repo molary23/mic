@@ -72,8 +72,8 @@ function Signal(props) {
           </div>
         </div>
         <div className="signal-about">
-          <div className="signal-type signal-title"></div>
-          <div className="signal-days-ago signal-align-right">2 days ago</div>
+          <div className="signal-type signal-title">Signal Identify</div>
+          <div className="signal-days-ago signal-align-right">ID of Signal</div>
         </div>
         <div className="signal-from">
           <div className="signal-from-title signal-title">Start</div>
