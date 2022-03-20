@@ -11,7 +11,7 @@ function SubFooter() {
               <img
                 src={logo}
                 alt="MIC Earn Business Logo"
-                className="nav-logo mb-2"
+                className="nav-logo mb-4"
               />
               <h2>MIC Earn Business</h2>
               <p>

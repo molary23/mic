@@ -1,5 +1,4 @@
 import React from "react";
-import { a } from "react-router-dom";
 import logo from "../asset/images/logo.png";
 
 function MainNav() {
@@ -7,11 +6,7 @@ function MainNav() {
     <nav className="navbar navbar-expand-sm bg-light navbar-light sticky-top">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
-          <img
-            src={logo}
-            alt="MIC Earn Business Logo"
-            className="rounded-pill nav-logo"
-          />
+          <img src={logo} alt="MIC Earn Business Logo" className="nav-logo" />
         </a>
         <span className="navbar-text">MIC Earn Business</span>
         <button
