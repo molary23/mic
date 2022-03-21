@@ -8,6 +8,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import DateFormat from "../../layout/DateFormat";
 import Toast from "../../layout/Toast";
 import CardDetails from "../../layout/CardDetails";
+import ConfirmModal from "../../layout/ConfirmModal";
 
 import { ImCancelCircle } from "react-icons/im";
 
@@ -32,8 +33,10 @@ class ViewAdmin extends Component {
     toast: null,
     toasttext: null,
     isLoading: {},
-    servererror: {},
     adminaction: null,
+    check: false,
+    checktext: null,
+    checktitle: null,
   };
   componentDidMount() {
     const { url } = this.state;
@@ -51,8 +54,17 @@ class ViewAdmin extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.errors) {
-      update.error = nextProps.errors;
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
     }
     return update;
   }
@@ -95,24 +107,39 @@ class ViewAdmin extends Component {
   errorUpdate = () => {};
 
   clickHandler = (value) => {
-    let check = window.confirm(
-      `Are you sure you want to ${value[0]} this Admin?`
-    );
-    if (check) {
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${value[0]} this Admin?`,
+      checktitle: "Confirm Delete",
+      isLoading: {
+        [value[0]]: true,
+      },
+      adminaction: `${value[0]}d`,
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.setState({
+          isLoading: true,
+        });
+        this.props.updateAdmin(value);
+      }
       this.setState({
-        isLoading: {
-          [value[0]]: true,
-        },
-        adminaction: `${value[0]}d`,
+        check: false,
       });
-      this.props.updateAdmin(value);
-    } else {
-      return false;
-    }
+    };
   };
 
   render() {
-    const { toasttext, toast, isLoading } = this.state;
+    const {
+      toasttext,
+      toast,
+      isLoading,
+      sender,
+      check,
+      checktext,
+      checktitle,
+    } = this.state;
     let loader = false,
       load = false,
       noRecord = false,
@@ -353,6 +380,12 @@ class ViewAdmin extends Component {
               </div>
             )}
           </div>
+        )}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
         )}
         {toast && <Toast text={toasttext} />}
       </div>

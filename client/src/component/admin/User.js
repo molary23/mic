@@ -49,7 +49,6 @@ class User extends Component {
     toasttext: null,
     toastcategory: null,
     isLoading: {},
-    servererror: {},
     adminaction: null,
     modal: false,
   };
@@ -69,22 +68,22 @@ class User extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.errors) {
-      update.servererror = nextProps.errors;
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
       update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
     }
-
     return update;
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.errors !== this.props.errors &&
-      Object.keys(this.props.errors).length > 0
-    ) {
-      // console.log(this.props.errors);
-    }
-
     if (
       prevProps.admin.changeemail !== this.props.admin.changeemail &&
       this.props.admin.changeemail
@@ -134,16 +133,8 @@ class User extends Component {
   errorUpdate = () => {};
 
   render() {
-    const {
-      toasttext,
-      toast,
-      isLoading,
-      modal,
-      sender,
-      purpose,
-      servererror,
-      toastcategory,
-    } = this.state;
+    const { toasttext, toast, isLoading, modal, sender, purpose, error } =
+      this.state;
     let loader = false,
       load = false,
       noRecord = false,
@@ -581,7 +572,7 @@ class User extends Component {
               modal,
               sender,
               purpose,
-              error: servererror,
+              error,
               user: user.username,
               info: { email: user.email, id: user.id },
               isLoading,
@@ -590,7 +581,7 @@ class User extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
-        {toast && <Toast text={toasttext} category={toastcategory} />}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }

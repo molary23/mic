@@ -170,18 +170,26 @@ export class Withdrawals extends Component {
     });
   };
 
-  clickhandler = (value) => {
-    console.log(value);
-    let check = window.confirm(
-      `Are you sure you want to ${
+  clickHandler = (value) => {
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${
         value[0]
-      } ${value[2].toUpperCase()}'s Withdrawal Request?`
-    );
-    if (check) {
-      this.props.updateWithdrawals(value[0], value[1]);
-    } else {
-      return false;
-    }
+      } ${value[2].toUpperCase()}'s Withdrawal Request?`,
+      checktitle: `Confirm ${value[0]}`,
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.setState({
+          isLoading: true,
+        });
+        this.props.updateWithdrawals(value[0], value[1]);
+      }
+      this.setState({
+        check: false,
+      });
+    };
   };
 
   downloadHandler = () => {
@@ -200,7 +208,6 @@ export class Withdrawals extends Component {
       getLoad,
       toast,
       toasttext,
-      error,
       isLoading,
     } = this.state;
     const { admin, searchTerms } = this.props;
@@ -310,7 +317,7 @@ export class Withdrawals extends Component {
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
-                onClick={this.clickhandler}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>

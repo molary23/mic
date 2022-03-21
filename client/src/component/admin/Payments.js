@@ -11,6 +11,9 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
+import ConfirmModal from "../../layout/ConfirmModal";
+
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import {
@@ -55,7 +58,7 @@ export class Payments extends Component {
     content: "payments",
     toast: false,
     toasttext: "",
-    servererror: null,
+    check: false,
   };
 
   componentDidMount() {
@@ -176,6 +179,30 @@ export class Payments extends Component {
     downloadFile({ sender, self: this });
   };
 
+  clickHandler = (value) => {
+    let action = value[0],
+      cur = value[1];
+
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${action} ${
+        cur.firstcurrency[1].toUpperCase() +
+        "/" +
+        cur.secondcurrency[1].toUpperCase()
+      } pair?`,
+      checktitle: "Confirm Delete",
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.props.updateCurrency(action, cur["id"]);
+      }
+      this.setState({
+        check: false,
+      });
+    };
+  };
+
   render() {
     const {
       sender,
@@ -184,12 +211,15 @@ export class Payments extends Component {
       startLoad,
       getLoad,
       search,
+      toast,
+      toasttext,
       paymentcount,
       gatewayOptions,
       gateway,
       isLoading,
-      servererror,
-      error,
+      check,
+      checktext,
+      checktitle,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -306,10 +336,18 @@ export class Payments extends Component {
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>
         )}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
+        )}
+        {toast && <Toast text={toasttext} />}
       </div>
     );
   }

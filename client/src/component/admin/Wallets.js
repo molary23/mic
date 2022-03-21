@@ -19,6 +19,7 @@ import SearchInput from "../../layout/SearchInput";
 import Toast from "../../layout/Toast";
 import AddModal from "../../layout/AddModal";
 import Spinner from "../../layout/Spinner";
+import ConfirmModal from "../../layout/ConfirmModal";
 
 import { RiFileExcel2Line } from "react-icons/ri";
 import { MdOutlinePostAdd } from "react-icons/md";
@@ -65,7 +66,9 @@ export class Wallets extends Component {
       toast: false,
       toasttext: "",
       isLoading: false,
-      servererror: null,
+      check: false,
+      checktext: null,
+      checktitle: null,
     };
   }
 
@@ -89,11 +92,18 @@ export class Wallets extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.errors) {
-      update.error = nextProps.errors;
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
       update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
     }
-
     return update;
   }
 
@@ -177,15 +187,26 @@ export class Wallets extends Component {
     });
   };
 
-  clickhandler = (value) => {
-    let check = window.confirm(
-      `Are you sure you want to ${value[0]} ${value[2].toUpperCase()}'s Wallet?`
-    );
-    if (check) {
-      this.props.updateWallet(value[0], value[1]);
-    } else {
-      return false;
-    }
+  clickHandler = (value) => {
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${
+        value[0]
+      } ${value[2].toUpperCase()}'s Wallet?`,
+      checktitle: "Confirm Delete",
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.setState({
+          isLoading: true,
+        });
+        this.props.updateWallet(value[0], value[1]);
+      }
+      this.setState({
+        check: false,
+      });
+    };
   };
 
   changeHandler = (e) => {
@@ -242,6 +263,9 @@ export class Wallets extends Component {
       error,
       modal,
       isLoading,
+      check,
+      checktext,
+      checktitle,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -367,6 +391,12 @@ export class Wallets extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
+        )}
         {toast && <Toast text={toasttext} />}
       </div>
     );

@@ -17,6 +17,7 @@ import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Toast from "../../layout/Toast";
 import Spinner from "../../layout/Spinner";
+import ConfirmModal from "../../layout/ConfirmModal";
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import {
@@ -58,9 +59,11 @@ export class Earnings extends Component {
       upLoad: true,
       content: "bonus",
       modal: false,
-      error: {},
       toast: false,
-      toasttext: "",
+      toasttext: null,
+      check: false,
+      checktext: null,
+      checktitle: null,
     };
   }
 
@@ -151,14 +154,56 @@ export class Earnings extends Component {
   };
 
   clickhandler = (value) => {
-    let check = window.confirm(
+    /*  let check = window.confirm(
       `Are you sure you want to ${value[0]} ${value[2].toUpperCase()}'s Bonus?`
     );
     if (check) {
       this.props.updateBonus({ action: value[0], id: value[1] });
     } else {
       return false;
-    }
+    }*/
+
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${
+        value[0]
+      } ${value[2].toUpperCase()}'s Bonus?`,
+      checktitle: `Confirm ${value[0]}`,
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.props.updateBonus({ action: value[0], id: value[1] });
+      }
+      this.setState({
+        check: false,
+      });
+    };
+  };
+
+  clickHandler = (value) => {
+    let action = value[0],
+      cur = value[1];
+
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${
+        value[0]
+      } ${value[2].toUpperCase()}'s Bonus?`,
+      checktitle: `Confirm ${value[0]}`,
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.setState({
+          isLoading: true,
+        });
+        this.props.updateCurrency(action, cur["id"]);
+      }
+      this.setState({
+        check: false,
+      });
+    };
   };
 
   changeHandler = (e) => {
@@ -195,9 +240,10 @@ export class Earnings extends Component {
       search,
       toast,
       toasttext,
-      error,
       isLoading,
-      servererror,
+      check,
+      checktext,
+      checktitle,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -310,6 +356,12 @@ export class Earnings extends Component {
               />
             </TableHead>
           </div>
+        )}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
         )}
         {toast && <Toast text={toasttext} />}
       </div>

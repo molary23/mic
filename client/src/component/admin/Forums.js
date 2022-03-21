@@ -9,12 +9,9 @@ import Toast from "../../layout/Toast";
 import Spinner from "../../layout/Spinner";
 import ForumCard from "../../layout/ForumCard";
 import AddModal from "../../layout/AddModal";
+import ConfirmModal from "../../layout/ConfirmModal";
 
 import { BiCommentAdd } from "react-icons/bi";
-import { MdOutlineDeleteForever } from "react-icons/md";
-
-import { FaRegEye } from "react-icons/fa";
-import { IoLockClosedOutline } from "react-icons/io5";
 
 import {
   getContent,
@@ -63,6 +60,9 @@ class Forums extends Component {
     forumcount: JSON.parse(localStorage.getItem("counts")).forums,
     content: "forums",
     update: "",
+    check: false,
+    checktext: null,
+    checktitle: null,
   };
 
   componentDidMount() {
@@ -86,9 +86,17 @@ class Forums extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.errors) {
-      update.error = nextProps.errors;
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
       update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
     }
     return update;
   }
@@ -232,6 +240,9 @@ class Forums extends Component {
       isLoading,
       rightOptions,
       modal,
+      check,
+      checktext,
+      checktitle,
     } = this.state;
 
     const { admin, searchTerms, auth } = this.props;
@@ -345,6 +356,12 @@ class Forums extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
+        )}
         {toast && <Toast text={toasttext} />}
       </div>
     );

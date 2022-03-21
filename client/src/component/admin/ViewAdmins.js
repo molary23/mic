@@ -27,9 +27,11 @@ import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
+import ConfirmModal from "../../layout/ConfirmModal";
+import Spinner from "../../layout/Spinner";
+
 import { RiFileExcel2Line } from "react-icons/ri";
 import { TiUserAddOutline } from "react-icons/ti";
-import Spinner from "../../layout/Spinner";
 
 import Pagination from "../../util/Pagination";
 
@@ -59,10 +61,11 @@ class ViewAdmins extends Component {
       this.props.auth.allCounts.admins,
     content: "admins",
     modal: false,
-    error: {},
     toast: false,
     toasttext: "",
-    servererror: {},
+    check: false,
+    checktext: null,
+    checktitle: null,
   };
 
   componentDidMount() {
@@ -83,13 +86,6 @@ class ViewAdmins extends Component {
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
     window.removeEventListener("scroll", this.loadMore);
-  }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let update = {};
-    if (nextProps.errors) {
-      update.servererror = nextProps.errors;
-    }
-    return update;
   }
 
   componentDidUpdate(prevProps) {
@@ -207,14 +203,23 @@ class ViewAdmins extends Component {
   };
 
   clickHandler = (value) => {
-    let check = window.confirm(
-      `Are you sure you want to ${value[0]} this Admin?`
-    );
-    if (check) {
-      this.props.updateAdmin(value);
-    } else {
-      return false;
-    }
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${value[0]} this Admin?`,
+      checktitle: "Confirm Delete",
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.setState({
+          isLoading: true,
+        });
+        this.props.updateAdmin(value);
+      }
+      this.setState({
+        check: false,
+      });
+    };
   };
 
   downloadHandler = () => {
@@ -236,6 +241,9 @@ class ViewAdmins extends Component {
       toasttext,
       error,
       isLoading,
+      check,
+      checktext,
+      checktitle,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -362,6 +370,12 @@ class ViewAdmins extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
+        )}
         {toast && <Toast text={toasttext} />}
       </div>
     );

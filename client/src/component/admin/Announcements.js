@@ -26,6 +26,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
+import ConfirmModal from "../../layout/ConfirmModal";
 
 import Pagination from "../../util/Pagination";
 
@@ -49,6 +50,9 @@ class Announcements extends Component {
     toasttext: "",
     purpose: "",
     modalAnnDetails: [],
+    check: false,
+    checktext: null,
+    checktitle: null,
   };
 
   componentDidMount() {
@@ -162,14 +166,22 @@ class Announcements extends Component {
         modalAnnDetails: value[1],
       });
     } else if (value[0] === "delete") {
-      let check = window.confirm(
-        `Are you sure you want to delete this Announcement?`
-      );
-      if (check) {
-        this.props.deleteAnn(value[1]);
-      } else {
-        return false;
-      }
+      this.setState({
+        check: true,
+        checktext: `Are you sure you want to delete this Announcement?`,
+        checktitle: "Confirm Delete",
+      });
+      this.confirmHandler = (option) => {
+        if (option) {
+          this.setState({
+            isLoading: true,
+          });
+          this.props.deleteAnn(value[1]);
+        }
+        this.setState({
+          check: false,
+        });
+      };
     }
   };
 
@@ -228,6 +240,9 @@ class Announcements extends Component {
       error,
       modalAnnDetails,
       purpose,
+      check,
+      checktext,
+      checktitle,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -343,6 +358,12 @@ class Announcements extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
+        )}
         {toast && <Toast text={toasttext} />}
       </div>
     );

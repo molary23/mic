@@ -196,8 +196,6 @@ class Currency extends Component {
       self: this,
       timer,
     });
-
-    //  this.setSearchParams(e.target.name, e.target.value);
   };
 
   clickHandler = (value) => {
@@ -214,27 +212,17 @@ class Currency extends Component {
       checktitle: "Confirm Delete",
     });
 
-    this.confirmHandler = (value) => {
-      if (value) {
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.setState({
+          isLoading: true,
+        });
         this.props.updateCurrency(action, cur["id"]);
       }
       this.setState({
         check: false,
       });
     };
-
-    /*  let check = window.confirm(
-      `Are you sure you want to ${action} ${
-        cur.firstcurrency[1].toUpperCase() +
-        "/" +
-        cur.secondcurrency[1].toUpperCase()
-      } pair?`
-    );
-    if (check) {
-      
-    } else {
-      return false;
-    }*/
   };
 
   openModal = () => {

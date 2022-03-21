@@ -8,6 +8,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import TextAreaField from "../../layout/TextAreaField";
 import ReplyCard from "../../layout/ReplyCard";
 import Toast from "../../layout/Toast";
+import ConfirmModal from "../../layout/ConfirmModal";
 
 import { IoLockClosedOutline } from "react-icons/io5";
 
@@ -33,6 +34,9 @@ class Forum extends Component {
     forumId: null,
     toast: null,
     toasttext: null,
+    check: false,
+    checktext: null,
+    checktitle: null,
   };
   componentDidMount() {
     const { url, forumId } = this.state;
@@ -135,16 +139,33 @@ class Forum extends Component {
   };
 
   clickHandler = (value) => {
-    let check = window.confirm(`Are you sure you want to delete this reply?`);
-    if (check) {
-      this.props.deleteReply(value);
-    } else {
-      return false;
-    }
+    this.setState({
+      check: true,
+      checktext: "Are you sure you want to delete this reply?",
+      checktitle: "Confirm Delete",
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.props.deleteReply(value);
+      }
+      this.setState({
+        check: false,
+      });
+    };
   };
 
   render() {
-    const { text, error, sender, toasttext, toast } = this.state;
+    const {
+      text,
+      error,
+      sender,
+      toasttext,
+      toast,
+      check,
+      checktext,
+      checktitle,
+    } = this.state;
     let loader = false,
       load = false,
       noRecord = false,
@@ -283,6 +304,12 @@ class Forum extends Component {
               </div>
             )}
           </div>
+        )}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
         )}
         {toast && <Toast text={toasttext} />}
       </div>

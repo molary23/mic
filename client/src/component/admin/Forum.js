@@ -8,6 +8,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import TextAreaField from "../../layout/TextAreaField";
 import ReplyCard from "../../layout/ReplyCard";
 import Toast from "../../layout/Toast";
+import ConfirmModal from "../../layout/ConfirmModal";
 
 import { IoLockClosedOutline } from "react-icons/io5";
 
@@ -34,7 +35,9 @@ class Forum extends Component {
     toast: null,
     toasttext: null,
     isLoading: false,
-    servererror: {},
+    check: false,
+    checktext: null,
+    checktitle: null,
   };
   componentDidMount() {
     const { url } = this.state;
@@ -53,8 +56,18 @@ class Forum extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
-    if (nextProps.errors) {
-      update.servererror = nextProps.errors;
+
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
     }
 
     return update;
@@ -127,7 +140,7 @@ class Forum extends Component {
       this.props.replyForum(reply);
     }
   };
-
+  /*
   clickHandler = (value) => {
     let check = window.confirm(`Are you sure you want to delete this reply?`);
     if (check) {
@@ -135,10 +148,37 @@ class Forum extends Component {
     } else {
       return false;
     }
+  };*/
+
+  clickHandler = (value) => {
+    this.setState({
+      check: true,
+      checktext: "Are you sure you want to delete this reply?",
+      checktitle: "Confirm Delete",
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.props.deleteReply(value);
+      }
+      this.setState({
+        check: false,
+      });
+    };
   };
 
   render() {
-    const { text, error, sender, toasttext, toast, isLoading } = this.state;
+    const {
+      text,
+      error,
+      sender,
+      toasttext,
+      toast,
+      isLoading,
+      check,
+      checktext,
+      checktitle,
+    } = this.state;
     let loader = false,
       load = false,
       noRecord = false,
@@ -264,6 +304,12 @@ class Forum extends Component {
               </div>
             )}
           </div>
+        )}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
         )}
         {toast && <Toast text={toasttext} />}
       </div>

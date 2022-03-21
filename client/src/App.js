@@ -59,7 +59,6 @@ import AdminSettings from "./component/admin/Settings";
 import AdminForum from "./component/admin/Forum";
 import AdminForums from "./component/admin/Forums";
 import AdminWallets from "./component/admin/Wallets";
-import AdminUserView from "./component/admin/UserView";
 import AdminViewAdmin from "./component/admin/ViewAdmin";
 
 // Signal Provider
@@ -291,11 +290,7 @@ function App() {
             path="/admin/user/:id"
             element={<PrivateRoute Component={AdminUser} />}
           />
-          <Route
-            exact
-            path="/admin/userview/:id/:table"
-            element={<PrivateRoute Component={AdminUserView} />}
-          />
+
           <Route
             exact
             path="/admin/admin/:id/"
