@@ -12,13 +12,15 @@ const express = require("express"),
   Payment = require("../../db/models/Payment"),
   Bonus = require("../../db/models/Bonus"),
   Premium = require("../../db/models/Premium"),
+  Referral = require("../../db/models/Referral"),
   //Bring in the Validation
 
   //Bring in User Checker
   checkSuperAdmin = require("../../validation/superCheck"),
   checkUser = require("../../validation/checkUser"),
   // Bring in Duration
-  duration = require("../../util/duration");
+  duration = require("../../util/duration"),
+  dateformat = require("../../util/dateformat");
 
 /*
 @route POST api/payments/make
@@ -30,119 +32,136 @@ router.post(
   "/make",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    const { error, isLevel } = checkUser(req.user.level);
     if (!isLevel) {
       return res.status(400).json(error);
     }
     const bonusFields = {},
       payFields = {},
       subFields = {},
-      premFields = {},
-      date = new Date();
+      premFields = {};
+    date = new Date();
+
     let daysleft, percent;
-    if (req.body.referrerID) bonusFields.UserId = req.body.referrerID;
+
     if (req.body.amount) payFields.amount = req.body.amount;
-    if (req.body.payFor) subFields.package = req.body.payFor;
-    if (req.body.payPlan) subFields.plan = req.body.payPlan;
-    if (req.body.starter) premFields.starter = req.body.starter;
-
-    let isTrue = premFields.starter === "true";
-
-    if (isTrue) {
-      daysleft = 0;
-      percent = 10;
-    } else {
-      daysleft = req.body.daysleft;
-      percent = 5;
-    }
+    if (req.body.package) subFields.package = req.body.package;
+    if (req.body.plan) subFields.plan = req.body.plan;
+    if (req.body.reference) payFields.reference = req.body.reference;
+    if (req.body.gateway) payFields.gateway = req.body.gateway;
+    if (req.body.status) payFields.status = req.body.status;
 
     payFields.UserId = req.user.id;
-    const returned = {
-      amount: 2.99,
-      user: 2,
-      date: new Date(),
-      status: "success",
-      package: "m",
-      plan: 6,
-      reference: "jgw7sti9237467tvjerghrs97t36y",
-    };
 
-    payFields.payday = returned.date.toISOString();
-    payFields.status = returned.status;
-    payFields.reference = returned.reference.toUpperCase();
-
-    Payment.create(payFields)
-      .then((pay) => {
-        const year = date.getFullYear(),
-          month = date.getMonth() + 1;
-        let days = 365,
-          payId = pay.id,
-          payType = "p",
-          period = 0;
-        if (year % 4 === 0) {
-          days = 366;
-        }
-
-        if (payFields.package.toLowerCase() === "m") {
-          for (let i = 0; i < payFields.plan; i++) {
-            period += duration(month + i, year);
-          }
-        } else if (payFields.package.toLowerCase() === "y") {
-          period = days;
-        }
-
-        Subscription.create({
-          type: payType,
-          duration: period,
-          payID: payId,
-          plan: subFields.plan,
-          package: subFields.package,
-          UserId: payFields.UserId,
-          amount: payFields.amount,
+    if (payFields.status === "f") {
+      Payment.create(payFields)
+        .then(() => {
+          error.payment = "Payment failed";
+          return res.status(400).json(error);
         })
-          .then((sub) => {
-            bonusFields.SubscriptionId = sub.id;
-            premFields.SubscriptionId = sub.id;
-            premFields.UserId = payFields.UserId;
-            let left = parseInt(daysleft) + period;
-            premFields.startdate = date;
-            premFields.enddate = new Date(
-              new Date().setDate(new Date().getDate() + left)
-            );
-            premFields.active = 1;
-            Premium.update(
-              {
-                SubscriptionId: premFields.SubscriptionId,
-                startdate: premFields.startdate,
-                enddate: premFields.enddate,
-                active: premFields.active,
-              },
-              { where: { UserId: premFields.UserId } }
-            )
-              .then(() => {
-                if (
-                  bonusFields.UserId !== "" ||
-                  bonusFields.UserId !== undefined
-                ) {
-                  bonusFields.amount = returned.amount * (percent / 100);
-                  Bonus.create(bonusFields)
-                    .then(() => {
-                      res.json({
-                        message: "Payment Successful!",
-                      });
+        .catch((err) => res.status(404).json(err));
+    } else {
+      return Promise.all([
+        Referral.findOne({
+          where: {
+            UserId: payFields.UserId,
+          },
+          attributes: ["referral"],
+        })
+          .then((ref) => {
+            if (ref) {
+              bonusFields.referral = ref.referral;
+              if (subFields.plan === "m") {
+                percent = 0.1;
+              } else {
+                percent = 0.2;
+              }
+            }
+
+            const year = new Date(date).getFullYear(),
+              month = new Date(date).getMonth() + 1;
+            let days = 365,
+              period = 0;
+            if (year % 4 === 0) {
+              days = 366;
+            }
+
+            if (subFields.plan.toLowerCase() === "m") {
+              for (let i = 0; i < subFields.package; i++) {
+                period += duration(month + i, year);
+              }
+            } else if (subFields.plan.toLowerCase() === "y") {
+              period = days;
+            }
+
+            Payment.create(payFields)
+              .then((pay) => {
+                subFields.payId = pay.id;
+                bonusFields.PaymentId = pay.id;
+                Subscription.create({
+                  type: "p",
+                  duration: period,
+                  payID: subFields.payId,
+                  plan: subFields.plan,
+                  package: subFields.package,
+                  UserId: payFields.UserId,
+                  amount: payFields.amount,
+                })
+                  .then((sub) => {
+                    premFields.SubscriptionId = sub.id;
+                    premFields.UserId = payFields.UserId;
+                    premFields.status = "a";
+                    Premium.findOne({
+                      where: { UserId: premFields.UserId },
+                      attributes: ["enddate"],
                     })
-                    .catch((err) => res.status(404).json(err));
-                } else {
-                  res.json({
-                    message: "Payment Successful!",
-                  });
-                }
+                      .then((prem) => {
+                        let enddate = prem.enddate,
+                          daysleft = Math.floor(
+                            Math.abs(new Date(enddate) - date) / (24 * 3600000)
+                          ),
+                          left = daysleft + period,
+                          expirydate = new Date(
+                            new Date().setDate(new Date().getDate() + left)
+                          );
+                        premFields.enddate = expirydate;
+
+                        Premium.update(
+                          {
+                            SubscriptionId: premFields.SubscriptionId,
+                            enddate: premFields.enddate,
+                            status: premFields.status,
+                          },
+                          { where: { UserId: premFields.UserId } }
+                        )
+                          .then(() => {
+                            if (bonusFields.referral !== null) {
+                              bonusFields.UserId = bonusFields.referral;
+                              bonusFields.amount = payFields.amount * percent;
+                              Bonus.create(bonusFields)
+                                .then(() => {
+                                  return res.json({
+                                    message: true,
+                                  });
+                                })
+                                .catch((err) => res.status(404).json(err));
+                            } else {
+                              return res.json({
+                                message: true,
+                              });
+                            }
+                          })
+                          .catch((err) => res.status(404).json(err));
+                      })
+                      .catch((err) => res.status(404).json(err));
+                  })
+                  .catch((err) => res.status(404).json(err));
               })
               .catch((err) => res.status(404).json(err));
           })
-          .catch((err) => res.status(404).json(err));
-      })
-      .catch((err) => res.status(404).json(err));
+          .catch((err) => res.status(404).json(err)),
+      ]);
+    }
   }
 );
 
@@ -162,35 +181,28 @@ router.post(
     }
     const subFields = {},
       UserId = req.user.id;
-    const today = new Date();
+    const date = new Date();
 
-    const year = today.getFullYear(),
-      month = today.getMonth() + 1;
+    const year = date.getFullYear(),
+      month = date.getMonth() + 1;
 
     subFields.amount = req.body.amount;
     subFields.plan = req.body.plan;
     subFields.package = req.body.package;
-    subFields.daysleft = req.body.daysleft;
+
     let days = 365,
       payType = "b";
     period = 0;
     if (year % 4 === 0) {
       days = 366;
     }
-    if (subFields.package.toLowerCase() === "m") {
-      for (let i = 0; i < subFields.plan; i++) {
+    if (subFields.plan.toLowerCase() === "m") {
+      for (let i = 0; i < subFields.package; i++) {
         period += duration(month + i, year);
       }
-    } else if (subFields.package.toLowerCase() === "y") {
+    } else if (subFields.plan.toLowerCase() === "y") {
       period = days;
     }
-
-    let left = parseInt(subFields.daysleft) + period;
-    subFields.startdate = today;
-    subFields.enddate = new Date(
-      new Date().setDate(new Date().getDate() + left)
-    );
-    console.log(subFields);
 
     return Promise.all([
       Transaction.sum("amount", {
@@ -200,7 +212,7 @@ router.post(
           Transaction.sum("amount", { where: { UserId, type: "d" } })
             .then((debit) => {
               const balance = credit - debit;
-              if (balance > subFields.amount) {
+              if (balance >= subFields.amount) {
                 Subscription.create({
                   type: payType,
                   duration: period,
@@ -210,32 +222,51 @@ router.post(
                   UserId,
                 })
                   .then((sub) => {
-                    const subid = sub.id;
-                    Premium.update(
-                      {
-                        active: 1,
-                        startdate: subFields.startdate.toISOString(),
-                        enddate: subFields.enddate.toISOString(),
-                        subid,
-                      },
-                      {
-                        where: {
-                          UserId,
-                        },
-                      }
-                    )
-                      .then(() => {
-                        Transaction.create({
-                          type: "d",
-                          method: "s",
-                          UserId,
-                          amount: subFields.amount,
-                        })
+                    const subId = sub.id;
+                    Premium.findOne({
+                      where: { UserId },
+                      attributes: ["enddate"],
+                    })
+                      .then((prem) => {
+                        let enddate = prem.enddate,
+                          daysleft = Math.floor(
+                            Math.abs(new Date(enddate) - date) / (24 * 3600000)
+                          ),
+                          left = daysleft + period,
+                          expirydate = new Date(
+                            new Date().setDate(new Date().getDate() + left)
+                          );
+                        subFields.enddate = expirydate;
+                        Premium.update(
+                          {
+                            status: "a",
+                            enddate: subFields.enddate,
+                            subId,
+                          },
+                          {
+                            where: {
+                              UserId,
+                            },
+                          }
+                        )
                           .then(() => {
-                            return res.json({ message: "Payment Successful!" });
+                            Transaction.create({
+                              type: "d",
+                              method: "s",
+                              UserId,
+                              amount: subFields.amount,
+                            })
+                              .then(() => {
+                                return res.json({
+                                  message: true,
+                                });
+                              })
+                              .catch((err) =>
+                                res.status(404).json(`transs ${err}`)
+                              );
                           })
                           .catch((err) =>
-                            res.status(404).json(`transs ${err}`)
+                            res.status(404).json(`Premium ${err}`)
                           );
                       })
                       .catch((err) => res.status(404).json(`Premium ${err}`));
@@ -251,6 +282,60 @@ router.post(
         })
         .catch((err) => res.status(404).json(err)),
     ]);
+  }
+);
+
+/*
+@route GET api/payments/update/:action/:id
+@desc Admin Delete wallet
+@access private
+*/
+
+router.get(
+  "/update/:action/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkSuperAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+    let id = req.params.id.split(":")[1];
+    let action = req.params.action.split(":")[1];
+    id = parseInt(id);
+
+    let status;
+    if (action === "cancel") {
+      status = "f";
+      bonusstatus = "r";
+    } else if (action === "update") {
+      // check payment gateway to get result
+      bonusstatus = "a";
+      status = "s";
+    }
+
+    Payment.update(
+      { status },
+      {
+        where: {
+          id,
+        },
+      }
+    )
+      .then(() => {
+        Bonus.update(
+          { status: bonusstatus },
+          {
+            where: {
+              PaymentId: id,
+            },
+          }
+        )
+          .then(() => {
+            res.json(true);
+          })
+          .catch((err) => res.status(404).json(err));
+      })
+      .catch((err) => res.status(404).json(err));
   }
 );
 

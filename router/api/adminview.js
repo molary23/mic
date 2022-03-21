@@ -1849,30 +1849,19 @@ router.get(
         if (bonus === null) {
           return res.json(info);
         } else {
-          SubscriptionId = bonus.SubscriptionId;
-          Subscription.findByPk(SubscriptionId, {
-            attributes: ["payID"],
+          PayID = bonus.PaymentId;
+          Payment.findByPk(PayId, {
+            attributes: [
+              "amount",
+              "reference",
+              "status",
+              "gateway",
+              "createdAt",
+            ],
           })
-            .then((sub) => {
-              let PayId = sub.payID;
-              if (PayId === null) {
-                return res.json(info);
-              } else {
-                Payment.findByPk(PayId, {
-                  attributes: [
-                    "amount",
-                    "reference",
-                    "status",
-                    "gateway",
-                    "createdAt",
-                  ],
-                })
-                  .then((pay) => {
-                    info.pay = pay;
-                    return res.json(info);
-                  })
-                  .catch((err) => res.status(404).json(err));
-              }
+            .then((pay) => {
+              info.pay = pay;
+              return res.json(info);
             })
             .catch((err) => res.status(404).json(err));
         }

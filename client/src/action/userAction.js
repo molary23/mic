@@ -65,9 +65,11 @@ import {
   CLEAR_USER_REPLY,
   USER_DELETE_REPLY,
   CLEAR_USER_DELETE_REPLY,
+  USER_MAKE_PAYMENT,
+  CLEAR_USER_MAKE_PAYMENT,
 } from "./types";
 
-import { getAllCounts } from "./authAction";
+import { getAllCounts, getMode } from "./authAction";
 
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
@@ -150,6 +152,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_USER_REPLY };
   } else if (actionToClear === "delete-reply") {
     return { type: CLEAR_USER_DELETE_REPLY };
+  } else if (actionToClear === "make-payment") {
+    return { type: CLEAR_USER_MAKE_PAYMENT };
   }
 };
 
@@ -425,6 +429,9 @@ export const saveSettings = (settings, data) => async (dispatch) => {
       type,
       payload: response.data,
     });
+    if (settings === "mode") {
+      dispatch(getMode(1));
+    }
     return result;
   } catch (error) {
     console.log(error.response);
@@ -462,5 +469,28 @@ export const clearSettings = (settings) => {
   }
   if (settings === "password") {
     return { type: CLEAR_USER_UPDATE_PASSWORD };
+  }
+};
+
+export const makePayment = (payData) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(clearActions("make-payment"));
+  let url = "/api/payments/";
+  if (payData[0] === "p") {
+    url += "make";
+  } else if (payData[0] === "b") {
+    url += "bonus";
+  }
+  try {
+    let response = await axios.post(url, payData[1]);
+    const result = await dispatch({
+      type: USER_MAKE_PAYMENT,
+      payload: response.data,
+    });
+    dispatch(getPremium());
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };

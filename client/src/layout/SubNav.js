@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import jwtDecode from "jwt-decode";
@@ -13,7 +13,7 @@ import logo from "../asset/images/logo.png";
 import Dropdown from "./Dropdown";
 import Toast from "../layout/Toast";
 
-import { logoutUser } from "../action/authAction";
+import { logoutUser, clearErrors } from "../action/authAction";
 import { clearCurrentProfile } from "../action/profileAction";
 
 export class SubNav extends Component {
@@ -26,6 +26,7 @@ export class SubNav extends Component {
     toast: false,
     toasttext: null,
     toastcategory: "error",
+    isMounted: true,
   };
 
   componentDidMount() {
@@ -36,26 +37,55 @@ export class SubNav extends Component {
           JSON.parse(localStorage.getItem("premium")),
       });
     }
+    this.props.clearErrors();
   }
+
+  componentWillUnmount() {
+    //  this.props.clearErrors();
+    this.setState({
+      isMounted: false,
+    });
+  }
+
+  /* static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (
+      nextProps.errors !== prevState.errors &&
+      this.props.errors.status !== undefined
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
+    }
+    return update;
+  }*/
 
   componentDidUpdate(prevProps) {
     let servererror;
-    console.log(prevProps.errors);
-    if (
-      prevProps.errors !== this.props.errors &&
-      this.props.errors.status !== undefined
-    ) {
+    console.log("norm", prevProps.errors);
+    console.log("norm", this.props.errors);
+
+    if (this.state.isMounted) {
       if (
-        this.props.errors.status === 500 ||
-        this.props.errors.status === 404
+        prevProps.errors !== this.props.errors &&
+        this.props.errors.status !== undefined
       ) {
-        servererror =
-          "There has been a Network Error. Refresh and Try again later.";
+        if (
+          this.props.errors.status === 500 ||
+          this.props.errors.status === 404
+        ) {
+          servererror =
+            "There has been a Network Error. Refresh and Try again later.";
+        }
+        if (this.props.errors.status === 400) {
+          servererror = this.props.errors.data;
+        }
+        this.getError(Object.values(servererror));
       }
-      if (this.props.errors.status === 400) {
-        servererror = this.props.errors.data;
-      }
-      this.getError(servererror);
     }
 
     if (
@@ -63,6 +93,8 @@ export class SubNav extends Component {
       this.props.errors.status === 401
     ) {
       this.logOut();
+      console.log("401", prevProps.errors);
+      console.log("401", this.props.errors);
     }
   }
 
@@ -76,7 +108,7 @@ export class SubNav extends Component {
       isLoading: false,
       toast: true,
       toastcategory: "error",
-      toasttext: message + "hello bro",
+      toasttext: message,
     });
 
     setTimeout(() => {
@@ -198,4 +230,5 @@ export default connect(mapStateToProps, {
   getUserProfile,
   logoutUser,
   clearCurrentProfile,
+  clearErrors,
 })(SubNav);

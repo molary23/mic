@@ -33,7 +33,7 @@ BonusView.init(
     updatedAt: {
       type: DataTypes.DATE,
     },
-    SubscriptionId: {
+    PayId: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
   },

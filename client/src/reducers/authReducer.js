@@ -4,6 +4,8 @@ import {
   CLEAR_ALL_ACTIONS,
   SET_PROVIDER_COUNTS,
   SET_USER_COUNTS,
+  USER_GET_MODE,
+  USER_GET_WALLET,
 } from "../action/types";
 import isEmpty from "../validation/emptyChecker";
 const initialState = {
@@ -12,6 +14,7 @@ const initialState = {
   allCounts: {},
   providerCounts: {},
   userCounts: {},
+  mode: null,
 };
 
 export default function authReducer(state = initialState, action) {
@@ -36,6 +39,11 @@ export default function authReducer(state = initialState, action) {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
+      };
+    case USER_GET_MODE:
+      return {
+        ...state,
+        mode: action.payload,
       };
     case CLEAR_ALL_ACTIONS:
       return {

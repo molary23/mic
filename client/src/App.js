@@ -8,6 +8,8 @@ import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
 import { clearCurrentProfile } from "./action/profileAction";
 
+import ErrorBoundary from "./util/ErrorBoundary";
+
 import PrivateRoute from "./util/PrivateRoute";
 
 import PageNotFound from "./util/404Page";
@@ -250,11 +252,17 @@ function App() {
             path="/admin/withdrawals"
             element={<PrivateRoute Component={AdminWithdrawals} />}
           />
+
           <Route
             exact
             path="/admin/payments"
-            element={<PrivateRoute Component={AdminPayments} />}
+            element={
+              <ErrorBoundary>
+                <PrivateRoute Component={AdminPayments} />
+              </ErrorBoundary>
+            }
           />
+
           <Route
             exact
             path="/admin/transactions"

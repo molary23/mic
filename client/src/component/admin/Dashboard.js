@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
 import { Outlet } from "react-router-dom";
@@ -7,8 +7,16 @@ import SubNav from "../../layout/SubNav";
 import SideNav from "../../layout/SideNav";
 import Footer from "../../layout/Footer";
 
+import { logoutUser } from "../../action/authAction";
+
 function Dashboard() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(true),
+    dispatch = useDispatch(),
+    auth = useSelector((state) => state.auth),
+    level = auth.user.level;
+  if (level !== 3) {
+    dispatch(logoutUser());
+  }
 
   const toggleOpen = (opt) => {
     setOpen(opt);
@@ -28,12 +36,7 @@ function Dashboard() {
 }
 
 Dashboard.propTypes = {
-  getTableCount: PropTypes.func,
-  auth: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func,
 };
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-  admin: state.admin,
-});
-export default connect(mapStateToProps, null)(Dashboard);
+export default Dashboard;

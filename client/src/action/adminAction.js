@@ -85,9 +85,11 @@ import {
   CLEAR_ADMIN_CHANGE_EMAIL,
   ADMIN_GET_ANALYTICS,
   CLEAR_ADMIN_GET_ANALYTICS,
+  ADMIN_UPDATE_PAYMENT,
+  CLEAR_ADMIN_UPDATE_PAYMENT,
 } from "./types";
 
-import { getAllCounts } from "./authAction";
+import { getAllCounts, getMode } from "./authAction";
 
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
@@ -214,6 +216,8 @@ export const clearActions = (actionToClear) => {
     return { type: CLEAR_ADMIN_CHANGE_EMAIL };
   } else if (actionToClear === "analytics") {
     return { type: CLEAR_ADMIN_GET_ANALYTICS };
+  } else if (actionToClear === "update-payment") {
+    return { type: CLEAR_ADMIN_UPDATE_PAYMENT };
   }
 };
 
@@ -482,6 +486,9 @@ export const saveSettings = (settings, data) => async (dispatch) => {
       type,
       payload: response.data,
     });
+    if (settings === "mode") {
+      dispatch(getMode(3));
+    }
     return result;
   } catch (error) {
     console.log(error.response);
@@ -659,6 +666,22 @@ export const getAnalytics = () => async (dispatch) => {
     let response = await axios.get("/api/adminview/analytics/");
     const result = await dispatch({
       type: ADMIN_GET_ANALYTICS,
+      payload: response.data,
+    });
+    return result;
+  } catch (error) {
+    console.log(error.response);
+    dispatch({ type: GET_ERRORS, payload: error.response });
+  }
+};
+
+export const updatePayment = (action, id) => async (dispatch) => {
+  dispatch(clearErrors());
+  dispatch(clearActions("update-payment"));
+  try {
+    let response = await axios.get(`/api/payments/update/:${action}/:${id}`);
+    const result = await dispatch({
+      type: ADMIN_UPDATE_PAYMENT,
       payload: response.data,
     });
     return result;

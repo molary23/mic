@@ -867,4 +867,34 @@ router.delete(
   }
 );
 
+/*
+@route POST api/users/theme
+@desc User get mode
+@access private
+*/
+
+router.get(
+  "/theme",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkUser(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    Settings.findOne({
+      where: {
+        UserId,
+      },
+      attributes: ["mode"],
+    })
+      .then((setting) => {
+        return res.json(setting.mode);
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
 module.exports = router;

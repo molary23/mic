@@ -82,6 +82,8 @@ import {
   CLEAR_ADMIN_CHANGE_EMAIL,
   ADMIN_GET_ANALYTICS,
   CLEAR_ADMIN_GET_ANALYTICS,
+  ADMIN_UPDATE_PAYMENT,
+  CLEAR_ADMIN_UPDATE_PAYMENT,
 } from "../action/types";
 
 const initialState = {
@@ -143,6 +145,7 @@ const initialState = {
   getuser: null,
   changeemail: false,
   getanalytics: null,
+  updatepayment: false,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -442,6 +445,11 @@ export default function adminReducer(state = initialState, action) {
         ...state,
         changeemail: action.payload,
       };
+    case ADMIN_UPDATE_PAYMENT:
+      return {
+        ...state,
+        updatepayment: action.payload,
+      };
     case CLEAR_SUBSCRIPTIONS_ACTION: {
       return { ...state, sub: [], subCount: 0, fetching: false };
     }
@@ -540,6 +548,9 @@ export default function adminReducer(state = initialState, action) {
     }
     case CLEAR_ADMIN_UPDATE_FORUM: {
       return { ...state, updateforum: false };
+    }
+    case CLEAR_ADMIN_UPDATE_PAYMENT: {
+      return { ...state, updatepayment: false };
     }
     case CLEAR_ADMIN_GET_A_FORUM: {
       return { ...state, getforum: false };

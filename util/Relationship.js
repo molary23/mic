@@ -128,14 +128,14 @@ User.hasMany(Subscription, {
 });
 Subscription.belongsTo(User);
 
-Subscription.hasOne(Bonus, {
+Payment.hasOne(Bonus, {
   onDelete: "RESTRICT",
   hooks: true,
   foreignKey: {
     allowNull: false,
   },
 });
-Bonus.belongsTo(Subscription);
+Bonus.belongsTo(Payment);
 
 User.hasMany(Transaction, {
   onDelete: "RESTRICT",

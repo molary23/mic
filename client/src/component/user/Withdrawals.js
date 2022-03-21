@@ -79,6 +79,8 @@ export class Withdrawals extends Component {
     const { content } = this.state;
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(content);
+    this.props.clearActions("user-account");
+    this.props.clearActions("user-balance");
     this.props.clearSearchActions(content);
   }
 

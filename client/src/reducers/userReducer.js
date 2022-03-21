@@ -62,6 +62,8 @@ import {
   CLEAR_USER_REPLY,
   USER_DELETE_REPLY,
   CLEAR_USER_DELETE_REPLY,
+  USER_MAKE_PAYMENT,
+  CLEAR_USER_MAKE_PAYMENT,
 } from "../action/types";
 
 const initialState = {
@@ -104,6 +106,7 @@ const initialState = {
   getforum: null,
   userreply: false,
   deletereply: false,
+  makepayment: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -310,6 +313,11 @@ export default function userReducer(state = initialState, action) {
         loading: false,
         fetching: true,
       };
+    case USER_MAKE_PAYMENT:
+      return {
+        ...state,
+        makepayment: action.payload,
+      };
     case ACTION_LOADING: {
       return { ...state, loading: true };
     }
@@ -405,6 +413,9 @@ export default function userReducer(state = initialState, action) {
     }
     case CLEAR_USER_DELETE_REPLY: {
       return { ...state, deletereply: false };
+    }
+    case CLEAR_USER_MAKE_PAYMENT: {
+      return { ...state, makepayment: false };
     }
     default:
       return state;

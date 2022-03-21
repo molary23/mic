@@ -565,20 +565,22 @@ function TableBody(props) {
                 className="btn btn-success btn-sm mb-1"
                 data-id={item.payid}
                 title="Update Payment"
-                onClick={() => onClick(i)}
+                onClick={() => onClick(["update", item.payid])}
               >
                 <i className="fas fa-sync" />
               </button>
 
-              <button
-                type="button"
-                className="btn btn-danger btn-sm mt-1"
-                data-id={item.payid}
-                title="Cancel Payment"
-                onClick={() => onClick(i)}
-              >
-                <ImCancelCircle />
-              </button>
+              {item.status !== "f" && (
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm mt-1"
+                  data-id={item.payid}
+                  title="Cancel Payment"
+                  onClick={() => onClick(["cancel", item.payid])}
+                >
+                  <ImCancelCircle />
+                </button>
+              )}
             </div>
           </td>
         </tr>

@@ -6,6 +6,7 @@ import {
   CLEAR_ALL_ACTIONS,
   SET_PROVIDER_COUNTS,
   SET_USER_COUNTS,
+  USER_GET_MODE,
 } from "./types";
 import { getPremium, clearActions } from "./userAction";
 
@@ -68,6 +69,31 @@ export const getAllCounts = (level) => async (dispatch) => {
       type,
       payload: await response.data,
     });
+    dispatch(getMode(level));
+    return result;
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: GET_ERRORS, payload: error.response });
+  }
+};
+
+// Get Mode
+export const getMode = (user) => async (dispatch) => {
+  let url = "/api/",
+    mode = "mode",
+    type = USER_GET_MODE;
+  if (user === 1) {
+    url = `${url}users/theme`;
+  } else if (user === 2 || user === 3) {
+    url = `${url}admin/theme`;
+  }
+  try {
+    const response = await axios.get(url, {});
+    localStorage.setItem(mode, JSON.stringify(response.data));
+    const result = await dispatch({
+      type,
+      payload: await response.data,
+    });
     return result;
   } catch (error) {
     console.log(error.response.data);
@@ -98,4 +124,6 @@ export const logoutUser = () => (dispatch) => {
     type: CLEAR_ALL_ACTIONS,
     payload: {},
   });
+  document.body.classList.remove("dark-content");
+  document.body.classList.add("white-content");
 };

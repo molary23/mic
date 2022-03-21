@@ -16,11 +16,6 @@ Premium.init(
       type: DataTypes.ENUM("a", "i", "n"), // New, Active or Not
       defaultValue: "n",
     },
-    startdate: {
-      type: DataTypes.DATEONLY, // Start date of recent sub
-      allowNull: false,
-      defaultValue: new Date(),
-    },
     enddate: {
       type: DataTypes.DATEONLY, // Duration in days
       allowNull: false,

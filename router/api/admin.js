@@ -21,7 +21,8 @@ const express = require("express"),
   validateAddUserInput = require("../../validation/addUser"),
   validateEmailInput = require("../../validation/email"),
   //Bring in Super Admin Checker
-  checkSuperAdmin = require("../../validation/superCheck");
+  checkSuperAdmin = require("../../validation/superCheck"),
+  checkAdmin = require("../../validation/adminCheck");
 
 /*
 @route POST api/admin/add
@@ -819,6 +820,36 @@ router.post(
             })
             .catch((err) => res.status(404).json(err));
         }
+      })
+      .catch((err) => res.status(404).json(err));
+  }
+);
+
+/*
+@route POST api/admin/theme
+@desc User get mode
+@access private
+*/
+
+router.get(
+  "/theme",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { error, isLevel } = checkAdmin(req.user.level);
+    if (!isLevel) {
+      return res.status(400).json(error);
+    }
+
+    let UserId = req.user.id;
+
+    Settings.findOne({
+      where: {
+        UserId,
+      },
+      attributes: ["mode"],
+    })
+      .then((setting) => {
+        return res.json(setting.mode);
       })
       .catch((err) => res.status(404).json(err));
   }

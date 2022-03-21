@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { getContent, clearActions } from "../../action/adminAction";
+import {
+  getContent,
+  clearActions,
+  updatePayment,
+} from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
 
 import TableBody from "../../layout/TableBody";
@@ -59,6 +63,7 @@ export class Payments extends Component {
     toast: false,
     toasttext: "",
     check: false,
+    update: null,
   };
 
   componentDidMount() {
@@ -82,22 +87,21 @@ export class Payments extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    /*   if (
-      prevProps.admin.updatepayment !==
-        this.props.admin.updatepayment &&
+    if (
+      prevProps.admin.updatepayment !== this.props.admin.updatepayment &&
       this.props.admin.updatepayment
     ) {
-      this.afterUpdate("updated");
+      this.afterUpdate();
       this.setState({
         currentPage: Pagination.currentpage,
       });
-    }*/
+    }
   }
 
   afterUpdate = () => {
     const { limit, content, timer } = this.state;
 
-    this.props.clearAdminAction("update-payments");
+    this.props.clearActions("update-payment");
     /* window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -122,7 +126,6 @@ export class Payments extends Component {
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
     }, timer);
   };
@@ -181,21 +184,20 @@ export class Payments extends Component {
 
   clickHandler = (value) => {
     let action = value[0],
-      cur = value[1];
+      id = value[1];
+
+    console.log(action, id);
 
     this.setState({
       check: true,
-      checktext: `Are you sure you want to ${action} ${
-        cur.firstcurrency[1].toUpperCase() +
-        "/" +
-        cur.secondcurrency[1].toUpperCase()
-      } pair?`,
-      checktitle: "Confirm Delete",
+      checktext: `Are you sure you want to ${action} this Payment?`,
+      checktitle: `Confirm ${action}`,
+      update: action,
     });
 
     this.confirmHandler = (option) => {
       if (option) {
-        this.props.updateCurrency(action, cur["id"]);
+        this.props.updatePayment(action, id);
       }
       this.setState({
         check: false,
@@ -360,13 +362,13 @@ Payments.propTypes = {
   searchTerms: PropTypes.object,
   getContent: PropTypes.func,
   searchContent: PropTypes.func,
-  clearAdminAction: PropTypes.func,
   landingLoad: PropTypes.func,
   renderArrange: PropTypes.func,
   updateBonus: PropTypes.func,
   clearActions: PropTypes.func,
   setSearchParams: PropTypes.func,
   clearSearchActions: PropTypes.func,
+  updatePayment: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -380,4 +382,5 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
+  updatePayment,
 })(Payments);

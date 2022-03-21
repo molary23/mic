@@ -10,7 +10,7 @@ import {
   MdOutlinePayments,
   MdOutlineSupervisedUserCircle,
 } from "react-icons/md";
-import { BsCurrencyExchange } from "react-icons/bs";
+import { BsCurrencyExchange, BsCreditCard } from "react-icons/bs";
 import { FiHome } from "react-icons/fi";
 import { CgSignal } from "react-icons/cg";
 
@@ -176,6 +176,14 @@ function SideNav(props) {
                   <AiOutlineBank />
                 </span>
                 Wallets
+              </Link>
+            )}
+            {level === 1 && (
+              <Link to={`/${viewer}/pay`}>
+                <span className="sidebar-icon">
+                  <BsCreditCard />
+                </span>
+                Pay Now
               </Link>
             )}
           </div>

@@ -24,7 +24,7 @@ import {
   CLEAR_PROVIDER_GET_FOLLOWERS,
 } from "./types";
 
-import { getAllCounts } from "./authAction";
+import { getAllCounts, getMode } from "./authAction";
 
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
@@ -161,7 +161,7 @@ export const getProviderSettings = () => async (dispatch) => {
 
 export const saveSettings = (settings, data) => async (dispatch) => {
   dispatch(clearErrors());
-  //dispatch(setLoading());
+
   let type,
     url = "/api/admin/settings/";
   if (settings === "mode") {
@@ -183,6 +183,9 @@ export const saveSettings = (settings, data) => async (dispatch) => {
       type,
       payload: response.data,
     });
+    if (settings === "mode") {
+      dispatch(getMode(2));
+    }
     return result;
   } catch (error) {
     console.log(error.response);
