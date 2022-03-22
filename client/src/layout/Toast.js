@@ -19,7 +19,7 @@ function Toast(props) {
             {category !== "error" ? "Success" : "Error"}
           </strong>
           <small>
-            {category !== "success" ? (
+            {category !== "error" ? (
               <BsCheckCircle />
             ) : (
               <MdReportGmailerrorred />

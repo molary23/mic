@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmpty from "../validation/emptyChecker";
 
@@ -336,6 +337,11 @@ class Register extends Component {
               </div>
             </form>
           </Box>
+          <div className="login-helper">
+            <p className="mb-1">
+              Already a Member? <Link to="/">Login</Link>
+            </p>
+          </div>
         </div>
         {modal ? <Modal {...{ modal, sender: "register" }} /> : ""}
       </div>

@@ -33,8 +33,8 @@ export class SubNav extends Component {
     if (this.props.auth.user.level === 1) {
       this.setState({
         premiuminfo:
-          this.props.user.premium ??
-          JSON.parse(localStorage.getItem("premium")),
+          JSON.parse(localStorage.getItem("premium")) ??
+          this.props.user.premium,
       });
     }
     this.props.clearErrors();
@@ -84,7 +84,9 @@ export class SubNav extends Component {
         if (this.props.errors.status === 400) {
           servererror = this.props.errors.data;
         }
-        this.getError(Object.values(servererror));
+        if (servererror !== null && servererror !== undefined) {
+          this.getError(Object.values(servererror));
+        }
       }
     }
 

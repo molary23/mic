@@ -2,14 +2,9 @@
 
 .home-page {
   min-height: 700px;
-  background: rgb(2, 48, 100);
-  background: radial-gradient(
-      circle,
-      rgba(2, 48, 100, 1) 0%,
-      rgba(3, 31, 63, 1) 35%,
-      $bg-dark 100%
-    )
-    no-repeat;
+  background: #000428;
+  background: -webkit-linear-gradient(to left, #000428, #004e92) no-repeat;
+  background: linear-gradient(to left, #000428, #004e92) no-repeat;
   padding-top: 50px;
   padding-bottom: 50px;
 
@@ -39,7 +34,7 @@
 
     .login-helper {
       text-align: center;
-      font-weight: 600;
+      font-weight: 400;
       color: #fff;
 
       a {
@@ -151,6 +146,11 @@ span.nav-sub-icon {
 
   .side-nav-list {
     margin-top: 25px;
+    width: 200px;
+  }
+
+  .hide-side .side-nav-list {
+    width: 0;
   }
 }
 
@@ -193,12 +193,16 @@ span.nav-sub-icon {
 }
 
 /* Dashboard */
+.dashboard-body {
+  background: rgba($color: #b3d6ff, $alpha: 0.2);
+  min-height: 800px;
+  padding-top: 80px;
+}
 .dashboard-content {
   min-height: 700px;
   margin-left: 200px;
-  padding: 25px;
+  padding: 25px 50px;
   margin-top: 80px;
-  padding-bottom: 80px;
   .card {
     border: 1px solid $border-light;
     box-shadow: 1px 2px 3px $shadow;
@@ -207,6 +211,10 @@ span.nav-sub-icon {
     h2 {
       margin-bottom: 0px;
     }
+  }
+
+  .page-dash-title {
+    margin-left: 10px;
   }
 
   .dashboard-item {
@@ -279,6 +287,9 @@ span.nav-sub-icon {
 
   .dash-user-name {
     text-transform: capitalize;
+  }
+  .dash-welcome {
+    font-weight: 300;
   }
 
   .premium-active {
@@ -442,7 +453,6 @@ span.nav-sub-icon {
   grid-row-gap: 1%;
   min-height: 400px;
   margin-bottom: 20px;
-  align-items: center;
   border-radius: 5px;
   color: rgb(31, 30, 30);
 
@@ -462,6 +472,7 @@ span.nav-sub-icon {
     grid-template-columns: 2fr 1fr;
     border-bottom: 1px dashed rgb(114, 114, 114);
     margin: 0px 10px;
+    align-items: end;
   }
 
   .signal-pip {
@@ -486,7 +497,7 @@ span.nav-sub-icon {
   }
 
   .signal-title {
-    font-weight: 600;
+    font-weight: 400;
   }
 
   .currency-image .flag {
@@ -494,8 +505,9 @@ span.nav-sub-icon {
     margin-top: 5px;
   }
   .signal-currency {
-    background: rgba($color: #8dbff8, $alpha: 0.2);
     padding: 10px 5px;
+    background: rgba($color: $def-blue, $alpha: 0.3);
+    color: #fff;
   }
   .currency-info {
     align-items: center;
@@ -609,7 +621,7 @@ span.nav-sub-icon {
   position: fixed;
   z-index: 9999;
   bottom: 60px;
-  left: 220px;
+  left: 20px;
   .toast-header {
     color: #fff;
     background: inherit;
@@ -813,7 +825,7 @@ ul.list-group.list-group-horizontal {
   right: 10px;
   cursor: pointer;
   display: none;
-  color: rgba($color: #8dbff8, $alpha: 0.8);
+  color: rgba($color: $def-blue, $alpha: 0.8);
 }
 
 .showscroller {
@@ -921,7 +933,7 @@ ul {
 
 .pricing-title {
   color: #fff;
-  background: #e95846;
+  background: #cb5442;
   padding: 15px 0;
   font-size: 1.5em;
   text-transform: uppercase;
@@ -929,11 +941,11 @@ ul {
 }
 
 .pricing-table.recommended .pricing-title {
-  background: #2db3cb;
+  background: #48acf0;
 }
 
 .pricing-table.recommended .pricing-action {
-  background: #2db3cb;
+  background: #48acf0;
 }
 
 .pricing-table .price {
@@ -978,7 +990,7 @@ ul {
 
 .table-list li span.unlimited {
   color: #fff;
-  background: #e95846;
+  background: #cb5442;
   font-size: 0.8em;
   padding: 5px 7px;
   display: inline-block;
@@ -1014,7 +1026,7 @@ ul {
 .table-buy .pricing-action {
   float: right;
   color: #fff;
-  background: #e95846;
+  background: #cb5442;
   padding: 5px 16px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -1033,7 +1045,7 @@ ul {
 }
 
 .recommended .table-buy .pricing-action:hover {
-  background: #228799;
+  background: #48acf0;
 }
 
 /** ================

@@ -45,13 +45,13 @@ export class Forgot extends Component {
       };
       try {
         let response = await axios.post(
-          "/api/public/forgot/",
+          "/api/public/forgot",
           {
             user,
           },
           {}
         );
-        if (response.data.update === 1) {
+        if (response.data === 1) {
           this.setState({
             modal: true,
             loading: false,

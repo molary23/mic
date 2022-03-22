@@ -140,15 +140,11 @@ router.post(
                               bonusFields.amount = payFields.amount * percent;
                               Bonus.create(bonusFields)
                                 .then(() => {
-                                  return res.json({
-                                    message: true,
-                                  });
+                                  return res.json(true);
                                 })
                                 .catch((err) => res.status(404).json(err));
                             } else {
-                              return res.json({
-                                message: true,
-                              });
+                              return res.json(true);
                             }
                           })
                           .catch((err) => res.status(404).json(err));
@@ -257,21 +253,15 @@ router.post(
                               amount: subFields.amount,
                             })
                               .then(() => {
-                                return res.json({
-                                  message: true,
-                                });
+                                return res.json(true);
                               })
-                              .catch((err) =>
-                                res.status(404).json(`transs ${err}`)
-                              );
+                              .catch((err) => res.status(404).json(err));
                           })
-                          .catch((err) =>
-                            res.status(404).json(`Premium ${err}`)
-                          );
+                          .catch((err) => res.status(404).json(err));
                       })
-                      .catch((err) => res.status(404).json(`Premium ${err}`));
+                      .catch((err) => res.status(404).json(err));
                   })
-                  .catch((err) => res.status(404).json(`sub: ${err}`));
+                  .catch((err) => res.status(404).json(err));
               } else {
                 error.amount =
                   "You don't have sufficient balance to pay for this plan";

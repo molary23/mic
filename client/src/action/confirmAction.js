@@ -9,6 +9,7 @@ import {
 } from "./types";
 
 import axios from "axios";
+import { decrypt } from "../util/decrypt";
 
 // Confirm Reset Code
 
@@ -16,10 +17,12 @@ export const confirmCode = (usercode) => async (dispatch) => {
   dispatch(clearErrors());
   dispatch(clearConfirmAction());
   try {
-    let response = await axios.post("/api/public/confirm/", usercode);
+    let response = await axios.post("/api/public/confirm/", usercode),
+      code = response.data;
+    localStorage.setItem("confirm", code);
     const result = await dispatch({
       type: USER_CONFIRM_PASSWORD_ACTION,
-      payload: response.data,
+      payload: code,
     });
     return result;
   } catch (error) {
@@ -41,6 +44,7 @@ export const resetPass = (pass) => async (dispatch) => {
   dispatch(clearResetAction());
   try {
     let response = await axios.post("/api/public/reset/", pass);
+    localStorage.removeItem("confirm");
     const result = await dispatch({
       type: USER_RESET_PASSWORD_ACTION,
       payload: response.data,

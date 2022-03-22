@@ -141,7 +141,7 @@ class Pay extends Component {
                           <sup>/ month</sup>
                         </p>
                         <button
-                          className="pricing-action"
+                          className="pricing-action btn"
                           onClick={() => this.clickHandler("month")}
                         >
                           Select
@@ -172,7 +172,7 @@ class Pay extends Component {
                           <sup>/ year</sup>
                         </p>
                         <button
-                          className="pricing-action"
+                          className="pricing-action btn"
                           onClick={() => this.clickHandler("year")}
                         >
                           Select
@@ -245,7 +245,7 @@ class Pay extends Component {
 
             {totalPrice > 0 && (
               <div className="pay-gateway card">
-                <h1 className="mb-2">Choose a Payment Gateway</h1>
+                <h1 className="mb-5">Choose a Payment Gateway</h1>
 
                 <div className="gateways-available">
                   <div className="crypto-card card">

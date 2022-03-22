@@ -154,8 +154,8 @@ export class Index extends Component {
           <div className="container">
             <div className="welcome-dashboard mb-5">
               <h1>
-                Hi, <span className="dash-user-name">{username}</span>, welcome
-                to your Dashboard
+                <span className="dash-user-name">Hi {username}</span>,{" "}
+                <span className="dash-welcome">welcome to your Dashboard</span>
               </h1>
             </div>
             <div className="dash-info mb-5">

@@ -1,3 +1,5 @@
+const Verify = require("../../db/models/Verify");
+
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -84,7 +86,11 @@ router.post(
                           .then(() => {
                             Settings.create(UserId)
                               .then(() => {
-                                return res.json(true);
+                                Verify.create(UserId)
+                                  .then(() => {
+                                    return res.json(true);
+                                  })
+                                  .catch((err) => res.json(err));
                               })
                               .catch((err) => res.json(err));
                           })

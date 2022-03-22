@@ -11,7 +11,7 @@
 */
 * {
   margin: 0;
-  font-family: "ubuntu", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Open Sans", "Segoe UI", "Roboto", "Oxygen", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -166,7 +166,7 @@ a.default-anchor:hover {
 .btn.default-btn {
   background: #06c2f7 !important;
   color: #fff !important;
-  font-weight: 600;
+  font-weight: 400;
   border: none;
   text-transform: capitalize;
 }
@@ -204,8 +204,14 @@ span.input-group-text {
   text-align: center;
 }
 
+nav.navbar {
+  -webkit-box-shadow: 1px 2px 1px #cecece;
+          box-shadow: 1px 2px 1px #cecece;
+}
+
 .nav-logo {
   width: 200px;
+  margin-left: 50px;
 }
 
 /* Modal */
@@ -235,10 +241,39 @@ svg {
   display: inline-block;
 }
 
+.download-btn,
+.add-btn,
+.pay-with {
+  color: #fff;
+  font-weight: 400;
+  border-radius: 0px;
+  -webkit-box-shadow: 1px 2px 2px #cecece;
+          box-shadow: 1px 2px 2px #cecece;
+}
+
+.download-btn:hover,
+.add-btn:hover,
+.pay-with:hover {
+  color: #e4e4e4;
+}
+
+.download-btn {
+  background: #1d6f42;
+}
+
+.add-btn {
+  background: #176dcf;
+}
+
+.pay-with {
+  background: #48acf0;
+}
+
 .home-page {
   min-height: 700px;
-  background: #023064;
-  background: radial-gradient(circle, #023064 0%, #031f3f 35%, #314297 100%) no-repeat;
+  background: #000428;
+  background: -webkit-gradient(linear, right top, left top, from(#000428), to(#004e92)) no-repeat;
+  background: linear-gradient(to left, #000428, #004e92) no-repeat;
   padding-top: 50px;
   padding-bottom: 50px;
 }
@@ -271,7 +306,7 @@ svg {
 
 .home-page .home-box .login-helper {
   text-align: center;
-  font-weight: 600;
+  font-weight: 400;
   color: #fff;
 }
 
@@ -394,6 +429,11 @@ span.nav-sub-icon svg {
 
 .sidebar .side-nav-list {
   margin-top: 25px;
+  width: 200px;
+}
+
+.sidebar .hide-side .side-nav-list {
+  width: 0;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -439,12 +479,17 @@ span.nav-sub-icon svg {
 }
 
 /* Dashboard */
+.dashboard-body {
+  background: rgba(179, 214, 255, 0.2);
+  min-height: 800px;
+  padding-top: 80px;
+}
+
 .dashboard-content {
   min-height: 700px;
   margin-left: 200px;
-  padding: 25px;
+  padding: 25px 50px;
   margin-top: 80px;
-  padding-bottom: 80px;
 }
 
 .dashboard-content .card {
@@ -457,6 +502,10 @@ span.nav-sub-icon svg {
 
 .dashboard-content .card h2 {
   margin-bottom: 0px;
+}
+
+.dashboard-content .page-dash-title {
+  margin-left: 10px;
 }
 
 .dashboard-content .dashboard-item {
@@ -521,6 +570,10 @@ span.nav-sub-icon svg {
 
 .dashboard-content .dash-user-name {
   text-transform: capitalize;
+}
+
+.dashboard-content .dash-welcome {
+  font-weight: 300;
 }
 
 .dashboard-content .premium-active {
@@ -659,9 +712,6 @@ span.nav-sub-icon svg {
   grid-row-gap: 1%;
   min-height: 400px;
   margin-bottom: 20px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   border-radius: 5px;
   color: #1f1e1e;
 }
@@ -688,6 +738,9 @@ span.nav-sub-icon svg {
       grid-template-columns: 2fr 1fr;
   border-bottom: 1px dashed #727272;
   margin: 0px 10px;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: end;
 }
 
 .signal-detail .signal-pip {
@@ -717,7 +770,7 @@ span.nav-sub-icon svg {
 }
 
 .signal-detail .signal-title {
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .signal-detail .currency-image .flag {
@@ -726,8 +779,9 @@ span.nav-sub-icon svg {
 }
 
 .signal-detail .signal-currency {
-  background: rgba(141, 191, 248, 0.2);
   padding: 10px 5px;
+  background: rgba(23, 109, 207, 0.3);
+  color: #fff;
 }
 
 .signal-detail .currency-info {
@@ -846,7 +900,7 @@ span.nav-sub-icon svg {
   position: fixed;
   z-index: 9999;
   bottom: 60px;
-  left: 220px;
+  left: 20px;
 }
 
 .toast .toast-header {
@@ -1070,7 +1124,7 @@ ul.list-group.list-group-horizontal {
   right: 10px;
   cursor: pointer;
   display: none;
-  color: rgba(141, 191, 248, 0.8);
+  color: rgba(23, 109, 207, 0.8);
 }
 
 .showscroller {
@@ -1204,7 +1258,7 @@ ul {
 
 .pricing-title {
   color: #fff;
-  background: #e95846;
+  background: #cb5442;
   padding: 15px 0;
   font-size: 1.5em;
   text-transform: uppercase;
@@ -1212,11 +1266,11 @@ ul {
 }
 
 .pricing-table.recommended .pricing-title {
-  background: #2db3cb;
+  background: #48acf0;
 }
 
 .pricing-table.recommended .pricing-action {
-  background: #2db3cb;
+  background: #48acf0;
 }
 
 .pricing-table .price {
@@ -1261,7 +1315,7 @@ ul {
 
 .table-list li span.unlimited {
   color: #fff;
-  background: #e95846;
+  background: #cb5442;
   font-size: 0.8em;
   padding: 5px 7px;
   display: inline-block;
@@ -1295,7 +1349,7 @@ ul {
 .table-buy .pricing-action {
   float: right;
   color: #fff;
-  background: #e95846;
+  background: #cb5442;
   padding: 5px 16px;
   border-radius: 2px;
   font-weight: 700;
@@ -1311,7 +1365,7 @@ ul {
 }
 
 .recommended .table-buy .pricing-action:hover {
-  background: #228799;
+  background: #48acf0;
 }
 
 /** ================

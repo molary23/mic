@@ -15,7 +15,7 @@
 */
 * {
   margin: 0;
-  font-family: "ubuntu", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+  font-family: "Open Sans", "Segoe UI", "Roboto", "Oxygen", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -160,7 +160,7 @@ a.default-anchor {
 .btn.default-btn {
   background: #06c2f7 !important;
   color: #fff !important;
-  font-weight: 600;
+  font-weight: 400;
   border: none;
   text-transform: capitalize;
   &:focus {
@@ -195,9 +195,12 @@ span.input-group-text {
 .page-title {
   text-align: center;
 }
-
+nav.navbar {
+  box-shadow: 1px 2px 1px $shadow;
+}
 .nav-logo {
   width: 200px;
+  margin-left: 50px;
 }
 
 /* Modal */
@@ -222,4 +225,28 @@ span.input-group-text {
 
 svg {
   display: inline-block;
+}
+
+.download-btn,
+.add-btn,
+.pay-with {
+  color: #fff;
+  font-weight: 400;
+  border-radius: 0px;
+  box-shadow: 1px 2px 2px $shadow;
+  &:hover {
+    color: rgb(228, 228, 228);
+  }
+}
+
+.download-btn {
+  background: #1d6f42;
+}
+
+.add-btn {
+  background: $def-blue;
+}
+
+.pay-with {
+  background: #48acf0;
 }

@@ -44,6 +44,19 @@ class Payment extends Component {
     this.props.clearActions("make-payment");
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+    }
+    return update;
+  }
+
   componentDidUpdate(prevProps) {
     if (
       prevProps.user.makepayment !== this.props.user.makepayment &&
@@ -53,7 +66,7 @@ class Payment extends Component {
     }
   }
 
-  afterUpdate = (text) => {
+  afterUpdate = () => {
     const { timer } = this.state;
 
     this.setState({
@@ -150,6 +163,7 @@ Payment.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {

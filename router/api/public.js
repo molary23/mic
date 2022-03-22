@@ -22,7 +22,22 @@ const express = require("express"),
   validateLoginInput = require("../../validation/login"),
   validateConfirmInput = require("../../validation/confirm"),
   validateResetInput = require("../../validation/reset"),
-  validatePassInput = require("../../validation/password");
+  validatePassInput = require("../../validation/password"),
+  encrypt = require("../../util/encrypt");
+
+/*
+@route POST api/public/register
+@desc Add new user
+@access public
+*/
+router.get("/finder", (req, res) => {
+  let details = {
+    code: "q6u2jp",
+    username: "mol",
+  };
+  details = JSON.stringify(details);
+  return res.json(encrypt(details));
+});
 
 /*
 @route POST api/public/register
@@ -506,7 +521,8 @@ router.post("/forgot", (req, res) => {
   }
 
   const verifyField = {};
-  verifyField.reset = Math.random().toString(36).substring(2, 8).toLowerCase();
+  verifyField.verify = Math.random().toString(36).substring(2, 8).toLowerCase();
+  verifyField.confirm = "y";
 
   User.findOne({
     where: {
@@ -520,16 +536,11 @@ router.post("/forgot", (req, res) => {
       }
 
       verifyField.UserId = user.id;
-      Verify.update(
-        {
-          confirm: "y",
+      Verify.update(verifyField, {
+        where: {
+          UserId: user.id,
         },
-        {
-          where: {
-            UserId: user.id,
-          },
-        }
-      )
+      })
         .then(() => {
           // Send  Mail to User
           res.json(1);

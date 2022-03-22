@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+import decrypt from "../util/decrypt";
+
 import isEmpty from "../validation/emptyChecker";
 
 import TextInputField from "../layout/TextInputField";
@@ -16,7 +18,23 @@ export class VerifyEmail extends Component {
     error: {},
     modal: false,
   };
-  componentDidMount() {}
+  componentDidMount() {
+    let search = window.location.search;
+
+    if (search !== "") {
+      let ref = search.split("?")[1],
+        sender = ref.split("=")[0];
+      if (sender === "refer") {
+        let params = search.split("refer=")[1],
+          opt = decrypt(params),
+          values = JSON.parse(opt);
+        this.setState({
+          username: values.username,
+          code: values.code.toUpperCase(),
+        });
+      }
+    }
+  }
 
   changeHandler = (e) => {
     this.setState({

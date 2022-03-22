@@ -22,7 +22,7 @@ function Dashboard() {
     setOpen(opt);
   };
   return (
-    <div>
+    <div className="dashboard-body">
       <SubNav onClick={toggleOpen} />
       <SideNav act={open} />
       <section>

@@ -279,7 +279,7 @@ export class Withdrawals extends Component {
                     </h6>
                   </div>
                 </div>
-                {balance > 10 && (
+                {balance >= 0 && (
                   <div className="col-md-2">
                     <button
                       type="button"
@@ -302,7 +302,7 @@ export class Withdrawals extends Component {
                 <div className="col-md-2">
                   <div className="transactions-total table-figure">
                     <h6>
-                      {totalText} Withdrawals
+                      {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>

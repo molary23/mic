@@ -20,7 +20,7 @@ export class Reset extends Component {
     loading: false,
     navigate: false,
     modal: false,
-    UserId: this.props.confirm.UserId.UserId,
+    UserId: localStorage.getItem("confirm") ?? this.props.confirm.UserId.UserId,
   };
 
   componentDidMount() {

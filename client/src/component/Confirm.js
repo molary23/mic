@@ -10,6 +10,7 @@ import isEmpty from "../validation/emptyChecker";
 import TextInputField from "../layout/TextInputField";
 import Modal from "../layout/Modal";
 import Box from "../layout/Box";
+import decrypt from "../util/decrypt";
 
 export class Confirm extends Component {
   state = {
@@ -22,6 +23,23 @@ export class Confirm extends Component {
   };
   componentDidMount() {
     this.props.clearErrors();
+
+    let search = window.location.search;
+
+    if (search !== "") {
+      let ref = search.split("?")[1],
+        sender = ref.split("=")[0];
+      if (sender === "refer") {
+        let params = search.split("refer=")[1],
+          opt = decrypt(params),
+          values = JSON.parse(opt);
+
+        this.setState({
+          username: values.username,
+          code: values.code.toUpperCase(),
+        });
+      }
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
