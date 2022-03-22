@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 function Dropdown(props) {
-  const { avatar, username } = props;
+  const { avatar, username, onClick } = props;
 
   let navigate = useNavigate();
   const [display, setDisplay] = useState(false);
@@ -22,6 +22,7 @@ function Dropdown(props) {
   };
 
   const toProfile = () => {
+    onClick();
     let to;
     if (props.auth.user.level === 3) {
       to = "admin";
@@ -30,13 +31,13 @@ function Dropdown(props) {
     } else if (props.auth.user.level === 1) {
       to = "user";
     }
-
     navigate(`/${to}/settings`, { replace: false });
   };
   const linkHandler = (e) => {
     e.preventDefault();
     setDisplay(!display);
   };
+
   return (
     <div className="Dropdown">
       <Link

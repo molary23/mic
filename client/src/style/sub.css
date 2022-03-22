@@ -306,6 +306,69 @@ svg {
   color: #314297;
 }
 
+.footer-nav {
+  height: 50px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+  .pricing-wrapper {
+    width: 768px;
+  }
+  .pricing-table {
+    width: 236px;
+  }
+  .table-list li {
+    font-size: 1.3em;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .pricing-wrapper {
+    width: 420px;
+  }
+  .pricing-table {
+    display: block;
+    float: none;
+    margin: 0 0 20px 0;
+    width: 100%;
+  }
+  .dashboard-content {
+    padding: 10px 20px;
+    margin-left: 0px;
+  }
+  .dash-card {
+    margin-bottom: 20px;
+  }
+  .nav-logo {
+    margin-left: 5px;
+  }
+  .navbar > .container-fluid {
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+  }
+  tr {
+    width: 100px;
+  }
+  .navbar-toggle.collapsed.pull-left {
+    margin-left: 40px;
+  }
+  ul.dropdown-menu {
+    margin-left: 0px;
+  }
+}
+
+@media only screen and (max-width: 479px) {
+  .pricing-wrapper {
+    width: 300px;
+  }
+}
+
+/* Card Figures*/
+.transactions-total.table-figure {
+  margin-top: 15px;
+}
+
 .home-page {
   min-height: 700px;
   background: #000428;
@@ -431,7 +494,7 @@ span.nav-sub-icon svg {
   /* Stay on top */
   top: 0;
   left: 0;
-  background: #314297;
+  background: #4059d1;
   overflow-x: hidden;
   /* Disable horizontal scroll */
   padding-top: 60px;
@@ -439,6 +502,8 @@ span.nav-sub-icon svg {
   -webkit-transition: 0.5s;
   transition: 0.5s;
   /* 0.5 second transition effect to slide in the sidebar */
+  -webkit-box-shadow: 1px 2px 1px #cecece;
+          box-shadow: 1px 2px 1px #cecece;
   /* The sidebar links */
 }
 
@@ -749,7 +814,7 @@ span.nav-sub-icon svg {
   min-height: 400px;
   margin-bottom: 20px;
   border-radius: 5px;
-  color: #1f1e1e;
+  color: rgba(31, 30, 30, 0.8);
 }
 
 .signal-detail .currency-info {
@@ -816,7 +881,7 @@ span.nav-sub-icon svg {
 
 .signal-detail .signal-currency {
   padding: 10px 5px;
-  background: rgba(23, 109, 207, 0.3);
+  background: rgba(23, 109, 207, 0.8);
   color: #fff;
 }
 
@@ -1509,9 +1574,6 @@ ul {
   background: #48acf0;
 }
 
-/** ================
- * Responsive
- ===================*/
 @media only screen and (min-width: 768px) and (max-width: 959px) {
   .pricing-wrapper {
     width: 768px;
@@ -1533,6 +1595,30 @@ ul {
     float: none;
     margin: 0 0 20px 0;
     width: 100%;
+  }
+  .dashboard-content {
+    padding: 10px 20px;
+    margin-left: 0px;
+  }
+  .dash-card {
+    margin-bottom: 20px;
+  }
+  .nav-logo {
+    margin-left: 5px;
+  }
+  .navbar > .container-fluid {
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+  }
+  tr {
+    width: 100px;
+  }
+  .navbar-toggle.collapsed.pull-left {
+    margin-left: 40px;
+  }
+  ul.dropdown-menu {
+    margin-left: 0px;
   }
 }
 

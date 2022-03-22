@@ -27,6 +27,7 @@ export class SubNav extends Component {
     toasttext: null,
     toastcategory: "error",
     isMounted: true,
+    mobile: false,
   };
 
   componentDidMount() {
@@ -66,8 +67,6 @@ export class SubNav extends Component {
 
   componentDidUpdate(prevProps) {
     let servererror;
-    console.log("norm", prevProps.errors);
-    console.log("norm", this.props.errors);
 
     if (this.state.isMounted) {
       if (
@@ -130,8 +129,19 @@ export class SubNav extends Component {
     }
   };
 
+  openMobile = () => {
+    this.setState((prevState) => ({
+      mobile: !prevState.mobile,
+    }));
+  };
+  closeMobile = () => {
+    this.setState({
+      mobile: false,
+    });
+  };
+
   render() {
-    const { premiuminfo, userinfo, toast, toastcategory, toasttext } =
+    const { premiuminfo, userinfo, toast, toastcategory, toasttext, mobile } =
       this.state;
     const { auth } = this.props;
 
@@ -152,12 +162,29 @@ export class SubNav extends Component {
               />
             </Link>
 
-            <div className="collapse navbar-collapse" id="sideNavBar">
+            <div className="toggle-btn">
+              <button
+                type="button"
+                className="navbar-toggle collapsed pull-left"
+                data-toggle="collapse"
+                data-target="#sideNavBar"
+                aria-expanded="false"
+                onClick={() => this.openMobile()}
+              >
+                <span className="navbar-toggler-icon"></span>
+              </button>
+            </div>
+
+            <div
+              className={`${mobile ? "" : "collapse"} navbar-collapse`}
+              id="sideNavBar"
+            >
               <ul className="navbar-nav ms-auto">
                 <li className="nav-item dropdown">
                   <Dropdown
                     avatar={userinfo.avatar}
                     username={userinfo.username}
+                    onClick={() => this.closeMobile()}
                   />
                 </li>
                 <li className="nav-item nav-user-item">
@@ -179,6 +206,7 @@ export class SubNav extends Component {
                           (auth.user.level === 2 && "sp") ||
                           (auth.user.level === 1 && "user")
                         }/forums`}
+                        onClick={() => this.closeMobile()}
                       >
                         <HiOutlineChatAlt2 />
                       </Link>
@@ -195,6 +223,7 @@ export class SubNav extends Component {
                         (auth.user.level === 2 && "sp") ||
                         (auth.user.level === 1 && "user")
                       }/settings`}
+                      onClick={() => this.closeMobile()}
                     >
                       <RiSettings3Line />
                     </Link>
