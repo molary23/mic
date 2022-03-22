@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ImUndo } from "react-icons/im";
+import { RiRefreshLine } from "react-icons/ri";
+import { IoIosRemoveCircleOutline } from "react-icons/io";
 
 function SelectList(props) {
   const { list, onSubmit, load } = props;
@@ -43,11 +44,12 @@ function SelectList(props) {
         >
           {`${item.firstcurrency[1].toUpperCase()}/${item.secondcurrency[1].toUpperCase()}`}
           <span className="remove-selected-item">
-            <i
-              className="fas fa-times"
+            <span
               title={`Remove ${item.firstcurrency[1].toUpperCase()}/${item.secondcurrency[1].toUpperCase()}`}
               onClick={() => clickHandler(item.id)}
-            />
+            >
+              <IoIosRemoveCircleOutline />
+            </span>
           </span>
         </li>
       );
@@ -76,10 +78,10 @@ function SelectList(props) {
             <div className="col-6">
               <button
                 type="submit"
-                className="btn default-btn btn-lg btn-block"
+                className="btn reset-btn btn-lg btn-block secondbtn"
                 onClick={resetHandler}
               >
-                Reset List <ImUndo />
+                Reset List <RiRefreshLine />
               </button>
             </div>
           </div>

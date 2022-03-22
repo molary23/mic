@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 
+import { IoIosRemoveCircleOutline } from "react-icons/io";
+import { MdOutlineSelectAll } from "react-icons/md";
+import ConfirmModal from "../layout/ConfirmModal";
+
 function SignalForm(props) {
   const { onSubmit, providerList, load } = props;
-  const [loading, setLoading] = useState(false);
-  const [provider, setProvider] = useState([]);
-  const [errors, setErrors] = useState("");
+  const [loading, setLoading] = useState(false),
+    [check, setCheck] = useState(false),
+    [provider, setProvider] = useState([]),
+    [errors, setErrors] = useState("");
   let providers = [];
   const submitHandler = (e) => {
     e.preventDefault();
@@ -40,16 +45,20 @@ function SignalForm(props) {
     setProvider(providers);
   };
 
+  let checktext = "Are you sure you want to add all Providers?",
+    checktitle = "Confirm Action";
+
   const submitAllHandler = (e) => {
     e.preventDefault();
-    let check = window.confirm(
-      "Are you sure you want to add all Currency Pair?"
-    );
-    if (!check) {
-      return false;
-    } else {
+    setCheck(true);
+  };
+
+  const confirmHandler = (option) => {
+    if (option) {
+      setLoading(true);
       onSubmit(["all", []]);
     }
+    setCheck(false);
   };
 
   let options = {},
@@ -96,11 +105,12 @@ function SignalForm(props) {
                 >
                   {item.split("-")[1]}
                   <span className="remove-selected-item">
-                    <i
-                      className="fas fa-times"
+                    <span
                       title={`Remove ${item}`}
                       onClick={() => clickHandler(item)}
-                    />
+                    >
+                      <IoIosRemoveCircleOutline />
+                    </span>
                   </span>
                 </li>
               );
@@ -123,10 +133,10 @@ function SignalForm(props) {
             <div className="col-6">
               <button
                 type="submit"
-                className="btn default-btn btn-lg btn-block"
+                className="btn default-btn btn-lg btn-block secondbtn"
                 onClick={submitAllHandler}
               >
-                Add All
+                Add All <MdOutlineSelectAll />
                 {loading && (
                   <span className="spinner-border spinner-border-sm ms-2"></span>
                 )}
@@ -135,6 +145,12 @@ function SignalForm(props) {
           </div>
         </div>
       </form>
+      {check && (
+        <ConfirmModal
+          {...{ check, checktext, checktitle }}
+          onClick={confirmHandler}
+        />
+      )}
     </div>
   );
 }

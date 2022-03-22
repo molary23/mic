@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
+import { IoIosRemoveCircleOutline } from "react-icons/io";
+import { MdOutlineSelectAll } from "react-icons/md";
+import ConfirmModal from "../layout/ConfirmModal";
+
 function CurrencyForm(props) {
-  const { onSubmit, currencyList, load } = props;
-  const [loading, setLoading] = useState(false);
-  const [currency, setCurrency] = useState([]);
-  const [errors, setErrors] = useState("");
+  const { onSubmit, currencyList, load } = props,
+    [loading, setLoading] = useState(false),
+    [check, setCheck] = useState(false),
+    [currency, setCurrency] = useState([]),
+    [errors, setErrors] = useState("");
   let currencies = [];
 
   const submitHandler = (e) => {
@@ -24,16 +29,20 @@ function CurrencyForm(props) {
     }
   };
 
+  let checktext = "Are you sure you want to add all Currency Pair?",
+    checktitle = "Confirm Action";
+
   const submitAllHandler = (e) => {
     e.preventDefault();
-    let check = window.confirm(
-      "Are you sure you want to add all Currency Pair?"
-    );
-    if (!check) {
-      return false;
-    } else {
+    setCheck(true);
+  };
+
+  const confirmHandler = (option) => {
+    if (option) {
+      setLoading(true);
       onSubmit(["all", []]);
     }
+    setCheck(false);
   };
 
   const changeHandler = (e) => {
@@ -102,11 +111,12 @@ function CurrencyForm(props) {
                 >
                   {item.split("-")[1]}
                   <span className="remove-selected-item">
-                    <i
-                      className="fas fa-times"
+                    <span
                       title={`Remove ${item}`}
                       onClick={() => clickHandler(item)}
-                    />
+                    >
+                      <IoIosRemoveCircleOutline />
+                    </span>
                   </span>
                 </li>
               );
@@ -130,10 +140,10 @@ function CurrencyForm(props) {
             <div className="col-6">
               <button
                 type="submit"
-                className="btn default-btn btn-lg btn-block"
+                className="btn default-btn btn-lg btn-block secondbtn"
                 onClick={submitAllHandler}
               >
-                Add All
+                Add All <MdOutlineSelectAll />
                 {loading && (
                   <span className="spinner-border spinner-border-sm ms-2"></span>
                 )}
@@ -142,6 +152,12 @@ function CurrencyForm(props) {
           </div>
         </div>
       </form>
+      {check && (
+        <ConfirmModal
+          {...{ check, checktext, checktitle }}
+          onClick={confirmHandler}
+        />
+      )}
     </div>
   );
 }

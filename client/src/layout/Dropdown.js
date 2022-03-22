@@ -22,14 +22,20 @@ function Dropdown(props) {
   };
 
   const toProfile = () => {
-    navigate(
-      `/${
-        (props.auth.user.level === 3 && "admin") ||
-        (props.auth.user.level === 2 && "sp") ||
-        (props.auth.user.level === 1 && "user")
-      }/settings`,
-      { replace: false }
-    );
+    let to;
+    if (props.auth.user.level === 3) {
+      to = "admin";
+    } else if (props.auth.user.level === 2) {
+      to = "sp";
+    } else if (props.auth.user.level === 1) {
+      to = "user";
+    }
+
+    navigate(`/${to}/settings`, { replace: false });
+  };
+  const linkHandler = (e) => {
+    e.preventDefault();
+    setDisplay(!display);
   };
   return (
     <div className="Dropdown">
@@ -38,9 +44,7 @@ function Dropdown(props) {
         to="#"
         // role="button"
         data-bs-toggle="dropdown"
-        onClick={() => {
-          setDisplay(!display);
-        }}
+        onClick={linkHandler}
         onBlur={() => {
           setDisplay(false);
         }}

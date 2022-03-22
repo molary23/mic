@@ -10,7 +10,9 @@ import ReplyCard from "../../layout/ReplyCard";
 import Toast from "../../layout/Toast";
 import ConfirmModal from "../../layout/ConfirmModal";
 
+import { FcIdea } from "react-icons/fc";
 import { IoLockClosedOutline } from "react-icons/io5";
+import { RiMapPinUserLine } from "react-icons/ri";
 
 import DateFormat from "../../layout/DateFormat";
 
@@ -42,7 +44,7 @@ class Forum extends Component {
   componentDidMount() {
     const { url } = this.state;
     let params = url.pathname.split("forum")[1],
-      id = params.split(":")[1];
+      id = parseInt(params.split(":")[1]);
     this.setState({
       forumId: id,
     });
@@ -61,13 +63,13 @@ class Forum extends Component {
       nextProps.errors !== prevState.errors &&
       Object.keys(nextProps.errors).length > 0
     ) {
-      update.error = nextProps.errors.data;
+      update.servererror = nextProps.errors.data;
       update.isLoading = false;
     } else if (
       nextProps.errors !== prevState.errors &&
       Object.keys(nextProps.errors).length === 0
     ) {
-      update.error = {};
+      update.servererror = {};
     }
 
     return update;
@@ -219,37 +221,54 @@ class Forum extends Component {
                 </Link>
               </p>
             ) : (
-              <div className="discussion-page">
+              <div className="transactions holder-card card">
                 <div className="discussion-card card">
                   <div className="discussion">
-                    <h3 className="mb-1">
+                    <h3 className="mb-4 forum-title">
                       {post.title}
-                      <span className="text-muted ms-4 forum-status">
-                        {post.status === "c" && (
-                          <span className="text-muted ms-4 forum-status">
-                            Closed <IoLockClosedOutline />
-                          </span>
-                        )}
-                      </span>
+                      {post.status === "c" && (
+                        <span className="forum-status">
+                          Closed <IoLockClosedOutline />
+                        </span>
+                      )}
                     </h3>
-                    <div className="row">
-                      <div className="col-md-2">
-                        {post.right === "p"
-                          ? "From Knowledge base"
-                          : "Created by You"}
-                      </div>
-                      <div className="col-md-3">
-                        <DateFormat date={post.createdAt} />
-                      </div>
+
+                    <div className="forum-from">
+                      {post.right === "p" ? (
+                        <span className="forum-right ">
+                          <FcIdea />
+                          From Knowledge base
+                        </span>
+                      ) : (
+                        <em>
+                          <small className="forum-by">
+                            <RiMapPinUserLine /> Created by You
+                          </small>
+                        </em>
+                      )}
                     </div>
 
-                    <p className="mt-1">{post.text}</p>
-                    <span className="reply-by">{post.User.username}</span>
-                    <span className="reply-level">
-                      {post.User.level === 3 && "Admin"}
+                    <div className="forum-time">
+                      <DateFormat date={post.createdAt} />
+                    </div>
+                    <div className="forum-text">
+                      <p className="mt-2">{post.text}</p>
+                    </div>
+
+                    <span className="reply-post-by text-muted">
+                      <RiMapPinUserLine />
+                      Created by{" "}
+                      {post.User.level === 3 ? (
+                        <span className="reply-post-level text-muted">
+                          Admin
+                        </span>
+                      ) : (
+                        post.User.username
+                      )}
                     </span>
-                    <span>
-                      {reply.length} repl{reply.length > 1 ? "ies" : "y"}
+
+                    <span className="reply-count text-muted">
+                      {reply.length} repl{reply.length !== 1 ? "ies" : "y"}
                     </span>
                   </div>
                 </div>
@@ -269,7 +288,7 @@ class Forum extends Component {
                 {post.status === "o" && (
                   <div className="reply-form">
                     <form
-                      className="account-form"
+                      className="reply-form"
                       onSubmit={this.submitReplyHandler}
                     >
                       <input
@@ -279,21 +298,22 @@ class Forum extends Component {
                         readOnly
                       />
                       <TextAreaField
-                        id="add-new-ann-summary"
-                        placeholder="Add Comment"
+                        id="add-new-reply"
+                        placeholder="Add Reply"
                         type="text"
                         name="text"
                         value={text}
                         onChange={this.changeHandler}
                         error={error.text}
                       />
-                      <div className="d-grid">
+
+                      <div className="">
                         <button
                           type="submit"
                           className="btn default-btn btn-lg btn-block"
                         >
                           Add Comment <BiCommentCheck />
-                          {isLoading && (
+                          {loading && (
                             <span className="spinner-border spinner-border-sm ms-2"></span>
                           )}
                         </button>

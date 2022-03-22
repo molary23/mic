@@ -90,12 +90,12 @@ ul.dropdown-menu {
 .nav-forum-icon svg,
 .nav-settings-icon svg {
   font-size: 25px;
-  color: rgba(102, 102, 102, 0.6);
+  color: $offwhite;
 }
 
 .nav-user-name {
   text-transform: capitalize;
-  color: rgba(102, 102, 102, 0.6);
+  color: $offwhite;
 }
 
 .nav-user-image {
@@ -194,7 +194,7 @@ span.nav-sub-icon {
 
 /* Dashboard */
 .dashboard-body {
-  background: rgba($color: #b3d6ff, $alpha: 0.2);
+  background: rgba($color: #b3d6ff, $alpha: 0.3);
   min-height: 800px;
   padding-top: 80px;
 }
@@ -202,7 +202,6 @@ span.nav-sub-icon {
   min-height: 700px;
   margin-left: 200px;
   padding: 25px 50px;
-  margin-top: 80px;
   .card {
     border: 1px solid $border-light;
     box-shadow: 1px 2px 3px $shadow;
@@ -538,6 +537,7 @@ span.nav-sub-icon {
   height: 2.5px;
   inset: 0;
   z-index: 9999;
+  background: transparent;
 }
 
 .loader {
@@ -547,7 +547,7 @@ span.nav-sub-icon {
 
 /* Page cards */
 .holder-card {
-  padding: 20px 10px;
+  padding: 30px;
 }
 
 /* Transactions Badges */
@@ -694,6 +694,15 @@ span.nav-sub-icon {
   padding: 10px 0px;
   border-bottom: 1px dashed rgba($color: #8dbff8, $alpha: 0.5);
 }
+.settings .nav-link {
+  color: rgba(133, 133, 133, 0.8) !important;
+}
+.settings .nav-link.active {
+  background: rgba(233, 233, 233, 0.8) !important;
+  border-bottom: 2px solid rgb(207, 207, 207);
+  border-radius: unset;
+  font-weight: 500;
+}
 
 .first-account.card {
   padding: 20px;
@@ -761,6 +770,94 @@ ul.list-group.list-group-horizontal {
   border-radius: 15px;
   min-height: 150px;
   padding: 20px;
+
+  background: rgba($color: #b3d6ff, $alpha: 0.2) !important;
+
+  .forum-title {
+    text-transform: capitalize;
+  }
+  .forum-text {
+    text-transform: capitalize;
+  }
+
+  .forum-from {
+    font-size: 14px;
+    color: $offwhite;
+    p {
+      margin-bottom: 0.5px !important;
+    }
+
+    svg {
+      font-size: 20px;
+      margin-right: 5px;
+    }
+  }
+  .forum-time {
+    font-size: 14px;
+    color: $offwhite;
+  }
+
+  .forum-right {
+    margin-right: 10px;
+  }
+
+  .forum-status {
+    padding: 5px 10px;
+    border: 1px solid rgba($color: $company-color, $alpha: 0.5);
+    font-size: 15px;
+    border-radius: 30px;
+    background: rgba($color: $company-color, $alpha: 0.2);
+    color: $company-color;
+    float: right;
+  }
+}
+
+.reply-form textarea {
+  height: 100px !important;
+}
+
+.forum-from {
+  font-size: 14px;
+  color: $offwhite;
+  p {
+    margin-bottom: 0.5px !important;
+  }
+
+  svg {
+    font-size: 20px;
+    margin-right: 5px;
+  }
+}
+.forum-time {
+  font-size: 14px;
+  color: $offwhite;
+}
+
+.forum-right {
+  margin-right: 10px;
+}
+
+.forum-action .btn {
+  border-radius: 40px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  svg {
+    margin-left: 20px;
+  }
+}
+
+.reply-card.card {
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba($color: $shadow, $alpha: 0.1) !important;
+}
+
+.reply-card.card.move-left {
+  background: rgba($color: $offwhite, $alpha: 0.2) !important;
+}
+
+.reply-count {
+  float: right;
 }
 
 /* Admin Views */
@@ -820,7 +917,7 @@ ul.list-group.list-group-horizontal {
 .scroll-up {
   bottom: 60px;
   position: fixed;
-  z-index: 9999;
+  z-index: 1;
   font-size: 40px;
   right: 10px;
   cursor: pointer;
@@ -1082,4 +1179,9 @@ ul {
   .pricing-wrapper {
     width: 300px;
   }
+}
+
+/* Card Figures*/
+.transactions-total.table-figure {
+  margin-top: 15px;
 }

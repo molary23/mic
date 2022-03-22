@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { ImUndo } from "react-icons/im";
+import { RiRefreshLine } from "react-icons/ri";
+
+import { IoIosRemoveCircleOutline } from "react-icons/io";
 function List(props) {
   const { list, onSubmit, load } = props;
   const [loading, setLoading] = useState(false);
@@ -39,11 +41,12 @@ function List(props) {
         >
           {item.username}
           <span className="remove-selected-item">
-            <i
-              className="fas fa-times"
+            <span
               title={`Remove ${item.username.toUpperCase()}`}
               onClick={() => clickHandler(item.id)}
-            />
+            >
+              <IoIosRemoveCircleOutline />
+            </span>
           </span>
         </li>
       );
@@ -51,7 +54,7 @@ function List(props) {
 
     listItem = (
       <div className="currency-list">
-        <h4 className="mb-3">List of Currencies you are subscribed to</h4>
+        <p className="mb-3">List of Signal Providers you are subscribed to</p>
         <ul className="list-group mb-3">{displayList}</ul>
         {errors && <small className="text-muted mb-2">{errors}</small>}
         <div className="d-grid mt-3">
@@ -73,10 +76,10 @@ function List(props) {
             <div className="col-6">
               <button
                 type="submit"
-                className="btn default-btn btn-lg btn-block"
+                className="btn reset-btn btn-lg btn-block secondbtn"
                 onClick={resetHandler}
               >
-                Reset List <ImUndo />
+                Reset List <RiRefreshLine />
               </button>
             </div>
           </div>

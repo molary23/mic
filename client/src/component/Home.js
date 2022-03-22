@@ -1,8 +1,27 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import logo from "../asset/images/mic-light.png";
 
 function Home() {
+  const auth = useSelector((state) => state.auth),
+    navigate = useNavigate();
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      let to;
+      if (auth.user.level === 1) {
+        to = "/user?navigate=lost";
+      }
+      if (auth.user.level === 2) {
+        to = "/sp?navigate=lost";
+      }
+      if (auth.user.level === 3) {
+        to = "/admin?navigate=lost";
+      }
+      navigate(to, { replace: true });
+    }
+  }, []);
+
   return (
     <div>
       <div className="home-page">

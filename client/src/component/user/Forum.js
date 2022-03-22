@@ -3,14 +3,16 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { FcIdea } from "react-icons/fc";
+import { IoLockClosedOutline } from "react-icons/io5";
+import { RiMapPinUserLine } from "react-icons/ri";
+
 import Spinner from "../../layout/Spinner";
 import ProgressBar from "../../layout/ProgressBar";
 import TextAreaField from "../../layout/TextAreaField";
 import ReplyCard from "../../layout/ReplyCard";
 import Toast from "../../layout/Toast";
 import ConfirmModal from "../../layout/ConfirmModal";
-
-import { IoLockClosedOutline } from "react-icons/io5";
 
 import DateFormat from "../../layout/DateFormat";
 
@@ -46,7 +48,6 @@ class Forum extends Component {
       forumId: id,
     });
     this.props.getForum(id);
-    console.log(forumId);
   }
 
   componentWillUnmount() {
@@ -174,8 +175,6 @@ class Forum extends Component {
       { loading } = user;
     let forum, post, reply, UserId, level;
 
-    console.log(user.getforum);
-
     if (
       (user.getforum === null || loading) &&
       !Object.keys(errors).includes("user")
@@ -221,36 +220,55 @@ class Forum extends Component {
                 </Link>
               </p>
             ) : (
-              <div className="discussion-page">
+              <div className="transactions holder-card card">
                 <div className="discussion-card card">
                   <div className="discussion">
-                    <h3 className="mb-1">
+                    <h3 className="mb-4 forum-title">
                       {post.title}
-                      <span className="text-muted ms-4 forum-status">
-                        {post.status === "c" && (
-                          <span className="text-muted ms-4 forum-status">
-                            Closed <IoLockClosedOutline />
-                          </span>
-                        )}
-                      </span>
+                      {post.status === "c" && (
+                        <span className="forum-status">
+                          Closed <IoLockClosedOutline />
+                        </span>
+                      )}
                     </h3>
-                    <div className="row">
-                      <div className="col-md-2">
-                        {post.right === "p"
-                          ? "From Knowledge base"
-                          : "Created by You"}
-                      </div>
-                      <div className="col-md-3">
-                        <DateFormat date={post.createdAt} />
-                      </div>
+
+                    <div className="forum-from">
+                      {post.right === "p" ? (
+                        <span className="forum-right ">
+                          <FcIdea />
+                          From Knowledge base
+                        </span>
+                      ) : (
+                        <em>
+                          <small className="forum-by">
+                            <RiMapPinUserLine /> Created by You
+                          </small>
+                        </em>
+                      )}
                     </div>
 
-                    <p className="mt-1">{post.text}</p>
-                    <span className="reply-by">{post.User.username}</span>
-                    <span className="reply-level">
-                      {post.User.level === 3 && "Admin"}
+                    <div className="forum-time">
+                      <DateFormat date={post.createdAt} />
+                    </div>
+                    <div className="forum-text">
+                      <p className="mt-2">{post.text}</p>
+                    </div>
+
+                    <span className="reply-post-by text-muted">
+                      <RiMapPinUserLine />
+                      Created by{" "}
+                      {post.User.level === 3 ? (
+                        <span className="reply-post-level text-muted">
+                          Admin
+                        </span>
+                      ) : (
+                        post.User.username
+                      )}
                     </span>
-                    <span>{reply.length} replies</span>
+
+                    <span className="reply-count text-muted">
+                      {reply.length} repl{reply.length !== 1 ? "ies" : "y"}
+                    </span>
                   </div>
                 </div>
                 <div className="replies-card">
@@ -266,7 +284,7 @@ class Forum extends Component {
                     </p>
                   )}
                 </div>
-                {post.status !== "o" && (
+                {post.status === "o" && (
                   <div className="reply-form">
                     <form
                       className="account-form"

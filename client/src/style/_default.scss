@@ -157,17 +157,25 @@ a.default-anchor {
     text-decoration: underline;
   }
 }
-.btn.default-btn {
-  background: #06c2f7 !important;
+.default-btn,
+.reset-btn {
   color: #fff !important;
   font-weight: 400;
   border: none;
   text-transform: capitalize;
+  &:hover {
+    color: $offwhite;
+  }
   &:focus {
     box-shadow: none !important;
   }
 }
-
+.default-btn {
+  background: #06c2f7 !important;
+}
+.reset-btn {
+  background: $success !important;
+}
 input {
   &:focus {
     box-shadow: none !important;
@@ -196,7 +204,7 @@ span.input-group-text {
   text-align: center;
 }
 nav.navbar {
-  box-shadow: 1px 2px 1px $shadow;
+  box-shadow: 2px 2px 1px $shadow;
 }
 .nav-logo {
   width: 200px;
@@ -205,13 +213,12 @@ nav.navbar {
 
 /* Modal */
 .modal {
-  background: rgba($color: $bg-dark, $alpha: 0.7);
+  background: rgba($color: rgb(31, 31, 31), $alpha: 0.7);
 }
 .modal-title {
   text-transform: capitalize;
 }
 .modal-content {
-  box-shadow: 1px 2px 3px $shadow;
   border: $border-light;
 }
 
@@ -241,6 +248,7 @@ svg {
 
 .download-btn {
   background: #1d6f42;
+  margin-top: 5px;
 }
 
 .add-btn {
@@ -249,4 +257,27 @@ svg {
 
 .pay-with {
   background: #48acf0;
+}
+
+.delete-btn {
+  background: rgba($color: $danger, $alpha: 0.3);
+  border: 1px solid rgba($color: $danger, $alpha: 0.5);
+  color: $danger;
+}
+
+.view-btn {
+  background: rgba($color: $def-blue, $alpha: 0.3);
+  border: 1px solid rgba($color: $def-blue, $alpha: 0.5);
+  color: $def-blue;
+}
+
+.move-btn {
+  background: rgba($color: $success, $alpha: 0.3);
+  border: 1px solid rgba($color: $success, $alpha: 0.5);
+  color: $success;
+}
+.close-btn {
+  background: rgba($color: $bg-dark, $alpha: 0.3);
+  border: 1px solid rgba($color: $bg-dark, $alpha: 0.5);
+  color: $bg-dark;
 }

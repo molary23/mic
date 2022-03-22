@@ -925,7 +925,7 @@ router.post(
       search = null,
       right = null,
       offset = 0,
-      where = { UserId },
+      where = {},
       result = [];
 
     if (req.body.limit) limit = req.body.limit;
@@ -984,6 +984,20 @@ router.post(
         };
       }
     }
+
+    where = {
+      ...where,
+      ...{
+        [Op.or]: [
+          {
+            right: "p",
+          },
+          {
+            UserId,
+          },
+        ],
+      },
+    };
 
     ForumView.findAndCountAll({
       order: [

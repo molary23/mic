@@ -109,43 +109,6 @@ class Signals extends Component {
     });
   };
 
-  /*  loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search;
-
-    let winScroll = window.scrollY;
-
-    if (winScroll > iScrollPos) {
-      if (currentPage <= numOfPages) {
-        this.setState((prevState) => ({
-          offset: prevState.offset + limit,
-          getLoad: (prevState.getLoad = false),
-        }));
-
-        if (searchParams !== "") {
-          let queryTerms = searchParams.split("?")[1];
-          queryTerms = queryTerms.split("&");
-          let terms = queryTerms.map((term) => term.split("="));
-          let params = Object.fromEntries(terms);
-          params.offset = this.state.offset;
-          params.limit = this.state.limit;
-          // Search Now
-          this.props.searchContent(content, params);
-        } else {
-          const paginate = {
-            offset: this.state.offset,
-            limit: this.state.limit,
-          };
-          this.props.getContent(content, paginate);
-        }
-
-        this.setState({
-          currentPage: this.state.currentPage + 1,
-        });
-      }
-    }
-  };*/
-
   changeHandler = (e) => {
     const { url, content, limit, offset } = this.state;
     this.setState({
@@ -163,134 +126,6 @@ class Signals extends Component {
       self: this,
     });
   };
-
-  /*
-  setSearchParams = (selected, valueOfSelected) => {
-    const { url, content } = this.state;
-    this.setState({
-      offset: 0,
-      limit: 4,
-      currentPage: 2,
-    });
-
-    if (valueOfSelected !== "") {
-      url.searchParams.set(selected, valueOfSelected);
-      window.history.pushState({}, "", url);
-    } else if (valueOfSelected === "") {
-      url.searchParams.delete(selected);
-      window.history.pushState({}, "", url);
-    }
-    let searchParams = window.location.search;
-    if (selected !== "search") {
-      if (searchParams !== "") {
-        let queryTerms = searchParams.split("?")[1];
-        queryTerms = queryTerms.split("&");
-        let terms = queryTerms.map((term) => term.split("="));
-        let params = Object.fromEntries(terms);
-        params.offset = 0;
-        params.limit = this.state.limit;
-        //this.props.clearSearchActions(content);
-
-        this.setState({
-          isLoading: true,
-        });
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        this.props.searchContent(content, params);
-      } else {
-        const paginate = {
-          offset: 0,
-          limit: this.state.limit,
-        };
-        this.props.clearActions(content);
-        this.setState((prevState) => ({
-          getLoad: (prevState.getLoad = false),
-        }));
-        this.props.getContent(content, paginate);
-      }
-    } else {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(() => {
-        this.setState({
-          isLoading: true,
-        });
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        console.log(searchParams);
-        if (searchParams !== "") {
-          let queryTerms = searchParams.split("?")[1];
-          queryTerms = queryTerms.split("&");
-          let terms = queryTerms.map((term) => term.split("="));
-          let params = Object.fromEntries(terms);
-          params.offset = 0;
-          params.limit = this.state.limit;
-        } else {
-          /*  const paginate = {
-            offset: 0,
-            limit: this.state.limit,
-          };
-          this.props.clearActions(content);
-          this.setState((prevState) => ({
-            getLoad: (prevState.getLoad = false),
-          }));
-          this.props.getContent(content, paginate);
-        }
-      }, this.state.doneTypingInterval);
-    }
-      console.log(searchParams);
-    if (searchParams !== "") {
-      let queryTerms = searchParams.split("?")[1];
-      queryTerms = queryTerms.split("&");
-      let terms = queryTerms.map((term) => term.split("="));
-      let params = Object.fromEntries(terms);
-      params.offset = 0;
-      params.limit = this.state.limit;
-
-      // Search Now
-      this.props.clearSearchActions(content);
-      if (selected === "search") {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-          this.setState({
-            isLoading: true,
-          });
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-          if (valueOfSelected !== "") {
-            //this.props.searchContent(content, params);
-            console.log(valueOfSelected);
-          } else {
-            console.log(valueOfSelected);
-          }
-        }, this.state.doneTypingInterval);
-      } else {
-        this.setState({
-          isLoading: true,
-        });
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        this.props.searchContent(content, params);
-      }
-    } else {
-      const paginate = {
-        offset: 0,
-        limit: this.state.limit,
-      };
-      this.props.clearActions(content);
-      this.setState((prevState) => ({
-        getLoad: (prevState.getLoad = false),
-      }));
-      this.props.getContent(content, paginate);
-    }
-  };*/
 
   clickHandler = (value) => {
     this.setState({
@@ -369,7 +204,7 @@ class Signals extends Component {
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Currencies</h1>
+              <h1>Signals</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">

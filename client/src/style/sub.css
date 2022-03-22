@@ -163,17 +163,31 @@ a.default-anchor:hover {
   text-decoration: underline;
 }
 
-.btn.default-btn {
-  background: #06c2f7 !important;
+.default-btn,
+.reset-btn {
   color: #fff !important;
   font-weight: 400;
   border: none;
   text-transform: capitalize;
 }
 
-.btn.default-btn:focus {
+.default-btn:hover,
+.reset-btn:hover {
+  color: rgba(102, 102, 102, 0.6);
+}
+
+.default-btn:focus,
+.reset-btn:focus {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
+}
+
+.default-btn {
+  background: #06c2f7 !important;
+}
+
+.reset-btn {
+  background: #2eba61 !important;
 }
 
 input:focus {
@@ -205,8 +219,8 @@ span.input-group-text {
 }
 
 nav.navbar {
-  -webkit-box-shadow: 1px 2px 1px #cecece;
-          box-shadow: 1px 2px 1px #cecece;
+  -webkit-box-shadow: 2px 2px 1px #cecece;
+          box-shadow: 2px 2px 1px #cecece;
 }
 
 .nav-logo {
@@ -216,7 +230,7 @@ nav.navbar {
 
 /* Modal */
 .modal {
-  background: rgba(49, 66, 151, 0.7);
+  background: rgba(31, 31, 31, 0.7);
 }
 
 .modal-title {
@@ -224,8 +238,6 @@ nav.navbar {
 }
 
 .modal-content {
-  -webkit-box-shadow: 1px 2px 3px #cecece;
-          box-shadow: 1px 2px 3px #cecece;
   border: #fcfcfc;
 }
 
@@ -259,6 +271,7 @@ svg {
 
 .download-btn {
   background: #1d6f42;
+  margin-top: 5px;
 }
 
 .add-btn {
@@ -267,6 +280,30 @@ svg {
 
 .pay-with {
   background: #48acf0;
+}
+
+.delete-btn {
+  background: rgba(220, 36, 48, 0.3);
+  border: 1px solid rgba(220, 36, 48, 0.5);
+  color: #dc2430;
+}
+
+.view-btn {
+  background: rgba(23, 109, 207, 0.3);
+  border: 1px solid rgba(23, 109, 207, 0.5);
+  color: #176dcf;
+}
+
+.move-btn {
+  background: rgba(46, 186, 97, 0.3);
+  border: 1px solid rgba(46, 186, 97, 0.5);
+  color: #2eba61;
+}
+
+.close-btn {
+  background: rgba(49, 66, 151, 0.3);
+  border: 1px solid rgba(49, 66, 151, 0.5);
+  color: #314297;
 }
 
 .home-page {
@@ -480,7 +517,7 @@ span.nav-sub-icon svg {
 
 /* Dashboard */
 .dashboard-body {
-  background: rgba(179, 214, 255, 0.2);
+  background: rgba(179, 214, 255, 0.3);
   min-height: 800px;
   padding-top: 80px;
 }
@@ -489,7 +526,6 @@ span.nav-sub-icon svg {
   min-height: 700px;
   margin-left: 200px;
   padding: 25px 50px;
-  margin-top: 80px;
 }
 
 .dashboard-content .card {
@@ -816,6 +852,7 @@ span.nav-sub-icon svg {
   height: 2.5px;
   inset: 0;
   z-index: 9999;
+  background: transparent;
 }
 
 .loader {
@@ -825,7 +862,7 @@ span.nav-sub-icon svg {
 
 /* Page cards */
 .holder-card {
-  padding: 20px 10px;
+  padding: 30px;
 }
 
 /* Transactions Badges */
@@ -986,6 +1023,17 @@ span.nav-sub-icon svg {
   border-bottom: 1px dashed rgba(141, 191, 248, 0.5);
 }
 
+.settings .nav-link {
+  color: rgba(133, 133, 133, 0.8) !important;
+}
+
+.settings .nav-link.active {
+  background: rgba(233, 233, 233, 0.8) !important;
+  border-bottom: 2px solid #cfcfcf;
+  border-radius: unset;
+  font-weight: 500;
+}
+
 .first-account.card {
   padding: 20px;
 }
@@ -1058,6 +1106,99 @@ ul.list-group.list-group-horizontal {
   border-radius: 15px;
   min-height: 150px;
   padding: 20px;
+  background: rgba(179, 214, 255, 0.2) !important;
+}
+
+.discussion-card .forum-title {
+  text-transform: capitalize;
+}
+
+.discussion-card .forum-text {
+  text-transform: capitalize;
+}
+
+.discussion-card .forum-from {
+  font-size: 14px;
+  color: rgba(102, 102, 102, 0.6);
+}
+
+.discussion-card .forum-from p {
+  margin-bottom: 0.5px !important;
+}
+
+.discussion-card .forum-from svg {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.discussion-card .forum-time {
+  font-size: 14px;
+  color: rgba(102, 102, 102, 0.6);
+}
+
+.discussion-card .forum-right {
+  margin-right: 10px;
+}
+
+.discussion-card .forum-status {
+  padding: 5px 10px;
+  border: 1px solid rgba(64, 89, 209, 0.5);
+  font-size: 15px;
+  border-radius: 30px;
+  background: rgba(64, 89, 209, 0.2);
+  color: #4059d1;
+  float: right;
+}
+
+.reply-form textarea {
+  height: 100px !important;
+}
+
+.forum-from {
+  font-size: 14px;
+  color: rgba(102, 102, 102, 0.6);
+}
+
+.forum-from p {
+  margin-bottom: 0.5px !important;
+}
+
+.forum-from svg {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.forum-time {
+  font-size: 14px;
+  color: rgba(102, 102, 102, 0.6);
+}
+
+.forum-right {
+  margin-right: 10px;
+}
+
+.forum-action .btn {
+  border-radius: 40px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.forum-action .btn svg {
+  margin-left: 20px;
+}
+
+.reply-card.card {
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(206, 206, 206, 0.1) !important;
+}
+
+.reply-card.card.move-left {
+  background: rgba(102, 102, 102, 0.2) !important;
+}
+
+.reply-count {
+  float: right;
 }
 
 /* Admin Views */
@@ -1119,7 +1260,7 @@ ul.list-group.list-group-horizontal {
 .scroll-up {
   bottom: 60px;
   position: fixed;
-  z-index: 9999;
+  z-index: 1;
   font-size: 40px;
   right: 10px;
   cursor: pointer;
@@ -1399,5 +1540,10 @@ ul {
   .pricing-wrapper {
     width: 300px;
   }
+}
+
+/* Card Figures*/
+.transactions-total.table-figure {
+  margin-top: 15px;
 }
 /*# sourceMappingURL=sub.css.map */

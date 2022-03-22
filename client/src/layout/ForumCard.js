@@ -1,9 +1,11 @@
 import React from "react";
 
-import { MdOutlineDeleteForever, MdPublic } from "react-icons/md";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
 import { FaRegEye } from "react-icons/fa";
+import { FcIdea } from "react-icons/fc";
 import { IoLockClosedOutline } from "react-icons/io5";
+import { RiMapPinUserLine } from "react-icons/ri";
 
 import DateFormat from "./DateFormat";
 import { Link } from "react-router-dom";
@@ -20,43 +22,47 @@ function ForumCard(props) {
     return (
       <div className="discussion-card card" key={i}>
         <div className="discussion">
-          <h3 className="mb-1">
+          <h3 className="mb-4 forum-title">
             {item.title}
-            <span className="text-muted ms-4 forum-status">
-              {item.status === "c" && (
-                <span className="text-muted ms-4 forum-status">
-                  Closed <IoLockClosedOutline />
-                </span>
-              )}
-            </span>
+
+            {item.status === "c" && (
+              <span className="forum-status">
+                Closed <IoLockClosedOutline />
+              </span>
+            )}
           </h3>
+          <div className="forum-from">
+            {item.right === "p" && (
+              <span className="forum-right ">
+                <FcIdea />
+                From Knowledge base
+              </span>
+            )}
+
+            {item.UserId === user && (
+              <em>
+                <small className="forum-by">
+                  <RiMapPinUserLine /> Created by You
+                </small>
+              </em>
+            )}
+          </div>
           <div className="forum-time">
             <DateFormat date={item.createdAt} />
           </div>
-          <div className="forum-from">
-            <span className="forum-right">
-              {item.right === "p" && "From Knowledge base"}
-            </span>
-            <span className="forum-by">
-              {item.UserId === user && "Created by You"}
-            </span>
+          <div className="forum-text">
+            <p className="mt-2">{item.text}</p>
           </div>
-          <p className="mt-1">{item.text}</p>
         </div>
         <div className="row">
-          <div className="col-md-6 col-xs-12">
-            <span className="text-muted forum-reply-count">
-              {item.replycount} repl{item.replycount > 1 ? "ies" : "y"}
-            </span>
-          </div>
-          <div className="col-md-6 col-xs-12">
+          <div className="col-md-10 col-xs-12">
             <div className="forum-action">
               <Link
                 className="btn view-btn"
                 to={`/${level === 3 ? "admin" : "user"}/forum/:${item.id}`}
                 title="view discussion"
               >
-                <FaRegEye />
+                View <FaRegEye />
               </Link>
 
               {(sender === "admin-forums" || item.right === "u") && (
@@ -65,28 +71,34 @@ function ForumCard(props) {
                   title="delete discussion"
                   onClick={() => clickHandler(["delete", item.id])}
                 >
-                  <MdOutlineDeleteForever />
+                  Delete <MdOutlineDeleteForever />
                 </button>
               )}
-              {item.status === "o" && (
+              {item.status === "o" &&
+                (item.UserId === user || sender === "admin-forums") && (
+                  <button
+                    className="btn close-btn"
+                    title="close discussion"
+                    onClick={() => clickHandler(["close", item.id])}
+                  >
+                    Close <IoLockClosedOutline />
+                  </button>
+                )}
+              {sender === "admin-forums" && item.right !== "pc" && (
                 <button
-                  className="btn close-btn"
-                  title="close discussion"
-                  onClick={() => clickHandler(["close", item.id])}
-                >
-                  <IoLockClosedOutline />
-                </button>
-              )}
-              {sender === "admin-forums" && item.right !== "p" && (
-                <button
-                  className="btn close-btn"
+                  className="btn move-btn"
                   title="turn to knowledge base"
                   onClick={() => clickHandler(["public", item.id])}
                 >
-                  <MdPublic />
+                  Add to Knowledgebase <FcIdea />
                 </button>
               )}
             </div>
+          </div>
+          <div className="col-md-2 col-xs-12">
+            <span className="text-muted forum-reply-count">
+              {item.replycount} repl{item.replycount !== 1 ? "ies" : "y"}
+            </span>
           </div>
         </div>
       </div>

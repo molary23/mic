@@ -133,21 +133,6 @@ function DisplayForm(props) {
           </form>
         )}
       </ThemeContext.Consumer>
-
-      <ThemeContext.Consumer>
-        {({ changeTheme }) => (
-          <button
-            color="link"
-            onClick={() => {
-              setDarkMode(!darkMode);
-              changeTheme(darkMode ? themes.light : themes.dark);
-            }}
-          >
-            <i className={darkMode ? "fas fa-sun" : "fas fa-moon"}></i>
-            <span className="d-lg-none d-md-block">Switch mode</span>
-          </button>
-        )}
-      </ThemeContext.Consumer>
     </div>
   );
 }

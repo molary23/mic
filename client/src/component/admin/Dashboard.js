@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import ErrorBoundary from "../../util/ErrorBoundary";
+import { useLocation } from "react-router-dom";
 
 import { Outlet } from "react-router-dom";
 import SubNav from "../../layout/SubNav";
@@ -18,16 +20,20 @@ function Dashboard() {
     dispatch(logoutUser());
   }
 
+  const location = useLocation();
+
   const toggleOpen = (opt) => {
     setOpen(opt);
   };
   return (
-    <div>
+    <div className="dashboard-body">
       <SubNav onClick={toggleOpen} />
       <SideNav act={open} />
       <section>
         <div className={`dashboard-content pb-4 ${!open && "dash-full"}`}>
-          <Outlet />
+          <ErrorBoundary {...location}>
+            <Outlet />
+          </ErrorBoundary>
         </div>
       </section>
       <Footer />

@@ -3,6 +3,8 @@ import DateFormat from "./DateFormat";
 
 import { MdOutlineDeleteForever } from "react-icons/md";
 
+import { RiMapPinUserLine } from "react-icons/ri";
+
 function ReplyCard(props) {
   const { sender, UserId, reply, onClick, level } = props;
 
@@ -14,25 +16,34 @@ function ReplyCard(props) {
   replyList = reply.map((item, i) => {
     return (
       <div
-        className={`reply-card ${
-          item.UserId === UserId && "move-left dash-card transactions"
-        }`}
+        className={`reply-card card ${item.UserId === UserId && "move-left"}`}
         key={i}
       >
-        <p className="mb-1">{item.text}</p>
-        <span className="reply-time">
+        <div className="forum-from">
+          <span className="reply-post-by text-muted">
+            <RiMapPinUserLine />
+            Reply from{" "}
+            {item.UserId === UserId ? (
+              <span className="reply-post-level text-muted">You</span>
+            ) : (
+              `${item.level === 3 ? "Admin" : item.User.username}`
+            )}
+          </span>
+        </div>
+        <div className="forum-time">
           <DateFormat date={item.createdAt} />
-        </span>
-        <span className="reply-by">{item.User.username}</span>
-        <span className="reply-level">{item.User.level === 3 && "Admin"}</span>
+        </div>
+        <div className="forum-text">
+          <p className="mt-2">{item.text}</p>
+        </div>
         {item.UserId === UserId && (
-          <div className="reply-action">
+          <div className="forum-action">
             <button
               className="btn delete-btn"
               title="delete discussion"
               onClick={() => clickHandler(item.id)}
             >
-              <MdOutlineDeleteForever />
+              Delete <MdOutlineDeleteForever />
             </button>
           </div>
         )}

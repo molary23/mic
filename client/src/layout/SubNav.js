@@ -95,8 +95,6 @@ export class SubNav extends Component {
       this.props.errors.status === 401
     ) {
       this.logOut();
-      console.log("401", prevProps.errors);
-      console.log("401", this.props.errors);
     }
   }
 

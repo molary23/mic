@@ -15,6 +15,13 @@ class ErrorBoundary extends Component {
     // You can also log error messages to an error reporting service here
   }
 
+  componentDidUpdate(prevProps) {
+    let location = window.location;
+    if (prevProps.pathname !== location.pathname) {
+      this.setState({ hasError: false });
+    }
+  }
+
   render() {
     if (this.state.errorInfo) {
       // Error path

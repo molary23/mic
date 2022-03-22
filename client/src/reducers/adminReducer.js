@@ -553,7 +553,7 @@ export default function adminReducer(state = initialState, action) {
       return { ...state, updatepayment: false };
     }
     case CLEAR_ADMIN_GET_A_FORUM: {
-      return { ...state, getforum: false };
+      return { ...state, getforum: null };
     }
     case CLEAR_ADMIN_GET_A_BONUS: {
       return { ...state, getbonus: false };

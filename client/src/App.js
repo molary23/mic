@@ -8,8 +8,6 @@ import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
 import { clearCurrentProfile } from "./action/profileAction";
 
-import ErrorBoundary from "./util/ErrorBoundary";
-
 import PrivateRoute from "./util/PrivateRoute";
 
 import PageNotFound from "./util/404Page";
@@ -103,67 +101,13 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Home />}>
-          <Route
-            path="/"
-            element={
-              <ErrorBoundary>
-                <Login />
-              </ErrorBoundary>
-            }
-          ></Route>
-          <Route
-            exact
-            path="/forgot"
-            element={
-              <ErrorBoundary>
-                <Forgot />
-              </ErrorBoundary>
-            }
-          ></Route>
-          <Route
-            exact
-            path="/reset"
-            element={
-              <ErrorBoundary>
-                <Reset />
-              </ErrorBoundary>
-            }
-          ></Route>
-          <Route
-            exact
-            path="/confirm"
-            element={
-              <ErrorBoundary>
-                <Confirm />
-              </ErrorBoundary>
-            }
-          ></Route>
-          <Route
-            exact
-            path="/verify"
-            element={
-              <ErrorBoundary>
-                <VerifyEmail />
-              </ErrorBoundary>
-            }
-          ></Route>
-          <Route
-            exact
-            path="/register"
-            element={
-              <ErrorBoundary>
-                <Register />
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="/referral/:username"
-            element={
-              <ErrorBoundary>
-                <Referral />
-              </ErrorBoundary>
-            }
-          />
+          <Route path="/" element={<Login />}></Route>
+          <Route exact path="/forgot" element={<Forgot />}></Route>
+          <Route exact path="/reset" element={<Reset />}></Route>
+          <Route exact path="/confirm" element={<Confirm />}></Route>
+          <Route exact path="/verify" element={<VerifyEmail />}></Route>
+          <Route exact path="/register" element={<Register />} />
+          <Route path="/referral/:username" element={<Referral />} />
         </Route>
         <Route
           path="/sp"
@@ -171,29 +115,14 @@ function App() {
         >
           <Route
             path="/sp/"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={ProviderSignals} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={ProviderSignals} />}
           />
           <Route
             path="/sp/settings"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={ProviderSettings} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={ProviderSettings} />}
           />
         </Route>
-        <Route
-          path="/user"
-          element={
-            <ErrorBoundary>
-              <PrivateRoute Component={Dashboard} />
-            </ErrorBoundary>
-          }
-        >
+        <Route path="/user" element={<PrivateRoute Component={Dashboard} />}>
           <Route
             exact
             path="/user/"
@@ -202,111 +131,63 @@ function App() {
           <Route
             exact
             path="/user/signals"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Signals} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Signals} />}
           />
           <Route
             exact
             path="/user/transactions"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Transactions} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Transactions} />}
           />
           <Route
             exact
             path="/user/earnings"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Earnings} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Earnings} />}
           />
           <Route
             exact
             path="/user/referrals"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Referrals} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Referrals} />}
           />
           <Route
             exact
             path="/user/subscriptions"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Subscriptions} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Subscriptions} />}
           />
           <Route
             exact
             path="/user/pay"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Pay} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Pay} />}
           />
           <Route
             exact
             path="/user/payment"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Payment} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Payment} />}
           ></Route>
           <Route
             exact
             path="/user/payments"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Payments} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Payments} />}
           />
           <Route
             exact
             path="/user/withdrawals"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Withdrawals} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Withdrawals} />}
           />
           <Route
             exact
             path="/user/settings"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Settings} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Settings} />}
           />
 
           <Route
             exact
             path="/user/forum/:id"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Forum} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Forum} />}
           />
           <Route
             exact
             path="/user/forums"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={Forums} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={Forums} />}
           />
         </Route>
 
@@ -317,194 +198,110 @@ function App() {
           <Route
             exact
             path="/admin/"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminIndex} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminIndex} />}
           ></Route>
           <Route
             exact
             path="/admin/earnings"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminEarnings} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminEarnings} />}
           />
           <Route
             exact
             path="/admin/signals"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminSignals} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminSignals} />}
           />
           <Route
             exact
             path="/admin/subscriptions/"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminSubscriptions} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminSubscriptions} />}
           />
           <Route
             exact
             path="/admin/currencies"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminCurrency} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminCurrency} />}
           />
           <Route
             exact
             path="/admin/signal-providers"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminSignalProviders} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminSignalProviders} />}
           />
           <Route
             exact
             path="/admin/referrals"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminReferrals} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminReferrals} />}
           />
           <Route
             exact
             path="/admin/accounts"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminAccounts} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminAccounts} />}
           />
           <Route
             exact
             path="/admin/announcements"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminAnnouncements} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminAnnouncements} />}
           />
           <Route
             exact
             path="/admin/users"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminUsers} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminUsers} />}
           />
           <Route
             exact
             path="/admin/withdrawals"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminWithdrawals} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminWithdrawals} />}
           />
 
           <Route
             exact
             path="/admin/payments"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminPayments} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminPayments} />}
           />
 
           <Route
             exact
             path="/admin/transactions"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AddminTransactions} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AddminTransactions} />}
           />
           <Route
             exact
             path="/admin/admins"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminViewAdmins} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminViewAdmins} />}
           />
           <Route
             exact
             path="/admin/wallets"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminWallets} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminWallets} />}
           />
           <Route
             exact
             path="/admin/settings"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminSettings} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminSettings} />}
           />
           <Route
             exact
             path="/admin/forum/:id"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminForum} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminForum} />}
           />
           <Route
             exact
             path="/admin/forums"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminForums} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminForums} />}
           />
           <Route
             exact
             path="/admin/user/:id"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminUser} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminUser} />}
           />
 
           <Route
             exact
             path="/admin/admin/:id/"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminViewAdmin} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminViewAdmin} />}
           />
           <Route
             exact
             path="/admin/bonus/:bonusId"
-            element={
-              <ErrorBoundary>
-                <PrivateRoute Component={AdminBonus} />
-              </ErrorBoundary>
-            }
+            element={<PrivateRoute Component={AdminBonus} />}
           />
         </Route>
 
