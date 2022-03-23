@@ -48,7 +48,7 @@ router.post("/register", (req, res) => {
   const { errors, isValid } = validateAddUserInput(req.body.user);
 
   if (!isValid) {
-    return res.status(404).json(errors);
+    return res.status(400).json(errors);
   }
 
   const { referral, username, email, phone, password } = req.body.user;
@@ -142,7 +142,7 @@ router.post("/register", (req, res) => {
                   });
                 }
               })
-              .catch((err) => res.status(400).json(err));
+              .catch((err) => res.status(404).json(err));
           }
         })
         .catch((err) => res.json(err)),
@@ -206,7 +206,7 @@ router.post("/register", (req, res) => {
             });
           }
         })
-        .catch((err) => res.status(400).json(err)),
+        .catch((err) => res.status(404).json(err)),
     ]);
   }
 });
@@ -422,7 +422,7 @@ router.post("/login", (req, res) => {
     .then((user) => {
       if (!user) {
         errors.username = "User not Found!";
-        return res.status(404).json(errors);
+        return res.status(400).json(errors);
       }
       bcrypt.compare(password, user.password).then((isMatch) => {
         if (isMatch) {
@@ -449,7 +449,7 @@ router.post("/login", (req, res) => {
               );
             } else {
               errors.username = "Your Administrative Rights has been revoked!";
-              return res.status(404).json(errors);
+              return res.status(400).json(errors);
             }
           } else {
             Preference.findOne({
@@ -476,7 +476,7 @@ router.post("/login", (req, res) => {
                     .then(() => {
                       // Send Mail
                       errors.verify = 0;
-                      return res.status(404).json(errors);
+                      return res.status(400).json(errors);
                     })
                     .catch((err) => res.json(err));
                 } else {
@@ -532,7 +532,7 @@ router.post("/forgot", (req, res) => {
     .then((user) => {
       if (!user) {
         message.error = "User not Found!";
-        return res.status(404).json(message);
+        return res.status(400).json(message);
       }
 
       verifyField.UserId = user.id;

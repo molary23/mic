@@ -60,6 +60,9 @@ function ProfileForm(props) {
 
   return (
     <div className="settings-form-profile dash-card settings-form-card">
+      <div className="page-title mb-2 mt-1">
+        <h4>Change Profile</h4>
+      </div>
       <form className="edit-profile-form" onSubmit={submitHandler}>
         <TextInputField
           id="profile-form-lastname"

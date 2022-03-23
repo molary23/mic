@@ -6,7 +6,7 @@ function TableHead(props) {
   return (
     <div>
       <div className="table-responsive">
-        <table className="">
+        <table className="mytable">
           <thead>
             <tr>
               {head.map((head, i) => {

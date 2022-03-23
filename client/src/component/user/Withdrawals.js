@@ -269,18 +269,18 @@ export class Withdrawals extends Component {
                     value={status}
                   />
                 </div>
-                <div className="col-md-2">
+                <div className="col-md-2 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
                       Balance
                       <span className="badge rounded-pill bg-success">
-                        {roundUp(balance)}
+                        {roundUp(balance.toFixed(2))}
                       </span>
                     </h6>
                   </div>
                 </div>
                 {balance >= 0 && (
-                  <div className="col-md-2">
+                  <div className="col-md-2 mb-2">
                     <button
                       type="button"
                       className="btn add-btn"

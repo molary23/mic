@@ -22,13 +22,21 @@ function Dashboard() {
 
   const location = useLocation();
 
-  const toggleOpen = (opt) => {
-    setOpen(opt);
+  const toggleOpen = () => {
+    if (open) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
+  };
+
+  const closeSide = (value) => {
+    setOpen(value);
   };
   return (
     <div className="dashboard-body">
       <SubNav onClick={toggleOpen} />
-      <SideNav act={open} />
+      <SideNav act={open} onClick={closeSide} />
       <section>
         <div className={`dashboard-content pb-4 ${!open && "dash-full"}`}>
           <ErrorBoundary {...location}>

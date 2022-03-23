@@ -121,12 +121,12 @@ export class SubNav extends Component {
     this.setState({
       close: !this.state.close,
     });
-
-    if (this.state.close) {
+    this.props.onClick();
+    /*  if (this.state.close) {
       this.props.onClick(false);
     } else {
       this.props.onClick(true);
-    }
+    }*/
   };
 
   openMobile = () => {

@@ -19,15 +19,22 @@ function Dashboard() {
   if (level !== 2) {
     dispatch(logoutUser());
   }
+  const toggleOpen = () => {
+    if (open) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
+  };
 
-  const toggleOpen = (opt) => {
-    setOpen(opt);
+  const closeSide = (value) => {
+    setOpen(value);
   };
   const location = useLocation();
   return (
     <div>
       <SubNav onClick={toggleOpen} />
-      <SideNav act={open} />
+      <SideNav act={open} onClick={closeSide} />
       <section>
         <div className={`dashboard-content pb-4 ${!open && "dash-full"}`}>
           <ErrorBoundary {...location}>

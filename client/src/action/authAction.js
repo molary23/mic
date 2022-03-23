@@ -28,7 +28,6 @@ export const loginuser = (userData) => async (dispatch) => {
     const result = await dispatch(setCurrentUser(decoded));
     return result;
   } catch (error) {
-    console.log(error.response.data);
     dispatch({ type: GET_ERRORS, payload: error.response.data });
   }
 };

@@ -652,14 +652,7 @@ router.post(
     BonusView.findAndCountAll({
       where,
       order: [["bonusid", "desc"]],
-      attributes: [
-        "amount",
-        "status",
-        "createdAt",
-        "updatedAt",
-        "subscriptionid",
-        "payer",
-      ],
+      attributes: ["amount", "status", "createdAt", "updatedAt", "payer"],
       limit,
       offset,
     })

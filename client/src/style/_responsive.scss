@@ -36,15 +36,75 @@
   .navbar > .container-fluid {
     justify-content: flex-start;
   }
+  table.mytable {
+    width: 200%;
+  }
   tr {
     width: 100px;
   }
   .navbar-toggle.collapsed.pull-left {
     margin-left: 40px;
+    border: unset;
+    background: transparent;
+    display: block;
   }
 
   ul.dropdown-menu {
     margin-left: 0px;
+  }
+  .home-page .home-box {
+    width: 350px;
+  }
+  .sidebar {
+    width: 0px;
+    .hide-nav {
+      display: none;
+    }
+  }
+  .sidebar .side-nav-list {
+    width: 0px;
+  }
+
+  .hide-side {
+    width: 200px;
+    .side-nav-list {
+      width: 200px;
+    }
+  }
+
+  .settings .nav-item,
+  .settings .nav-link {
+    width: 100%;
+  }
+
+  .settings .dash-card {
+    width: 100%;
+
+    .input-group {
+      flex-wrap: inherit;
+    }
+  }
+  .currency-list {
+    margin-bottom: 20px;
+    .btn {
+      font-size: 16px;
+    }
+  }
+  .settings-form-signal {
+    .btn {
+      font-size: 14px;
+      padding: 10px;
+    }
+  }
+  .settings-info {
+    overflow-wrap: anywhere;
+  }
+
+  .pay-table {
+    width: 100%;
+  }
+  .crypto-card.card {
+    margin-right: 20px;
   }
 }
 

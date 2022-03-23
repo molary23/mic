@@ -304,7 +304,7 @@ class Settings extends Component {
               <h1>Settings</h1>
             </div>
             <div className="card card-nav-tabs card-plain">
-              <div className="card-header card-header-primary d-none d-md-block">
+              <div className="card-header card-header-primary">
                 <div className="nav-tabs-navigation">
                   <div className="nav-tabs-wrapper">
                     <ul className="nav nav-pills" data-tabs="tabs">

@@ -224,7 +224,7 @@ export class Transactions extends Component {
                 <div className="col-md-4">
                   <div className="transactions-total table-figure">
                     <h6>
-                      {totalText} Transactions
+                      {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>

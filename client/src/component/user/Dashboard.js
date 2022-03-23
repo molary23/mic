@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import ErrorBoundary from "../../util/ErrorBoundary";
@@ -13,6 +13,7 @@ import { logoutUser } from "../../action/authAction";
 
 function Dashboard() {
   const [open, setOpen] = useState(true),
+    location = useLocation(),
     dispatch = useDispatch(),
     auth = useSelector((state) => state.auth),
     level = auth.user.level;
@@ -20,15 +21,21 @@ function Dashboard() {
     dispatch(logoutUser());
   }
 
-  const toggleOpen = (opt) => {
-    setOpen(opt);
+  const toggleOpen = () => {
+    if (open) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
   };
 
-  const location = useLocation();
+  const closeSide = (value) => {
+    setOpen(value);
+  };
   return (
     <div className="dashboard-body">
       <SubNav onClick={toggleOpen} />
-      <SideNav act={open} />
+      <SideNav act={open} onClick={closeSide} />
       <section>
         <div className={`dashboard-content pb-4 ${!open && "dash-full"}`}>
           <ErrorBoundary {...location}>

@@ -151,9 +151,17 @@ span.nav-sub-icon {
     width: 200px;
   }
 
+  .sidebar .side-nav-list {
+    width: 200px;
+  }
+
   .hide-side .side-nav-list {
     width: 0;
   }
+}
+
+.navbar-toggle.collapsed.pull-left {
+  display: none;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -893,7 +901,7 @@ ul.list-group.list-group-horizontal {
   left: 50%;
   width: 30px;
   height: 30px;
-  margin: -60px 0 0 -60px;
+  // margin: -60px 0 0 -60px;
   -webkit-animation: spin 2s linear infinite;
   -moz-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;

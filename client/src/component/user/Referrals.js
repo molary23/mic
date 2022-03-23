@@ -196,7 +196,7 @@ export class Referrals extends Component {
                     value={status}
                   />
                 </div>
-                <div className="col-md-3 ">
+                <div className="col-md-3 mb-3">
                   <button
                     type="button"
                     className="btn download-btn"
@@ -208,7 +208,7 @@ export class Referrals extends Component {
                 <div className="col-md-3 ">
                   <div className="table-figure">
                     <h5>
-                      {totalText} Referrals
+                      {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>
