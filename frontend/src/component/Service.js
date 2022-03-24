@@ -1,59 +1,108 @@
 import React from "react";
 
-import phone from "../asset/images/phone.png";
+import time from "../asset/images/time.jpg";
+import money from "../asset/images/money.jpg";
+import work from "../asset/images/work.jpg";
+import consistent from "../asset/images/consistent.jpg";
 
 function Service() {
   return (
     <div>
-      <div className="main-home-service">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-sm-6 mb-5">
-              <div className="service-first-image m-auto ">
-                <img
-                  src={phone}
-                  alt="MIC Business on Phone"
-                  className="img-responsive"
-                />
+      <div className="main-home-service" id="service">
+        <div className="container">
+          <div className="service-text-image-box">
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="service-image">
+                  <img
+                    src={money}
+                    alt="MIC Business help you save money"
+                    className="img-responsive"
+                  />
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="service-text">
+                  <h1 className="">We save your money</h1>
+                  <p>
+                    Making money consistently in the forex market requires years
+                    of experience, including losing a lot of money. We save you
+                    from loss and trade with our expertise to make you money
+                    from the beginning.
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="col-sm-6 mt-5">
-              <div className="service-first-text m-auto ">
-                <h1>Signal at your Fingertips</h1>
-                <p>
-                  On the other hand, we denounce with righteous indignation and
-                  dislike men who are so beguiled and demoralized by the charms
-                  of pleasure of the moment, so blinded by desire, that they
-                  cannot foresee the pain and trouble that are bound to ensue;
-                  and equal blame belongs to those who fail in their duty
-                  through weakness of will,
-                </p>
+          </div>
+          <div className="service-text-image-box">
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="service-text">
+                  <h1 className="">We save you time</h1>
+                  <p>
+                    You don't have to spend hours every day in front of charts
+                    and news channels. We will do it for you while you can spend
+                    that time elsewhere. You can use our services to make money
+                    while you work or spend time with your family.
+                  </p>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="service-image">
+                  <img
+                    src={time}
+                    alt="MIC Business save time by getting signal to you fast"
+                    className="img-responsive"
+                  />
+                </div>
               </div>
             </div>
-
-            <div className="col-sm-6 mt-5">
-              <div className="service-second-text m-auto ">
-                <h1>Get notified on Signal change</h1>
-                <p>
-                  Neque porro quisquam est, qui dolorem ipsum quia dolor sit
-                  amet, consectetur, adipisci velit, sed quia non numquam eius
-                  modi tempora incidunt ut labore et dolore magnam aliquam
-                  quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-                  exercitationem ullam corporis suscipit laboriosam, nisi ut
-                  aliquid ex ea commodi consequatur? Quis autem vel eum iure
-                  reprehenderit qui in ea voluptate velit esse quam nihil
-                  molestiae consequatur, vel illum qui dolorem eum fugiat quo
-                  voluptas nulla pariatur?
-                </p>
+          </div>
+          <div className="service-text-image-box">
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="service-image">
+                  <img
+                    src={work}
+                    alt="MIC Business get the hard part of the job done"
+                    className="img-responsive"
+                  />
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="service-text">
+                  <h1 className="">We do the hard work</h1>
+                  <p>
+                    Our team of professional traders scans the market 24 hours a
+                    day, 7 days a week. We analyze and decipher markets and
+                    economies for you. We all make the same deal. We all make
+                    money!
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="col-sm-6 mt-5">
-              <div className="service-second-image m-auto ">
-                <img
-                  src={phone}
-                  alt="MIC Business on Phone"
-                  className="img-responsive"
-                />
+          </div>
+          <div className="service-text-image-box">
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="service-text">
+                  <h1 className="">We are consistent</h1>
+                  <p>
+                    Consistency is the name of the game. We are disciplined and
+                    patient traders and know what we are doing. As a result,
+                    unlike other similar services, we have always been able to
+                    make a profit.
+                  </p>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="service-image">
+                  <img
+                    src={consistent}
+                    alt="MIC Business team are consistent in delivering signals"
+                    className="img-responsive"
+                  />
+                </div>
               </div>
             </div>
           </div>

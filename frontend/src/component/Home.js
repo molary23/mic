@@ -1,52 +1,79 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import Contact from "./Contact";
-import Service from "./Service";
+import { GiArcheryTarget } from "react-icons/gi";
+import { AiOutlineBarChart } from "react-icons/ai";
+import { CgSignal } from "react-icons/cg";
+import { RiExchangeDollarFill, RiShieldUserLine } from "react-icons/ri";
+import { HiOutlineUserGroup, HiOutlineChatAlt2 } from "react-icons/hi";
+import {
+  MdOutlineSupportAgent,
+  MdOutlineMarkEmailUnread,
+} from "react-icons/md";
+
+import dashboard from "../asset/images/mic dashboard.jpeg";
 
 function Home() {
   return (
-    <div className="main-home">
-      <div className="main-home-top"></div>
+    <div className="main-home" id="home">
+      <div className="main-home-top">
+        <div className="">
+          <div className="row">
+            <div className="col-md-5 col-12">
+              <div className="home-top-text">
+                <h1 className="mb-4">Why MIC Earn Business</h1>
+                <p>
+                  With an accuracy of 85% or higher, you can keep your drawdown
+                  very low and get the maximum profit. All results are verified.
+                  Check your Dashboard for signal performance updates.
+                </p>
+              </div>
+            </div>
+            <div className="col-md-7">
+              <div className="home-top-image"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="main-home-intro">
         <div className="container">
           <div className="row">
             <div className="col-sm">
               <div className="intro-1">
-                <div className="intro-icon">
-                  <i className="fas fa-satellite-dish fa-2x" />
+                <div className="intro-icon mb-5">
+                  <GiArcheryTarget />
                 </div>
-                <h4 className="mt-2">Signal</h4>
+                <h4 className="mt-2 mb-4">Unbeatable Accuracy</h4>
                 <p>
-                  At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                  blanditiis praesentium voluptatum deleniti atque corrupti quos
-                  dolores et quas molestias excepturi sint occaecati
+                  With an accuracy of 85% or higher, you can keep your drawdown
+                  very low and get the maximum profit. All results are verified.
+                  Check your Dashboard for signal performance updates.
                 </p>
               </div>
             </div>
             <div className="col-sm">
               <div className="intro-2">
-                <div className="intro-icon">
-                  <i className="fas fa-chart-line fa-2x" />
+                <div className="intro-icon mb-5">
+                  <HiOutlineUserGroup />
                 </div>
-                <h4 className="mt-2">Take Profit</h4>
+                <h4 className="mt-2 mb-4">Refer and Earn</h4>
                 <p>
-                  Et harum quidem rerum facilis est et expedita distinctio. Nam
-                  libero tempore, cum soluta nobis est eligendi optio cumque
-                  nihil impedit quo minus id quod maxime
+                  With us there is more than one way to earn, refer families and
+                  friends and end cashback reward that could be withdrawn or
+                  used for premium subscription.
                 </p>
               </div>
             </div>
             <div className="col-sm">
               <div className="intro-3">
-                <div className="intro-icon">
-                  <i className="fas fa-hand-holding-usd fa-2x" />
+                <div className="intro-icon mb-5">
+                  <MdOutlineSupportAgent />
                 </div>
 
-                <h4 className="mt-2">Stop Loss</h4>
+                <h4 className="mt-2 mb-4">24/7 Support</h4>
                 <p>
-                  Itaque earum rerum hic tenetur a sapiente delectus, ut aut
-                  reiciendis voluptatibus maiores alias consequatur aut
-                  perferendis doloribus asperiores repellat
+                  You can contact us at any time of the day. We will contact you
+                  in the shortest time. You can always send us a message with
+                  your question. We are always there for you.
                 </p>
               </div>
             </div>
@@ -54,31 +81,65 @@ function Home() {
         </div>
       </div>
       <div className="main-home-middle"></div>
-      <div className="main-home-about">
+      <div className="main-home-about" id="about">
         <div className="container">
-          <h1>Lorem Ipsum</h1>
-          <p>
-            But I must explain to you how all this mistaken idea of denouncing
-            pleasure and praising pain was born and I will give you a complete
-            account of the system, and expound the actual teachings of the great
-            explorer of the truth, the master-builder of human happiness. No one
-            rejects, dislikes, or avoids pleasure itself, because it is
-            pleasure, but because those who do not know how to pursue pleasure
-            rationally encounter consequences that are extremely painful. Nor
-            again is there anyone who loves or pursues or desires to obtain pain
-            of itself, because it is pain, but because occasionally
-            circumstances occur in which toil and pain can procure him some
-            great pleasure. To take a trivial example, which of us ever
-            undertakes laborious physical exercise, except to obtain some
-            advantage from it? But who has any right to find fault with a man
-            who chooses to enjoy a pleasure that has no annoying consequences,
-            or one who avoids a pain that produces no resultant pleasure?
-          </p>
+          <h1 className="mb-5">Searching For Consistent Profitability?</h1>
+          <div className="row pt-5">
+            <div className="col-md-8 col-12">
+              <ul className="about-ul">
+                <li className="mb-4">
+                  <span className="list-icon">
+                    <RiExchangeDollarFill />
+                  </span>
+                  <h4>
+                    Forex, Indices, Commodities, Stocks And Cryptocurrency
+                    Signals
+                  </h4>
+                </li>
+                <li className="mb-4">
+                  <span className="list-icon">
+                    <AiOutlineBarChart />
+                  </span>
+                  <h4>
+                    Leverage Years Of Trading Experience Of Our Signal Provider
+                  </h4>
+                </li>
+                <li className="mb-4">
+                  <span className="list-icon">
+                    <RiShieldUserLine />
+                  </span>
+                  <h4>Access To Over 30 Plus Accurate Signal Providers</h4>
+                </li>
+                <li className="mb-4">
+                  <span className="list-icon">
+                    <CgSignal />
+                  </span>
+                  <h4>Up To 25 Signals Per Day</h4>
+                </li>
+                <li className="mb-4">
+                  <span className="list-icon">
+                    <MdOutlineMarkEmailUnread />
+                  </span>
+                  <h4>Instant Email Alert For Every Signal Generated</h4>
+                </li>
+                <li className="mb-4">
+                  <span className="list-icon">
+                    <HiOutlineChatAlt2 />
+                  </span>
+                  <h4>Chat 24/7 With Our Team For Any Trade Assistance</h4>
+                </li>
+              </ul>
+            </div>
+            <div className="col-md-4 col-12">
+              <img
+                src={dashboard}
+                alt="MIC Business save time by getting signal to you fast"
+                className="img-responsive"
+              />
+            </div>
+          </div>
         </div>
       </div>
-
-      <Service />
-      <Contact />
     </div>
   );
 }

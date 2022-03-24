@@ -1,94 +1,138 @@
 @import "default.scss";
 
-/* Register */
-.main-register {
-  margin-top: 50px;
-
-  .register-box {
-    width: 600px;
-    margin: auto;
-  }
-  .form-box {
-    border: 1px solid $border-light;
-    box-shadow: 1px 2px 3px rgba($color: #2c2c2c, $alpha: 0.6);
-    padding: 50px;
-    border-radius: 5px;
-  }
-}
-
 /* Main Home */
 .main-home {
-  .main-home-top,
-  .main-home-middle {
-    height: 600px;
-    background: url("../asset/images/colleague.jpg");
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+  margin-top: 50px;
+  .main-home-top {
+    min-height: 500px;
+    .home-top-text {
+      padding: 80px 0px;
+      width: 80%;
+      margin: 50px auto 0px;
+      h1 {
+        font-size: 3.5em;
+        font-weight: 900;
+      }
+    }
+
+    .home-top-image {
+      height: 500px;
+      background: url("../asset/images/fxtrading.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
   }
 
-  .main-home-intro,
   .main-home-about {
-    height: 600px;
+    min-height: 600px;
     text-align: center;
-    background: #fff;
-    padding-top: 200px;
+    background: rgb(64, 89, 209);
+    padding: 200px 0px;
+    color: #fff;
+
+    .about-ul {
+      list-style-type: none;
+      text-align: left;
+      font-weight: 500;
+
+      li {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: flex-end;
+      }
+    }
+
+    .list-icon {
+      margin-right: 10px;
+      margin-bottom: 5px;
+      font-size: 30px;
+    }
+
+    h4 {
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+  .main-home-intro {
+    min-height: 600px;
+    text-align: center;
+    padding: 150px 0px;
+
+    .intro-1,
+    .intro-2,
+    .intro-3 {
+      margin-bottom: 80px;
+    }
     .intro-icon {
-      i {
+      display: flex;
+      justify-content: center;
+
+      svg {
         width: 60px;
         height: 60px;
-        border-radius: 15px;
-        padding-top: 15px;
-        background: rgba($color: #176dcf, $alpha: 0.2);
-        color: rgba($color: #176dcf, $alpha: 0.6);
+        border-radius: 30px;
+        padding: 15px;
+        background: rgba($color: #3e86d8, $alpha: 0.2);
+        color: rgba($color: #176dcf, $alpha: 0.8);
+        text-align: center;
       }
     }
   }
   .main-home-middle {
     height: 600px;
-    background: url("../asset/images/busy.jpg");
+    background: url("../asset/images/trading.jpg");
     background-attachment: fixed;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
   }
-  .main-home-contact {
-    height: 600px;
-    background: url("../asset/images/contactus.jpg");
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-  .main-home-contact-box {
-    height: 600px;
-    padding-top: 50px;
-    background: #fefcf5;
-  }
 
-  .main-home-service {
-    min-height: 600px;
-    padding: 50px 0px;
-    background: #fefcf5;
-
-    .service-first-image,
-    .service-second-image {
-      height: 600px;
-      width: 100%;
-      margin: 0px auto !important;
-    }
-
-    .service-second-text,
-    .service-first-text {
-      width: 80%;
-      margin: 100px auto !important;
-    }
+  h1 {
+    font-weight: 900;
+    text-transform: capitalize;
   }
 }
 
-.nav-logo {
-  width: 200px;
+.main-home-contact {
+  height: 600px;
+  background: url("../asset/images/contactus.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.main-home-contact-box {
+  min-height: 600px;
+  padding: 100px 0px;
+  background: #fefcf5;
+}
+
+.main-home-service {
+  min-height: 600px;
+  padding-bottom: 100px;
+
+  .service-text-image-box {
+    padding-top: 100px;
+    .service-image {
+      min-height: 400px;
+      width: 90%;
+      &:hover {
+        -webkit-transform: scale(1.2);
+        -ms-transform: scale(1.2);
+        -o-transform: scale(1.2);
+        transform: scale(1.2);
+      }
+    }
+    .service-text {
+      width: 80%;
+      margin: 100px auto 0px;
+
+      h1 {
+        margin-bottom: 30px;
+        font-weight: 700;
+      }
+    }
+  }
 }
 
 a.btn.nav-link.btn {
@@ -96,8 +140,8 @@ a.btn.nav-link.btn {
 }
 
 .sub-footer {
-  height: 400px;
-  padding-top: 50px;
+  min-height: 400px;
+  padding: 100px 0px;
 
   h2 {
     font-size: clamp(1.5vw, 18px, 3.5vh);
@@ -119,15 +163,32 @@ a.btn.nav-link.btn {
     width: 80%;
     margin: 5px auto;
   }
-  .footer-connect .social-icon {
+
+  .footer-connect svg {
+    display: inline-block;
+    font-size: 30px;
     margin-right: 10px;
-    color: #176dcf;
+  }
+  .facebook-icon-a {
+    color: #3b5998;
+  }
+  .twitter-icon-a {
+    color: #00acee;
+  }
+  .linkedin-icon-a {
+    color: #0e76a8;
+  }
+  .instagram-icon-a {
+    color: #30618a;
   }
   address {
     margin-bottom: 10px;
   }
 }
 
-textarea {
-  height: 100px;
+.fixed-bottom {
+  height: 50px;
+  padding-top: 20px;
 }
+
+@import "responsive.scss";

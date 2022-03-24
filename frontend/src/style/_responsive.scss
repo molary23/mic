@@ -1,0 +1,39 @@
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+}
+
+@media only screen and (max-width: 767px) {
+  .navbar-toggler {
+    background: transparent !important;
+    border: unset;
+  }
+  .main-home-service .service-text-image-box {
+    padding-top: 50px;
+    text-align: center;
+
+    .service-image {
+      margin: 0px auto;
+    }
+    .service-text {
+      margin: 25px auto;
+    }
+  }
+  .main-home .main-home-top .home-top-image {
+    height: 500px;
+    background: url("../asset/images/fxtrading.jpg");
+    background-size: 400px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+  }
+
+  .main-home .main-home-middle {
+    background-size: 400px;
+  }
+
+  .main-home-contact {
+    background-size: 400px;
+  }
+}
+
+@media only screen and (max-width: 479px) {
+}

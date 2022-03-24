@@ -15,7 +15,7 @@
 */
 * {
   margin: 0;
-  font-family: "Ubuntu", "Segoe UI", "Roboto", "Oxygen", "Cantarell",
+  font-family: "Open Sans", "Segoe UI", "Roboto", "Oxygen", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -91,18 +91,19 @@ section {
 }
 
 textarea {
-  height: 120px;
+  height: 120px !important;
 }
 
 button,
 .btn {
   background: #06c2f7 !important;
   color: #fff !important;
-  font-weight: 600;
+  font-weight: 400;
   border: none;
 }
 
-input {
+input,
+button {
   &:focus {
     box-shadow: none;
   }
@@ -127,14 +128,16 @@ span.input-group-text {
 }
 
 .nav-logo {
-  width: 30px;
+  width: 200px;
 }
 
-/* Modal */
-#myModal {
-  background: rgba($color: $bg-dark, $alpha: 0.5);
+nav.top-nav {
+  background: transparent;
+  font-weight: 500;
 }
-.modal-content {
-  box-shadow: 1px 2px 3px $shadow;
-  border: $border-light;
+nav.top-nav.show-bg {
+  background: rgba($color: #d5e7fc, $alpha: 1);
+}
+.right-nav {
+  margin-right: 20px;
 }

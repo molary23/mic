@@ -1,6 +1,13 @@
 import React from "react";
 import logo from "../asset/images/logo.png";
 
+import {
+  AiFillInstagram,
+  AiFillTwitterSquare,
+  AiFillFacebook,
+  AiFillLinkedin,
+} from "react-icons/ai";
+
 function SubFooter() {
   return (
     <div className="sub-footer">
@@ -42,17 +49,17 @@ function SubFooter() {
           <div className="col-md-4">
             <div className="footer-connect">
               <h2>Connect</h2>
-              <a href="/">
-                <i className="fab fa-facebook-square fa-2x social-icon" />
+              <a href="/" className="facebook-icon-a">
+                <AiFillFacebook />
               </a>
-              <a href="/">
-                <i className="fab fa-twitter-square fa-2x  social-icon" />
+              <a href="/" className="twitter-icon-a">
+                <AiFillTwitterSquare />
               </a>
-              <a href="/">
-                <i className="fab fa-linkedin fa-2x  social-icon" />
+              <a href="/" className="linkedin-icon-a">
+                <AiFillLinkedin />
               </a>
-              <a href="/">
-                <i className="fab fa-instagram fa-2x  social-icon" />
+              <a href="/" className="instagram-icon-a">
+                <AiFillInstagram />
               </a>
             </div>
           </div>
