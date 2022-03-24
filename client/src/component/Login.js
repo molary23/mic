@@ -79,8 +79,15 @@ class Login extends Component {
       update.move = true;
     }
 
-    if (nextProps.errors) {
-      update.servererror = nextProps.errors;
+    if (nextProps.errors !== prevState.errors) {
+      if (nextProps.errors.status === 400) {
+        update.servererror = nextProps.errors.data;
+      }
+      if (nextProps.errors.status === 404) {
+        update.servererror = {
+          network: "There has been a network error. Refresh and try again.",
+        };
+      }
       update.loading = false;
     }
 
@@ -204,6 +211,9 @@ class Login extends Component {
             />
 
             <div className="d-grid">
+              {servererror.network && (
+                <small className="text-muted mb-2">{servererror.network}</small>
+              )}
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"

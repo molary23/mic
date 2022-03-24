@@ -271,7 +271,6 @@ svg {
 
 .download-btn {
   background: #1d6f42;
-  margin-top: 5px;
 }
 
 .add-btn {
@@ -416,13 +415,16 @@ svg {
   .pricing-wrapper {
     width: 300px;
   }
+  body {
+    overflow-x: hidden;
+  }
 }
 
-/* Card Figures*/
+/* Card Figures
 .transactions-total.table-figure {
   margin-top: 15px;
 }
-
+*/
 .home-page {
   min-height: 700px;
   background: #000428;
@@ -1428,6 +1430,14 @@ ul.list-group.list-group-horizontal {
   margin: 0px auto 60px;
 }
 
+.crypto-card.card svg {
+  color: #00afe1;
+}
+
+.bank-card.card svg {
+  color: #002855;
+}
+
 .plan-pay-card.card {
   padding: 20px;
 }
@@ -1475,7 +1485,8 @@ ul.list-group.list-group-horizontal {
 }
 
 .gateways-available svg {
-  font-size: 5.5em;
+  font-size: 4.5em;
+  margin-bottom: 20px;
 }
 
 ul {
@@ -1741,10 +1752,14 @@ ul {
   .pricing-wrapper {
     width: 300px;
   }
+  body {
+    overflow-x: hidden;
+  }
 }
 
-/* Card Figures*/
+/* Card Figures
 .transactions-total.table-figure {
   margin-top: 15px;
 }
+*/
 /*# sourceMappingURL=sub.css.map */

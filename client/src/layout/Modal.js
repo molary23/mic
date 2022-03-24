@@ -40,7 +40,7 @@ function Modal(props) {
     );
     title = "Registration Successful!";
   }
-  if (sender === "confirm") {
+  if (sender === "confirmed") {
     text = (
       <div>
         <p>Your Password Reset Code has been confirmed. </p>
@@ -54,7 +54,24 @@ function Modal(props) {
         </p>
       </div>
     );
-    title = "Registration Successful!";
+    title = "Code Confirmed";
+  }
+
+  if (sender === "unconfirmed") {
+    text = (
+      <div>
+        <p>Your Account has been secured. </p>
+        <p>
+          Click{" "}
+          <Link to="/" className="default-anchor">
+            {" "}
+            Here{" "}
+          </Link>{" "}
+          to Login.
+        </p>
+      </div>
+    );
+    title = "Account Secured!";
   }
 
   if (sender === "reset") {

@@ -15,6 +15,7 @@ import jwtDecode from "jwt-decode";
 import setAuthToken from "../util/setAuthToken";
 
 export const loginuser = (userData) => async (dispatch) => {
+  dispatch(clearErrors());
   try {
     let response = await axios.post("/api/public/login/", userData, {});
     const { token } = response.data;
@@ -23,12 +24,10 @@ export const loginuser = (userData) => async (dispatch) => {
     setAuthToken(token);
     //Decode Token
     const decoded = jwtDecode(token);
-
-    dispatch(clearErrors());
     const result = await dispatch(setCurrentUser(decoded));
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -112,6 +111,7 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("userdetails");
   localStorage.removeItem("details");
   localStorage.removeItem("premium");
+  localStorage.removeItem("mode");
 
   //Remove Auth Header  for future requests
   setAuthToken(false);

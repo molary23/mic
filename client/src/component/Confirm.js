@@ -20,6 +20,7 @@ export class Confirm extends Component {
     error: {},
     navigate: false,
     modal: false,
+    sender: "",
   };
   componentDidMount() {
     this.props.clearErrors();
@@ -27,17 +28,29 @@ export class Confirm extends Component {
     let search = window.location.search;
 
     if (search !== "") {
-      let ref = search.split("?")[1],
-        sender = ref.split("=")[0];
+      let fullparams = search.split("auth="),
+        auth = fullparams[1].split("&")[0];
+
+      let ref = fullparams[1].split("&"),
+        sender = ref[1].split("=")[0];
+
       if (sender === "refer") {
-        let params = search.split("refer=")[1],
+        let params = ref[1].split("=")[1],
           opt = decrypt(params),
           values = JSON.parse(opt);
-
-        this.setState({
-          username: values.username,
-          code: values.code.toUpperCase(),
-        });
+        if (auth === "no") {
+          const usercode = {
+            username: values.username.trim(),
+            code: values.code.toLowerCase(),
+            auth: "no",
+          };
+          this.props.confirmCode(usercode);
+        } else {
+          this.setState({
+            username: values.username,
+            code: values.code.toUpperCase(),
+          });
+        }
       }
     }
   }
@@ -45,8 +58,21 @@ export class Confirm extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
 
-    if (nextProps.confirm.isConfirmed && prevState.modal === false) {
+    if (
+      nextProps.confirm.isConfirmed &&
+      prevState.modal === false &&
+      nextProps.confirm.isConfirmed.message
+    ) {
       update.modal = true;
+      update.sender = "confirmed";
+    }
+    if (
+      nextProps.confirm.isConfirmed &&
+      prevState.modal === false &&
+      !nextProps.confirm.isConfirmed.message
+    ) {
+      update.modal = true;
+      update.sender = "unconfirmed";
     }
 
     if (nextProps.errors) {
@@ -91,6 +117,7 @@ export class Confirm extends Component {
       const usercode = {
         username: username.trim(),
         code: code.toLowerCase(),
+        auth: "yes",
       };
 
       this.props.confirmCode(usercode);
@@ -98,7 +125,7 @@ export class Confirm extends Component {
   };
 
   render() {
-    const { username, code, error, loading, modal } = this.state;
+    const { username, code, error, loading, modal, sender } = this.state;
     //const { errors } = this.props;
     return (
       <div>
@@ -146,7 +173,7 @@ export class Confirm extends Component {
             Take me back to <Link to="/">Login</Link>
           </p>
         </div>
-        {modal ? <Modal {...{ modal, sender: "confirm" }} /> : null}
+        {modal ? <Modal {...{ modal, sender }} /> : null}
       </div>
     );
   }

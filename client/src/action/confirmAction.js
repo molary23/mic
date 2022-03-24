@@ -9,17 +9,19 @@ import {
 } from "./types";
 
 import axios from "axios";
-import { decrypt } from "../util/decrypt";
 
 // Confirm Reset Code
 
 export const confirmCode = (usercode) => async (dispatch) => {
   dispatch(clearErrors());
   dispatch(clearConfirmAction());
+
   try {
-    let response = await axios.post("/api/public/confirm/", usercode),
+    let response = await axios.post("/api/public/confirm", usercode),
       code = response.data;
-    localStorage.setItem("confirm", code);
+    if (code.message) {
+      localStorage.setItem("confirm", code.value);
+    }
     const result = await dispatch({
       type: USER_CONFIRM_PASSWORD_ACTION,
       payload: code,

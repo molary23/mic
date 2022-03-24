@@ -959,6 +959,12 @@ ul.list-group.list-group-horizontal {
   width: 80%;
   margin: 0px auto 60px;
 }
+.crypto-card.card svg {
+  color: #00afe1;
+}
+.bank-card.card svg {
+  color: #002855;
+}
 
 .plan-pay-card.card {
   padding: 20px;
@@ -988,7 +994,8 @@ ul.list-group.list-group-horizontal {
     justify-content: center;
   }
   svg {
-    font-size: 5.5em;
+    font-size: 4.5em;
+    margin-bottom: 20px;
   }
 }
 

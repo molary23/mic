@@ -129,15 +129,17 @@ router.post("/register", (req, res) => {
                                           // send mail to user
                                           return res.json(1);
                                         })
-                                        .catch((err) => res.json(err));
+                                        .catch((err) =>
+                                          res.status(404).json(err)
+                                        );
                                     })
-                                    .catch((err) => res.json(err));
+                                    .catch((err) => res.status(404).json(err));
                                 })
-                                .catch((err) => res.json(err));
+                                .catch((err) => res.status(404).json(err));
                             })
-                            .catch((err) => res.json(err));
+                            .catch((err) => res.status(404).json(err));
                         })
-                        .catch((err) => res.json(err));
+                        .catch((err) => res.status(404).json(err));
                     });
                   });
                 }
@@ -195,13 +197,13 @@ router.post("/register", (req, res) => {
                                 // send mail to user
                                 return res.json(1);
                               })
-                              .catch((err) => res.json(err));
+                              .catch((err) => res.status(404).json(err));
                           })
-                          .catch((err) => res.json(err));
+                          .catch((err) => res.status(404).json(err));
                       })
-                      .catch((err) => res.json(err));
+                      .catch((err) => res.status(404).json(err));
                   })
-                  .catch((err) => res.json(err));
+                  .catch((err) => res.status(404).json(err));
               });
             });
           }
@@ -296,21 +298,21 @@ router.post("/verify", (req, res) => {
                                 .then(() => {
                                   return res.json(1);
                                 })
-                                .catch((err) => res.json(err));
+                                .catch((err) => res.status(404).json(err));
                             })
-                            .catch((err) => res.json(err));
+                            .catch((err) => res.status(404).json(err));
                         })
-                        .catch((err) => res.json(err));
+                        .catch((err) => res.status(404).json(err));
                     })
-                    .catch((err) => res.json(err));
+                    .catch((err) => res.status(404).json(err));
                 })
-                .catch((err) => res.json(err)),
+                .catch((err) => res.status(404).json(err)),
             ]);
           }
         })
-        .catch((err) => res.json(err));
+        .catch((err) => res.status(404).json(err));
     })
-    .catch((err) => res.json(err));
+    .catch((err) => res.status(404).json(err));
 });
 
 /*
@@ -478,7 +480,7 @@ router.post("/login", (req, res) => {
                       errors.verify = 0;
                       return res.status(400).json(errors);
                     })
-                    .catch((err) => res.json(err));
+                    .catch((err) => res.status(404).json(err));
                 } else {
                   jwt.sign(
                     payload,
@@ -493,7 +495,7 @@ router.post("/login", (req, res) => {
                   );
                 }
               })
-              .catch((err) => res.json(err));
+              .catch((err) => res.status(404).json(err));
           }
         } else {
           errors.password = "Incorrect Password";
@@ -501,7 +503,7 @@ router.post("/login", (req, res) => {
         }
       });
     })
-    .catch((err) => res.json(err));
+    .catch((err) => res.status(404).json(err));
 });
 
 /*
@@ -545,9 +547,9 @@ router.post("/forgot", (req, res) => {
           // Send  Mail to User
           res.json(1);
         })
-        .catch((err) => res.json(err));
+        .catch((err) => res.status(404).json(err));
     })
-    .catch((err) => res.json(err));
+    .catch((err) => res.status(404).json(err));
 });
 
 /*
@@ -562,7 +564,8 @@ router.post("/confirm", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  const { username, code } = req.body;
+
+  const { username, code, auth } = req.body;
   User.findOne({
     where: {
       [Op.or]: [{ username }, { email: username }],
@@ -592,7 +595,7 @@ router.post("/confirm", (req, res) => {
             "Your Password Reset Code has expired. Kindly request for a new one";
           return res.status(400).json(errors);
         } else {
-          Pass.update(
+          Verify.update(
             {
               confirm: "y",
             },
@@ -603,14 +606,21 @@ router.post("/confirm", (req, res) => {
             }
           )
             .then(() => {
-              res.json({
-                UserId: user.id,
+              if (auth === "no") {
+                return res.json({
+                  message: false,
+                  value: null,
+                });
+              }
+              return res.json({
+                message: true,
+                value: user.id,
               });
             })
-            .catch((err) => res.json(err));
+            .catch((err) => res.status(404).json(err));
         }
       })
-      .catch((err) => res.json(err));
+      .catch((err) => res.status(404).json(err));
   });
 });
 
@@ -652,7 +662,7 @@ router.post("/reset", (req, res) => {
         });
       });
     })
-    .catch((err) => res.json(err));
+    .catch((err) => res.status(404).json(err));
 });
 
 /*

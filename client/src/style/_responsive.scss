@@ -112,9 +112,13 @@
   .pricing-wrapper {
     width: 300px;
   }
+  body {
+    overflow-x: hidden;
+  }
 }
 
-/* Card Figures*/
+/* Card Figures
 .transactions-total.table-figure {
   margin-top: 15px;
 }
+*/

@@ -26,17 +26,11 @@ function SideNav(props) {
   let location = useLocation();
   const [show, setShow] = useState(false);
   // check user logged in
-  useEffect(() => {
+  /* useEffect(() => {
     if (!props.auth.isAuthenticated) {
       navigate(`/?next=${location.pathname}`, { replace: true });
     }
-  });
-
-  useEffect(() => {
-    //setShow(false);
-    //document.getElementById("mySidebar").classList.remove("hide-side");
-  }, [location]);
-
+  });*/
   let display;
 
   const closeSide = () => {
@@ -52,8 +46,6 @@ function SideNav(props) {
   } else {
     display = act;
   }
-
-  console.log(display, show);
 
   let viewer,
     level = props.auth.user.level;
@@ -77,7 +69,7 @@ function SideNav(props) {
           </Link>
 
           {(level === 1 || level === 3) && (
-            <Link to={`/${viewer}/signals`}>
+            <Link to={`/${viewer}/signals`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <CgSignal />
               </span>
@@ -86,7 +78,7 @@ function SideNav(props) {
           )}
 
           {level > 2 && (
-            <Link to={`/${viewer}/currencies`}>
+            <Link to={`/${viewer}/currencies`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <BsCurrencyExchange />
               </span>
@@ -95,7 +87,7 @@ function SideNav(props) {
           )}
 
           {level > 2 && (
-            <Link to={`/${viewer}/users`}>
+            <Link to={`/${viewer}/users`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <HiOutlineUsers />
               </span>
@@ -104,7 +96,7 @@ function SideNav(props) {
           )}
 
           {level > 2 && (
-            <Link to={`/${viewer}/admins`}>
+            <Link to={`/${viewer}/admins`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <MdOutlineSupervisedUserCircle />
               </span>
@@ -113,7 +105,7 @@ function SideNav(props) {
           )}
 
           {level > 2 && (
-            <Link to={`/${viewer}/signal-providers`}>
+            <Link to={`/${viewer}/signal-providers`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <RiShieldUserLine />
               </span>
@@ -122,7 +114,7 @@ function SideNav(props) {
           )}
 
           {(level === 1 || level === 3) && (
-            <Link to={`/${viewer}/subscriptions`}>
+            <Link to={`/${viewer}/subscriptions`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <MdOutlinePayments />
               </span>
@@ -131,7 +123,7 @@ function SideNav(props) {
           )}
 
           {(level === 1 || level === 3) && (
-            <Link to={`/${viewer}/transactions`}>
+            <Link to={`/${viewer}/transactions`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <RiExchangeBoxLine />
               </span>
@@ -140,7 +132,7 @@ function SideNav(props) {
           )}
 
           {(level === 1 || level === 3) && (
-            <Link to={`/${viewer}/referrals`}>
+            <Link to={`/${viewer}/referrals`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <AiOutlineUsergroupAdd />
               </span>
@@ -149,7 +141,7 @@ function SideNav(props) {
           )}
 
           {(level === 1 || level === 3) && (
-            <Link to={`/${viewer}/earnings`}>
+            <Link to={`/${viewer}/earnings`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <GiWallet />
               </span>
@@ -158,7 +150,7 @@ function SideNav(props) {
           )}
 
           {level === 3 && (
-            <Link to={`/${viewer}/accounts`}>
+            <Link to={`/${viewer}/accounts`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <AiOutlineMoneyCollect />
               </span>
@@ -167,7 +159,7 @@ function SideNav(props) {
           )}
 
           {(level === 1 || level === 3) && (
-            <Link to={`/${viewer}/payments`}>
+            <Link to={`/${viewer}/payments`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <GiMoneyStack />
               </span>
@@ -176,7 +168,7 @@ function SideNav(props) {
           )}
 
           {(level === 1 || level === 3) && (
-            <Link to={`/${viewer}/withdrawals`}>
+            <Link to={`/${viewer}/withdrawals`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <GiReceiveMoney />
               </span>
@@ -185,7 +177,7 @@ function SideNav(props) {
           )}
 
           {level === 3 && (
-            <Link to={`/${viewer}/announcements`}>
+            <Link to={`/${viewer}/announcements`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <HiOutlineSpeakerphone />
               </span>
@@ -193,7 +185,7 @@ function SideNav(props) {
             </Link>
           )}
           {level === 3 && (
-            <Link to={`/${viewer}/wallets`}>
+            <Link to={`/${viewer}/wallets`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <AiOutlineBank />
               </span>
@@ -201,7 +193,7 @@ function SideNav(props) {
             </Link>
           )}
           {level === 1 && (
-            <Link to={`/${viewer}/pay`}>
+            <Link to={`/${viewer}/pay`} onClick={closeSide}>
               <span className="sidebar-icon">
                 <BsCreditCard />
               </span>

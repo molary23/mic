@@ -159,7 +159,7 @@ class Pay extends Component {
 
                       <ul className="table-list">
                         <li>
-                          35 GB <span>De almacenamiento</span>
+                          1 <span>De almacenamiento</span>
                         </li>
                         <li>
                           5 Dominios <span>incluidos</span>
@@ -254,7 +254,7 @@ class Pay extends Component {
                       className="btn pay-with mt-2"
                       onClick={() => this.payHandler("crypto")}
                     >
-                      Bitpay
+                      Stripe
                     </button>
                   </div>
                   <div className="bank-card card">
@@ -263,7 +263,7 @@ class Pay extends Component {
                       className="btn pay-with mt-2"
                       onClick={() => this.payHandler("bank")}
                     >
-                      Stripe
+                      Bitpay
                     </button>
                   </div>
                   {balance > totalPrice && (
