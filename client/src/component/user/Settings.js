@@ -485,10 +485,7 @@ class Settings extends Component {
                       </div>
                     </div>
                     <div className="add-new-account">
-                      <button
-                        className="btn add-new-btn"
-                        onClick={this.openModal}
-                      >
+                      <button className="btn add-btn" onClick={this.openModal}>
                         Add/Change Account <i className="fas fa-edit" />
                       </button>
                     </div>

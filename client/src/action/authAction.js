@@ -87,6 +87,23 @@ export const getMode = (user) => async (dispatch) => {
   }
   try {
     const response = await axios.get(url, {});
+    let display = response.data;
+    if (display === "n") {
+      document.body.classList.add("dark-content");
+    }
+    if (display === "d") {
+      document.body.classList.remove("dark-content");
+    }
+    if (display === "i") {
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.body.classList.add("dark-content");
+      }
+    } else if (display === "a") {
+      let hour = new Date().getHours();
+      if (hour > 7 && hour < 20) {
+        document.body.classList.add("dark-content");
+      }
+    }
     localStorage.setItem(mode, JSON.stringify(response.data));
     const result = await dispatch({
       type,
@@ -124,5 +141,4 @@ export const logoutUser = () => (dispatch) => {
     payload: {},
   });
   document.body.classList.remove("dark-content");
-  document.body.classList.add("white-content");
 };

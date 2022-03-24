@@ -31,12 +31,15 @@ function SignalForm(props) {
     let selected = e.target.options.selectedIndex,
       dataId = e.target.options[selected].getAttribute("data"),
       display = `${dataId}-${e.target.value}`;
-    if (provider.includes(display)) {
-      providers = provider.filter((elm) => elm !== display);
-      setProvider(providers);
-    } else {
-      providers.push(display);
-      setProvider([...provider, ...providers]);
+
+    if (dataId !== "") {
+      if (provider.includes(display)) {
+        providers = provider.filter((elm) => elm !== display);
+        setProvider(providers);
+      } else {
+        providers.push(display);
+        setProvider([...provider, ...providers]);
+      }
     }
   };
 
@@ -106,7 +109,7 @@ function SignalForm(props) {
                   {item.split("-")[1]}
                   <span className="remove-selected-item">
                     <span
-                      title={`Remove ${item}`}
+                      title={`Remove ${item.split("-")[1]}`}
                       onClick={() => clickHandler(item)}
                     >
                       <IoIosRemoveCircleOutline />

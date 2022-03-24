@@ -18,8 +18,8 @@ function DisplayForm(props) {
       setLoading(load);
     }
   };
-  let hour = new Date().getHours();
-  let systemcolor;
+  let hour = new Date().getHours(),
+    systemcolor;
   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
     //  document.documentElement.setAttribute("dark", true);
     systemcolor = "dark";
@@ -118,8 +118,8 @@ function DisplayForm(props) {
                 Inherit from System
               </label>
             </div>
-            {errors && <small>{errors}</small>}
-            <div className="d-grid mt-2">
+            {errors && <small className="mb-2">{errors}</small>}
+            <div className="d-grid mt-3">
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"

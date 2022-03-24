@@ -1,5 +1,106 @@
-@import "color.scss";
+$border-light: #fcfcfc;
+$shadow: #3a3a3a;
+$dark-color: #121212;
+$normal-white: rgba(
+  $color: #fff,
+  $alpha: 0.9,
+);
+$off-white: rgba(
+  $color: #fff,
+  $alpha: 0.7,
+);
 
 .dark-content {
-  background: yellow;
+  background: $dark-color;
+  color: $normal-white;
+  nav.navbar {
+    background: $dark-color !important;
+    box-shadow: 1px 1px 1px $shadow;
+    .nav-item {
+      color: $normal-white;
+    }
+  }
+  #mySidebar {
+    background: $dark-color;
+    box-shadow: 1px 1px 1px $shadow;
+  }
+  .dashboard-body {
+    background: $dark-color;
+    svg,
+    span {
+      color: $off-white;
+    }
+    .toggle-btn .btn {
+      background: $normal-white !important;
+    }
+    .input-group input {
+      background: transparent;
+    }
+    .card {
+      background: $dark-color;
+      color: $normal-white;
+      box-shadow: 1px 1px 1px $shadow;
+    }
+    .signal-detail {
+      color: $normal-white;
+      .signal-currency {
+        background: $off-white;
+        color: $dark-color;
+        svg {
+          color: $dark-color;
+        }
+      }
+    }
+    .form-select {
+      background: transparent;
+      color: $normal-white;
+    }
+    .btn,
+    .default-btn {
+      background: $dark-color !important;
+      box-shadow: 1px 1px 1px $shadow;
+      border: 1px solid $border-light;
+    }
+    table {
+      tbody > tr:hover {
+        background: $shadow;
+        td {
+          color: $border-light;
+          font-weight: 600;
+        }
+      }
+      td {
+        color: $normal-white;
+      }
+    }
+    input#pay-months {
+      color: $off-white;
+    }
+    .form-floating input {
+      background: transparent;
+    }
+    .list-group-item.d-flex.justify-content-between {
+      background: $shadow !important;
+      color: $normal-white;
+      border: 1px solid $border-light;
+    }
+    ul.dropdown-menu {
+      background: $shadow;
+      .dropdown-item {
+        &:hover {
+          background: $dark-color;
+        }
+        a {
+          color: $normal-white;
+        }
+      }
+    }
+    .footer-nav {
+      border-top: 1px solid $shadow;
+    }
+    .pay-now-btn .btn {
+      background: $off-white !important;
+      color: $shadow;
+    }
+  }
 }

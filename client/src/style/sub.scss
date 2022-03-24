@@ -1,5 +1,4 @@
 @import "default.scss";
-@import "responsive.scss";
 
 .home-page {
   min-height: 700px;
@@ -601,8 +600,8 @@ span.nav-sub-icon {
   }
 
   input#pay-months {
-    width: 40px;
-    max-width: 40px;
+    max-width: 100px;
+    font-weight: 600;
   }
 
   .pay-plan-selected {
@@ -758,14 +757,24 @@ span.nav-sub-icon {
 }
 
 ul.list-group.list-group-horizontal {
-  max-width: 400px;
-  overflow-y: auto;
+  flex-wrap: wrap;
+  .list-group-item {
+    border: 1px solid $shadow;
+    border-radius: 5px;
+    margin: 0px 5px 5px 0px;
+    padding: 5px;
+  }
+  svg {
+    width: 20px;
+    height: auto;
+  }
 }
 
 .remove-selected-item {
-  color: tomato;
+  color: $danger;
   cursor: pointer;
   margin-left: 10px;
+  font-size: 18px;
 }
 
 .settings-form-profile input {
@@ -1162,4 +1171,10 @@ ul {
   background: #48acf0;
 }
 
+/* Card Figures*/
+.transactions-total.table-figure {
+  margin-top: 10px;
+}
+
 @import "responsive.scss";
+@import "dark.scss";

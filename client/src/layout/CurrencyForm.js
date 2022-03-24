@@ -49,12 +49,15 @@ function CurrencyForm(props) {
     let selected = e.target.options.selectedIndex,
       dataId = e.target.options[selected].getAttribute("data"),
       display = `${dataId}-${e.target.value}`;
-    if (currency.includes(display)) {
-      currencies = currency.filter((elm) => elm !== display);
-      setCurrency(currencies);
-    } else {
-      currencies.push(display);
-      setCurrency([...currency, ...currencies]);
+
+    if (dataId !== "") {
+      if (currency.includes(display)) {
+        currencies = currency.filter((elm) => elm !== display);
+        setCurrency(currencies);
+      } else {
+        currencies.push(display);
+        setCurrency([...currency, ...currencies]);
+      }
     }
   };
 
@@ -64,7 +67,7 @@ function CurrencyForm(props) {
   };
 
   let options = {},
-    optArray = [{ value: "", option: "Select New Currency(ies)", data: 0 }];
+    optArray = [{ value: "", option: "Select New Currency(ies)", data: "" }];
 
   for (let i = 0; i < currencyList.length; i++) {
     options = {
@@ -112,7 +115,7 @@ function CurrencyForm(props) {
                   {item.split("-")[1]}
                   <span className="remove-selected-item">
                     <span
-                      title={`Remove ${item}`}
+                      title={`Remove ${item.split("-")[1]}`}
                       onClick={() => clickHandler(item)}
                     >
                       <IoIosRemoveCircleOutline />
