@@ -207,7 +207,7 @@ class User extends Component {
                   <h1>User Details</h1>
                 </div>
                 <div className="row">
-                  <div className="col-md-6 col-sm-12">
+                  <div className="col-md-6 col-12 mb-5">
                     <h3>Personal Info</h3>
                     <CardDetails
                       {...{
@@ -313,7 +313,7 @@ class User extends Component {
                     )}
                   </div>
 
-                  <div className="col-md-6 col-sm-12">
+                  <div className="col-md-6 col-12 mb-5">
                     <h3>Activity Info</h3>
                     <CardDetails
                       {...{
@@ -553,7 +553,7 @@ class User extends Component {
                   </div>
                 </div>
 
-                <div className="mt-3 admin-change-email-btn">
+                <div className="admin-change-email-btn">
                   <button
                     type="button"
                     className="btn add-btn btn-lg btn-block"

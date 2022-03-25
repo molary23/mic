@@ -55,8 +55,6 @@ class Currency extends Component {
     currencycount:
       JSON.parse(localStorage.getItem("counts")).currency ??
       this.props.auth.allCounts.currency,
-    getLoad: true,
-    startLoad: false,
     isLoading: false,
     content: "currency",
     modal: "",
@@ -72,7 +70,6 @@ class Currency extends Component {
     landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(currencycount / limit),
-      startLoad: true,
     });
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
@@ -146,37 +143,30 @@ class Currency extends Component {
 
   afterUpdate = (text) => {
     const { limit, content, currencycount, timer } = this.state;
-    if (text === "added") {
-      this.setState({
-        numOfPages: Math.ceil((currencycount + 1) / limit),
-      });
-      this.props.clearAdminAction("add-currency");
-    } else {
-      this.props.clearAdminAction("update-currency");
-    }
     this.setState({
       isLoading: false,
-      offset: 0,
       modal: false,
       toast: true,
       toasttext: `Currency ${text} successfully`,
-    });
-    const paginate = {
-      limit,
+      currentPage: Pagination.currentpage,
       offset: 0,
-    };
+    });
+    if (text === "added") {
+      this.props.clearAdminAction("add-currency");
+      this.setState({
+        numOfPages: Math.ceil((currencycount + 1) / limit),
+      });
+    } else {
+      this.props.clearAdminAction("update-currency");
+    }
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: prevState.offset + limit,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
     }, timer);
   };
@@ -203,13 +193,13 @@ class Currency extends Component {
       cur = value[1];
 
     this.setState({
-      check: true,
       checktext: `Are you sure you want to ${action} ${
         cur.firstcurrency[1].toUpperCase() +
         "/" +
         cur.secondcurrency[1].toUpperCase()
       } pair?`,
       checktitle: "Confirm Delete",
+      check: true,
     });
 
     this.confirmHandler = (option) => {
@@ -257,8 +247,6 @@ class Currency extends Component {
       sender,
       status,
       statusOpt,
-      startLoad,
-      getLoad,
       search,
       currencycount,
       modal,
@@ -299,8 +287,7 @@ class Currency extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
+
       currencycount,
     });
 

@@ -139,7 +139,7 @@ function DisplayForm(props) {
 }
 
 DisplayForm.propTypes = {
-  display: PropTypes.bool.isRequired,
+  display: PropTypes.string.isRequired,
   onSubmit: PropTypes.func,
   load: PropTypes.bool,
 };

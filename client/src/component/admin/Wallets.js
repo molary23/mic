@@ -123,7 +123,15 @@ export class Wallets extends Component {
   }
 
   afterUpdate = (text) => {
-    const { limit, content, walletcount } = this.state;
+    const { limit, content, walletcount, timer } = this.state;
+    this.setState({
+      modal: false,
+      toast: true,
+      toasttext: `Wallet ${text} successfully`,
+      isLoading: false,
+      currentPage: Pagination.currentpage,
+      offset: 0,
+    });
     if (text === "added") {
       this.setState({
         numOfPages: Math.ceil((walletcount + 1) / limit),
@@ -133,29 +141,16 @@ export class Wallets extends Component {
       this.props.clearAdminAction("update-wallet");
     }
 
-    this.setState({
-      offset: 0,
-      modal: false,
-      toast: true,
-      toasttext: `Wallet ${text} successfully`,
-    });
-    const paginate = {
-      limit,
-      offset: 0,
-    };
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: prevState.offset + limit,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
@@ -241,6 +236,9 @@ export class Wallets extends Component {
   };
 
   submitHandler = (value) => {
+    this.setState({
+      isLoading: true,
+    });
     this.props.addWallet(value);
   };
 
@@ -254,8 +252,6 @@ export class Wallets extends Component {
       sender,
       status,
       statusOpt,
-      startLoad,
-      getLoad,
       walletcount,
       search,
       toast,
@@ -296,8 +292,6 @@ export class Wallets extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       walletcount,
     });
 

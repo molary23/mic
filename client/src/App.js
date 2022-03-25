@@ -33,9 +33,9 @@ import Settings from "./component/user/Settings";
 import Forum from "./component/user/Forum";
 import Forums from "./component/user/Forums";
 import Payment from "./component/user/Payment";
-
 import Index from "./component/user/Index";
 import Subscriptions from "./component/user/Subscriptions";
+import UserError from "./util/UserError";
 
 //Admin
 import AdminDashboard from "./component/admin/Dashboard";
@@ -60,11 +60,13 @@ import AdminForum from "./component/admin/Forum";
 import AdminForums from "./component/admin/Forums";
 import AdminWallets from "./component/admin/Wallets";
 import AdminViewAdmin from "./component/admin/ViewAdmin";
+import AdminError from "./util/AdminError";
 
 // Signal Provider
 import ProviderDashboard from "./component/signalprovider/Dashboard";
 import ProviderSignals from "./component/signalprovider/Signals";
 import ProviderSettings from "./component/signalprovider/Settings";
+import ProviderError from "./util/ProviderError";
 
 /*
 import axios from "axios";
@@ -120,6 +122,10 @@ function App() {
           <Route
             path="/sp/settings"
             element={<PrivateRoute Component={ProviderSettings} />}
+          />
+          <Route
+            path="/sp/*"
+            element={<PrivateRoute Component={ProviderError} />}
           />
         </Route>
         <Route path="/user" element={<PrivateRoute Component={Dashboard} />}>
@@ -188,6 +194,10 @@ function App() {
             exact
             path="/user/forums"
             element={<PrivateRoute Component={Forums} />}
+          />
+          <Route
+            path="/user/*"
+            element={<PrivateRoute Component={UserError} />}
           />
         </Route>
 
@@ -297,6 +307,11 @@ function App() {
             exact
             path="/admin/admin/:id/"
             element={<PrivateRoute Component={AdminViewAdmin} />}
+          />
+          <Route
+            exact
+            path="/admin/*"
+            element={<PrivateRoute Component={AdminError} />}
           />
           <Route
             exact

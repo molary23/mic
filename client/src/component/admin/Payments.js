@@ -53,8 +53,6 @@ export class Payments extends Component {
     timer: Pagination.timer,
     lastScrollTop: 0,
     url: new URL(window.location),
-    startLoad: false,
-    getLoad: true,
     isLoading: false,
     paymentcount:
       JSON.parse(localStorage.getItem("counts")).payments ??
@@ -63,7 +61,6 @@ export class Payments extends Component {
     toast: false,
     toasttext: "",
     check: false,
-    update: null,
   };
 
   componentDidMount() {
@@ -92,9 +89,6 @@ export class Payments extends Component {
       this.props.admin.updatepayment
     ) {
       this.afterUpdate();
-      this.setState({
-        currentPage: Pagination.currentpage,
-      });
     }
   }
 
@@ -102,27 +96,20 @@ export class Payments extends Component {
     const { limit, content, timer } = this.state;
 
     this.props.clearActions("update-payment");
-    /* window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });*/
     this.setState({
       modal: false,
       toast: true,
+      isLoading: false,
       toasttext: `Payment updated successfully`,
-    });
-    const paginate = {
-      limit,
+      currentPage: Pagination.currentpage,
       offset: 0,
-    };
+    });
+
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState({
-      offset: this.state.offset - Pagination.limit,
-    });
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
@@ -210,8 +197,6 @@ export class Payments extends Component {
       sender,
       statusOptions,
       status,
-      startLoad,
-      getLoad,
       search,
       toast,
       toasttext,
@@ -253,8 +238,6 @@ export class Payments extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       paymentcount,
     });
 

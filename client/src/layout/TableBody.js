@@ -562,19 +562,17 @@ function TableBody(props) {
             <div className="action-buttons">
               <button
                 type="button"
-                className="btn accept-btn btn-sm mb-1"
-                data-id={item.payid}
+                className="btn accept-btn btn-sm mt-1"
                 title="Update Payment"
                 onClick={() => onClick(["update", item.payid])}
               >
-                <i className="fas fa-sync" />
+                <RiRefreshLine />
               </button>
 
               {item.status !== "f" && (
                 <button
                   type="button"
                   className="btn reject-btn btn-sm mt-1"
-                  data-id={item.payid}
                   title="Cancel Payment"
                   onClick={() => onClick(["cancel", item.payid])}
                 >

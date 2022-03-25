@@ -556,7 +556,7 @@ export default function adminReducer(state = initialState, action) {
       return { ...state, getforum: null };
     }
     case CLEAR_ADMIN_GET_A_BONUS: {
-      return { ...state, getbonus: false };
+      return { ...state, getbonus: null };
     }
     case CLEAR_ADMIN_GET_AN_ADMIN: {
       return { ...state, getadmin: null };

@@ -13,6 +13,6 @@ function CardDetails(props) {
 
 CardDetails.propTypes = {
   label: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
 };
 export default CardDetails;

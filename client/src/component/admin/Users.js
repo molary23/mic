@@ -45,9 +45,7 @@ class Users extends Component {
     usercount:
       JSON.parse(localStorage.getItem("counts")).users ??
       this.props.auth.allCounts.users,
-    startLoad: false,
     isLoading: false,
-    getLoad: true,
     content: "users",
   };
 
@@ -120,16 +118,8 @@ class Users extends Component {
   };
 
   render() {
-    const {
-      sender,
-      premiumstatus,
-      statusOpt,
-      usercount,
-      startLoad,
-      getLoad,
-      search,
-      isLoading,
-    } = this.state;
+    const { sender, premiumstatus, statusOpt, usercount, search, isLoading } =
+      this.state;
 
     const { admin, searchTerms } = this.props,
       { loading, fetching } = admin,
@@ -159,8 +149,6 @@ class Users extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       usercount,
     });
 

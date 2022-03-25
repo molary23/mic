@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../asset/images/logo.png";
 
 function MainNav() {
+  const [display, setDisplay] = useState(false);
   return (
-    <nav className="navbar navbar-expand-sm bg-light navbar-light sticky-top">
+    <nav className="navbar navbar-expand-sm bg-light navbar-light sticky-top main-nav">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img
@@ -13,16 +14,21 @@ function MainNav() {
             className="rounded-pill nav-logo"
           />
         </Link>
-        <span className="navbar-text">MIC Earn Business</span>
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#mainNavbarMenu"
+          onClick={() => {
+            setDisplay(!display);
+          }}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="mainNavbarMenu">
+        <div
+          className={`${!display ? "collapse" : ""}  navbar-collapse`}
+          id="mainNavbarMenu"
+        >
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <Link className="nav-link" to="/">
@@ -31,21 +37,15 @@ function MainNav() {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/">
-                About us
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/">
-                Contact
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="//dashboard.localhost:3000">
                 Login
               </Link>
             </li>
             <li className="nav-item">
-              <Link type="button" className="btn nav-link btn" to="/register">
+              <Link
+                type="button"
+                className="btn nav-link btn default-btn"
+                to="/register"
+              >
                 Register
               </Link>
             </li>

@@ -54,8 +54,6 @@ class ViewAdmin extends Component {
     lastScrollTop: 0,
     url: new URL(window.location),
     isLoading: false,
-    startLoad: false,
-    getLoad: true,
     providercount:
       JSON.parse(localStorage.getItem("counts")).providers ??
       this.props.auth.allCounts.providers,
@@ -65,6 +63,8 @@ class ViewAdmin extends Component {
     toasttext: "",
     error: {},
     check: false,
+    checktext: null,
+    checktitle: null,
   };
 
   componentDidMount() {
@@ -121,38 +121,32 @@ class ViewAdmin extends Component {
   }
 
   afterUpdate = (text) => {
-    const { limit, content, signalcount, timer } = this.state;
+    const { limit, content, providercount, timer } = this.state;
+    this.setState({
+      isLoading: false,
+      modal: false,
+      toast: true,
+      toasttext: `Provider ${text} successfully`,
+      currentPage: Pagination.currentpage,
+      offset: 0,
+    });
     if (text === "added") {
       this.setState({
-        numOfPages: Math.ceil((signalcount + 1) / limit),
+        numOfPages: Math.ceil((providercount + 1) / limit),
       });
       this.props.clearAdminAction("add-admin");
     } else {
       this.props.clearAdminAction("update-admin");
     }
 
-    this.setState({
-      offset: 0,
-      modal: false,
-      toast: true,
-      toasttext: `Provider ${text} successfully`,
-    });
-    const paginate = {
-      limit,
-      offset: 0,
-    };
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: prevState.offset + limit,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
     }, timer);
   };
@@ -215,6 +209,9 @@ class ViewAdmin extends Component {
   };
 
   submitHandler = (value) => {
+    this.setState({
+      isLoading: true,
+    });
     if (value[0] === "add") {
       this.props.addNewAdmin("provider", value[1]);
     }
@@ -246,8 +243,6 @@ class ViewAdmin extends Component {
     const {
       sender,
       providercount,
-      startLoad,
-      getLoad,
       search,
       statusOpt,
       status,
@@ -256,6 +251,9 @@ class ViewAdmin extends Component {
       toasttext,
       error,
       isLoading,
+      check,
+      checktext,
+      checktitle,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -286,8 +284,6 @@ class ViewAdmin extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       providercount,
     });
 
@@ -369,7 +365,7 @@ class ViewAdmin extends Component {
               <TableBody
                 sender={sender}
                 tablebody={!showSearch ? main : searchMain}
-                onClick={this.clickhandler}
+                onClick={this.clickHandler}
               />
             </TableHead>
           </div>
@@ -381,6 +377,12 @@ class ViewAdmin extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
+        {check && (
+          <ConfirmModal
+            {...{ check, sender, checktext, checktitle }}
+            onClick={this.confirmHandler}
+          />
+        )}
         {toast && <Toast text={toasttext} />}
       </div>
     );

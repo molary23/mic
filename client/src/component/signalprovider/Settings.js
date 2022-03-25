@@ -21,7 +21,7 @@ class Settings extends Component {
   state = {
     active: 0,
     sender: "provider-settings",
-    loading: false,
+    isLoading: false,
     error: {},
     toast: false,
     toasttext: "",
@@ -30,7 +30,9 @@ class Settings extends Component {
   componentDidMount() {
     this.props.getProviderSettings();
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.props.clearActions("provider-settings");
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};

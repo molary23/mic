@@ -46,7 +46,6 @@ class Signals extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
-    timer: Pagination.timer,
     lastScrollTop: 0,
     url: new URL(window.location),
     signalcount:
@@ -54,9 +53,6 @@ class Signals extends Component {
       this.props.auth.counts.signals,
     content: "signals",
     modal: false,
-    isLoading: false,
-    startLoad: false,
-    getLoad: true,
     modalsignaldetails: [],
     purpose: "",
   };
@@ -68,7 +64,6 @@ class Signals extends Component {
     landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(signalcount / limit),
-      startLoad: true,
     });
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
@@ -151,8 +146,6 @@ class Signals extends Component {
       sender,
       status,
       statusOpt,
-      startLoad,
-      getLoad,
       search,
       signalcount,
       signalOpt,
@@ -160,7 +153,6 @@ class Signals extends Component {
       modal,
       modalsignaldetails,
       purpose,
-      isLoading,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -191,14 +183,12 @@ class Signals extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       signalcount,
     });
 
     return (
       <div>
-        {(loader || isLoading) && <ProgressBar />}
+        {loader && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (

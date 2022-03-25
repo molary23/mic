@@ -356,6 +356,15 @@ a.btn.nav-link.btn {
   padding-top: 20px;
 }
 
+.error-main {
+  height: 600px;
+  background: url("../asset/images/error404.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 @media only screen and (max-width: 767px) {
   .navbar-toggler {
     background: transparent !important;
@@ -384,6 +393,9 @@ a.btn.nav-link.btn {
   }
   .main-home-contact {
     background-size: 400px;
+  }
+  .error-main {
+    background-size: 500px;
   }
 }
 /*# sourceMappingURL=main.css.map */

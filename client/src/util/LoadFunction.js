@@ -131,11 +131,9 @@ export const renderArrange = ({
   searchcount,
   searchlist,
   searchloading,
-  startLoad,
-  getLoad,
 }) => {
-  let load = getLoad,
-    loader = startLoad,
+  let load = true,
+    loader = true,
     main = [],
     searchMain = [],
     showSearch,

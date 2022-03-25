@@ -67,7 +67,7 @@ export const getAllCounts = (level) => async (dispatch) => {
       type,
       payload: await response.data,
     });
-    dispatch(getMode(level));
+
     return result;
   } catch (error) {
     console.log(error.response.data);

@@ -191,4 +191,13 @@ a.btn.nav-link.btn {
   padding-top: 20px;
 }
 
+.error-main {
+  height: 600px;
+  background: url("../asset/images/error404.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 @import "responsive.scss";

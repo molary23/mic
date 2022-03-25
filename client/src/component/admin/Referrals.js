@@ -31,11 +31,7 @@ export class Referrals extends Component {
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
     url: new URL(window.location),
-    timer: Pagination.timer,
     lastScrollTop: 0,
-    startLoad: false,
-    getLoad: true,
-    isLoading: false,
     refcount:
       JSON.parse(localStorage.getItem("counts")).referrals ??
       this.props.auth.allCounts.referrals,
@@ -109,8 +105,7 @@ export class Referrals extends Component {
   };
 
   render() {
-    const { sender, search, refcount, startLoad, getLoad, isLoading } =
-      this.state;
+    const { sender, search, refcount } = this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -141,14 +136,12 @@ export class Referrals extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       refcount,
     });
 
     return (
       <div>
-        {(loader || isLoading) && <ProgressBar />}
+        {loader && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (

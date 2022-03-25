@@ -43,8 +43,6 @@ class Announcements extends Component {
     currentPage: Pagination.currentpage,
     url: new URL(window.location),
     announcementcount: JSON.parse(localStorage.getItem("counts")).announcements,
-    startLoad: false,
-    getLoad: true,
     content: "announcements",
     modal: false,
     error: {},
@@ -55,6 +53,7 @@ class Announcements extends Component {
     check: false,
     checktext: null,
     checktitle: null,
+    isLoading: false,
   };
 
   componentDidMount() {
@@ -70,7 +69,6 @@ class Announcements extends Component {
     };
     this.setState({
       numOfPages: Math.ceil(announcementcount / limit),
-      startLoad: true,
     });
 
     this.props.getContent(content, paginate);
@@ -82,6 +80,23 @@ class Announcements extends Component {
     this.props.clearActions(this.state.content);
     this.props.clearSearchActions(this.state.content);
     window.removeEventListener("scroll", this.loadMore);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
+    }
+    return update;
   }
 
   componentDidUpdate(prevProps) {
@@ -119,6 +134,7 @@ class Announcements extends Component {
       this.props.clearAdminAction("delete-ann");
     }
     this.setState({
+      isLoading: false,
       offset: 0,
       modal: false,
       toast: true,
@@ -218,13 +234,14 @@ class Announcements extends Component {
   };
 
   submitHandler = (anninfo) => {
-    console.log(anninfo);
     let act = anninfo[0],
       anndetail = anninfo[1];
+    this.setState({
+      isLoading: true,
+    });
     if (act === "new") {
       this.props.addAnn(anndetail);
     } else if (act === "edit") {
-      console.log(anninfo);
       this.props.editAnn([anndetail, anninfo[2]]);
     }
   };
@@ -233,8 +250,6 @@ class Announcements extends Component {
     const {
       sender,
       announcementcount,
-      startLoad,
-      getLoad,
       search,
       modal,
       toast,
@@ -275,8 +290,6 @@ class Announcements extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       announcementcount,
     });
 

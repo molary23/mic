@@ -36,7 +36,7 @@ export class Index extends Component {
 
   render() {
     const { userinfo, allCounts } = this.state;
-    const { loading, admin } = this.props;
+    const { admin } = this.props;
 
     let username = userinfo.username,
       load = false,
@@ -339,11 +339,11 @@ export class Index extends Component {
                         >
                           <span title={`Real Figure: ${debit}`}>
                             {roundUp(debit)}
-                          </span>
+                          </span>{" "}
                           debit,{" "}
                           <span title={`Real Figure: ${credit}`}>
                             {roundUp(credit)}
-                          </span>
+                          </span>{" "}
                           credit this week
                         </p>
                       </div>

@@ -5,7 +5,6 @@ function GoUp() {
     mode = localStorage.getItem("mode");
   let hour = new Date().getHours();
   const changeAuto = () => {
-    console.log(hour);
     if (mode === "a") {
       if (hour > 7 && hour < 20) {
         if (!document.body.classList.contains("dark-content")) {

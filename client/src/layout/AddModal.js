@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 
 import { clearErrors } from "../action/authAction";
 
+import { BsEyeSlash, BsEye } from "react-icons/bs";
+
 import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "./TextPasswordField";
 import Select from "../layout/Select";
@@ -555,7 +557,13 @@ function AddModal(props) {
         <TextPasswordField
           id="add-admin-form-email"
           placeholder="Email Address"
-          icon={`${icon.addadminemail ? "fas fa-circle-notch fa-spin" : ""}`}
+          icon={
+            icon.addadminemail ? (
+              <span className="spinner-border spinner-border-sm"></span>
+            ) : (
+              ""
+            )
+          }
           type="email"
           name="addadminemail"
           value={inputs.addadminemail || ""}
@@ -567,7 +575,13 @@ function AddModal(props) {
         <TextPasswordField
           id="add-admin-form-referral"
           placeholder="Username"
-          icon={`${icon.addadminusername ? "fas fa-circle-notch fa-spin" : ""}`}
+          icon={
+            icon.addadminusername ? (
+              <span className="spinner-border spinner-border-sm"></span>
+            ) : (
+              ""
+            )
+          }
           type="text"
           name="addadminusername"
           value={inputs.addadminusername || ""}
@@ -589,7 +603,7 @@ function AddModal(props) {
         <TextPasswordField
           id="add-admin-form-password"
           placeholder="Password"
-          icon={`far ${pass1 ? "fa-eye" : "fa-eye-slash"}`}
+          icon={pass1 ? <BsEye /> : <BsEyeSlash />}
           type={pass1 ? "password" : "text"}
           name="addadminpassword"
           value={inputs.addadminpassword || ""}
@@ -600,7 +614,7 @@ function AddModal(props) {
         <TextPasswordField
           id="add-admin-form-password2"
           placeholder="Confirm Password"
-          icon={`far ${pass2 ? "fa-eye" : "fa-eye-slash"}`}
+          icon={pass2 ? <BsEye /> : <BsEyeSlash />}
           type={pass2 ? "password" : "text"}
           name="addadminpassword2"
           value={inputs.addadminpassword2 || ""}

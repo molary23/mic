@@ -11,7 +11,7 @@ import CardDetails from "../../layout/CardDetails";
 import ConfirmModal from "../../layout/ConfirmModal";
 
 import { ImCancelCircle } from "react-icons/im";
-
+import { VscCircleFilled } from "react-icons/vsc";
 import { IoReturnUpBackOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 
@@ -192,7 +192,7 @@ class ViewAdmin extends Component {
                   <h1>Admin Details</h1>
                 </div>
                 <div className="row">
-                  <div className="col-md-6 col-sm-12">
+                  <div className="col-md-6 col-12 mb-5">
                     <div className="bonus-info-card">
                       <h3>Personal Info</h3>
 
@@ -237,7 +237,9 @@ class ViewAdmin extends Component {
                             value: (
                               <div>
                                 <span className="active-status status-info">
-                                  <span>&bull;</span>
+                                  <span>
+                                    <VscCircleFilled />
+                                  </span>
                                 </span>
                                 active
                               </div>
@@ -251,7 +253,9 @@ class ViewAdmin extends Component {
                             value: (
                               <div>
                                 <span className="inactive-status status-info">
-                                  <span>&bull;</span>
+                                  <span>
+                                    <VscCircleFilled />
+                                  </span>
                                 </span>
                                 deactivated
                               </div>
@@ -279,7 +283,7 @@ class ViewAdmin extends Component {
                       />
                     </div>
                   </div>
-                  <div className="col-md-6 col-sm-12">
+                  <div className="col-md-6 col-12 mb-5">
                     <div className="payer-info-card">
                       <h3>Job Info</h3>
                       {admininfo.level === 3 && (
@@ -337,7 +341,7 @@ class ViewAdmin extends Component {
                   </div>
                 </div>
 
-                <div className="admin-action">
+                <div className="admin-action ">
                   <div className="row">
                     {admininfo.status === "i" && (
                       <div className="col-6">

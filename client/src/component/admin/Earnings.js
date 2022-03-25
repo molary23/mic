@@ -56,7 +56,6 @@ export class Earnings extends Component {
       bonuscount:
         JSON.parse(localStorage.getItem("counts")).bonus ??
         this.props.auth.allCounts.bonus,
-      upLoad: true,
       content: "bonus",
       modal: false,
       toast: false,
@@ -94,34 +93,40 @@ export class Earnings extends Component {
     }
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.isLoading = false;
+    }
+    return update;
+  }
+
   afterUpdate = (text) => {
-    const { limit, content } = this.state;
+    const { limit, content, timer } = this.state;
 
     this.props.clearAdminAction("update-bonus");
 
     this.setState({
-      offset: 0,
       modal: false,
       toast: true,
+      isLoading: false,
       toasttext: `Bonus ${text} successfully`,
-    });
-    const paginate = {
-      limit,
+      currentPage: Pagination.currentpage,
       offset: 0,
-    };
+    });
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: prevState.offset + limit,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
       });
-    }, 5000);
+    }, timer);
   };
 
   loadMore = () => {
@@ -154,15 +159,6 @@ export class Earnings extends Component {
   };
 
   clickhandler = (value) => {
-    /*  let check = window.confirm(
-      `Are you sure you want to ${value[0]} ${value[2].toUpperCase()}'s Bonus?`
-    );
-    if (check) {
-      this.props.updateBonus({ action: value[0], id: value[1] });
-    } else {
-      return false;
-    }*/
-
     this.setState({
       check: true,
       checktext: `Are you sure you want to ${
@@ -234,8 +230,6 @@ export class Earnings extends Component {
       sender,
       status,
       statusOpt,
-      startLoad,
-      getLoad,
       bonuscount,
       search,
       toast,
@@ -274,8 +268,6 @@ export class Earnings extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       bonuscount,
     });
 

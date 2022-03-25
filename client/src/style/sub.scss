@@ -572,6 +572,22 @@ span.nav-sub-icon {
   background: transparent;
 }
 
+.progress-bar {
+  position: relative;
+  animation: progress-indeterminate 3s linear infinite;
+}
+
+@keyframes progress-indeterminate {
+  from {
+    left: -20%;
+    width: 20%;
+  }
+  to {
+    left: 100%;
+    width: 20%;
+  }
+}
+
 .loader {
   text-align: center;
   margin-top: 50px;
@@ -1207,6 +1223,14 @@ ul {
 }
 .new-status svg {
   color: #06c2f7;
+}
+
+.error-main {
+  height: 700px;
+  background: url("../asset/images/error404.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 @import "responsive.scss";

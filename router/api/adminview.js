@@ -1841,8 +1841,7 @@ router.get(
     }
     let bonusid = parseInt(req.params.id.split(":")[1]);
 
-    let info = {},
-      SubscriptionId = null;
+    let info = {};
     BonusView.findOne({ where: { bonusid } })
       .then((bonus) => {
         info.bonus = bonus;
@@ -1850,7 +1849,7 @@ router.get(
           return res.json(info);
         } else {
           PayID = bonus.PaymentId;
-          Payment.findByPk(PayId, {
+          Payment.findByPk(PayID, {
             attributes: [
               "amount",
               "reference",
@@ -2021,8 +2020,8 @@ router.get(
                                     },
                                     attributes: [
                                       "status",
-                                      "startdate",
                                       "enddate",
+                                      "updatedAt",
                                     ],
                                   })
                                     .then((premiumstatus) => {

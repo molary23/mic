@@ -81,9 +81,6 @@ class Forum extends Component {
       this.props.admin.adminreply
     ) {
       this.afterUpdate("added");
-      this.setState({
-        isLoading: false,
-      });
     }
     if (
       prevProps.admin.deletereply !== this.props.admin.deletereply &&
@@ -91,17 +88,13 @@ class Forum extends Component {
     ) {
       this.afterUpdate("deleted");
     }
-    /*  if (prevProps.errors.allow !== this.props.errors.allow) {
-      this.errorUpdate();
-    }*/
   }
-
-  errorUpdate = () => {};
 
   afterUpdate = (text) => {
     const { forumId } = this.state;
     this.setState({
       text: "",
+      isLoading: false,
       toast: true,
       toasttext: `Reply ${text}.`,
     });

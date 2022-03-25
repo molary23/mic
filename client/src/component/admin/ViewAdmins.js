@@ -54,8 +54,6 @@ class ViewAdmins extends Component {
     lastScrollTop: 0,
     url: new URL(window.location),
     isLoading: false,
-    startLoad: false,
-    getLoad: true,
     admincount:
       JSON.parse(localStorage.getItem("counts")).admins ??
       this.props.auth.allCounts.admins,
@@ -66,6 +64,7 @@ class ViewAdmins extends Component {
     check: false,
     checktext: null,
     checktitle: null,
+    error: {},
   };
 
   componentDidMount() {
@@ -88,6 +87,23 @@ class ViewAdmins extends Component {
     window.removeEventListener("scroll", this.loadMore);
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let update = {};
+    if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length > 0
+    ) {
+      update.error = nextProps.errors.data;
+      update.isLoading = false;
+    } else if (
+      nextProps.errors !== prevState.errors &&
+      Object.keys(nextProps.errors).length === 0
+    ) {
+      update.error = {};
+    }
+    return update;
+  }
+
   componentDidUpdate(prevProps) {
     if (
       prevProps.admin.addadmin !== this.props.admin.addadmin &&
@@ -104,40 +120,33 @@ class ViewAdmins extends Component {
   }
 
   afterUpdate = (text) => {
-    const { limit, content, signalcount } = this.state;
-    if (text === "added") {
-      this.setState({
-        numOfPages: Math.ceil((signalcount + 1) / limit),
-      });
-      this.props.clearAdminAction("add-admin");
-    } else {
-      this.props.clearAdminAction("update-admin");
-    }
-
+    const { limit, content, admincount, timer } = this.state;
     this.setState({
-      offset: 0,
+      isLoading: false,
       modal: false,
       toast: true,
       toasttext: `Admin ${text} successfully`,
-    });
-    const paginate = {
-      limit,
+      currentPage: Pagination.currentpage,
       offset: 0,
-    };
+    });
+    if (text === "added") {
+      this.props.clearAdminAction("add-admin");
+      this.setState({
+        numOfPages: Math.ceil((admincount + 1) / limit),
+      });
+    } else {
+      this.props.clearAdminAction("update-admin");
+    }
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: prevState.offset + limit,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
@@ -197,6 +206,9 @@ class ViewAdmins extends Component {
   };
 
   submitHandler = (value) => {
+    this.setState({
+      isLoading: true,
+    });
     if (value[0] === "add") {
       this.props.addNewAdmin("super", value[1]);
     }
@@ -231,8 +243,6 @@ class ViewAdmins extends Component {
     const {
       sender,
       admincount,
-      startLoad,
-      getLoad,
       search,
       statusOpt,
       status,
@@ -274,8 +284,6 @@ class ViewAdmins extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       admincount,
     });
 
@@ -287,7 +295,7 @@ class ViewAdmins extends Component {
         ) : (
           <div className="transactions card holder-card ">
             <div className="page-dash-title mb-4">
-              <h1>Transactions</h1>
+              <h1>Admins</h1>
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
@@ -349,7 +357,7 @@ class ViewAdmins extends Component {
                 "S/N",
                 "Fullname",
                 "email",
-                "ussername",
+                "username",
                 "phone number",
                 "status",
                 "action",

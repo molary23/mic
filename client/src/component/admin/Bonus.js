@@ -10,7 +10,7 @@ import Toast from "../../layout/Toast";
 import CardDetails from "../../layout/CardDetails";
 
 import { ImCancelCircle } from "react-icons/im";
-
+import { VscCircleFilled } from "react-icons/vsc";
 import { IoReturnUpBackOutline } from "react-icons/io5";
 import { FiCheckCircle } from "react-icons/fi";
 
@@ -26,13 +26,11 @@ class Bonus extends Component {
   state = {
     text: "",
     sender: "admin-bonus",
-    error: {},
     url: new URL(window.location),
     bonusid: null,
     toast: null,
     toasttext: null,
-    isLoading: {},
-    servererror: {},
+    isLoading: false,
     bonusaction: null,
   };
   componentDidMount() {
@@ -53,7 +51,7 @@ class Bonus extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
     if (nextProps.errors) {
-      update.servererror = nextProps.errors;
+      update.isLoading = false;
     }
 
     return update;
@@ -66,12 +64,10 @@ class Bonus extends Component {
     ) {
       this.afterUpdate();
       this.setState({
-        isLoading: {},
+        isLoading: false,
       });
     }
   }
-
-  errorUpdate = () => {};
 
   afterUpdate = () => {
     const { bonusid, bonusaction } = this.state;
@@ -96,9 +92,7 @@ class Bonus extends Component {
     );
     if (check) {
       this.setState({
-        isLoading: {
-          [value[0]]: true,
-        },
+        isLoading: true,
         bonusaction: `${value[0]}d`,
       });
       this.props.updateBonus({ action: value[0], id: value[1] });
@@ -116,7 +110,6 @@ class Bonus extends Component {
     const { admin } = this.props,
       { loading } = admin;
     let bonus, bonusinfo, pay;
-
     if (admin.getbonus === null || loading) {
       loader = true;
       load = true;
@@ -133,12 +126,9 @@ class Bonus extends Component {
       notAllowed = "There is no Bonus with the specified ID";
     }
 
-    if (isLoading.approve || isLoading.reject) {
-      loader = true;
-    }
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -156,7 +146,7 @@ class Bonus extends Component {
                   <h1>Bonus Details</h1>
                 </div>
                 <div className="row">
-                  <div className="col-md-6 col-sm-12">
+                  <div className="col-md-6 col-12 mb-5">
                     <div className="bonus-info-card">
                       <h3>Bonus Info</h3>
                       <CardDetails
@@ -179,7 +169,9 @@ class Bonus extends Component {
                             value: (
                               <div>
                                 <span className="new-status status-info">
-                                  <span>&bull;</span>
+                                  <span>
+                                    <VscCircleFilled />
+                                  </span>
                                 </span>
                                 pending
                               </div>
@@ -194,7 +186,9 @@ class Bonus extends Component {
                             value: (
                               <div>
                                 <span className="active-status status-info">
-                                  <span>&bull;</span>
+                                  <span>
+                                    <VscCircleFilled />
+                                  </span>
                                 </span>
                                 approved
                               </div>
@@ -209,7 +203,9 @@ class Bonus extends Component {
                             value: (
                               <div>
                                 <span className="inactive-status status-info">
-                                  <span>&bull;</span>
+                                  <span>
+                                    <VscCircleFilled />
+                                  </span>
                                 </span>
                                 rejected
                               </div>
@@ -236,7 +232,7 @@ class Bonus extends Component {
                       )}
                     </div>
                   </div>
-                  <div className="col-md-6 col-sm-12">
+                  <div className="col-md-6 col-12 mb-5">
                     <div className="payer-info-card">
                       <h3>Payment Info</h3>
                       <CardDetails
@@ -265,7 +261,9 @@ class Bonus extends Component {
                             value: (
                               <div>
                                 <span className="active-status status-info">
-                                  <span>&bull;</span>
+                                  <span>
+                                    <VscCircleFilled />
+                                  </span>
                                 </span>
                                 successful
                               </div>
@@ -279,7 +277,9 @@ class Bonus extends Component {
                             value: (
                               <div>
                                 <span className="inactive-status status-info">
-                                  <span>&bull;</span>
+                                  <span>
+                                    <VscCircleFilled />
+                                  </span>
                                 </span>
                                 failed
                               </div>
@@ -296,20 +296,20 @@ class Bonus extends Component {
                       <CardDetails
                         {...{
                           label: "date of payment",
-                          value: pay.createdAt,
+                          value: <DateFormat date={pay.createdAt} />,
                         }}
                       />
                     </div>
                   </div>
                 </div>
                 {bonusinfo.status === "p" && (
-                  <div className="bonus-action">
+                  <div className="bonus-action ">
                     <div className="row">
                       <div className="col-6">
                         <div className="d-grid">
                           <button
                             type="button"
-                            className="btn default-btn btn-lg btn-block"
+                            className="btn accept-btn btn-lg btn-block"
                             onClick={() =>
                               this.clickHandler(["approve", bonusinfo.bonusid])
                             }

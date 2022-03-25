@@ -352,6 +352,7 @@ export const addNewAdmin = (level, data) => async (dispatch) => {
       type,
       payload: response.data,
     });
+    dispatch(getAllCounts(3));
     return result;
   } catch (error) {
     console.log(error.response);

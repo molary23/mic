@@ -77,12 +77,13 @@ export class SubNav extends Component {
         ) {
           servererror =
             "There has been a Network Error. Refresh and Try again later.";
+          this.getError(servererror);
         }
         if (this.props.errors.status === 400) {
           servererror = this.props.errors.data;
-        }
-        if (servererror !== null && servererror !== undefined) {
-          this.getError(Object.values(servererror));
+          if (servererror !== null && servererror !== undefined) {
+            this.getError(Object.values(servererror));
+          }
         }
       }
     }

@@ -9,7 +9,7 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
-  loadFromParams,
+  landingLoad,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -43,9 +43,6 @@ export class Subscriptions extends Component {
     currentPage: Pagination.currentpage,
     url: new URL(window.location),
     subcount: JSON.parse(localStorage.getItem("counts")).subscriptions,
-    startLoad: false,
-    getLoad: true,
-    isLoading: false,
     content: "subscriptions",
   };
 
@@ -53,16 +50,7 @@ export class Subscriptions extends Component {
     const { limit, offset, subcount, content } = this.state;
 
     let searchParams = window.location.search;
-
-    if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(subcount / limit),
     });
@@ -111,17 +99,8 @@ export class Subscriptions extends Component {
   };
 
   render() {
-    const {
-      sender,
-      typeOptions,
-      planOptions,
-      type,
-      plan,
-      search,
-      subcount,
-      startLoad,
-      getLoad,
-    } = this.state;
+    const { sender, typeOptions, planOptions, type, plan, search, subcount } =
+      this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -152,8 +131,6 @@ export class Subscriptions extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       subcount,
     });
 
@@ -243,7 +220,7 @@ Subscriptions.propTypes = {
   getContent: PropTypes.func.isRequired,
   searchContent: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  loadFromParams: PropTypes.func,
+  landingLoad: PropTypes.func,
   clearSearchActions: PropTypes.func,
   renderArrange: PropTypes.func,
   setSearchParams: PropTypes.func,

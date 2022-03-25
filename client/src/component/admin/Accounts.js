@@ -38,9 +38,6 @@ class Accounts extends Component {
     accountcount:
       JSON.parse(localStorage.getItem("counts")).accounts ??
       this.props.auth.allCounts.accounts,
-    startLoad: false,
-    getLoad: true,
-    isLoading: false,
     content: "accounts",
   };
 
@@ -113,8 +110,7 @@ class Accounts extends Component {
     downloadFile({ sender, self: this });
   };
   render() {
-    const { sender, accountcount, search, startLoad, getLoad, isLoading } =
-      this.state;
+    const { sender, accountcount, search } = this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -145,14 +141,12 @@ class Accounts extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       accountcount,
     });
 
     return (
       <div>
-        {(loader || isLoading) && <ProgressBar />}
+        {loader && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (

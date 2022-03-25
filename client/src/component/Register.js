@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmpty from "../validation/emptyChecker";
 
+import { BsEyeSlash, BsEye } from "react-icons/bs";
+
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -252,7 +254,13 @@ class Register extends Component {
                 id="register-form-referral"
                 placeholder="Referral"
                 label="Referral"
-                icon={`${loader.referral ? "fas fa-circle-notch fa-spin" : ""}`}
+                icon={
+                  loader.referral ? (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  ) : (
+                    ""
+                  )
+                }
                 type="text"
                 name="referral"
                 value={referral}
@@ -266,7 +274,13 @@ class Register extends Component {
                 id="register-form-email"
                 placeholder="Email Address"
                 label="Email Address"
-                icon={`${loader.email ? "fas fa-circle-notch fa-spin" : ""}`}
+                icon={
+                  loader.email ? (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  ) : (
+                    ""
+                  )
+                }
                 type="email"
                 name="email"
                 value={email}
@@ -290,7 +304,13 @@ class Register extends Component {
                 id="register-form-username"
                 placeholder="Username"
                 label="Username"
-                icon={`${loader.username ? "fas fa-circle-notch fa-spin" : ""}`}
+                icon={
+                  loader.username ? (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  ) : (
+                    ""
+                  )
+                }
                 type="text"
                 name="username"
                 value={username}
@@ -304,7 +324,7 @@ class Register extends Component {
                 id="register-form-password"
                 placeholder="Password"
                 label="Password"
-                icon={`far ${pass1 ? "fa-eye" : "fa-eye-slash"}`}
+                icon={pass1 ? <BsEye /> : <BsEyeSlash />}
                 type={pass1 ? "password" : "text"}
                 name="password"
                 value={password}
@@ -316,7 +336,7 @@ class Register extends Component {
                 id="register-form-password2"
                 placeholder="Confirm Password"
                 label="Confirm Password"
-                icon={`far ${pass2 ? "fa-eye" : "fa-eye-slash"}`}
+                icon={pass2 ? <BsEye /> : <BsEyeSlash />}
                 type={pass2 ? "password" : "text"}
                 name="password2"
                 value={password2}

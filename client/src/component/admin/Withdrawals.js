@@ -50,9 +50,7 @@ export class Withdrawals extends Component {
     withcount:
       JSON.parse(localStorage.getItem("counts")).withdrawals ??
       this.props.auth.allCounts.withdrawals,
-    startLoad: false,
     isLoading: false,
-    getLoad: true,
     content: "withdrawals",
     toast: false,
     toasttext: "",
@@ -83,38 +81,29 @@ export class Withdrawals extends Component {
         this.props.admin.updatewithdrawals &&
       this.props.admin.updatewithdrawals
     ) {
-      this.afterUpdate("updated");
-      this.setState({
-        currentPage: Pagination.currentpage,
-      });
+      this.afterUpdate();
     }
   }
 
-  afterUpdate = (text) => {
+  afterUpdate = () => {
     const { limit, content, timer } = this.state;
 
     this.props.clearAdminAction("update-withdrawals");
-    /* window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });*/
+
     this.setState({
       modal: false,
       toast: true,
-      toasttext: `Withdrawal ${text} successfully`,
-    });
-    const paginate = {
-      limit,
+      isLoading: false,
+      toasttext: `Payment updated successfully`,
+      currentPage: Pagination.currentpage,
       offset: 0,
-    };
+    });
+
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState({
-      offset: this.state.offset - Pagination.limit,
-    });
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
@@ -204,8 +193,6 @@ export class Withdrawals extends Component {
       statusOptions,
       search,
       withcount,
-      startLoad,
-      getLoad,
       toast,
       toasttext,
       isLoading,
@@ -239,8 +226,6 @@ export class Withdrawals extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       withcount,
     });
 

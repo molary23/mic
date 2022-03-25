@@ -20,7 +20,6 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
-import Toast from "../../layout/Toast";
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import Pagination from "../../util/Pagination";
@@ -46,15 +45,11 @@ export class Transactions extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
-    timer: Pagination.timer,
     lastScrollTop: 0,
     url: new URL(window.location),
     transcount:
       JSON.parse(localStorage.getItem("counts")).transactions ??
       this.props.auth.allCounts.transactions,
-    startLoad: false,
-    getLoad: true,
-    isLoading: false,
     content: "transactions",
   };
 
@@ -66,7 +61,6 @@ export class Transactions extends Component {
 
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
-      startLoad: true,
     });
 
     window.addEventListener("scroll", this.loadMore, { passive: true });
@@ -135,9 +129,6 @@ export class Transactions extends Component {
       type,
       method,
       search,
-      startLoad,
-      getLoad,
-      isLoading,
       transcount,
     } = this.state;
 
@@ -169,14 +160,12 @@ export class Transactions extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       transcount,
     });
 
     return (
       <div>
-        {(loader || isLoading) && <ProgressBar />}
+        {loader && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (

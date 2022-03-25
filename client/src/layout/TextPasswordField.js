@@ -33,7 +33,7 @@ function TextPasswordField(props) {
           <label htmlFor={id}>{placeholder}</label>
         </div>
         <span className="input-group-text" onClick={onClick}>
-          <i className={icon} />
+          {icon}
         </span>
       </div>
       {error && <small className="text-muted">{error}</small>}
@@ -48,7 +48,7 @@ TextPasswordField.defaultProps = {
 
 TextPasswordField.propTypes = {
   id: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.any.isRequired,
   placeholder: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,

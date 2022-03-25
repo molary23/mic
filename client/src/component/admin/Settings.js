@@ -21,7 +21,7 @@ class Settings extends Component {
   state = {
     active: 0,
     sender: "admin-settings",
-    loading: false,
+    isLoading: false,
     error: {},
     toast: false,
     toasttext: "",
@@ -30,7 +30,9 @@ class Settings extends Component {
   componentDidMount() {
     this.props.getAdminSettings();
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.props.clearActions("admin-settings");
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let update = {};
@@ -72,7 +74,7 @@ class Settings extends Component {
   }
 
   afterUpdate = (text) => {
-    // this.props.clearActions("admin-settings");
+    const { timer } = this.state;
     this.props.getAdminSettings();
     let words;
     if (text === "pass") {
@@ -91,14 +93,14 @@ class Settings extends Component {
       offset: 0,
       toast: true,
       toasttext: words,
-      loading: false,
+      isLoading: false,
     });
 
     setTimeout(() => {
       this.setState({
         toast: false,
       });
-    }, 3000);
+    }, timer);
   };
 
   moveActive = (nextTab) => {
@@ -109,27 +111,35 @@ class Settings extends Component {
 
   submitDisplayHandler = (value) => {
     this.setState({
-      loading: true,
+      isLoading: true,
     });
     this.props.saveSettings("mode", { mode: value });
   };
   submitProfileHandler = (value) => {
     this.setState({
-      loading: true,
+      isLoading: true,
     });
     this.props.saveSettings("profile", value);
   };
 
   submitPassHandler = (value) => {
     this.setState({
-      loading: true,
+      isLoading: true,
     });
     this.props.saveSettings("password", value);
   };
 
   render() {
-    const { active, sender, loading, modal, error, toast, toasttext, purpose } =
-      this.state;
+    const {
+      active,
+      sender,
+      isLoading,
+      modal,
+      error,
+      toast,
+      toasttext,
+      purpose,
+    } = this.state;
     const { admin } = this.props;
 
     let load = false,
@@ -152,7 +162,7 @@ class Settings extends Component {
 
     return (
       <div>
-        {(loader || loading) && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (
@@ -220,7 +230,7 @@ class Settings extends Component {
                     <PasswordForm
                       onSubmit={this.submitPassHandler}
                       sender={sender}
-                      load={loading}
+                      load={isLoading}
                       error={error}
                     />
                   </div>
@@ -234,7 +244,7 @@ class Settings extends Component {
                         onSubmit={this.submitDisplayHandler}
                         sender={sender}
                         display={mode}
-                        load={loading}
+                        load={isLoading}
                       />
                     )}
                   </div>

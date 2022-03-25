@@ -113,9 +113,6 @@ class Forums extends Component {
       this.props.admin.updateforum
     ) {
       this.afterUpdate("updated");
-      this.setState({
-        currentPage: Pagination.currentpage,
-      });
     }
   }
   afterUpdate = (text) => {
@@ -129,11 +126,15 @@ class Forums extends Component {
       action = text;
     } else {
       this.props.clearActions("update-forum");
+      this.setState({
+        currentPage: Pagination.currentpage,
+      });
       action = update;
     }
     this.setState({
       offset: 0,
       modal: false,
+      isLoading: false,
       toast: true,
       toasttext: `Discussion ${action} successfully`,
     });

@@ -29,7 +29,7 @@ function Select(props) {
 }
 
 Select.propTypes = {
-  value: PropTypes.array.isRequired,
+  value: PropTypes.string.isRequired,
   options: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   error: PropTypes.object,

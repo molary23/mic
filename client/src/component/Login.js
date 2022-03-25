@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loginuser, getAllCounts, clearErrors } from "../action/authAction";
+import { loginuser, clearErrors } from "../action/authAction";
 
 import TextInputField from "../layout/TextInputField";
 import TextPasswordField from "../layout/TextPasswordField";
 import ProgressBar from "../layout/ProgressBar";
 import LoadCount from "../layout/LoadCount";
 import Modal from "../layout/Modal";
+
+import { BsEyeSlash, BsEye } from "react-icons/bs";
 
 import Box from "../layout/Box";
 
@@ -201,7 +203,7 @@ class Login extends Component {
               id="login-form-password"
               placeholder="Password"
               label="Password"
-              icon={`far ${pass ? "fa-eye" : "fa-eye-slash"}`}
+              icon={pass ? <BsEye /> : <BsEyeSlash />}
               type={pass ? "password" : "text"}
               name="password"
               value={password}
@@ -248,7 +250,6 @@ class Login extends Component {
 
 Login.propTypes = {
   loginuser: PropTypes.func.isRequired,
-  getAllCounts: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.any,
   clearErrors: PropTypes.func.isRequired,
@@ -260,6 +261,5 @@ const mapStateToProps = (state) => ({
 });
 export default connect(mapStateToProps, {
   loginuser,
-  getAllCounts,
   clearErrors,
 })(Login);

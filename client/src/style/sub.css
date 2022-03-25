@@ -901,6 +901,34 @@ span.nav-sub-icon svg {
   background: transparent;
 }
 
+.progress-bar {
+  position: relative;
+  -webkit-animation: progress-indeterminate 3s linear infinite;
+          animation: progress-indeterminate 3s linear infinite;
+}
+
+@-webkit-keyframes progress-indeterminate {
+  from {
+    left: -20%;
+    width: 20%;
+  }
+  to {
+    left: 100%;
+    width: 20%;
+  }
+}
+
+@keyframes progress-indeterminate {
+  from {
+    left: -20%;
+    width: 20%;
+  }
+  to {
+    left: 100%;
+    width: 20%;
+  }
+}
+
 .loader {
   text-align: center;
   margin-top: 50px;
@@ -1593,6 +1621,14 @@ ul {
   color: #06c2f7;
 }
 
+.error-main {
+  height: 700px;
+  background: url("../asset/images/error404.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 @media only screen and (min-width: 768px) and (max-width: 959px) {
   .pricing-wrapper {
     width: 768px;
@@ -1692,6 +1728,12 @@ ul {
   }
   .crypto-card.card {
     margin-right: 20px;
+  }
+  .error-main {
+    background-size: 500px;
+  }
+  .main--nav .navbar-toggler {
+    margin-left: 100px;
   }
 }
 
