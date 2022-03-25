@@ -61,10 +61,19 @@ export class Forgot extends Component {
         }
       } catch (error) {
         let err = error.response;
-        this.setState({
-          error: { username: err.data.error },
-          loading: false,
-        });
+        if (err.status === 404) {
+          this.setState({
+            error: {
+              network: "There has been a network error. Refresh and try again.",
+            },
+            loading: false,
+          });
+        } else {
+          this.setState({
+            error: { username: err.data.error },
+            loading: false,
+          });
+        }
       }
     }
   };
@@ -85,6 +94,9 @@ export class Forgot extends Component {
               error={error.username}
             />
             <div className="d-grid">
+              {error.network && (
+                <small className="text-muted mb-2">{error.network}</small>
+              )}
               <button
                 type="submit"
                 className="btn btn-lg btn-block default-btn"
@@ -105,7 +117,11 @@ export class Forgot extends Component {
             Take me back to <Link to="/">Login</Link>
           </p>
         </div>
-        {modal ? <Modal {...{ modal, sender: "forgot" }} /> : ""}
+        {modal ? (
+          <Modal {...{ modal, sender: "forgot" }} onClick={this.modalHandler} />
+        ) : (
+          ""
+        )}
       </div>
     );
   }

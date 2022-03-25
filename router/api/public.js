@@ -524,7 +524,7 @@ router.post("/forgot", (req, res) => {
 
   const verifyField = {};
   verifyField.verify = Math.random().toString(36).substring(2, 8).toLowerCase();
-  verifyField.confirm = "y";
+  verifyField.confirm = "n";
 
   User.findOne({
     where: {
@@ -566,6 +566,7 @@ router.post("/confirm", (req, res) => {
   }
 
   const { username, code, auth } = req.body;
+
   User.findOne({
     where: {
       [Op.or]: [{ username }, { email: username }],
@@ -611,11 +612,12 @@ router.post("/confirm", (req, res) => {
                   message: false,
                   value: null,
                 });
+              } else {
+                return res.json({
+                  message: true,
+                  value: user.id,
+                });
               }
-              return res.json({
-                message: true,
-                value: user.id,
-              });
             })
             .catch((err) => res.status(404).json(err));
         }

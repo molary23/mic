@@ -9,7 +9,7 @@ import isEmpty from "../validation/emptyChecker";
 
 const initialState = {
   isConfirmed: false,
-  UserId: {},
+  message: {},
   loading: false,
   reset: false,
   resetDetails: {},
@@ -24,7 +24,7 @@ export default function confirmReducer(state = initialState, action) {
       return {
         ...state,
         isConfirmed: !isEmpty(action.payload),
-        UserId: action.payload,
+        message: action.payload,
         loading: false,
       };
     case USER_RESET_PASSWORD_ACTION:

@@ -143,18 +143,6 @@ table .td-shorter {
   font-size: 14px;
 }
 
-.active-status span {
-  color: #04c734;
-}
-
-.inactive-status span {
-  color: #dd1010;
-}
-
-.new-status {
-  color: #06c2f7;
-}
-
 a.default-anchor {
   text-decoration: none;
 }
@@ -305,6 +293,17 @@ svg {
   color: #314297;
 }
 
+.accept-btn {
+  background: #2eba61;
+  color: #fff;
+  float: right;
+}
+
+.reject-btn {
+  background: #dc2430;
+  color: #fff;
+}
+
 .footer-nav {
   height: 50px;
   padding-top: 20px;
@@ -392,6 +391,10 @@ ul.dropdown-menu li a {
 
 .nav-user-item {
   padding-top: 10px;
+}
+
+img {
+  font-size: 10px;
 }
 
 .nav-item.dropdown {
@@ -574,21 +577,50 @@ span.nav-sub-icon svg {
 }
 
 .dashboard-content .ann-card {
-  height: 300px;
-  padding: 20px;
+  min-height: 300px;
+  background: #fff;
 }
 
 .dashboard-content .ann-card .ann-title {
-  text-align: center;
-  text-transform: uppercase;
+  text-transform: capitalize;
+  border-bottom: 1px solid rgba(102, 102, 102, 0.2);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  background: rgba(23, 109, 207, 0.8);
+  color: #fff;
+  font-weight: 500;
+  padding: 10px;
+}
+
+.dashboard-content .ann-card .ann-title h4 {
+  font-size: 16px;
+  width: 100%;
 }
 
 .dashboard-content .ann-card .ann-content {
   min-height: 200px;
+  padding: 20px;
+  text-align: justify;
+  text-justify: inter-word;
+  text-transform: capitalize;
 }
 
 .dashboard-content .ann-card .ann-link {
+  padding: 0px 20px 10px 0px;
   text-align: right;
+}
+
+.dashboard-content .ann-card .ann-link .btn {
+  border-radius: 20px;
 }
 
 .dashboard-content .dash-intro .dash-card {
@@ -1549,6 +1581,18 @@ ul {
   margin-top: 10px;
 }
 
+.active-status span svg {
+  color: #04c734;
+}
+
+.inactive-status span svg {
+  color: #dd1010;
+}
+
+.new-status svg {
+  color: #06c2f7;
+}
+
 @media only screen and (min-width: 768px) and (max-width: 959px) {
   .pricing-wrapper {
     width: 768px;
@@ -1691,7 +1735,7 @@ ul {
 }
 
 .dark-content .dashboard-body .toggle-btn .btn {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
 }
 
 .dark-content .dashboard-body .input-group input {
@@ -1777,5 +1821,34 @@ ul {
 .dark-content .dashboard-body .pay-now-btn .btn {
   background: rgba(255, 255, 255, 0.7) !important;
   color: #3a3a3a;
+}
+
+.dark-content .dashboard-body .dash-card {
+  -webkit-box-shadow: 0.5px 0.5px 2px #fcfcfc;
+          box-shadow: 0.5px 0.5px 2px #fcfcfc;
+}
+
+.dark-content .dashboard-body .modal-content {
+  background: #121212;
+}
+
+.dark-content .dashboard-body .ann-card {
+  background: #121212;
+}
+
+.dark-content .dashboard-body .active-status span svg {
+  color: #04c734;
+}
+
+.dark-content .dashboard-body .inactive-status span svg {
+  color: #dd1010;
+}
+
+.dark-content .dashboard-body .new-status svg {
+  color: #06c2f7;
+}
+
+.dark-content .dashboard-body textarea {
+  background: #121212;
 }
 /*# sourceMappingURL=sub.css.map */

@@ -148,7 +148,9 @@ export class VerifyEmail extends Component {
             New to MIC? <Link to="/register">Join</Link>
           </p>
         </div>
-        {modal ? <Modal {...{ modal, sender: "verify" }} /> : null}
+        {modal ? (
+          <Modal {...{ modal, sender: "verify" }} onClick={this.modalHandler} />
+        ) : null}
       </div>
     );
   }

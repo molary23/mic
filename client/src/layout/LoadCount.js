@@ -16,6 +16,8 @@ function LoadCount(props) {
 LoadCount.propTypes = {
   getAllCounts: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  sender: PropTypes.string.isRequired,
+  level: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({

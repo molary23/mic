@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { MdOutlineDeleteForever } from "react-icons/md";
 
@@ -6,6 +7,7 @@ import { FaRegEye } from "react-icons/fa";
 import { FcIdea } from "react-icons/fc";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { RiMapPinUserLine } from "react-icons/ri";
+import { BsFileEarmarkFont } from "react-icons/bs";
 
 import DateFormat from "./DateFormat";
 import { Link } from "react-router-dom";
@@ -32,6 +34,14 @@ function ForumCard(props) {
             )}
           </h3>
           <div className="forum-from">
+            {item.right !== "p" && (
+              <span className="forum-right ">
+                <BsFileEarmarkFont />
+                {item.id.toString().length < 5
+                  ? item.id.toString().padStart(5, "0")
+                  : item.id}
+              </span>
+            )}
             {item.right === "p" && (
               <span className="forum-right ">
                 <FcIdea />
@@ -106,5 +116,11 @@ function ForumCard(props) {
   });
   return <div>{forumList}</div>;
 }
-
+ForumCard.propTypes = {
+  onClick: PropTypes.func,
+  sender: PropTypes.string.isRequired,
+  forum: PropTypes.array.isRequired,
+  user: PropTypes.number.isRequired,
+  level: PropTypes.number.isRequired,
+};
 export default ForumCard;

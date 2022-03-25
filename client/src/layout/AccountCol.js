@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function AccountCol(props) {
   const { details } = props;
@@ -21,5 +22,7 @@ function AccountCol(props) {
     );
   });
 }
-
+AccountCol.propTypes = {
+  details: PropTypes.array.isRequired,
+};
 export default AccountCol;

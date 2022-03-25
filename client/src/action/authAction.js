@@ -104,7 +104,7 @@ export const getMode = (user) => async (dispatch) => {
         document.body.classList.add("dark-content");
       }
     }
-    localStorage.setItem(mode, JSON.stringify(response.data));
+    localStorage.setItem(mode, response.data);
     const result = await dispatch({
       type,
       payload: await response.data,

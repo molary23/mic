@@ -343,7 +343,14 @@ class Register extends Component {
             </p>
           </div>
         </div>
-        {modal ? <Modal {...{ modal, sender: "register" }} /> : ""}
+        {modal ? (
+          <Modal
+            {...{ modal, sender: "register" }}
+            onClick={this.modalHandler}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }

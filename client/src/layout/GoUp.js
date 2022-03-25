@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { BiUpArrowCircle } from "react-icons/bi";
 function GoUp() {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false),
+    mode = localStorage.getItem("mode");
+  let hour = new Date().getHours();
+  const changeAuto = () => {
+    console.log(hour);
+    if (mode === "a") {
+      if (hour > 7 && hour < 20) {
+        if (!document.body.classList.contains("dark-content")) {
+          document.body.classList.add("dark-content");
+        }
+      }
+    }
+  };
+
   const scrollUp = () => {
     window.scroll({
       top: 0,
@@ -25,6 +38,8 @@ function GoUp() {
       window.removeEventListener("scroll", checkPosition);
     };
   }, []);
+
+  useEffect(changeAuto, [hour]);
 
   return (
     <div

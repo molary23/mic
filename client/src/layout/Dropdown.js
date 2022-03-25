@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../action/authAction";
-import { clearCurrentProfile } from "../action/profileAction";
 import { clearActions } from "../action/adminAction";
 import { clearSearchActions } from "../action/searchAction";
 import PropTypes from "prop-types";
@@ -88,19 +87,15 @@ function Dropdown(props) {
 
 Dropdown.propTypes = {
   logoutUser: PropTypes.func.isRequired,
-  clearCurrentProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  profile: state.profile,
 });
 
 export default connect(mapStateToProps, {
   logoutUser,
-  clearCurrentProfile,
   clearActions,
   clearSearchActions,
 })(Dropdown);

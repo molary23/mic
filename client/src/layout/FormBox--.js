@@ -4,8 +4,8 @@ import { withRouter } from "../util/withRouter";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import TextInputField from "../layout/TextInputField";
-import TextPasswordField from "../layout/TextPasswordField";
+import TextInputField from "./TextInputField";
+import TextPasswordField from "./TextPasswordField";
 
 function FormBox(props) {
   const [inputs, setInputs] = useState({});

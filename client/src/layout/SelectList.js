@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+
 import { RiRefreshLine } from "react-icons/ri";
 import { IoIosRemoveCircleOutline } from "react-icons/io";
 
@@ -92,4 +94,10 @@ function SelectList(props) {
 
   return <div>{listItem}</div>;
 }
+
+SelectList.propTypes = {
+  list: PropTypes.array.isRequired,
+  onSubmit: PropTypes.func,
+  load: PropTypes.bool,
+};
 export default SelectList;

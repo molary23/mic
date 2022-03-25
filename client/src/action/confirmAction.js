@@ -18,13 +18,13 @@ export const confirmCode = (usercode) => async (dispatch) => {
 
   try {
     let response = await axios.post("/api/public/confirm", usercode),
-      code = response.data;
-    if (code.message) {
-      localStorage.setItem("confirm", code.value);
+      message = response.data;
+    if (message.message) {
+      localStorage.setItem("confirm", message.value);
     }
     const result = await dispatch({
       type: USER_CONFIRM_PASSWORD_ACTION,
-      payload: code,
+      payload: message,
     });
     return result;
   } catch (error) {

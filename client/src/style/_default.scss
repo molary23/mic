@@ -141,16 +141,6 @@ table {
   }
 }
 
-.active-status span {
-  color: #04c734;
-}
-.inactive-status span {
-  color: #dd1010;
-}
-.new-status {
-  color: #06c2f7;
-}
-
 a.default-anchor {
   text-decoration: none;
   &:hover {
@@ -280,6 +270,17 @@ svg {
   border: 1px solid rgba($color: $bg-dark, $alpha: 0.5);
   color: $bg-dark;
 }
+
+.accept-btn {
+  background: $success;
+  color: #fff;
+  float: right;
+}
+.reject-btn {
+  background: $danger;
+  color: #fff;
+}
+
 .footer-nav {
   height: 50px;
   padding-top: 20px;

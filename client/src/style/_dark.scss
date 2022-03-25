@@ -31,7 +31,7 @@ $off-white: rgba(
       color: $off-white;
     }
     .toggle-btn .btn {
-      background: $normal-white !important;
+      background: $off-white !important;
     }
     .input-group input {
       background: transparent;
@@ -101,6 +101,28 @@ $off-white: rgba(
     .pay-now-btn .btn {
       background: $off-white !important;
       color: $shadow;
+    }
+
+    .dash-card {
+      box-shadow: 0.5px 0.5px 2px $border-light;
+    }
+    .modal-content {
+      background: $dark-color;
+    }
+    .ann-card {
+      background: $dark-color;
+    }
+    .active-status span svg {
+      color: #04c734;
+    }
+    .inactive-status span svg {
+      color: #dd1010;
+    }
+    .new-status svg {
+      color: #06c2f7;
+    }
+    textarea {
+      background: $dark-color;
     }
   }
 }

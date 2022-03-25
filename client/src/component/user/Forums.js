@@ -342,7 +342,7 @@ class Forums extends Component {
                 <div className="col-md-3 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
-                      {totalText} Discussions
+                      {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>
@@ -357,7 +357,7 @@ class Forums extends Component {
             <ForumCard
               sender={sender}
               forum={!showSearch ? main : searchMain}
-              onClick={this.clickhandler}
+              onClick={this.clickHandler}
               user={UserId}
               level={level}
             />

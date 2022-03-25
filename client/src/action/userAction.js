@@ -294,7 +294,7 @@ export const addForum = (forumData) => async (dispatch) => {
       type: USER_ADD_FORUM,
       payload: response.data,
     });
-    dispatch(getAllCounts(2));
+    dispatch(getAllCounts(1));
     return result;
   } catch (error) {
     console.log(error.response);

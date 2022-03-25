@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function DateFormat(props) {
   const { date } = props;
@@ -22,5 +23,9 @@ function DateFormat(props) {
 
   return <div>{time}</div>;
 }
+
+DateFormat.propTypes = {
+  date: PropTypes.string.isRequired,
+};
 
 export default DateFormat;

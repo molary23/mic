@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function Box(props) {
   return (
@@ -14,5 +15,10 @@ function Box(props) {
     </div>
   );
 }
+
+Box.propTypes = {
+  sender: PropTypes.string.isRequired,
+  children: PropTypes.any.isRequired,
+};
 
 export default Box;

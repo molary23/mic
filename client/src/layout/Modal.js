@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+
 import { Link } from "react-router-dom";
 
 function Modal(props) {
@@ -148,5 +150,11 @@ function Modal(props) {
     </div>
   );
 }
+
+Modal.propTypes = {
+  sender: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+  modal: PropTypes.bool,
+};
 
 export default Modal;

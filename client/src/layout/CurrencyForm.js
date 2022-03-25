@@ -165,6 +165,10 @@ function CurrencyForm(props) {
   );
 }
 
-CurrencyForm.propTypes = {};
+CurrencyForm.propTypes = {
+  onSubmit: PropTypes.func,
+  currencyList: PropTypes.object.isRequired,
+  load: PropTypes.bool,
+};
 
 export default CurrencyForm;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 import TextInputField from "./TextInputField";
 function ProfileForm(props) {
@@ -103,5 +104,10 @@ function ProfileForm(props) {
     </div>
   );
 }
+
+ProfileForm.propTypes = {
+  onSubmit: PropTypes.func,
+  userinfo: PropTypes.object.isRequired,
+};
 
 export default ProfileForm;

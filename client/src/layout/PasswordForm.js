@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 import TextPasswordField from "./TextPasswordField";
 
@@ -77,7 +78,7 @@ function PasswordForm(props) {
   return (
     <div className="settings-form-password dash-card settings-form-card">
       <div className="page-title mb-2 mt-1">
-        <h4>Add/Modify Account</h4>
+        <h4>Add/Modify Password</h4>
       </div>
       <form className="change-password-form" onSubmit={submitHandler}>
         <TextPasswordField
@@ -125,5 +126,10 @@ function PasswordForm(props) {
     </div>
   );
 }
+
+PasswordForm.propTypes = {
+  onSubmit: PropTypes.func,
+  error: PropTypes.object,
+};
 
 export default PasswordForm;

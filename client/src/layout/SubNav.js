@@ -7,14 +7,12 @@ import jwtDecode from "jwt-decode";
 import { HiBadgeCheck, HiOutlineChatAlt2 } from "react-icons/hi";
 import { RiSettings3Line } from "react-icons/ri";
 
-import { getUserProfile } from "../action/profileAction";
 import logo from "../asset/images/logo.png";
 
 import Dropdown from "./Dropdown";
 import Toast from "../layout/Toast";
 
 import { logoutUser, clearErrors } from "../action/authAction";
-import { clearCurrentProfile } from "../action/profileAction";
 
 export class SubNav extends Component {
   state = {
@@ -98,7 +96,6 @@ export class SubNav extends Component {
   }
 
   logOut = () => {
-    this.props.clearCurrentProfile();
     this.props.logoutUser();
   };
 
@@ -239,25 +236,19 @@ export class SubNav extends Component {
   }
 }
 SubNav.propTypes = {
-  getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
   errors: PropTypes.any,
   logoutUser: PropTypes.func.isRequired,
-  clearCurrentProfile: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
-  profile: state.profile,
   errors: state.errors,
 });
 
 export default connect(mapStateToProps, {
-  getUserProfile,
   logoutUser,
-  clearCurrentProfile,
   clearErrors,
 })(SubNav);

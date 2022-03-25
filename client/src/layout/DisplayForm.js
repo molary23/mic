@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ThemeContext, themes } from "../contexts/ThemeContext";
+import PropTypes from "prop-types";
 
 function DisplayForm(props) {
   const { onSubmit, display, load } = props;
@@ -136,5 +137,11 @@ function DisplayForm(props) {
     </div>
   );
 }
+
+DisplayForm.propTypes = {
+  display: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func,
+  load: PropTypes.bool,
+};
 
 export default DisplayForm;

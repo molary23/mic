@@ -20,7 +20,7 @@ export class Reset extends Component {
     loading: false,
     navigate: false,
     modal: false,
-    UserId: localStorage.getItem("confirm") ?? this.props.confirm.UserId.UserId,
+    UserId: localStorage.getItem("confirm") ?? this.props.confirm.message.value,
   };
 
   componentDidMount() {
@@ -164,7 +164,11 @@ export class Reset extends Component {
             Take me back to <Link to="/">Login</Link>
           </p>
         </div>
-        {modal ? <Modal {...{ modal, sender: "reset" }} /> : ""}
+        {modal ? (
+          <Modal {...{ modal, sender: "reset" }} onClick={this.modalHandler} />
+        ) : (
+          ""
+        )}
         {navigate && <Navigate to="/confirm" replace={true} />}
       </div>
     );

@@ -323,7 +323,7 @@ export class Index extends Component {
               </div>
             </div>
 
-            <div className="row">
+            <div className="row g-0">
               {userdetails.ann.length >= 1 && (
                 <AnnCard details={userdetails.ann} />
               )}

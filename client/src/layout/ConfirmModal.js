@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 import { FiCheckCircle } from "react-icons/fi";
 import { MdOutlineCancel } from "react-icons/md";
@@ -6,7 +7,6 @@ import { MdOutlineCancel } from "react-icons/md";
 function ConfirmModal(props) {
   const { checktext, checktitle, onClick, check } = props;
   const [open, setOpen] = useState(check);
-  const [confirm, setConfirm] = useState(false);
   const confirmAction = (value) => {
     setOpen(false);
     onClick(value);
@@ -24,7 +24,8 @@ function ConfirmModal(props) {
             </div>
 
             <div className="modal-body">
-              {checktext}
+              <div className="mb-4">{checktext}</div>
+
               <div className="row">
                 <div className="col-6">
                   <button
@@ -52,5 +53,11 @@ function ConfirmModal(props) {
     </div>
   );
 }
+ConfirmModal.propTypes = {
+  checktext: PropTypes.any.isRequired,
+  checktitle: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+  check: PropTypes.bool,
+};
 
 export default ConfirmModal;

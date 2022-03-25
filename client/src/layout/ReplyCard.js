@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import DateFormat from "./DateFormat";
 
 import { MdOutlineDeleteForever } from "react-icons/md";
@@ -6,7 +8,7 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import { RiMapPinUserLine } from "react-icons/ri";
 
 function ReplyCard(props) {
-  const { sender, UserId, reply, onClick, level } = props;
+  const { UserId, reply, onClick } = props;
 
   const clickHandler = (value) => {
     onClick(value);
@@ -53,5 +55,11 @@ function ReplyCard(props) {
 
   return <div>{replyList}</div>;
 }
+
+ReplyCard.propTypes = {
+  UserId: PropTypes.number.isRequired,
+  reply: PropTypes.array.isRequired,
+  onClick: PropTypes.func,
+};
 
 export default ReplyCard;

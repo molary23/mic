@@ -635,13 +635,6 @@ function AddModal(props) {
           setErrors({
             addanntitle: "Announcement Title can't be more than 50 characters",
           });
-        } else if (
-          !Object.keys(inputs).includes("addannlink") ||
-          inputs.addannlink === ""
-        ) {
-          setErrors({
-            addannlink: "Announcement Link can't be empty",
-          });
         } else if (inputs.addannlink.length > 100) {
           setErrors({
             addannlink: "Announcement Title can't be more than 30 characters",
@@ -763,10 +756,6 @@ function AddModal(props) {
         } else if (anns.editanntitle.length > 50) {
           setErrors({
             editanntitle: "Announcement Title can't be more than 50 characters",
-          });
-        } else if (anns.editannlink === "") {
-          setErrors({
-            editannlink: "Announcement Link can't be empty",
           });
         } else if (anns.editannlink.length > 100) {
           setErrors({
@@ -1151,7 +1140,7 @@ function AddModal(props) {
         setErrors({
           email: "Email Address can't be more than 50 characters",
         });
-      } else if (old.email === props.info.email) {
+      } else if (old.email === info.email) {
         setErrors({
           email: "New Email Address can't be same with the Old Email Address",
         });
@@ -1215,6 +1204,22 @@ function AddModal(props) {
     </div>
   );
 }
+
+AddModal.propTypes = {
+  modal: PropTypes.bool.isRequired,
+  sender: PropTypes.string.isRequired,
+  purpose: PropTypes.string,
+  onSubmit: PropTypes.func,
+  error: PropTypes.any,
+  modalAnnDetails: PropTypes.object,
+  modalsignaldetails: PropTypes.object,
+  walletList: PropTypes.object,
+  isLoading: PropTypes.bool,
+  info: PropTypes.object,
+  onClick: PropTypes.func,
+  accountList: PropTypes.object,
+  balance: PropTypes.number,
+};
 
 export default connect(null, {
   clearErrors,

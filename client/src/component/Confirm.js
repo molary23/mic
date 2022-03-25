@@ -21,6 +21,7 @@ export class Confirm extends Component {
     navigate: false,
     modal: false,
     sender: "",
+    servererror: {},
   };
   componentDidMount() {
     this.props.clearErrors();
@@ -60,23 +61,32 @@ export class Confirm extends Component {
 
     if (
       nextProps.confirm.isConfirmed &&
-      prevState.modal === false &&
-      nextProps.confirm.isConfirmed.message
+      !prevState.modal &&
+      nextProps.confirm.message.message
     ) {
       update.modal = true;
       update.sender = "confirmed";
     }
     if (
       nextProps.confirm.isConfirmed &&
-      prevState.modal === false &&
-      !nextProps.confirm.isConfirmed.message
+      !prevState.modal &&
+      !nextProps.confirm.message.message
     ) {
       update.modal = true;
       update.sender = "unconfirmed";
     }
 
-    if (nextProps.errors) {
-      update.error = nextProps.errors;
+    console.log(nextProps.confirm.message.message);
+
+    if (nextProps.errors !== prevState.errors) {
+      if (nextProps.errors.status === 400) {
+        update.servererror = nextProps.errors.data;
+      }
+      if (nextProps.errors.status === 404) {
+        update.servererror = {
+          network: "There has been a network error. Refresh and try again.",
+        };
+      }
       update.loading = false;
     }
 
@@ -125,7 +135,8 @@ export class Confirm extends Component {
   };
 
   render() {
-    const { username, code, error, loading, modal, sender } = this.state;
+    const { username, code, error, loading, modal, sender, servererror } =
+      this.state;
     //const { errors } = this.props;
     return (
       <div>
@@ -138,7 +149,7 @@ export class Confirm extends Component {
               name="username"
               value={username}
               onChange={this.changeHandler}
-              error={error.username}
+              error={error.username || servererror.username}
             />
             <TextInputField
               id="reset-form-code"
@@ -147,9 +158,12 @@ export class Confirm extends Component {
               name="code"
               value={code}
               onChange={this.changeHandler}
-              error={error.code}
+              error={error.code || servererror.code}
             />
             <div className="d-grid">
+              {servererror.network && (
+                <small className="text-muted mb-2">{servererror.network}</small>
+              )}
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
@@ -173,7 +187,9 @@ export class Confirm extends Component {
             Take me back to <Link to="/">Login</Link>
           </p>
         </div>
-        {modal ? <Modal {...{ modal, sender }} /> : null}
+        {modal ? (
+          <Modal {...{ modal, sender }} onClick={this.modalHandler} />
+        ) : null}
       </div>
     );
   }

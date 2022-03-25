@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 import { IoIosRemoveCircleOutline } from "react-icons/io";
 import { MdOutlineSelectAll } from "react-icons/md";
@@ -157,5 +158,9 @@ function SignalForm(props) {
     </div>
   );
 }
-
+SignalForm.propTypes = {
+  onSubmit: PropTypes.func,
+  currencyList: PropTypes.object.isRequired,
+  load: PropTypes.bool,
+};
 export default SignalForm;

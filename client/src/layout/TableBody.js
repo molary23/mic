@@ -300,7 +300,7 @@ function TableBody(props) {
               <div className="action-buttons">
                 <button
                   type="button"
-                  className="btn btn-success btn-sm"
+                  className="btn accept-btn btn-sm"
                   data-id={item.bonusid}
                   title="Approve Bonus"
                   onClick={() =>
@@ -311,7 +311,7 @@ function TableBody(props) {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-danger btn-sm"
+                  className="btn reject-btn btn-sm"
                   data-id={item.bonusid}
                   title="Disapprove Bonus"
                   onClick={() =>
@@ -400,7 +400,7 @@ function TableBody(props) {
               {item.status !== "a" ? (
                 <button
                   type="button"
-                  className="btn btn-success btn-sm"
+                  className="btn accept-btn btn-sm"
                   title="Activate Wallet"
                   onClick={() => onClick(["activate", item.id, item.wallet])}
                 >
@@ -409,7 +409,7 @@ function TableBody(props) {
               ) : (
                 <button
                   type="button"
-                  className="btn btn-danger btn-sm"
+                  className="btn reject-btn btn-sm"
                   title="Deactivate Wallet"
                   onClick={() => onClick(["delete", item.id, item.wallet])}
                 >
@@ -506,7 +506,7 @@ function TableBody(props) {
               <div className="action-buttons">
                 <button
                   type="button"
-                  className="btn btn-success btn-sm"
+                  className="btn accept-btn btn-sm"
                   title="Approve Withdrawals"
                   onClick={() =>
                     onClick(["approve", item.withdrawalid, item.username])
@@ -516,7 +516,7 @@ function TableBody(props) {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-danger btn-sm"
+                  className="btn reject-btn btn-sm"
                   title="Reject Withdrawals"
                   onClick={() =>
                     onClick(["reject", item.withdrawalid, item.username])
@@ -562,7 +562,7 @@ function TableBody(props) {
             <div className="action-buttons">
               <button
                 type="button"
-                className="btn btn-success btn-sm mb-1"
+                className="btn accept-btn btn-sm mb-1"
                 data-id={item.payid}
                 title="Update Payment"
                 onClick={() => onClick(["update", item.payid])}
@@ -573,7 +573,7 @@ function TableBody(props) {
               {item.status !== "f" && (
                 <button
                   type="button"
-                  className="btn btn-danger btn-sm mt-1"
+                  className="btn reject-btn btn-sm mt-1"
                   data-id={item.payid}
                   title="Cancel Payment"
                   onClick={() => onClick(["cancel", item.payid])}
@@ -703,8 +703,6 @@ function TableBody(props) {
           <td className="td-lower">{item.email}</td>
           <td className="td-lower">
             <Link
-              type="button"
-              className=""
               data-id={i}
               title={`View ${adm}`}
               to={`/admin/admin/:${item.userid}`}
@@ -733,7 +731,7 @@ function TableBody(props) {
               {item.status === "a" && (
                 <button
                   type="button"
-                  className="btn btn-danger btn-sm"
+                  className="btn reject-btn btn-sm"
                   data-id={item.id}
                   title={`Deactivate ${adm}`}
                   onClick={() => onClick(["delete", item.userid])}
@@ -745,7 +743,7 @@ function TableBody(props) {
               {item.status === "i" && (
                 <button
                   type="button"
-                  className="btn btn-success btn-sm"
+                  className="btn accept-btn btn-sm"
                   data-id={item.id}
                   title={`Activate ${adm}`}
                   onClick={() => onClick(["reactivate", item.userid])}
@@ -772,12 +770,7 @@ function TableBody(props) {
           <td>{item.enddate}</td>
           <td className="td-lower">
             <div className="action-buttons">
-              <Link
-                type=""
-                className=""
-                title="View Addmin"
-                to={`/admin/admin/:${item.UserId}`}
-              >
+              <Link title="View Addmin" to={`/admin/admin/:${item.UserId}`}>
                 {item.User.username}
               </Link>
             </div>
@@ -795,7 +788,7 @@ function TableBody(props) {
               </button>
               <button
                 type="button"
-                className="btn btn-danger btn-sm"
+                className="btn reject-btn btn-sm"
                 data-id={item.bonusid}
                 title="Delete Announcement"
                 onClick={() => onClick(["delete", item.id])}
@@ -888,7 +881,7 @@ function TableBody(props) {
               {item.status === "a" ? (
                 <button
                   type="button"
-                  className="btn btn-danger btn-sm"
+                  className="btn reject-btn btn-sm"
                   data-id={item.id}
                   title="Delete Currency "
                   onClick={() => onClick(["delete", item])}
@@ -1020,7 +1013,7 @@ function TableBody(props) {
               {sender === "provider-signals" && item.status === null && (
                 <button
                   type="button"
-                  className="btn btn-success btn-sm"
+                  className="btn accept-btn btn-sm"
                   data-id={item.signalid}
                   title="Edit Signal"
                   onClick={() => onClick([...["edit"], ...[item]])}

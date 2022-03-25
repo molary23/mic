@@ -28,6 +28,8 @@ import AddModal from "../../layout/AddModal";
 import Toast from "../../layout/Toast";
 import ConfirmModal from "../../layout/ConfirmModal";
 
+import { HiOutlineSpeakerphone } from "react-icons/hi";
+
 import Pagination from "../../util/Pagination";
 
 class Announcements extends Component {
@@ -309,16 +311,16 @@ class Announcements extends Component {
                 <div className="col-md-2 mb-3">
                   <button
                     type="button"
-                    className="btn addd-btn"
+                    className="btn add-btn btn-sm"
                     onClick={this.openModal}
                   >
-                    Create <i className="fas fa-bullhorn" />
+                    Create <HiOutlineSpeakerphone />
                   </button>
                 </div>
                 <div className="col-md-4 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
-                      {totalText} Announcements
+                      {totalText}
                       <span className="badge rounded-pill bg-success">
                         {totalCount}
                       </span>

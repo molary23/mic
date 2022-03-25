@@ -6,11 +6,9 @@ export default function ThemeContextWrapper(props) {
     display;
   if (mode === "n") {
     display = themes.dark;
-  }
-  if (mode === "d") {
+  } else if (mode === "d") {
     display = themes.light;
-  }
-  if (mode === "i") {
+  } else if (mode === "i") {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       display = themes.dark;
     }
@@ -25,7 +23,7 @@ export default function ThemeContextWrapper(props) {
   function changeTheme(theme) {
     setTheme(theme);
   }
-  console.log(theme);
+
   useEffect(() => {
     switch (theme) {
       case themes.light:

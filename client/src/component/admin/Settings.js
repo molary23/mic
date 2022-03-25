@@ -193,7 +193,7 @@ class Settings extends Component {
                           onClick={() => this.moveActive(2)}
                         >
                           {" "}
-                          <BiAdjust />
+                          <BiAdjust /> Display Mode
                         </button>
                       </li>
                     </ul>

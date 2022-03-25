@@ -22,7 +22,6 @@ Announcement.init(
     },
     link: {
       type: DataTypes.STRING(100),
-      allowNull: false,
     },
     startdate: {
       type: DataTypes.DATEONLY,

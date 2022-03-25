@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Box from "./Box";
+import PropTypes from "prop-types";
 
 function Notification(props) {
   const { onSubmit, load, alert } = props;
@@ -79,5 +79,11 @@ function Notification(props) {
     </div>
   );
 }
+
+Notification.propTypes = {
+  alert: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func,
+  load: PropTypes.bool,
+};
 
 export default Notification;

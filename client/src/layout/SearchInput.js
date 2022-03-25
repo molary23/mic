@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { BiSearchAlt } from "react-icons/bi";
+
 function SearchInput(props) {
   const { placeholder, onChange, name, value } = props;
   return (
@@ -15,7 +17,7 @@ function SearchInput(props) {
           onChange={onChange}
         />
         <span className="input-group-text">
-          <i className="fas fa-search" />
+          <BiSearchAlt />
         </span>
       </div>
     </div>

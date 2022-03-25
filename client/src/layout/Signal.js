@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+
 import Flag from "react-flagpack";
 
 import { FcCurrencyExchange } from "react-icons/fc";
@@ -74,8 +76,8 @@ function Signal(props) {
         <div className="signal-about">
           <div className="signal-type signal-title">Signal Identifier</div>
           <div className="signal-days-ago signal-align-right">
-            {signal.signalid.toString().length < 3
-              ? signal.signalid.toString().padStart(3, "0")
+            {signal.signalid.toString().length < 5
+              ? signal.signalid.toString().padStart(5, "0")
               : signal.signalid.toString()}
           </div>
         </div>
@@ -157,5 +159,9 @@ function Signal(props) {
     </div>
   );
 }
+
+Signal.propTypes = {
+  signal: PropTypes.object.isRequired,
+};
 
 export default Signal;

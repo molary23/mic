@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { FcIdea } from "react-icons/fc";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { RiMapPinUserLine } from "react-icons/ri";
+import { BsFileEarmarkFont } from "react-icons/bs";
 
 import Spinner from "../../layout/Spinner";
 import ProgressBar from "../../layout/ProgressBar";
@@ -233,6 +234,14 @@ class Forum extends Component {
                     </h3>
 
                     <div className="forum-from">
+                      {post.right !== "p" && (
+                        <span className="forum-right ">
+                          <BsFileEarmarkFont />
+                          {post.id.toString().length < 5
+                            ? post.id.toString().padStart(5, "0")
+                            : post.id}
+                        </span>
+                      )}
                       {post.right === "p" ? (
                         <span className="forum-right ">
                           <FcIdea />

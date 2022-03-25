@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import { BsCheckCircle } from "react-icons/bs";
 import { MdReportGmailerrorred } from "react-icons/md";
 
@@ -33,5 +35,10 @@ function Toast(props) {
     </div>
   );
 }
+
+Toast.propTypes = {
+  text: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+};
 
 export default Toast;

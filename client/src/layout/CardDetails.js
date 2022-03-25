@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function CardDetails(props) {
   const { label, value } = props;
@@ -10,4 +11,8 @@ function CardDetails(props) {
   );
 }
 
+CardDetails.propTypes = {
+  label: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
 export default CardDetails;

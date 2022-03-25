@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function TableHead(props) {
   const { head } = props;
@@ -20,5 +21,7 @@ function TableHead(props) {
     </div>
   );
 }
-
+TableHead.propTypes = {
+  head: PropTypes.array.isRequired,
+};
 export default TableHead;

@@ -25,12 +25,7 @@ function SideNav(props) {
   let navigate = useNavigate();
   let location = useLocation();
   const [show, setShow] = useState(false);
-  // check user logged in
-  /* useEffect(() => {
-    if (!props.auth.isAuthenticated) {
-      navigate(`/?next=${location.pathname}`, { replace: true });
-    }
-  });*/
+
   let display;
 
   const closeSide = () => {
@@ -209,6 +204,8 @@ function SideNav(props) {
 SideNav.propTypes = {
   getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
+  act: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
