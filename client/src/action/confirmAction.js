@@ -46,11 +46,11 @@ export const resetPass = (pass) => async (dispatch) => {
   dispatch(clearResetAction());
   try {
     let response = await axios.post("/api/public/reset/", pass);
-    localStorage.removeItem("confirm");
     const result = await dispatch({
       type: USER_RESET_PASSWORD_ACTION,
       payload: response.data,
     });
+    localStorage.removeItem("confirm");
     return result;
   } catch (error) {
     console.log(error.response.data);

@@ -7,6 +7,7 @@ import TableHead from "../../layout/TableHead";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import { getContent, clearActions } from "../../action/userAction";
@@ -48,9 +49,10 @@ export class Earnings extends Component {
       JSON.parse(localStorage.getItem("userCounts")).bonus ??
       this.props.auth.userCounts.bonus,
     isLoading: false,
-    startLoad: false,
-    getLoad: true,
     content: "bonus",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -133,6 +135,9 @@ export class Earnings extends Component {
       getLoad,
       bonuscount,
       isLoading,
+      toast,
+      toastcategory,
+      toasttext,
     } = this.state;
 
     const { user, userSearch } = this.props;
@@ -232,6 +237,7 @@ export class Earnings extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

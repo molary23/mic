@@ -8,6 +8,8 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
+
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import { getContent, clearActions } from "../../action/userAction";
@@ -58,6 +60,9 @@ export class Payments extends Component {
       this.props.auth.userCounts.payments,
     upLoad: true,
     content: "payments",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -143,6 +148,9 @@ export class Payments extends Component {
       paycount,
       search,
       isLoading,
+      toast,
+      toastcategory,
+      toasttext,
     } = this.state;
 
     const { user, userSearch } = this.props;
@@ -259,6 +267,7 @@ export class Payments extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

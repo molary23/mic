@@ -43,7 +43,7 @@ export class Index extends Component {
       loader = false,
       analytics,
       premium,
-      providers,
+      payments,
       currencies,
       signals,
       bonus,
@@ -61,7 +61,7 @@ export class Index extends Component {
       loader = false;
       analytics = admin.getanalytics;
       premium = analytics.premium;
-      providers = analytics.providers;
+      payments = analytics.payments;
       currencies = analytics.currencies;
       signals = analytics.signals;
       bonus = analytics.bonus;
@@ -137,16 +137,18 @@ export class Index extends Component {
                       </div>
                     </div>
                     <div className="col-8">
-                      <p className="mb-1">Signal Providers</p>
-                      <h2 title={`Real Figure: ${allCounts.providers}`}>
-                        {roundUp(allCounts.providers)}
+                      <p className="mb-1">Payments</p>
+                      <h2 title={`Real Figure: ${allCounts.payments}`}>
+                        {roundUp(allCounts.payments)}
                       </h2>
                     </div>
                   </div>
                   <div className="analytics">
                     <div className="row">
                       <div className="col-7">
-                        <p className="mb-1">{providers} active providers</p>
+                        <p className="mb-1" title={`Real Figure: ${payments}`}>
+                          {roundUp(payments)} payments this week
+                        </p>
                       </div>
                       <div className="col-5">
                         <span className="pay-now-btn">

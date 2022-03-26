@@ -129,6 +129,7 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("details");
   localStorage.removeItem("premium");
   localStorage.removeItem("mode");
+  localStorage.removeItem("confirm");
 
   //Remove Auth Header  for future requests
   setAuthToken(false);

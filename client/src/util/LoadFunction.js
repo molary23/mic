@@ -1,4 +1,5 @@
 import axios from "axios";
+import Toast from "../layout/Toast";
 
 export const getMore = ({
   limit,
@@ -336,12 +337,18 @@ export const downloadFile = ({ sender, self }) => {
       });
     })
     .catch((error) => {
-      console.log("main", error);
+      self.setState({
+        isLoading: false,
+        toasttext:
+          "There has been a Network Error. Refresh and Try downloading later.",
+        toastcategory: "error",
+        toast: true,
+      });
 
-      console.log("message", error.message);
-      console.log("request", error.request);
-      console.log("data", error.response.data);
-      console.log("status", error.response.status);
-      console.log("header", error.response.headers);
+      setTimeout(() => {
+        self.setState({
+          toast: false,
+        });
+      }, 5000);
     });
 };

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import { getContent, clearActions } from "../../action/adminAction";
 import { searchContent, clearSearchActions } from "../../action/searchAction";
+import Toast from "../../layout/Toast";
 
 import {
   getMore,
@@ -55,6 +56,9 @@ class Signals extends Component {
     modal: false,
     modalsignaldetails: [],
     purpose: "",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -100,7 +104,7 @@ class Signals extends Component {
       });
     }
     this.setState({
-      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 
@@ -153,6 +157,9 @@ class Signals extends Component {
       modal,
       modalsignaldetails,
       purpose,
+      toast,
+      toastcategory,
+      toasttext,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -287,6 +294,7 @@ class Signals extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

@@ -60,7 +60,8 @@ class ViewAdmin extends Component {
     content: "providers",
     modal: false,
     toast: false,
-    toasttext: "",
+    toasttext: null,
+    toastcategory: null,
     error: {},
     check: false,
     checktext: null,
@@ -252,6 +253,7 @@ class ViewAdmin extends Component {
       modal,
       toast,
       toasttext,
+      toastcategory,
       error,
       isLoading,
       check,
@@ -388,7 +390,7 @@ class ViewAdmin extends Component {
             onClick={this.confirmHandler}
           />
         )}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

@@ -64,7 +64,8 @@ export class Wallets extends Component {
       modal: false,
       error: {},
       toast: false,
-      toasttext: "",
+      toasttext: null,
+      toastcategory: null,
       isLoading: false,
       check: false,
       checktext: null,
@@ -256,6 +257,7 @@ export class Wallets extends Component {
       search,
       toast,
       toasttext,
+      toastcategory,
       error,
       modal,
       isLoading,
@@ -393,7 +395,7 @@ export class Wallets extends Component {
             onClick={this.confirmHandler}
           />
         )}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

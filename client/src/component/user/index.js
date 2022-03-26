@@ -38,7 +38,7 @@ export class Index extends Component {
   }
 
   componentDidMount() {
-    const { premiuminfo, premiumstatus } = this.state;
+    const { premiuminfo } = this.state;
     // this.props.getUserProfile();
     let dateOnly = new Date().toDateString(),
       curDate = new Date(dateOnly).getTime() / 1000,
@@ -257,7 +257,7 @@ export class Index extends Component {
                     <h4 className="mb-2">Referrals </h4>
                     <h1 className="mb-2">{referral}</h1>
                     <code>http://localhost:3000/referral/:{username}</code>
-                    <div className={`tiptool ${true && "showTip"}`}>
+                    <div className={`tiptool ${copy && "showTip"}`}>
                       <span className="tooltiptext">Copied to Clipboard</span>
                     </div>
                     <input
@@ -317,7 +317,14 @@ export class Index extends Component {
                   <div className="dash-bonus dash-card">
                     <h4 className="mb-3">Bonus Index</h4>
                     <h1 className="mb-3">${bonus.toFixed(2)}</h1>
-                    <p>Estimated earning</p>
+                    <p>
+                      Estimated earning{" "}
+                      <span className="dash-earning">${credit.toFixed(2)}</span>
+                    </p>
+                    <p>
+                      Estimated spending{" "}
+                      <span className="dash-earning">${debit.toFixed(2)}</span>
+                    </p>
                   </div>
                 </div>
               </div>

@@ -53,7 +53,8 @@ export class Withdrawals extends Component {
     isLoading: false,
     content: "withdrawals",
     toast: false,
-    toasttext: "",
+    toasttext: null,
+    toastcategory: null,
   };
 
   componentDidMount() {
@@ -195,6 +196,7 @@ export class Withdrawals extends Component {
       withcount,
       toast,
       toasttext,
+      toastcategory,
       isLoading,
     } = this.state;
     const { admin, searchTerms } = this.props;
@@ -309,7 +311,7 @@ export class Withdrawals extends Component {
           )}
         </div>
 
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

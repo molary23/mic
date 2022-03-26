@@ -59,7 +59,8 @@ export class Payments extends Component {
       this.props.auth.allCounts.payments,
     content: "payments",
     toast: false,
-    toasttext: "",
+    toasttext: null,
+    toastcategory: null,
     check: false,
   };
 
@@ -142,7 +143,7 @@ export class Payments extends Component {
       });
     }
     this.setState({
-      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 
@@ -200,6 +201,7 @@ export class Payments extends Component {
       search,
       toast,
       toasttext,
+      toastcategory,
       paymentcount,
       gatewayOptions,
       gateway,
@@ -334,7 +336,7 @@ export class Payments extends Component {
             onClick={this.confirmHandler}
           />
         )}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

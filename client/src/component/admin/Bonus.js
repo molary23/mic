@@ -32,6 +32,7 @@ class Bonus extends Component {
     toasttext: null,
     isLoading: false,
     bonusaction: null,
+    toastcategory: null,
   };
   componentDidMount() {
     const { url } = this.state;
@@ -102,7 +103,7 @@ class Bonus extends Component {
   };
 
   render() {
-    const { toasttext, toast, isLoading } = this.state;
+    const { toasttext, toast, isLoading, toastcategory } = this.state;
     let loader = false,
       load = false,
       noRecord = false,
@@ -344,7 +345,7 @@ class Bonus extends Component {
             )}
           </div>
         )}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

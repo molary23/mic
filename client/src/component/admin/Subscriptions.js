@@ -18,6 +18,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
 import Pagination from "../../util/Pagination";
 
 export class Subscriptions extends Component {
@@ -44,6 +45,9 @@ export class Subscriptions extends Component {
     url: new URL(window.location),
     subcount: JSON.parse(localStorage.getItem("counts")).subscriptions,
     content: "subscriptions",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -99,8 +103,18 @@ export class Subscriptions extends Component {
   };
 
   render() {
-    const { sender, typeOptions, planOptions, type, plan, search, subcount } =
-      this.state;
+    const {
+      sender,
+      typeOptions,
+      planOptions,
+      type,
+      plan,
+      search,
+      subcount,
+      toast,
+      toastcategory,
+      toasttext,
+    } = this.state;
 
     const { admin, searchTerms } = this.props;
     const { loading } = admin;
@@ -214,6 +228,7 @@ export class Subscriptions extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

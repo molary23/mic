@@ -20,6 +20,7 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import Pagination from "../../util/Pagination";
@@ -51,6 +52,9 @@ export class Transactions extends Component {
       JSON.parse(localStorage.getItem("counts")).transactions ??
       this.props.auth.allCounts.transactions,
     content: "transactions",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -133,6 +137,9 @@ export class Transactions extends Component {
       method,
       search,
       transcount,
+      toast,
+      toastcategory,
+      toasttext,
     } = this.state;
 
     const { admin, searchTerms } = this.props;
@@ -241,6 +248,7 @@ export class Transactions extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

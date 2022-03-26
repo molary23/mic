@@ -7,6 +7,8 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
+
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import { getContent, clearActions } from "../../action/userAction";
@@ -53,6 +55,9 @@ export class Transactions extends Component {
       JSON.parse(localStorage.getItem("userCounts")).transactions ??
       this.props.auth.userCounts.transactions,
     content: "transactions",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -90,7 +95,7 @@ export class Transactions extends Component {
       });
     }
     this.setState({
-      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 
@@ -125,8 +130,17 @@ export class Transactions extends Component {
   };
 
   render() {
-    const { sender, methodOptions, typeOptions, type, method, transcount } =
-      this.state;
+    const {
+      sender,
+      methodOptions,
+      typeOptions,
+      type,
+      method,
+      transcount,
+      toast,
+      toastcategory,
+      toasttext,
+    } = this.state;
 
     const { user, userSearch } = this.props;
     const { loading, fetching } = user;
@@ -225,6 +239,7 @@ export class Transactions extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

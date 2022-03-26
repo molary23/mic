@@ -61,7 +61,8 @@ export class Withdrawals extends Component {
     error: {},
     modal: false,
     toast: false,
-    toasttext: "",
+    toasttext: null,
+    toastcategory: null,
   };
 
   componentDidMount() {
@@ -207,6 +208,7 @@ export class Withdrawals extends Component {
       modal,
       toast,
       toasttext,
+      toastcategory,
       isLoading,
     } = this.state;
 
@@ -336,7 +338,7 @@ export class Withdrawals extends Component {
             onSubmit={this.submitHandler}
           />
         ) : null}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

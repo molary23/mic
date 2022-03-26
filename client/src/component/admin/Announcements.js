@@ -48,7 +48,8 @@ class Announcements extends Component {
     modal: false,
     error: {},
     toast: false,
-    toasttext: "",
+    toasttext: null,
+    toastcategory: null,
     purpose: "",
     modalAnnDetails: [],
     check: false,
@@ -255,6 +256,7 @@ class Announcements extends Component {
       modal,
       toast,
       toasttext,
+      toastcategory,
       error,
       modalAnnDetails,
       purpose,
@@ -380,7 +382,7 @@ class Announcements extends Component {
             onClick={this.confirmHandler}
           />
         )}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

@@ -60,7 +60,8 @@ class Currency extends Component {
     modal: "",
     error: {},
     toast: false,
-    toasttext: "",
+    toasttext: null,
+    toastcategory: null,
     check: false,
   };
 
@@ -253,6 +254,7 @@ class Currency extends Component {
       error,
       toast,
       toasttext,
+      toastcategory,
       isLoading,
       checktext,
       checktitle,
@@ -393,7 +395,7 @@ class Currency extends Component {
             onClick={this.confirmHandler}
           />
         )}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

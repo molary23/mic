@@ -7,6 +7,8 @@ import TableBody from "../../layout/TableBody";
 import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
+
 import { RiFileExcel2Line } from "react-icons/ri";
 
 import { getContent, clearActions } from "../../action/userAction";
@@ -59,6 +61,9 @@ export class Subscriptions extends Component {
       JSON.parse(localStorage.getItem("userCounts")).subscriptions ??
       this.props.auth.userCounts.subscriptions,
     content: "subscriptions",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -139,6 +144,9 @@ export class Subscriptions extends Component {
       status,
       plan,
       subcount,
+      toast,
+      toastcategory,
+      toasttext,
     } = this.state;
 
     const { user, userSearch } = this.props;
@@ -256,6 +264,7 @@ export class Subscriptions extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

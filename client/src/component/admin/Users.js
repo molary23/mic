@@ -20,6 +20,8 @@ import ProgressBar from "../../layout/ProgressBar";
 import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
+
 import Pagination from "../../util/Pagination";
 import { RiFileExcel2Line } from "react-icons/ri";
 
@@ -47,6 +49,9 @@ class Users extends Component {
       this.props.auth.allCounts.users,
     isLoading: false,
     content: "users",
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
   };
 
   componentDidMount() {
@@ -121,8 +126,17 @@ class Users extends Component {
   };
 
   render() {
-    const { sender, premiumstatus, statusOpt, usercount, search, isLoading } =
-      this.state;
+    const {
+      sender,
+      premiumstatus,
+      statusOpt,
+      usercount,
+      search,
+      isLoading,
+      toast,
+      toastcategory,
+      toasttext,
+    } = this.state;
 
     const { admin, searchTerms } = this.props,
       { loading, fetching } = admin,
@@ -230,6 +244,7 @@ class Users extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

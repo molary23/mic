@@ -135,15 +135,6 @@ class Forum extends Component {
       this.props.replyForum(reply);
     }
   };
-  /*
-  clickHandler = (value) => {
-    let check = window.confirm(`Are you sure you want to delete this reply?`);
-    if (check) {
-      this.props.deleteReply(value);
-    } else {
-      return false;
-    }
-  };*/
 
   clickHandler = (value) => {
     this.setState({
@@ -154,6 +145,9 @@ class Forum extends Component {
 
     this.confirmHandler = (option) => {
       if (option) {
+        this.setState({
+          isLoading: true,
+        });
         this.props.deleteReply(value);
       }
       this.setState({
@@ -201,7 +195,7 @@ class Forum extends Component {
     }
     return (
       <div>
-        {loader && <ProgressBar />}
+        {loader || (isLoading && <ProgressBar />)}
         {load ? (
           <Spinner />
         ) : (

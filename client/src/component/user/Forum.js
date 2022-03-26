@@ -40,6 +40,7 @@ class Forum extends Component {
     check: false,
     checktext: null,
     checktitle: null,
+    isLoading: false,
   };
   componentDidMount() {
     const { url } = this.state;
@@ -88,6 +89,7 @@ class Forum extends Component {
     this.setState({
       toast: true,
       toasttext: servererror.allow,
+      isLoading: false,
     });
 
     setTimeout(() => {
@@ -105,6 +107,7 @@ class Forum extends Component {
       text: "",
       toast: true,
       toasttext: `Reply ${text}.`,
+      isLoading: false,
     });
     this.props.clearActions("get-forum");
     this.props.getForum(forumId);
@@ -113,7 +116,7 @@ class Forum extends Component {
       this.setState({
         toast: false,
       });
-    }, 3000);
+    }, 5000);
   };
 
   changeHandler = (e) => {
@@ -148,6 +151,9 @@ class Forum extends Component {
     });
 
     this.confirmHandler = (option) => {
+      this.setState({
+        isLoading: true,
+      });
       if (option) {
         this.props.deleteReply(value);
       }
@@ -167,6 +173,7 @@ class Forum extends Component {
       check,
       checktext,
       checktitle,
+      isLoading,
     } = this.state;
     let loader = false,
       load = false,
@@ -208,7 +215,7 @@ class Forum extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         {load ? (
           <Spinner />
         ) : (

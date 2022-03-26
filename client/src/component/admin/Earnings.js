@@ -60,6 +60,7 @@ export class Earnings extends Component {
       modal: false,
       toast: false,
       toasttext: null,
+      toastcategory: null,
       check: false,
       checktext: null,
       checktitle: null,
@@ -234,6 +235,7 @@ export class Earnings extends Component {
       search,
       toast,
       toasttext,
+      toastcategory,
       isLoading,
       check,
       checktext,
@@ -357,7 +359,7 @@ export class Earnings extends Component {
             onClick={this.confirmHandler}
           />
         )}
-        {toast && <Toast text={toasttext} />}
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }

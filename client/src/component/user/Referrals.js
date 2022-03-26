@@ -24,6 +24,8 @@ import ProgressBar from "../../layout/ProgressBar";
 import SearchInput from "../../layout/SearchInput";
 import Select from "../../layout/Select";
 import Spinner from "../../layout/Spinner";
+import Toast from "../../layout/Toast";
+
 import { RiFileExcel2Line } from "react-icons/ri";
 
 export class Referrals extends Component {
@@ -49,8 +51,9 @@ export class Referrals extends Component {
     refcount:
       JSON.parse(localStorage.getItem("userCounts")).referrals ??
       this.props.auth.userCounts.referrals,
-    getLoad: true,
-    startLoad: false,
+    toast: false,
+    toastcategory: null,
+    toasttext: null,
     content: "referrals",
   };
 
@@ -132,6 +135,9 @@ export class Referrals extends Component {
       search,
       status,
       statusOptions,
+      toast,
+      toastcategory,
+      toasttext,
     } = this.state;
 
     const { user, userSearch } = this.props;
@@ -232,6 +238,7 @@ export class Referrals extends Component {
             </TableHead>
           )}
         </div>
+        {toast && <Toast text={toasttext} category={toastcategory} />}
       </div>
     );
   }
