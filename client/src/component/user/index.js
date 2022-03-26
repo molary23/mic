@@ -6,8 +6,7 @@ import jwtDecode from "jwt-decode";
 
 import QRCode from "react-qr-code";
 
-import { getUserProfile } from "../../action/profileAction";
-import { getUserDetails } from "../../action/userAction";
+import { getUserDetails, clearActions } from "../../action/userAction";
 import ProgressBar from "../../layout/ProgressBar";
 import AnnCard from "../../layout/AnnCard";
 import Spinner from "../../layout/Spinner";
@@ -19,8 +18,6 @@ import {
   FaLinkedin,
 } from "react-icons/fa";
 import { IoMdCopy } from "react-icons/io";
-
-//const [details, setDetails] = useState(null);
 
 export class Index extends Component {
   constructor(props) {
@@ -39,7 +36,6 @@ export class Index extends Component {
 
   componentDidMount() {
     const { premiuminfo } = this.state;
-    // this.props.getUserProfile();
     let dateOnly = new Date().toDateString(),
       curDate = new Date(dateOnly).getTime() / 1000,
       expDate = new Date(premiuminfo.enddate).getTime() / 1000;
@@ -50,6 +46,10 @@ export class Index extends Component {
       premiumstatus: status,
     });
     this.props.getUserDetails();
+  }
+
+  componentWillUnmount() {
+    this.props.clearActions("user-details");
   }
 
   clickHandler = (e) => {
@@ -342,17 +342,16 @@ export class Index extends Component {
   }
 }
 Index.propTypes = {
-  getUserProfile: PropTypes.func,
   auth: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
   getUserDetails: PropTypes.func.isRequired,
+  clearActions: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   user: state.user,
-  profile: state.profile,
 });
-export default connect(mapStateToProps, { getUserProfile, getUserDetails })(
+export default connect(mapStateToProps, { getUserDetails, clearActions })(
   Index
 );
