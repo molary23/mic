@@ -5,7 +5,6 @@ import {
   SET_PROVIDER_COUNTS,
   SET_USER_COUNTS,
   USER_GET_MODE,
-  USER_GET_WALLET,
 } from "../action/types";
 import isEmpty from "../validation/emptyChecker";
 const initialState = {
