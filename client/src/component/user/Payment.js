@@ -142,7 +142,7 @@ class Payment extends Component {
           </p>
           <p className="mb-1">
             Proceed to{" "}
-            <button className="btn pay-with" onClick={this.clickHandler}>
+            <button className="btn pay" onClick={this.clickHandler}>
               {gateway}
             </button>
             site to pay.

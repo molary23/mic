@@ -59,7 +59,6 @@ class Pay extends Component {
     let plan = displayMonths ? "m" : "y",
       subPackage = displayMonths ? months : 1;
 
-    console.log(plan, subPackage);
     const toencrypt = {
       amount: totalPrice,
       gateway: option,
@@ -67,7 +66,7 @@ class Pay extends Component {
       package: subPackage,
     };
     const details = window.btoa(JSON.stringify(toencrypt));
-    console.log(details);
+
     let url = `/user/payment?details=${details}`;
     this.setState({
       to: url,
@@ -118,7 +117,7 @@ class Pay extends Component {
             <div className="pay-table">
               <div className="pricing-wrapper">
                 <div className="row">
-                  <div className="col-md-6 col-xs-12">
+                  <div className="col-md-6 col-12">
                     <div className="pricing-table">
                       <h3 className="pricing-title">Monthly</h3>
                       <div className="price">
@@ -149,7 +148,7 @@ class Pay extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-6 col-xs-12">
+                  <div className="col-md-6 col-12">
                     <div className="pricing-table recommended">
                       <h3 className="pricing-title">Annually</h3>
                       <div className="price">
@@ -187,13 +186,13 @@ class Pay extends Component {
             <div className="pay-balance-info" ref={this.payRef}>
               <div className="plan-pay-card card">
                 <div className="row">
-                  <div className="col-md-3 col-xs-12">
+                  <div className="col-md-3 col-12">
                     <div className="plan-box">
                       <h3>Plan</h3>
                       <h4>Monthly</h4>
                     </div>
                   </div>
-                  <div className="col-md-3 col-xs-12">
+                  <div className="col-md-3 col-12 mb-3">
                     {displayMonths && (
                       <div className="monthly-pay mb-4">
                         <h3>Choose plan month(s)</h3>
@@ -226,14 +225,14 @@ class Pay extends Component {
                     )}
                   </div>
 
-                  <div className="col-md-3 col-xs-12">
+                  <div className="col-md-3 col-12 mb-3">
                     <div className="total-box">
                       <h3>Total</h3>
                       <h2>${totalPrice}</h2>
                     </div>
                   </div>
 
-                  <div className="col-md-3 col-xs-12">
+                  <div className="col-md-3 col-12 mb-3">
                     <div className="total-box">
                       <h3>Balance</h3>
                       <h2>${balance}</h2>
