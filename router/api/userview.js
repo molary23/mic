@@ -35,7 +35,8 @@ const express = require("express"),
   UserView = require("../../db/models/UserView"),
   Transaction = require("../../db/models/Transaction"),
   // Bring in User Checker
-  checkUser = require("../../validation/checkUser");
+  checkUser = require("../../validation/checkUser"),
+  dateformat = require("../../util/dateformat");
 /*
 @route GET api/view/payments
 @desc User View Payments
@@ -679,7 +680,9 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    const UserId = req.user.id;
+    const UserId = req.user.id,
+      today = dateformat(new Date());
+
     Premium.findOne({
       where: {
         UserId,
@@ -687,7 +690,34 @@ router.get(
       attributes: ["enddate", "status"],
     })
       .then((premium) => {
-        res.json(premium);
+        let enddate = new Date(premium.enddate),
+          status = premium.status,
+          formattedDate = new Date(today);
+        if (enddate <= formattedDate && status === "a") {
+          Premium.update(
+            { status: "i" },
+            {
+              where: {
+                UserId,
+              },
+            }
+          )
+            .then(() => {
+              Premium.findOne({
+                where: {
+                  UserId,
+                },
+                attributes: ["enddate", "status"],
+              })
+                .then((premia) => {
+                  return res.json(premia);
+                })
+                .catch((err) => res.status(404).json(err));
+            })
+            .catch((err) => res.status(404).json(err));
+        } else {
+          return res.json(premium);
+        }
       })
       .catch((err) => res.status(404).json(err));
   }

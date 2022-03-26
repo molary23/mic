@@ -278,9 +278,8 @@
                                                                               color: #14171a;
                                                                             "
                                                                           >
-                                                                            Verify
-                                                                            Email
-                                                                            Address
+                                                                            Support
+                                                                            Ticket
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -381,7 +380,7 @@
                                                                               font-family: Helvetica,
                                                                                 Arial,
                                                                                 sans-serif;
-                                                                              font-size: 18px;
+                                                                              font-size: 16px;
                                                                               line-height: 20px;
                                                                               color: #14171a;
                                                                             "
@@ -456,23 +455,33 @@
                                                                             lot
                                                                             of
                                                                             money.
-                                                                            We
-                                                                            save
-                                                                            you
-                                                                            from
-                                                                            loss
-                                                                            and
-                                                                            trade
-                                                                            with
-                                                                            our
-                                                                            expertise
-                                                                            to
-                                                                            make
-                                                                            you
-                                                                            money
-                                                                            from
-                                                                            the
-                                                                            beginning.
+                                                                            <div
+                                                                              style="
+                                                                                margin: 20px
+                                                                                  0px;
+                                                                              "
+                                                                            >
+                                                                              <a
+                                                                                href="#"
+                                                                                style="
+                                                                                  background: rgba(
+                                                                                    64,
+                                                                                    89,
+                                                                                    209,
+                                                                                    1
+                                                                                  );
+                                                                                  border-radius: 20px;
+                                                                                  text-decoration: none;
+                                                                                  padding: 10px
+                                                                                    20px;
+                                                                                  color: #fff;
+                                                                                  font-weight: 500;
+                                                                                "
+                                                                              >
+                                                                                View
+                                                                                Discussion
+                                                                              </a>
+                                                                            </div>
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -493,9 +502,9 @@
                                                         </tr>
                                                         <tr>
                                                           <td
-                                                            height="12"
+                                                            height="20"
                                                             style="
-                                                              min-height: 12px;
+                                                              min-height: 20px;
                                                               padding: 0px;
                                                             "
                                                           ></td>

@@ -2160,6 +2160,14 @@ router.get(
         ),
         status: "p",
       });
+      count.payments = await Payment.count({
+        where: sequelize.where(
+          sequelize.fn("date", sequelize.col("createdAt")),
+          ">=",
+          week
+        ),
+        status: "s",
+      });
       count.referrals = await Referral.count({
         where: sequelize.where(
           sequelize.fn("date", sequelize.col("createdAt")),

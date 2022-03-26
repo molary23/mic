@@ -1,5 +1,6 @@
 <html>
   <head> </head>
+
   <body
     leftmargin="0"
     rightmargin="0"
@@ -561,7 +562,7 @@
                                                                             "
                                                                           >
                                                                             Signal
-                                                                            Option
+                                                                            Identifier
                                                                           </td>
                                                                           <td
                                                                             class="head_title"
@@ -577,7 +578,7 @@
                                                                               font-size: 20px;
                                                                             "
                                                                           >
-                                                                            Buy
+                                                                            0078253
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -687,8 +688,7 @@
                                                                               color: #14171a;
                                                                             "
                                                                           >
-                                                                            Signal
-                                                                            Option
+                                                                            Start
                                                                           </td>
                                                                           <td
                                                                             class="head_title"
@@ -704,7 +704,7 @@
                                                                               font-size: 20px;
                                                                             "
                                                                           >
-                                                                            Buy
+                                                                            0.0974
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -814,8 +814,7 @@
                                                                               color: #14171a;
                                                                             "
                                                                           >
-                                                                            Signal
-                                                                            Option
+                                                                            End
                                                                           </td>
                                                                           <td
                                                                             class="head_title"
@@ -831,7 +830,7 @@
                                                                               font-size: 20px;
                                                                             "
                                                                           >
-                                                                            Buy
+                                                                            1.08998
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -941,8 +940,9 @@
                                                                               color: #14171a;
                                                                             "
                                                                           >
-                                                                            Signal
-                                                                            Option
+                                                                            Take
+                                                                            Profit
+                                                                            1
                                                                           </td>
                                                                           <td
                                                                             class="head_title"
@@ -958,7 +958,7 @@
                                                                               font-size: 20px;
                                                                             "
                                                                           >
-                                                                            Buy
+                                                                            0.094
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -1068,8 +1068,8 @@
                                                                               color: #14171a;
                                                                             "
                                                                           >
-                                                                            Signal
-                                                                            Option
+                                                                            Stop
+                                                                            Loss
                                                                           </td>
                                                                           <td
                                                                             class="head_title"
@@ -1085,7 +1085,7 @@
                                                                               font-size: 20px;
                                                                             "
                                                                           >
-                                                                            Buy
+                                                                            0.0034
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -1195,8 +1195,8 @@
                                                                               color: #14171a;
                                                                             "
                                                                           >
-                                                                            Signal
-                                                                            Option
+                                                                            Profit,
+                                                                            Pip
                                                                           </td>
                                                                           <td
                                                                             class="head_title"
@@ -1212,259 +1212,7 @@
                                                                               font-size: 20px;
                                                                             "
                                                                           >
-                                                                            Buy
-                                                                          </td>
-                                                                        </tr>
-                                                                      </tbody>
-                                                                    </table>
-                                                                  </td>
-                                                                  <td
-                                                                    width="24"
-                                                                    class="made_margin"
-                                                                    style="
-                                                                      padding: 0px;
-                                                                      width: 24px;
-                                                                    "
-                                                                  ></td>
-                                                                </tr>
-                                                              </tbody>
-                                                            </table>
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td
-                                                            height="12"
-                                                            style="
-                                                              min-height: 12px;
-                                                              padding: 0px;
-                                                            "
-                                                          ></td>
-                                                        </tr>
-                                                      </tbody>
-                                                    </table>
-                                                  </td>
-                                                </tr>
-
-                                                <tr class="row">
-                                                  <td style="padding: 0px">
-                                                    <table
-                                                      cellpadding="0"
-                                                      cellspacing="0"
-                                                      border="0"
-                                                      class="bottom_line"
-                                                      style="
-                                                        padding: 0px;
-                                                        min-width: 100%;
-                                                        width: 100%;
-                                                        border-bottom: 1px solid
-                                                          #dbdbdb;
-                                                      "
-                                                    >
-                                                      <tbody>
-                                                        <tr>
-                                                          <td
-                                                            height="12"
-                                                            style="
-                                                              min-height: 12px;
-                                                              padding: 0px;
-                                                            "
-                                                          ></td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td style="padding: 0px">
-                                                            <table
-                                                              cellpadding="0"
-                                                              cellspacing="0"
-                                                              border="0"
-                                                              style="
-                                                                min-width: 100%;
-                                                                width: 100%;
-                                                                padding: 0px;
-                                                              "
-                                                            >
-                                                              <tbody>
-                                                                <tr>
-                                                                  <td
-                                                                    width="24"
-                                                                    class="made_margin"
-                                                                    style="
-                                                                      padding: 0px;
-                                                                      width: 24px;
-                                                                    "
-                                                                  ></td>
-                                                                  <td
-                                                                    style="
-                                                                      padding: 0px;
-                                                                    "
-                                                                  >
-                                                                    <table
-                                                                      cellpadding="0"
-                                                                      cellspacing="0"
-                                                                      border="0"
-                                                                      style="
-                                                                        min-width: 100%;
-                                                                        width: 100%;
-                                                                        padding: 0px;
-                                                                      "
-                                                                    >
-                                                                      <tbody>
-                                                                        <tr>
-                                                                          <td
-                                                                            class="head_title"
-                                                                            style="
-                                                                              padding: 0px;
-                                                                              font-family: Helvetica,
-                                                                                Arial,
-                                                                                sans-serif;
-                                                                              font-size: 18px;
-                                                                              line-height: 20px;
-                                                                              font-weight: 600;
-                                                                              color: #14171a;
-                                                                            "
-                                                                          >
-                                                                            Signal
-                                                                            Option
-                                                                          </td>
-                                                                          <td
-                                                                            class="head_title"
-                                                                            style="
-                                                                              padding: 0px;
-                                                                              font-family: Helvetica,
-                                                                                Arial,
-                                                                                sans-serif;
-                                                                              font-size: 12px;
-                                                                              line-height: 16px;
-                                                                              color: #14171a;
-                                                                              text-align: right;
-                                                                              font-size: 20px;
-                                                                            "
-                                                                          >
-                                                                            Buy
-                                                                          </td>
-                                                                        </tr>
-                                                                      </tbody>
-                                                                    </table>
-                                                                  </td>
-                                                                  <td
-                                                                    width="24"
-                                                                    class="made_margin"
-                                                                    style="
-                                                                      padding: 0px;
-                                                                      width: 24px;
-                                                                    "
-                                                                  ></td>
-                                                                </tr>
-                                                              </tbody>
-                                                            </table>
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td
-                                                            height="12"
-                                                            style="
-                                                              min-height: 12px;
-                                                              padding: 0px;
-                                                            "
-                                                          ></td>
-                                                        </tr>
-                                                      </tbody>
-                                                    </table>
-                                                  </td>
-                                                </tr>
-
-                                                <tr class="row">
-                                                  <td style="padding: 0px">
-                                                    <table
-                                                      cellpadding="0"
-                                                      cellspacing="0"
-                                                      border="0"
-                                                      class="bottom_line"
-                                                      style="
-                                                        padding: 0px;
-                                                        min-width: 100%;
-                                                        width: 100%;
-                                                      "
-                                                    >
-                                                      <tbody>
-                                                        <tr>
-                                                          <td
-                                                            height="12"
-                                                            style="
-                                                              min-height: 12px;
-                                                              padding: 0px;
-                                                            "
-                                                          ></td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td style="padding: 0px">
-                                                            <table
-                                                              cellpadding="0"
-                                                              cellspacing="0"
-                                                              border="0"
-                                                              style="
-                                                                min-width: 100%;
-                                                                width: 100%;
-                                                                padding: 0px;
-                                                              "
-                                                            >
-                                                              <tbody>
-                                                                <tr>
-                                                                  <td
-                                                                    width="24"
-                                                                    class="made_margin"
-                                                                    style="
-                                                                      padding: 0px;
-                                                                      width: 24px;
-                                                                    "
-                                                                  ></td>
-                                                                  <td
-                                                                    style="
-                                                                      padding: 0px;
-                                                                    "
-                                                                  >
-                                                                    <table
-                                                                      cellpadding="0"
-                                                                      cellspacing="0"
-                                                                      border="0"
-                                                                      style="
-                                                                        min-width: 100%;
-                                                                        width: 100%;
-                                                                        padding: 0px;
-                                                                      "
-                                                                    >
-                                                                      <tbody>
-                                                                        <tr>
-                                                                          <td
-                                                                            class="head_title"
-                                                                            style="
-                                                                              padding: 0px;
-                                                                              font-family: Helvetica,
-                                                                                Arial,
-                                                                                sans-serif;
-                                                                              font-size: 18px;
-                                                                              line-height: 20px;
-                                                                              font-weight: 600;
-                                                                              color: #14171a;
-                                                                            "
-                                                                          >
-                                                                            Signal
-                                                                            Option
-                                                                          </td>
-                                                                          <td
-                                                                            class="head_title"
-                                                                            style="
-                                                                              padding: 0px;
-                                                                              font-family: Helvetica,
-                                                                                Arial,
-                                                                                sans-serif;
-                                                                              font-size: 12px;
-                                                                              line-height: 16px;
-                                                                              color: #14171a;
-                                                                              text-align: right;
-                                                                              font-size: 20px;
-                                                                            "
-                                                                          >
-                                                                            Buy
+                                                                            +6
                                                                           </td>
                                                                         </tr>
                                                                       </tbody>
@@ -1635,7 +1383,7 @@
                                     >
                                       Copyright &copy;
                                       <a
-                                        href="'.$website.'"
+                                        href={website}
                                         style="
                                           color: #8899a6 !important;
                                           text-decoration: none !important;
@@ -1643,9 +1391,9 @@
                                         "
                                         target="_blank"
                                       >
-                                        <em>Luci</em>post
+                                        <strong>MIC</strong>Earn Business
                                       </a>
-                                      '. date('Y').'
+                                      {date}
                                     </span>
                                   </td>
                                   <td
