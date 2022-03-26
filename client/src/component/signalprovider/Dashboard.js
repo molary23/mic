@@ -32,7 +32,7 @@ function Dashboard() {
   };
   const location = useLocation();
   return (
-    <div>
+    <div className="dashboard-body">
       <SubNav onClick={toggleOpen} />
       <SideNav act={open} onClick={closeSide} />
       <section>

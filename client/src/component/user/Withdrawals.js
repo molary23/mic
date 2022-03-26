@@ -34,6 +34,7 @@ import {
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
+import Spinner from "../../layout/Spinner";
 
 export class Withdrawals extends Component {
   state = {
@@ -51,10 +52,11 @@ export class Withdrawals extends Component {
     numOfPages: Pagination.numberofpages,
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
+    timer: Pagination.timer,
+    lastScrollTop: 0,
     url: new URL(window.location),
     isLoading: false,
     withcount: JSON.parse(localStorage.getItem("userCounts")).withdrawals,
-    upLoad: true,
     content: "withdrawals",
     error: {},
     modal: false,
@@ -110,7 +112,7 @@ export class Withdrawals extends Component {
     }
   }
   afterUpdate = () => {
-    const { limit, content, walletcount } = this.state;
+    const { limit, content, walletcount, timer } = this.state;
 
     this.setState({
       numOfPages: Math.ceil((walletcount + 1) / limit),
@@ -118,29 +120,24 @@ export class Withdrawals extends Component {
     this.props.clearActions("user-payout");
 
     this.setState({
-      offset: 0,
       modal: false,
       toast: true,
       toasttext: `Withdrawal request sent`,
-    });
-    const paginate = {
-      limit,
+      currentPage: Pagination.currentpage,
       offset: 0,
-    };
+    });
+
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: prevState.offset + limit,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
         newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
@@ -189,6 +186,9 @@ export class Withdrawals extends Component {
   };
 
   submitHandler = (value) => {
+    this.setState({
+      isLoading: true,
+    });
     this.props.requestWithdrawal(value);
   };
 
@@ -202,8 +202,6 @@ export class Withdrawals extends Component {
       sender,
       statusOptions,
       status,
-      startLoad,
-      getLoad,
       withcount,
       error,
       modal,
@@ -240,8 +238,6 @@ export class Withdrawals extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       withcount,
     });
     let balance = user.userbalance;
@@ -249,71 +245,70 @@ export class Withdrawals extends Component {
     return (
       <div>
         {(loader || isLoading) && <ProgressBar />}
-        {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
+
+        <div className="payments card holder-card ">
+          <div className="page-dash-title mb-4">
+            <h1>Withdrawals</h1>
           </div>
-        ) : (
-          <div className="payments card holder-card ">
-            <div className="page-dash-title mb-4">
-              <h1>Payments</h1>
-            </div>
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-3">
-                  <Select
-                    sender={sender}
-                    options={statusOptions}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-3">
+                <Select
+                  sender={sender}
+                  options={statusOptions}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-2 mb-2">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    Balance
+                    <span className="badge rounded-pill bg-success">
+                      {roundUp(balance.toFixed(2))}
+                    </span>
+                  </h6>
                 </div>
+              </div>
+              {balance >= 0 && (
                 <div className="col-md-2 mb-2">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      Balance
-                      <span className="badge rounded-pill bg-success">
-                        {roundUp(balance.toFixed(2))}
-                      </span>
-                    </h6>
-                  </div>
-                </div>
-                {balance >= 0 && (
-                  <div className="col-md-2 mb-2">
-                    <button
-                      type="button"
-                      className="btn add-btn"
-                      onClick={this.openModal}
-                    >
-                      Withdraw <GiReceiveMoney />
-                    </button>
-                  </div>
-                )}
-                <div className="col-md-2">
                   <button
                     type="button"
-                    className="btn download-btn"
-                    onClick={this.downloadHandler}
+                    className="btn add-btn"
+                    onClick={this.openModal}
                   >
-                    Download <RiFileExcel2Line />
+                    Withdraw <GiReceiveMoney />
                   </button>
                 </div>
-                <div className="col-md-2">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+              )}
+              <div className="col-md-2">
+                <button
+                  type="button"
+                  className="btn download-btn"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
+                </button>
+              </div>
+              <div className="col-md-2">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={[
@@ -331,8 +326,9 @@ export class Withdrawals extends Component {
                 tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
+
         {modal ? (
           <AddModal
             {...{ modal, sender, accountList, balance, error, isLoading }}

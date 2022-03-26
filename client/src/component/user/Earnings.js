@@ -90,7 +90,7 @@ export class Earnings extends Component {
       });
     }
     this.setState({
-      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 
@@ -170,48 +170,49 @@ export class Earnings extends Component {
     return (
       <div>
         {(loader || isLoading) && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="payments card holder-card ">
-            <div className="page-dash-title mb-4">
-              <h1>Bonus</h1>
-            </div>
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-3">
-                  <Select
-                    sender={sender}
-                    options={statusOptions}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
-                </div>
-                <div className="col-md-2">
-                  <button
-                    type="button"
-                    className="btn download-btn"
-                    onClick={this.downloadHandler}
-                  >
-                    Download <RiFileExcel2Line />
-                  </button>
-                </div>
-                <div className="col-md-3">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText} Bonus
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+
+        <div className="payments card holder-card ">
+          <div className="page-dash-title mb-4">
+            <h1>Bonus</h1>
+          </div>
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-3">
+                <Select
+                  sender={sender}
+                  options={statusOptions}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-2">
+                <button
+                  type="button"
+                  className="btn download-btn"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
+                </button>
+              </div>
+              <div className="col-md-3">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText} Bonus
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={[
@@ -229,8 +230,8 @@ export class Earnings extends Component {
                 onClick={this.clickHandler}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }

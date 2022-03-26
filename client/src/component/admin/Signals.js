@@ -189,69 +189,70 @@ class Signals extends Component {
     return (
       <div>
         {loader && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="page-dash-title mb-4">
-              <h1>Signals</h1>
-            </div>
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-3 mb-2">
-                  <SearchInput
-                    sender={sender}
-                    placeholder="Search by Name, Email, Username"
-                    onChange={this.changeHandler}
-                    onKeyUp={this.keyHandler}
-                    name="search"
-                    value={search}
-                  />
-                </div>
-                <div className="col-md-2 mb-3">
-                  <Select
-                    sender={sender}
-                    options={statusOpt}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
-                </div>
-                <div className="col-md-2 mb-3">
-                  <Select
-                    sender={sender}
-                    options={signalOpt}
-                    onChange={this.changeHandler}
-                    name="signaloption"
-                    value={signaloption}
-                  />
-                </div>
 
-                <div className="col-md-2 mb-3">
-                  <button
-                    type="button"
-                    className="btn download-btn btn-sm"
-                    onClick={this.downloadHandler}
-                  >
-                    Download <RiFileExcel2Line />
-                  </button>
-                </div>
+        <div className="transactions card holder-card ">
+          <div className="page-dash-title mb-4">
+            <h1>Signals</h1>
+          </div>
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-3 mb-2">
+                <SearchInput
+                  sender={sender}
+                  placeholder="Search by Name, Email, Username"
+                  onChange={this.changeHandler}
+                  onKeyUp={this.keyHandler}
+                  name="search"
+                  value={search}
+                />
+              </div>
+              <div className="col-md-2 mb-3">
+                <Select
+                  sender={sender}
+                  options={statusOpt}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-2 mb-3">
+                <Select
+                  sender={sender}
+                  options={signalOpt}
+                  onChange={this.changeHandler}
+                  name="signaloption"
+                  value={signaloption}
+                />
+              </div>
 
-                <div className="col-md-3 mb-2">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+              <div className="col-md-2 mb-3">
+                <button
+                  type="button"
+                  className="btn download-btn btn-sm"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
+                </button>
+              </div>
+
+              <div className="col-md-3 mb-2">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={[
@@ -276,8 +277,9 @@ class Signals extends Component {
                 onClick={this.clickHandler}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
+
         {modal ? (
           <AddModal
             {...{ modal, sender, purpose, modalsignaldetails }}

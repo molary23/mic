@@ -42,7 +42,7 @@ class Forum extends Component {
     checktitle: null,
   };
   componentDidMount() {
-    const { url, forumId } = this.state;
+    const { url } = this.state;
     let params = url.pathname.split("forum")[1],
       id = params.split(":")[1];
     this.setState({

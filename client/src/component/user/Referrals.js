@@ -169,57 +169,58 @@ export class Referrals extends Component {
     return (
       <div>
         {loader && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="page-dash-title mb-4">
-              <h1>Referrals</h1>
-            </div>
-            <div className="container-fluid mb-3">
-              <div className="row">
-                <div className="col-md-3">
-                  <SearchInput
-                    placeholder="Search by Name"
-                    type="text"
-                    name="search"
-                    value={search}
-                    onChange={this.changeHandler}
-                  />
-                </div>
-                <div className="col-md-3 ">
-                  <Select
-                    sender={sender}
-                    options={statusOptions}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
-                </div>
-                <div className="col-md-3 mb-3">
-                  <button
-                    type="button"
-                    className="btn download-btn"
-                    onClick={this.downloadHandler}
-                  >
-                    Download <RiFileExcel2Line />
-                  </button>
-                </div>
-                <div className="col-md-3 ">
-                  <div className="table-figure">
-                    <h5>
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h5>
-                  </div>
+
+        <div className="transactions card holder-card ">
+          <div className="page-dash-title mb-4">
+            <h1>Referrals</h1>
+          </div>
+          <div className="container-fluid mb-3">
+            <div className="row">
+              <div className="col-md-3">
+                <SearchInput
+                  placeholder="Search by Name"
+                  type="text"
+                  name="search"
+                  value={search}
+                  onChange={this.changeHandler}
+                />
+              </div>
+              <div className="col-md-3 ">
+                <Select
+                  sender={sender}
+                  options={statusOptions}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-3 mb-3">
+                <button
+                  type="button"
+                  className="btn download-btn"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
+                </button>
+              </div>
+              <div className="col-md-3 ">
+                <div className="table-figure">
+                  <h5>
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h5>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={["S/N", "username", "phone", "premium status"]}
@@ -229,8 +230,8 @@ export class Referrals extends Component {
                 tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }

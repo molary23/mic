@@ -28,7 +28,6 @@ import Pagination from "../../util/Pagination";
 export class Subscriptions extends Component {
   state = {
     sender: "user-subscriptions",
-    loading: false,
     statusOptions: [
       { value: "", option: "Filter by Status" },
       { value: "r", option: "Disapproved" },
@@ -59,9 +58,6 @@ export class Subscriptions extends Component {
     subcount:
       JSON.parse(localStorage.getItem("userCounts")).subscriptions ??
       this.props.auth.userCounts.subscriptions,
-    startLoad: false,
-    getLoad: true,
-    isLoading: false,
     content: "subscriptions",
   };
 
@@ -69,15 +65,6 @@ export class Subscriptions extends Component {
     const { limit, offset, subcount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });
-    /* if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }*/
     this.setState({
       numOfPages: Math.ceil(subcount / limit),
     });
@@ -100,8 +87,8 @@ export class Subscriptions extends Component {
       lastScrollTop,
     } = this.state;
     let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
     if (toTop > lastScrollTop) {
       getMore({
         limit,
@@ -152,9 +139,6 @@ export class Subscriptions extends Component {
       status,
       plan,
       subcount,
-      startLoad,
-      getLoad,
-      isLoading,
     } = this.state;
 
     const { user, userSearch } = this.props;
@@ -185,75 +169,74 @@ export class Subscriptions extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       subcount,
     });
 
     return (
       <div>
-        {(loader || isLoading) && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="page-dash-title mb-4">
-              <h1>Subscriptions</h1>
-            </div>
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-2">
-                  <Select
-                    sender={sender}
-                    options={statusOptions}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
-                </div>
-                <div className="col-md-2">
-                  <Select
-                    sender={sender}
-                    options={typeOptions}
-                    onChange={this.changeHandler}
-                    name="type"
-                    value={type}
-                  />
-                </div>
-                <div className="col-md-2">
-                  <Select
-                    sender={sender}
-                    options={planOptions}
-                    onChange={this.changeHandler}
-                    name="plan"
-                    value={plan}
-                  />
-                </div>
+        {loader && <ProgressBar />}
 
-                <div className="col-md-2">
-                  <button
-                    type="button"
-                    className="btn download-btn"
-                    onClick={this.downloadHandler}
-                  >
-                    Download <RiFileExcel2Line />
-                  </button>
-                </div>
-                <div className="col-md-4">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+        <div className="transactions card holder-card ">
+          <div className="page-dash-title mb-4">
+            <h1>Subscriptions</h1>
+          </div>
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-2">
+                <Select
+                  sender={sender}
+                  options={statusOptions}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-2">
+                <Select
+                  sender={sender}
+                  options={typeOptions}
+                  onChange={this.changeHandler}
+                  name="type"
+                  value={type}
+                />
+              </div>
+              <div className="col-md-2">
+                <Select
+                  sender={sender}
+                  options={planOptions}
+                  onChange={this.changeHandler}
+                  name="plan"
+                  value={plan}
+                />
+              </div>
+
+              <div className="col-md-2">
+                <button
+                  type="button"
+                  className="btn download-btn"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
+                </button>
+              </div>
+              <div className="col-md-4">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={[
@@ -271,8 +254,8 @@ export class Subscriptions extends Component {
                 tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }

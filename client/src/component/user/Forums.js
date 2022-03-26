@@ -52,8 +52,6 @@ class Forums extends Component {
     search: "",
     status: "",
     right: "",
-    startLoad: false,
-    getLoad: true,
     statusOptions: [
       { value: "", option: "Filter by Status" },
       { value: "o", option: "Open" },
@@ -119,63 +117,64 @@ class Forums extends Component {
       this.props.user.updateforum
     ) {
       this.afterUpdate("updated");
-      this.setState({
-        currentPage: Pagination.currentpage,
-      });
     }
   }
   afterUpdate = (text) => {
-    const { limit, content, forumcount, update } = this.state;
-    let action;
+    const { limit, content, forumcount, timer } = this.state;
+    this.setState({
+      isLoading: false,
+      modal: false,
+      toast: true,
+      toasttext: `Discussion ${text} successfully`,
+      currentPage: Pagination.currentpage,
+      offset: 0,
+    });
     if (text === "added") {
       this.setState({
         numOfPages: Math.ceil((forumcount + 1) / limit),
       });
       this.props.clearActions("add-forum");
-      action = text;
     } else {
       this.props.clearActions("update-forum");
-      action = update;
     }
-    this.setState({
-      offset: 0,
-      modal: false,
-      toast: true,
-      toasttext: `Discussion ${action} successfully`,
-    });
-    const paginate = {
-      limit,
-      offset: 0,
-    };
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: this.state.offset,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 
@@ -210,6 +209,9 @@ class Forums extends Component {
   };
 
   submitHandler = (value) => {
+    this.setState({
+      isLoading: true,
+    });
     this.props.addForum(value);
   };
 
@@ -245,8 +247,6 @@ class Forums extends Component {
       statusOptions,
       search,
       forumcount,
-      startLoad,
-      getLoad,
       right,
       toast,
       toasttext,
@@ -287,8 +287,6 @@ class Forums extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       forumcount,
     });
     let UserId = auth.user.id,
@@ -296,64 +294,64 @@ class Forums extends Component {
     return (
       <div>
         {loader && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-3 mb-2">
-                  <SearchInput
-                    sender={sender}
-                    placeholder="Search by User Name"
-                    onChange={this.changeHandler}
-                    name="search"
-                    value={search}
-                  />
-                </div>
+        <div className="transactions card holder-card ">
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-3 mb-2">
+                <SearchInput
+                  sender={sender}
+                  placeholder="Search by User Name"
+                  onChange={this.changeHandler}
+                  name="search"
+                  value={search}
+                />
+              </div>
 
-                <div className="col-md-2 mb-2">
-                  <Select
-                    sender={sender}
-                    options={statusOptions}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
-                </div>
-                <div className="col-md-2 mb-2">
-                  <Select
-                    sender={sender}
-                    options={rightOptions}
-                    onChange={this.changeHandler}
-                    name="right"
-                    value={right}
-                  />
-                </div>
-                <div className="col-md-2 mb-2">
-                  <button
-                    type="button"
-                    className="btn add-btn"
-                    onClick={this.openModal}
-                  >
-                    Create <BiCommentAdd />
-                  </button>
-                </div>
-                <div className="col-md-3 mb-2">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+              <div className="col-md-2 mb-2">
+                <Select
+                  sender={sender}
+                  options={statusOptions}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-2 mb-2">
+                <Select
+                  sender={sender}
+                  options={rightOptions}
+                  onChange={this.changeHandler}
+                  name="right"
+                  value={right}
+                />
+              </div>
+              <div className="col-md-2 mb-2">
+                <button
+                  type="button"
+                  className="btn add-btn"
+                  onClick={this.openModal}
+                >
+                  Create <BiCommentAdd />
+                </button>
+              </div>
+              <div className="col-md-3 mb-2">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <ForumCard
               sender={sender}
               forum={!showSearch ? main : searchMain}
@@ -361,8 +359,9 @@ class Forums extends Component {
               user={UserId}
               level={level}
             />
-          </div>
-        )}
+          )}
+        </div>
+
         {modal ? (
           <AddModal
             {...{ modal, sender, isLoading, error }}

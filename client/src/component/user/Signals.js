@@ -37,10 +37,8 @@ export class Signals extends Component {
     premiuminfo:
       JSON.parse(localStorage.getItem("premium")) ??
       JSON.parse(this.props.auth.user.premium),
-    startLoad: false,
-    getLoad: true,
     content: "signals",
-    refreshing: false,
+    isLoading: false,
     substatus: "",
   };
 
@@ -50,8 +48,6 @@ export class Signals extends Component {
       dateOnly = new Date().toDateString(),
       curDate = new Date(dateOnly).getTime() / 1000,
       expDate = new Date(premiuminfo.enddate).getTime() / 1000;
-    console.log(curDate);
-    console.log(expDate);
     if (curDate > expDate && premiuminfo.status === "n") {
       this.setState({
         substatus: "n",
@@ -71,7 +67,7 @@ export class Signals extends Component {
           behavior: "smooth",
         });
         this.setState({
-          autoRefresh: true,
+          isLoading: true,
         });
         this.refreshGet();
       }, 300000);
@@ -99,7 +95,7 @@ export class Signals extends Component {
       !this.props.user.loading
     ) {
       this.setState({
-        autoRefresh: false,
+        isLoading: false,
       });
     }
   }
@@ -123,15 +119,7 @@ export class Signals extends Component {
   };
 
   render() {
-    const {
-      sender,
-      startLoad,
-      getLoad,
-      search,
-      signalcount,
-      autoRefresh,
-      substatus,
-    } = this.state;
+    const { sender, search, signalcount, isLoading, substatus } = this.state;
     let pagecontent;
     if (substatus === "a") {
       const { user, userSearch } = this.props;
@@ -163,8 +151,6 @@ export class Signals extends Component {
         searchcount,
         searchlist,
         searchloading,
-        startLoad,
-        getLoad,
         signalcount,
       });
       let signal;
@@ -175,41 +161,42 @@ export class Signals extends Component {
       }
       pagecontent = (
         <div>
-          {(loader || autoRefresh) && <ProgressBar />}
-          {load && !autoRefresh ? (
-            <Spinner />
-          ) : (
-            <div className="signal-page">
-              <div className="page-dash-title mb-4">
-                <h1>Signals</h1>
-              </div>
-              <div className="container-fluid mb-4">
-                <div className="row">
-                  <div className="col-md-4 mb-2">
-                    <SearchInput
-                      sender={sender}
-                      placeholder="Search by Currency"
-                      onChange={this.changeHandler}
-                      onKeyUp={this.keyHandler}
-                      name="search"
-                      value={search}
-                    />
-                  </div>
-                  <div className="col-md-4 mb-2">
-                    <div className="transactions-total table-figure">
-                      <h6>
-                        {totalText}
-                        <span className="badge rounded-pill bg-success">
-                          {totalCount}
-                        </span>
-                      </h6>
-                    </div>
+          {(loader || isLoading) && <ProgressBar />}
+
+          <div className="signal-page">
+            <div className="page-dash-title mb-4">
+              <h1>Signals</h1>
+            </div>
+            <div className="container-fluid mb-4">
+              <div className="row">
+                <div className="col-md-4 mb-2">
+                  <SearchInput
+                    sender={sender}
+                    placeholder="Search by Currency"
+                    onChange={this.changeHandler}
+                    onKeyUp={this.keyHandler}
+                    name="search"
+                    value={search}
+                  />
+                </div>
+                <div className="col-md-4 mb-2">
+                  <div className="transactions-total table-figure">
+                    <h6>
+                      {totalText}
+                      <span className="badge rounded-pill bg-success">
+                        {totalCount}
+                      </span>
+                    </h6>
                   </div>
                 </div>
               </div>
-              {(noRecord || emptyRecord) && (
-                <p className="no-records">No Record(s) found</p>
-              )}
+            </div>
+            {(noRecord || emptyRecord) && (
+              <p className="no-records">No Record(s) found</p>
+            )}
+            {load ? (
+              <Spinner />
+            ) : (
               <div className="container-fluid">
                 <div className="row">
                   {signal.map((signal, i) => {
@@ -223,8 +210,8 @@ export class Signals extends Component {
                   })}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       );
     } else if (substatus === "i") {

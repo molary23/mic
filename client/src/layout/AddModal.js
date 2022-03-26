@@ -294,7 +294,7 @@ function AddModal(props) {
         } else {
           setLoading(true);
           const signal = {
-            signalstatus: inputs.signalstatus,
+            status: inputs.signalstatus,
           };
           setErrors({});
           onSubmit(["edit", signal, modalsignaldetails.signalid]);
@@ -1226,7 +1226,7 @@ AddModal.propTypes = {
   onSubmit: PropTypes.func,
   error: PropTypes.any,
   modalAnnDetails: PropTypes.object,
-  modalsignaldetails: PropTypes.object,
+  modalsignaldetails: PropTypes.any,
   walletList: PropTypes.object,
   isLoading: PropTypes.bool,
   info: PropTypes.object,

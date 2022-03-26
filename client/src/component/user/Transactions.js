@@ -52,9 +52,6 @@ export class Transactions extends Component {
     transcount:
       JSON.parse(localStorage.getItem("userCounts")).transactions ??
       this.props.auth.userCounts.transactions,
-    startLoad: false,
-    getLoad: true,
-    isLoading: false,
     content: "transactions",
   };
 
@@ -62,15 +59,6 @@ export class Transactions extends Component {
     const { limit, offset, transcount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });
-    /*  if (searchParams !== "") {
-      loadFromParams({ limit, self: this, content, searchParams });
-    } else {
-      const paginate = {
-        limit,
-        offset,
-      };
-      this.props.getContent(content, paginate);
-    }*/
     this.setState({
       numOfPages: Math.ceil(transcount / limit),
     });
@@ -137,17 +125,8 @@ export class Transactions extends Component {
   };
 
   render() {
-    const {
-      sender,
-      methodOptions,
-      typeOptions,
-      type,
-      method,
-      transcount,
-      startLoad,
-      getLoad,
-      isLoading,
-    } = this.state;
+    const { sender, methodOptions, typeOptions, type, method, transcount } =
+      this.state;
 
     const { user, userSearch } = this.props;
     const { loading, fetching } = user;
@@ -177,65 +156,64 @@ export class Transactions extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       transcount,
     });
 
     return (
       <div>
-        {(loader || isLoading) && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="page-dash-title mb-4">
-              <h1>Transactions</h1>
-            </div>
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-3">
-                  <Select
-                    sender={sender}
-                    options={methodOptions}
-                    onChange={this.changeHandler}
-                    name="method"
-                    value={method}
-                  />
-                </div>
-                <div className="col-md-3">
-                  <Select
-                    sender={sender}
-                    options={typeOptions}
-                    onChange={this.changeHandler}
-                    name="type"
-                    value={type}
-                  />
-                </div>
-                <div className="col-md-2">
-                  <button
-                    type="button"
-                    className="btn download-btn"
-                    onClick={this.downloadHandler}
-                  >
-                    Download <RiFileExcel2Line />
-                  </button>
-                </div>
-                <div className="col-md-4">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+        {loader && <ProgressBar />}
+
+        <div className="transactions card holder-card ">
+          <div className="page-dash-title mb-4">
+            <h1>Transactions</h1>
+          </div>
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-3">
+                <Select
+                  sender={sender}
+                  options={methodOptions}
+                  onChange={this.changeHandler}
+                  name="method"
+                  value={method}
+                />
+              </div>
+              <div className="col-md-3">
+                <Select
+                  sender={sender}
+                  options={typeOptions}
+                  onChange={this.changeHandler}
+                  name="type"
+                  value={type}
+                />
+              </div>
+              <div className="col-md-2">
+                <button
+                  type="button"
+                  className="btn download-btn"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
+                </button>
+              </div>
+              <div className="col-md-4">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={["S/N", "amount", "method", "type", "date"]}
@@ -245,8 +223,8 @@ export class Transactions extends Component {
                 tablebody={!showSearch ? main : searchMain}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }

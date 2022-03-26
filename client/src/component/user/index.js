@@ -252,12 +252,12 @@ export class Index extends Component {
             </div>
             <div className="dash-intro mb-5">
               <div className="row">
-                <div className="col-md-4 col-xs-12">
+                <div className="col-md-5 col-xs-12">
                   <div className="dash-basic dash-card">
                     <h4 className="mb-2">Referrals </h4>
                     <h1 className="mb-2">{referral}</h1>
                     <code>http://localhost:3000/referral/:{username}</code>
-                    <div className={`tiptool ${copy && "showTip"}`}>
+                    <div className={`tiptool ${true && "showTip"}`}>
                       <span className="tooltiptext">Copied to Clipboard</span>
                     </div>
                     <input
@@ -313,7 +313,7 @@ export class Index extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-5 col-xs-12">
+                <div className="col-md-4 col-xs-12">
                   <div className="dash-bonus dash-card">
                     <h4 className="mb-3">Bonus Index</h4>
                     <h1 className="mb-3">${bonus.toFixed(2)}</h1>

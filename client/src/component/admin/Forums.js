@@ -25,6 +25,7 @@ import {
   getMore,
   setSearchParams,
   renderArrange,
+  landingLoad,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -37,7 +38,6 @@ class Forums extends Component {
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
     url: new URL(window.location),
-    loading: false,
     modal: false,
     error: {},
     toast: false,
@@ -67,14 +67,11 @@ class Forums extends Component {
 
   componentDidMount() {
     const { limit, offset, forumcount, content } = this.state;
-    const paginate = {
-      limit,
-      offset,
-    };
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(forumcount / limit),
     });
-    this.props.getContent(content, paginate);
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
   componentWillUnmount() {
@@ -116,35 +113,32 @@ class Forums extends Component {
     }
   }
   afterUpdate = (text) => {
-    const { limit, content, forumcount, update } = this.state;
-    let action;
+    const { limit, content, forumcount, timer } = this.state;
+    this.setState({
+      isLoading: false,
+      modal: false,
+      toast: true,
+      toasttext: `Discussion ${text} successfully`,
+      currentPage: Pagination.currentpage,
+      offset: 0,
+    });
+
     if (text === "added") {
       this.setState({
         numOfPages: Math.ceil((forumcount + 1) / limit),
       });
       this.props.clearActions("add-forum");
-      action = text;
     } else {
       this.props.clearActions("update-forum");
       this.setState({
         currentPage: Pagination.currentpage,
       });
-      action = update;
     }
-    this.setState({
-      offset: 0,
-      modal: false,
-      isLoading: false,
-      toast: true,
-      toasttext: `Discussion ${action} successfully`,
-    });
-    const paginate = {
-      limit,
-      offset: 0,
-    };
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
+
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
 
     this.setState((prevState) => ({
       offset: this.state.offset,
@@ -155,22 +149,35 @@ class Forums extends Component {
         toast: false,
         newsignal: {},
       });
-    }, 3000);
+    }, timer);
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 
@@ -204,27 +211,36 @@ class Forums extends Component {
   };
 
   submitHandler = (value) => {
+    this.setState({
+      isLoading: true,
+    });
     this.props.addForum(value);
   };
 
-  clickhandler = (value) => {
+  clickHandler = (value) => {
     const forum = {
       action: value[0],
       id: value[1],
     };
-    this.setState({
-      update: `${forum.action}d`,
-    });
-    let check = window.confirm(
-      `Are you sure you want to ${value[0]} this Discussion?`
-    );
-    if (check) {
-      this.props.updateForum(forum);
-    } else {
-      return false;
-    }
-  };
 
+    this.setState({
+      check: true,
+      checktext: `Are you sure you want to ${value[0]} this Discussion?`,
+      checktitle: `Confirm ${value[0]}`,
+    });
+
+    this.confirmHandler = (option) => {
+      if (option) {
+        this.setState({
+          isLoading: true,
+        });
+        this.props.updateForum(forum);
+      }
+      this.setState({
+        check: false,
+      });
+    };
+  };
   render() {
     const {
       sender,
@@ -283,64 +299,65 @@ class Forums extends Component {
     return (
       <div>
         {loader && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-3 mb-2">
-                  <SearchInput
-                    sender={sender}
-                    placeholder="Search by User Name"
-                    onChange={this.changeHandler}
-                    name="search"
-                    value={search}
-                  />
-                </div>
 
-                <div className="col-md-2 mb-2">
-                  <Select
-                    sender={sender}
-                    options={statusOptions}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
-                </div>
-                <div className="col-md-2 mb-2">
-                  <Select
-                    sender={sender}
-                    options={rightOptions}
-                    onChange={this.changeHandler}
-                    name="right"
-                    value={right}
-                  />
-                </div>
-                <div className="col-md-2 mb-2">
-                  <button
-                    type="button"
-                    className="btn add-btn"
-                    onClick={this.openModal}
-                  >
-                    Create <BiCommentAdd />
-                  </button>
-                </div>
-                <div className="col-md-3 mb-2">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText} Discussions
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+        <div className="transactions card holder-card ">
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-3 mb-2">
+                <SearchInput
+                  sender={sender}
+                  placeholder="Search by User Name"
+                  onChange={this.changeHandler}
+                  name="search"
+                  value={search}
+                />
+              </div>
+
+              <div className="col-md-2 mb-2">
+                <Select
+                  sender={sender}
+                  options={statusOptions}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-2 mb-2">
+                <Select
+                  sender={sender}
+                  options={rightOptions}
+                  onChange={this.changeHandler}
+                  name="right"
+                  value={right}
+                />
+              </div>
+              <div className="col-md-2 mb-2">
+                <button
+                  type="button"
+                  className="btn add-btn"
+                  onClick={this.openModal}
+                >
+                  Create <BiCommentAdd />
+                </button>
+              </div>
+              <div className="col-md-3 mb-2">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText} Discussions
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <ForumCard
               sender={sender}
               forum={!showSearch ? main : searchMain}
@@ -348,8 +365,9 @@ class Forums extends Component {
               user={UserId}
               level={level}
             />
-          </div>
-        )}
+          )}
+        </div>
+
         {modal ? (
           <AddModal
             {...{ modal, sender, isLoading, error }}
@@ -382,6 +400,7 @@ Forums.propTypes = {
   auth: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
   searchTerms: PropTypes.object.isRequired,
+  landingLoad: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

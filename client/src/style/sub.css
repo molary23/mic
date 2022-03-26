@@ -598,7 +598,7 @@ span.nav-sub-icon svg {
   background: rgba(23, 109, 207, 0.8);
   color: #fff;
   font-weight: 500;
-  padding: 10px;
+  padding: 15px 20px;
 }
 
 .dashboard-content .ann-card .ann-title h4 {
@@ -776,6 +776,10 @@ span.nav-sub-icon svg {
 
 .dashboard-content input.form-control select {
   height: 40px;
+}
+
+.form-floating label {
+  font-size: 14px;
 }
 
 .dash-full {
@@ -1036,7 +1040,8 @@ span.nav-sub-icon svg {
 .tiptool {
   position: relative;
   display: inline-block;
-  left: 40%;
+  top: 5%;
+  right: 45%;
 }
 
 .tiptool .tooltiptext {
@@ -1051,7 +1056,6 @@ span.nav-sub-icon svg {
   position: absolute;
   z-index: 1;
   left: 50%;
-  margin-left: -60px;
   /* Fade in tooltip */
   opacity: 0;
   -webkit-transition: opacity 0.3s;
@@ -1321,8 +1325,6 @@ ul.list-group.list-group-horizontal svg {
 
 /*Spinner*/
 .icon-spin {
-  top: 50%;
-  left: 50%;
   width: 30px;
   height: 30px;
   -webkit-animation: spin 2s linear infinite;
@@ -1494,7 +1496,7 @@ ul {
 
 .pricing-title {
   color: #fff;
-  background: #cb5442;
+  background: rgba(46, 186, 97, 0.8);
   padding: 15px 0;
   font-size: 1.5em;
   text-transform: uppercase;
@@ -1502,11 +1504,11 @@ ul {
 }
 
 .pricing-table.recommended .pricing-title {
-  background: #48acf0;
+  background: rgba(23, 109, 207, 0.8);
 }
 
 .pricing-table.recommended .pricing-action {
-  background: #48acf0;
+  background: rgba(23, 109, 207, 0.8);
 }
 
 .pricing-table .price {
@@ -1585,7 +1587,7 @@ ul {
 .table-buy .pricing-action {
   float: right;
   color: #fff;
-  background: #cb5442;
+  background: rgba(46, 186, 97, 0.8);
   padding: 5px 16px;
   border-radius: 2px;
   font-weight: 700;
@@ -1734,6 +1736,10 @@ ul {
   }
   .main--nav .navbar-toggler {
     margin-left: 100px;
+  }
+  .tiptool {
+    top: -5%;
+    left: 30%;
   }
 }
 

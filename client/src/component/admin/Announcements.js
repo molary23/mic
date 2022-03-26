@@ -31,6 +31,7 @@ import ConfirmModal from "../../layout/ConfirmModal";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 
 import Pagination from "../../util/Pagination";
+import Spinner from "../../layout/Spinner";
 
 class Announcements extends Component {
   state = {
@@ -296,55 +297,54 @@ class Announcements extends Component {
     return (
       <div>
         {loader && <ProgressBar />}
-        {load ? (
-          <div className="loader">
-            <i className="fas fa-circle-notch fa-2x fa-spin" />
+
+        <div className="transactions card holder-card ">
+          <div className="page-dash-title mb-4">
+            <h1>Accounts</h1>
           </div>
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="page-dash-title mb-4">
-              <h1>Accounts</h1>
-            </div>
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-4 mb-2">
-                  <SearchInput
-                    sender={sender}
-                    placeholder="Search by Title, Summary, Link"
-                    onChange={this.changeHandler}
-                    name="search"
-                    value={search}
-                  />
-                </div>
-                <div className="col-md-2 mb-3">
-                  <button type="button" className="btn download-btn">
-                    Download <i className="far fa-file-excel" />
-                  </button>
-                </div>
-                <div className="col-md-2 mb-3">
-                  <button
-                    type="button"
-                    className="btn add-btn btn-sm"
-                    onClick={this.openModal}
-                  >
-                    Create <HiOutlineSpeakerphone />
-                  </button>
-                </div>
-                <div className="col-md-4 mb-2">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-4 mb-2">
+                <SearchInput
+                  sender={sender}
+                  placeholder="Search by Title, Summary, Link"
+                  onChange={this.changeHandler}
+                  name="search"
+                  value={search}
+                />
+              </div>
+              <div className="col-md-2 mb-3">
+                <button type="button" className="btn download-btn">
+                  Download <i className="far fa-file-excel" />
+                </button>
+              </div>
+              <div className="col-md-2 mb-3">
+                <button
+                  type="button"
+                  className="btn add-btn btn-sm"
+                  onClick={this.openModal}
+                >
+                  Create <HiOutlineSpeakerphone />
+                </button>
+              </div>
+              <div className="col-md-4 mb-2">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={[
@@ -364,8 +364,9 @@ class Announcements extends Component {
                 onClick={this.clickHandler}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
+
         {modal ? (
           <AddModal
             {...{ modal, sender, error, modalAnnDetails, purpose }}

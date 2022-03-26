@@ -65,11 +65,10 @@ class Signals extends Component {
     currentPage: Pagination.currentpage,
     timer: Pagination.timer,
     lastScrollTop: 0,
+    url: new URL(window.location),
     signalcount:
       JSON.parse(localStorage.getItem("providerCounts")).signals ??
       this.props.auth.providerCounts.signals,
-    startLoad: false,
-    getLoad: true,
     content: "signals",
     modal: false,
     purpose: "",
@@ -87,7 +86,6 @@ class Signals extends Component {
     landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(signalcount / limit),
-      startLoad: true,
     });
     this.props.getCurrency();
     this.props.getFollowers();
@@ -135,37 +133,32 @@ class Signals extends Component {
 
   afterUpdate = (text) => {
     const { limit, content, signalcount, timer } = this.state;
-    if (text === "added") {
-      this.setState({
-        numOfPages: Math.ceil((signalcount + 1) / limit),
-      });
-      this.props.clearSignal("new");
-    } else {
-      this.props.clearSignal("edit");
-    }
     this.setState({
-      offset: 0,
+      isLoading: false,
       modal: false,
       toast: true,
       toasttext: `Signal ${text} successfully`,
       toastcategory: "success",
-    });
-    const paginate = {
-      limit,
+      currentPage: Pagination.currentpage,
       offset: 0,
-    };
+    });
+    if (text === "added") {
+      this.props.clearSignal("new");
+      this.setState({
+        numOfPages: Math.ceil((signalcount + 1) / limit),
+      });
+    } else {
+      this.props.clearSignal("edit");
+    }
+
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-    this.props.getContent(content, paginate);
 
-    this.setState((prevState) => ({
-      offset: prevState.offset + limit,
-    }));
-    window.addEventListener("scroll", this.loadMore, { passive: true });
+    let searchParams = window.location.search;
+    landingLoad({ limit, offset: 0, self: this, content, searchParams });
     setTimeout(() => {
       this.setState({
         toast: false,
-        newsignal: {},
       });
     }, timer);
   };
@@ -194,6 +187,9 @@ class Signals extends Component {
         self: this,
       });
     }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
+    });
   };
 
   changeHandler = (e) => {
@@ -236,6 +232,9 @@ class Signals extends Component {
   };
 
   submitHandler = (signalinfo) => {
+    this.setState({
+      isLoading: true,
+    });
     let act = signalinfo[0],
       signaldetail = signalinfo[1];
     if (act === "new") {
@@ -254,8 +253,6 @@ class Signals extends Component {
       sender,
       status,
       statusOpt,
-      startLoad,
-      getLoad,
       search,
       signalcount,
       signalOpt,
@@ -302,24 +299,21 @@ class Signals extends Component {
       searchcount,
       searchlist,
       searchloading,
-      startLoad,
-      getLoad,
       signalcount,
     });
 
     return (
       <div>
         {(loader || isLoading) && <ProgressBar />}
-        {load ? (
-          <Spinner />
-        ) : (
-          <div className="transactions card holder-card ">
-            <div className="page-dash-title mb-4">
-              <div className="row">
-                <div className="col-md-3">
-                  <h1>Signals</h1>
-                </div>
-                <div className="col-md-3 mt-3">
+
+        <div className="transactions card holder-card ">
+          <div className="page-dash-title mb-4">
+            <div className="row">
+              <div className="col-md-3">
+                <h1>Signals</h1>
+              </div>
+              <div className="col-md-3 mt-3">
+                <div className="transactions-total table-figure">
                   <h6>
                     <BiGroup />
                     Followers{" "}
@@ -328,81 +322,87 @@ class Signals extends Component {
                     </span>
                   </h6>
                 </div>
-                <div className="col-md-3 mt-3">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      <CgSignal />
-                      {totalText}
-                      <span className="badge rounded-pill bg-success">
-                        {totalCount}
-                      </span>
-                    </h6>
-                  </div>
+              </div>
+              <div className="col-md-3 mt-3">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    <CgSignal />
+                    {totalText}
+                    <span className="badge rounded-pill bg-success">
+                      {totalCount}
+                    </span>
+                  </h6>
                 </div>
-                <div className="col-md-3 mt-3">
-                  <div className="transactions-total table-figure">
-                    <h6>
-                      <BsCurrencyExchange /> Currency Pair
-                      <span className="badge rounded-pill bg-success">
-                        {currencies.length}
-                      </span>
-                    </h6>
-                  </div>
+              </div>
+              <div className="col-md-3 mt-3">
+                <div className="transactions-total table-figure">
+                  <h6>
+                    <BsCurrencyExchange /> Currency Pair
+                    <span className="badge rounded-pill bg-success">
+                      {currencies.length}
+                    </span>
+                  </h6>
                 </div>
               </div>
             </div>
-            <div className="container-fluid mb-4">
-              <div className="row">
-                <div className="col-md-3 mb-2">
-                  <SearchInput
-                    sender={sender}
-                    placeholder="Search by Signals, Currency Pair"
-                    onChange={this.changeHandler}
-                    onKeyUp={this.keyHandler}
-                    name="search"
-                    value={search}
-                  />
-                </div>
-                <div className="col-md-3 mb-2">
-                  <Select
-                    sender={sender}
-                    options={statusOpt}
-                    onChange={this.changeHandler}
-                    name="status"
-                    value={status}
-                  />
-                </div>
-                <div className="col-md-3 mb-2">
-                  <Select
-                    sender={sender}
-                    options={signalOpt}
-                    onChange={this.changeHandler}
-                    name="signaloption"
-                    value={signaloption}
-                  />
-                </div>
+          </div>
+          <div className="container-fluid mb-4">
+            <div className="row">
+              <div className="col-md-3 mb-2">
+                <SearchInput
+                  sender={sender}
+                  placeholder="Search by Signals, Currency Pair"
+                  onChange={this.changeHandler}
+                  onKeyUp={this.keyHandler}
+                  name="search"
+                  value={search}
+                />
+              </div>
+              <div className="col-md-3 mb-2">
+                <Select
+                  sender={sender}
+                  options={statusOpt}
+                  onChange={this.changeHandler}
+                  name="status"
+                  value={status}
+                />
+              </div>
+              <div className="col-md-2 mb-2">
+                <Select
+                  sender={sender}
+                  options={signalOpt}
+                  onChange={this.changeHandler}
+                  name="signaloption"
+                  value={signaloption}
+                />
+              </div>
 
-                <div className="col-md-3">
-                  <button
-                    type="button"
-                    className="btn btn-sm add-new"
-                    onClick={this.openModal}
-                  >
-                    Add New <MdAddChart />
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm download-btn"
-                    onClick={this.downloadHandler}
-                  >
-                    Download <RiFileExcel2Line />
-                  </button>
-                </div>
+              <div className="col-md-2 mb-2">
+                <button
+                  type="button"
+                  className="btn btn-sm add-btn"
+                  onClick={this.openModal}
+                >
+                  Add New <MdAddChart />
+                </button>
+              </div>
+              <div className="col-md-2 mb-2">
+                <button
+                  type="button"
+                  className="btn btn-sm download-btn"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
+                </button>
               </div>
             </div>
-            {(noRecord || emptyRecord) && (
-              <p className="no-records">No Record(s) found</p>
-            )}
+          </div>
+          {(noRecord || emptyRecord) && (
+            <p className="no-records">No Record(s) found</p>
+          )}
+          {load ? (
+            <Spinner />
+          ) : (
             <TableHead
               sender={sender}
               head={[
@@ -425,8 +425,9 @@ class Signals extends Component {
                 onClick={this.clickHandler}
               />
             </TableHead>
-          </div>
-        )}
+          )}
+        </div>
+
         {modal ? (
           <AddModal
             {...{ modal, sender, purpose, modalsignaldetails, error }}
