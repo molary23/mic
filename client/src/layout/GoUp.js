@@ -23,7 +23,7 @@ function GoUp() {
 
   const checkPosition = () => {
     let winScroll = window.scrollY,
-      toTop = 50;
+      toTop = 500;
     if (winScroll > toTop) {
       setShow(true);
     } else {

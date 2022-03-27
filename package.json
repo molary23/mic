@@ -29,6 +29,7 @@
     "express": "^4.17.2",
     "formidable": "^2.0.1",
     "gravatar": "^1.8.2",
+    "helmet": "^5.0.2",
     "http-proxy-middleware": "^2.0.3",
     "json2csv": "^5.0.7",
     "jsonwebtoken": "^8.5.1",
@@ -46,6 +47,7 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
+    "eslint-plugin-security": "^1.4.0",
     "nodemon": "^2.0.15",
     "sequelize-cli": "^6.4.1"
   }

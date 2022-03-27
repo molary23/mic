@@ -81,7 +81,6 @@ router.get(
 
     SignalView.findAll(query)
       .then((entries) => {
-        const jsonUsers = JSON.parse(JSON.stringify(entries));
         // -> Convert JSON to CSV data
         const csvFields = [
           "Firstcurrency",
@@ -95,15 +94,16 @@ router.get(
           "CreatedAt",
           "UpdatedAt",
         ];
-        const json2csvParser = new Json2csvParser({ csvFields });
-        const csv = json2csvParser.parse(jsonUsers);
+        const tabledata = JSON.parse(JSON.stringify(entries));
+
+        const parser = new Parser({ csvFields });
+        const csv = parser.parse(tabledata);
         res.setHeader("Content-Disposition", "attachment;filename=signals.csv");
         res.setHeader("Content-Type", "application/octet-stream");
 
-        res.attachment("signals.csv");
         res.status(200).end(csv);
       })
-      .catch((err) => res.status(404).json(err));
+      .catch((err) => res.status(404).json(`H ${err}`));
   }
 );
 
@@ -276,10 +276,10 @@ router.get(
         attributes,
       })
       .then((entries) => {
-        const jsonUsers = JSON.parse(JSON.stringify(entries));
+        const tabledata = JSON.parse(JSON.stringify(entries));
 
-        const json2csvParser = new Json2csvParser({ csvFields });
-        const csv = json2csvParser.parse(jsonUsers);
+        const parser = new Parser({ csvFields });
+        const csv = parser.parse(tabledata);
         res.setHeader("Content-Disposition", "attachment;filename=signals.csv");
         res.setHeader("Content-Type", "application/octet-stream");
 
@@ -339,7 +339,7 @@ router.get(
         "username",
         "package",
         "duration",
-        "subscriptiondate",
+        "createdAt",
       ];
       order = [["subscriptionid", "desc"]];
       csvFields = [
@@ -606,10 +606,10 @@ router.get(
         include,
       })
       .then((entries) => {
-        const tabeldata = JSON.parse(JSON.stringify(entries));
+        const tabledata = JSON.parse(JSON.stringify(entries));
 
         const parser = new Parser({ csvFields });
-        const csv = parser.parse(tabeldata);
+        const csv = parser.parse(tabledata);
         res.setHeader("Content-Disposition", "attachment;filename=signals.csv");
         res.setHeader("Content-Type", "application/octet-stream");
 

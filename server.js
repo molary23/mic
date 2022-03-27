@@ -2,6 +2,7 @@ const express = require("express"),
   app = express(),
   bodyParser = require("body-parser"),
   passport = require("passport"),
+  helmet = require("helmet"),
   // Bring in APIs
   users = require("./router/api/users"),
   admin = require("./router/api/admin"),
@@ -13,6 +14,8 @@ const express = require("express"),
   download = require("./router/api/download"),
   cron = require("./router/api/cron"),
   payments = require("./router/api/payments");
+
+app.use(helmet());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

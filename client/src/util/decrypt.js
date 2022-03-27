@@ -1,5 +1,7 @@
+import keys from "./config/keys";
+
 export default function decrypt(encoded) {
-  const salt = "the greatest TO EVER DO it is Molary",
+  const salt = keys.mailKey,
     textToChars = (text) => text.split("").map((c) => c.charCodeAt(0)),
     applySaltToChar = (code) => textToChars(salt).reduce((a, b) => a ^ b, code);
   return encoded

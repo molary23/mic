@@ -10,6 +10,7 @@ import {
   setSearchParams,
   renderArrange,
   landingLoad,
+  downloadFile,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -19,6 +20,7 @@ import Select from "../../layout/Select";
 import SearchInput from "../../layout/SearchInput";
 import Spinner from "../../layout/Spinner";
 import Toast from "../../layout/Toast";
+import { RiFileExcel2Line } from "react-icons/ri";
 import Pagination from "../../util/Pagination";
 
 export class Subscriptions extends Component {
@@ -100,6 +102,11 @@ export class Subscriptions extends Component {
       offset,
       self: this,
     });
+  };
+
+  downloadHandler = () => {
+    const { sender } = this.state;
+    downloadFile({ sender, self: this });
   };
 
   render() {
@@ -187,8 +194,12 @@ export class Subscriptions extends Component {
                 />
               </div>
               <div className="col-md-2 mb-2">
-                <button type="button" className="btn download-btn">
-                  Download <i className="far fa-file-excel" />
+                <button
+                  type="button"
+                  className="btn download-btn"
+                  onClick={this.downloadHandler}
+                >
+                  Download <RiFileExcel2Line />
                 </button>
               </div>
               <div className="col-md-3 mb-2">
@@ -241,6 +252,7 @@ Subscriptions.propTypes = {
   landingLoad: PropTypes.func,
   clearSearchActions: PropTypes.func,
   renderArrange: PropTypes.func,
+  downloadFile: PropTypes.func,
   setSearchParams: PropTypes.func,
   errors: PropTypes.any,
 };

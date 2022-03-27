@@ -299,6 +299,9 @@ export const downloadFile = ({ sender, self }) => {
   } else if (sender === "admin-transactions") {
     url = `${url}admin/:transactions`;
     filename = "all-transactions";
+  } else if (sender === "admin-subscriptions") {
+    url = `${url}admin/:subscriptions`;
+    filename = "all-subscriptions";
   } else if (sender === "admin-referrals") {
     url = `${url}admin/:referrals`;
     filename = "all-referrals";
