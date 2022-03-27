@@ -136,7 +136,7 @@ nav.top-nav {
 }
 
 nav.top-nav.show-bg {
-  background: #d5e7fc;
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .right-nav {
@@ -161,6 +161,10 @@ nav.top-nav.show-bg {
 .main-home .main-home-top .home-top-text h1 {
   font-size: 3.5em;
   font-weight: 900;
+}
+
+.main-home .main-home-top .home-top-text a {
+  margin-top: 20px;
 }
 
 .main-home .main-home-top .home-top-image {
@@ -250,6 +254,15 @@ nav.top-nav.show-bg {
   text-transform: capitalize;
 }
 
+.main-home-faq {
+  height: 600px;
+  background: url("../asset/images/faqs.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .main-home-contact {
   height: 600px;
   background: url("../asset/images/contactus.jpg");
@@ -262,7 +275,25 @@ nav.top-nav.show-bg {
 .main-home-contact-box {
   min-height: 600px;
   padding: 100px 0px;
-  background: #fefcf5;
+  background: #dee9ff;
+}
+
+.contact-image {
+  height: 500px;
+  background: url("../asset/images/contact.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.contact-form {
+  margin: 100px auto 0px;
+  width: 95%;
+}
+
+.main-home-faq-box {
+  min-height: 600px;
+  padding: 100px 0px;
+  background: #fff;
 }
 
 .main-home-service {
@@ -365,6 +396,20 @@ a.btn.nav-link.btn {
   background-repeat: no-repeat;
 }
 
+.card-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  cursor: pointer;
+}
+
+.card-header .accordion-control {
+  font-weight: 600;
+}
+
 @media only screen and (max-width: 767px) {
   .navbar-toggler {
     background: transparent !important;
@@ -392,6 +437,17 @@ a.btn.nav-link.btn {
     background-size: 400px;
   }
   .main-home-contact {
+    background-size: 400px;
+  }
+  .contact-image {
+    background-attachment: fixed;
+    background-size: 400px;
+    height: 300px;
+  }
+  .contact-form {
+    margin-top: 20px;
+  }
+  .main-home-faq {
     background-size: 400px;
   }
   .error-main {

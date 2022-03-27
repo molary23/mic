@@ -26,6 +26,9 @@ function Home() {
                   very low and get the maximum profit. All results are verified.
                   Check your Dashboard for signal performance updates.
                 </p>
+                <a type="button" href="/" className="btn ">
+                  Register
+                </a>
               </div>
             </div>
             <div className="col-md-7">

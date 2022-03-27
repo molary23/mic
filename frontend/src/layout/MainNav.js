@@ -74,7 +74,7 @@ function MainNav() {
               </a>
             </li>
             <li className="nav-item">
-              <a type="button" className="btn nav-link btn" href="/">
+              <a type="button" className="btn nav-link" href="/">
                 Register
               </a>
             </li>

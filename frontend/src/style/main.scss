@@ -13,6 +13,9 @@
         font-size: 3.5em;
         font-weight: 900;
       }
+      a {
+        margin-top: 20px;
+      }
     }
 
     .home-top-image {
@@ -93,6 +96,15 @@
   }
 }
 
+.main-home-faq {
+  height: 600px;
+  background: url("../asset/images/faqs.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .main-home-contact {
   height: 600px;
   background: url("../asset/images/contactus.jpg");
@@ -104,7 +116,24 @@
 .main-home-contact-box {
   min-height: 600px;
   padding: 100px 0px;
-  background: #fefcf5;
+  background: rgba($color: #dee9ff, $alpha: 1);
+}
+
+.contact-image {
+  height: 500px;
+  background: url("../asset/images/contact.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.contact-form {
+  margin: 100px auto 0px;
+  width: 95%;
+}
+
+.main-home-faq-box {
+  min-height: 600px;
+  padding: 100px 0px;
+  background: #fff;
 }
 
 .main-home-service {
@@ -198,6 +227,15 @@ a.btn.nav-link.btn {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  .accordion-control {
+    font-weight: 600;
+  }
 }
 
 @import "responsive.scss";

@@ -1906,4 +1906,8 @@ ul {
 .dark-content .dashboard-body textarea {
   background: #121212;
 }
+
+.dark-content .error-main {
+  background: url("../asset/images/error-dark.jpg");
+}
 /*# sourceMappingURL=sub.css.map */
