@@ -37,140 +37,6 @@ const express = require("express"),
   // Bring in User Checker
   checkUser = require("../../validation/checkUser"),
   dateformat = require("../../util/dateformat");
-/*
-@route GET api/view/payments
-@desc User View Payments
-@access private
-
-
-router.get(
-  "/payments",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-
-    let limit = null,
-      offset = 0;
-
-    if (req.body.limit) limit = req.body.limit;
-    if (req.body.offset) offset = req.body.offset;
-
-    const UserId = req.user.id;
-    Payment.findAll({
-      where: {
-        UserId,
-      },
-      order: ["id", "DESC"],
-      limit,
-      offset,
-    })
-      .then((pay) => {
-        res.json(pay);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/view/subscriptions
-@desc User View subscriptions
-@access private
-
-
-router.get(
-  "/subscriptions",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-
-    let limit = null,
-      offset = 0;
-
-    if (req.body.limit) limit = req.body.limit;
-    if (req.body.offset) offset = req.body.offset;
-
-    const UserId = req.user.id;
-    Subscription.findAll({
-      where: {
-        UserId,
-      },
-      order: ["id", "DESC"],
-      limit,
-      offset,
-    })
-      .then((sub) => {
-        res.json(sub);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/userview/bonus
-desc User View bonus
-@access private
-
-
-router.get(
-  "/bonus",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.user.id;
-    Bonus.findAll({
-      where: { UserId },
-      include: [Payment],
-    })
-      .then((bonus) => {
-        res.json(bonus);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/user/transactions
-desc User View transactions
-@access private
-
-
-router.get(
-  "/transactions",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkUser(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.user.id;
-    let clause = {},
-      where = {};
-    where.UserId = UserId;
-    if (req.body.type && !req.body.method) {
-      where.type = req.body.type;
-    } else if (!req.body.type && req.body.method) {
-      where.method = req.body.method;
-    } else if (req.body.type && req.body.method) {
-      where.method = req.body.method;
-      where.type = req.body.type;
-    }
-    clause = { where };
-    Transaction.findAll(clause)
-      .then((transactions) => {
-        res.json(transactions);
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);*/
 
 /*
 @route GET api/userview/signals
@@ -203,40 +69,44 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                provider: { [Op.substring]: searchArray[i] },
-              },
-              {
-                firstcurrency: { [Op.regexp]: searchArray[i] },
-              },
-              {
-                secondcurrency: { [Op.regexp]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  provider: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  firstcurrency: { [Op.regexp]: searchArray[i] },
+                },
+                {
+                  secondcurrency: { [Op.regexp]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                provider: { [Op.substring]: searchTerms },
-              },
-              {
-                firstcurrency: { [Op.regexp]: searchTerms },
-              },
-              {
-                secondcurrency: { [Op.regexp]: searchTerms },
-              },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  provider: { [Op.substring]: searchTerms },
+                },
+                {
+                  firstcurrency: { [Op.regexp]: searchTerms },
+                },
+                {
+                  secondcurrency: { [Op.regexp]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 
@@ -330,20 +200,24 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [{ referred: { [Op.substring]: searchArray[i] } }],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [{ referred: { [Op.substring]: searchArray[i] } }],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [{ referred: { [Op.substring]: searchTerms } }],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [{ referred: { [Op.substring]: searchTerms } }],
+            },
+          };
+        }
       }
     }
 
@@ -525,20 +399,24 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [{ reference: { [Op.substring]: searchArray[i] } }],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [{ reference: { [Op.substring]: searchArray[i] } }],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [{ reference: { [Op.substring]: searchTerms } }],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [{ reference: { [Op.substring]: searchTerms } }],
+            },
+          };
+        }
       }
     }
 
@@ -969,42 +847,46 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: searchArray[i] },
-              },
-              {
-                creator: { [Op.substring]: searchArray[i] },
-              },
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  title: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  creator: { [Op.substring]: searchArray[i] },
+                },
 
-              {
-                text: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+                {
+                  text: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                title: { [Op.substring]: searchTerms },
-              },
-              {
-                creator: { [Op.substring]: searchTerms },
-              },
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  title: { [Op.substring]: searchTerms },
+                },
+                {
+                  creator: { [Op.substring]: searchTerms },
+                },
 
-              {
-                text: { [Op.substring]: searchTerms },
-              },
-            ],
-          },
-        };
+                {
+                  text: { [Op.substring]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 

@@ -1,5 +1,6 @@
 import axios from "axios";
-import Toast from "../layout/Toast";
+
+import isEmpty from "../validation/emptyChecker";
 
 export const getMore = ({
   limit,
@@ -17,15 +18,23 @@ export const getMore = ({
         offset: prevState.offset + limit,
         getLoad: (prevState.getLoad = false),
       }));
-      if (searchParams !== "") {
-        let queryTerms = searchParams.split("?")[1];
-        queryTerms = queryTerms.split("&");
-        let terms = queryTerms.map((term) => term.split("="));
-        let params = Object.fromEntries(terms);
-        params.offset = self.state.offset;
-        params.limit = self.state.limit;
-        // Search Now
-        self.props.searchContent(content, params);
+      if (!isEmpty(searchParams)) {
+        try {
+          let queryTerms = searchParams.split("?")[1];
+          queryTerms = queryTerms.split("&");
+          let terms = queryTerms.map((term) => term.split("="));
+          let params = Object.fromEntries(terms);
+          params.offset = self.state.offset;
+          params.limit = self.state.limit;
+          // Search Now
+          self.props.searchContent(content, params);
+        } catch (error) {
+          const paginate = {
+            offset: self.state.offset,
+            limit: self.state.limit,
+          };
+          self.props.getContent(content, paginate);
+        }
       } else {
         const paginate = {
           offset: self.state.offset,
@@ -56,10 +65,10 @@ export const setSearchParams = ({
     currentPage: 2,
   });
 
-  if (valueOfSelected !== "") {
+  if (!isEmpty(valueOfSelected)) {
     url.searchParams.set(selected, valueOfSelected);
     window.history.pushState({}, "", url);
-  } else if (valueOfSelected === "") {
+  } else if (isEmpty(valueOfSelected)) {
     url.searchParams.delete(selected);
     window.history.pushState({}, "", url);
   }
@@ -69,7 +78,7 @@ export const setSearchParams = ({
   if (selected === "search") {
     clearTimeout(typingTimer);
     typingTimer = setTimeout(() => {
-      if (searchParams !== "") {
+      if (!isEmpty(searchParams)) {
         loadFromParams({ limit, self, content, searchParams });
       } else {
         const paginate = {
@@ -86,7 +95,7 @@ export const setSearchParams = ({
       }
     }, 5000);
   } else {
-    if (searchParams !== "") {
+    if (!isEmpty(searchParams)) {
       loadFromParams({ limit, self, content, searchParams });
     } else {
       const paginate = {
@@ -105,21 +114,49 @@ export const setSearchParams = ({
 };
 
 export const loadFromParams = ({ limit, self, content, searchParams }) => {
-  if (searchParams !== "") {
-    let queryTerms = searchParams.split("?")[1];
-    queryTerms = queryTerms.split("&");
-    let terms = queryTerms.map((term) => term.split("="));
-    let params = Object.fromEntries(terms);
-    params.offset = 0;
-    params.limit = limit;
-    self.setState({
-      getLoad: true,
-    });
+  if (!isEmpty(searchParams)) {
+    try {
+      let queryTerms = searchParams.split("?")[1];
+      queryTerms = queryTerms.split("&");
+      let terms = queryTerms.map((term) => term.split("="));
+      let params = Object.fromEntries(terms);
+      params.offset = 0;
+      params.limit = limit;
+      self.setState({
+        getLoad: true,
+      });
 
-    // Search Now
-    self.props.clearActions(content);
-    self.props.clearSearchActions(content);
-    self.props.searchContent(content, params);
+      // Search Now
+      self.props.clearActions(content);
+      self.props.clearSearchActions(content);
+      self.props.searchContent(content, params);
+    } catch (error) {
+      self.setState({
+        isLoading: false,
+        toasttext: "Invalid URL",
+        toastcategory: "error",
+        toast: true,
+      });
+
+      setTimeout(() => {
+        self.setState({
+          toast: false,
+        });
+      }, 5000);
+    }
+  }
+};
+
+//On Component mount load
+export const landingLoad = ({ limit, offset, self, content, searchParams }) => {
+  if (!isEmpty(searchParams)) {
+    loadFromParams({ limit, self, content, searchParams });
+  } else {
+    const paginate = {
+      limit,
+      offset,
+    };
+    self.props.getContent(content, paginate);
   }
 };
 
@@ -168,20 +205,18 @@ export const renderArrange = ({
   } else if (searching) {
     showSearch = true;
     loader = false;
+    load = false;
     totalCount = searchcount;
     totalText = "Filtered";
     if ((searchlist === [] || searchlist.length <= 0) && !searchloading) {
       noRecord = true;
       searchMain = [];
       loader = false;
-      load = false;
     } else if (searchlist.length > 0 && !searchloading) {
       searchMain = searchlist;
       loader = false;
-      load = false;
     } else if (searchlist.length > 0 && searchloading) {
       searchMain = searchlist;
-      loader = false;
     }
   }
   return {
@@ -241,19 +276,6 @@ export const roundUp = (num) => {
     return `${(figure / 1000).toFixed(1)}K+`;
   } else {
     return figure;
-  }
-};
-
-//On Component mount load
-export const landingLoad = ({ limit, offset, self, content, searchParams }) => {
-  if (searchParams !== "") {
-    loadFromParams({ limit, self, content, searchParams });
-  } else {
-    const paginate = {
-      limit,
-      offset,
-    };
-    self.props.getContent(content, paginate);
   }
 };
 

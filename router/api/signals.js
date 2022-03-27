@@ -213,30 +213,34 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                firstcurrency: { [Op.substring]: searchArray[i] },
-              },
-              {
-                secondcurrency: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  firstcurrency: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  secondcurrency: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              { firstcurrency: { [Op.substring]: searchTerms } },
-              { secondcurrency: { [Op.substring]: searchTerms } },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                { firstcurrency: { [Op.substring]: searchTerms } },
+                { secondcurrency: { [Op.substring]: searchTerms } },
+              ],
+            },
+          };
+        }
       }
     }
 

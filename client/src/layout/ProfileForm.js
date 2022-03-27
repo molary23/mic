@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
+import isEmpty from "../validation/emptyChecker";
+
 import TextInputField from "./TextInputField";
 function ProfileForm(props) {
   const { onSubmit, userinfo } = props;
@@ -9,7 +11,7 @@ function ProfileForm(props) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (inputs.lastname === "") {
+    if (isEmpty(inputs.lastname)) {
       setErrors({
         lastname: "Last Name Field can't be empty",
       });
@@ -17,7 +19,7 @@ function ProfileForm(props) {
       setErrors({
         lastname: "Last Name can't be more than 25 characters",
       });
-    } else if (inputs.firstname === "") {
+    } else if (isEmpty(inputs.firstname)) {
       setErrors({
         firstname: "First Name Field can't be empty",
       });
@@ -25,7 +27,7 @@ function ProfileForm(props) {
       setErrors({
         firstname: "First Name can't be more than 25 characters",
       });
-    } else if (inputs.phone === "") {
+    } else if (isEmpty(inputs.phone)) {
       setErrors({
         phone: "Phone Number Field can't be empty",
       });

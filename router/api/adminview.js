@@ -36,7 +36,8 @@ const express = require("express"),
   AccountView = require("../../db/models/AccountView"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck"),
-  dateformat = require("../../util/dateformat");
+  dateformat = require("../../util/dateformat"),
+  validator = require("validator");
 
 /*
 @route GET api/adminview/payments
@@ -82,30 +83,34 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              { username: { [Op.substring]: searchArray[i] } },
-              { reference: { [Op.substring]: searchArray[i] } },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                { username: { [Op.substring]: searchArray[i] } },
+                { reference: { [Op.substring]: searchArray[i] } },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              { username: { [Op.substring]: searchTerms } },
-              { reference: { [Op.substring]: searchTerms } },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                { username: { [Op.substring]: searchTerms } },
+                { reference: { [Op.substring]: searchTerms } },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       let UserId = user;
       where = { ...where, ...{ UserId } };
     }
@@ -184,24 +189,28 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [{ username: { [Op.substring]: searchArray[i] } }],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [{ username: { [Op.substring]: searchArray[i] } }],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [{ username: { [Op.substring]: searchTerms } }],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [{ username: { [Op.substring]: searchTerms } }],
+            },
+          };
+        }
       }
     }
 
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       let UserId = user;
       where = { ...where, ...{ UserId } };
     }
@@ -275,30 +284,34 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              { username: { [Op.substring]: searchArray[i] } },
-              { payer: { [Op.substring]: searchArray[i] } },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                { username: { [Op.substring]: searchArray[i] } },
+                { payer: { [Op.substring]: searchArray[i] } },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              { username: { [Op.substring]: searchTerms } },
-              { payer: { [Op.substring]: searchTerms } },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                { username: { [Op.substring]: searchTerms } },
+                { payer: { [Op.substring]: searchTerms } },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if ((user !== null) & (ref !== null)) {
+    if ((user !== null) & (ref !== null) && !isNaN(user)) {
       let UserId = user;
       where = { ...where, ...{ UserId } };
     }
@@ -376,32 +389,36 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              { provider: { [Op.substring]: search } },
-              { firstcurrency: { [Op.substring]: search } },
-              { secondcurrency: { [Op.substring]: search } },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                { provider: { [Op.substring]: searchArray[i] } },
+                { firstcurrency: { [Op.substring]: searchArray[i] } },
+                { secondcurrency: { [Op.substring]: searchArray[i] } },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              { provider: { [Op.substring]: searchTerms } },
-              { firstcurrency: { [Op.substring]: searchTerms } },
-              { secondcurrency: { [Op.substring]: searchTerms } },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                { provider: { [Op.substring]: searchTerms } },
+                { firstcurrency: { [Op.substring]: searchTerms } },
+                { secondcurrency: { [Op.substring]: searchTerms } },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if (creator !== null && ref !== null) {
+    if (creator !== null && ref !== null && !isNaN(creator)) {
       where = { ...where, ...{ providerid: creator } };
     }
 
@@ -478,33 +495,37 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              { username: { [Op.substring]: searchArray[i] } },
-              { email: { [Op.substring]: searchArray[i] } },
-              { fullname: { [Op.substring]: searchArray[i] } },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                { username: { [Op.substring]: searchArray[i] } },
+                { email: { [Op.substring]: searchArray[i] } },
+                { fullname: { [Op.substring]: searchArray[i] } },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              { username: { [Op.substring]: searchTerms } },
-              { email: { [Op.substring]: searchTerms } },
-              { fullname: { [Op.substring]: searchTerms } },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                { username: { [Op.substring]: searchTerms } },
+                { email: { [Op.substring]: searchTerms } },
+                { fullname: { [Op.substring]: searchTerms } },
+              ],
+            },
+          };
+        }
       }
     }
 
     let result = [];
-    if ((creator !== null) & (ref !== null)) {
+    if (creator !== null && ref !== null && !isNaN(creator)) {
       const userid = Preference.findAll({
         where: {
           [Op.or]: [
@@ -616,28 +637,32 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              { username: { [Op.substring]: searchArray[i] } },
-              { email: { [Op.substring]: searchArray[i] } },
-              { fullname: { [Op.substring]: searchArray[i] } },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                { username: { [Op.substring]: searchArray[i] } },
+                { email: { [Op.substring]: searchArray[i] } },
+                { fullname: { [Op.substring]: searchArray[i] } },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              { username: { [Op.substring]: searchTerms } },
-              { email: { [Op.substring]: searchTerms } },
-              { fullname: { [Op.substring]: searchTerms } },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                { username: { [Op.substring]: searchTerms } },
+                { email: { [Op.substring]: searchTerms } },
+                { fullname: { [Op.substring]: searchTerms } },
+              ],
+            },
+          };
+        }
       }
     }
     let UserId,
@@ -645,7 +670,7 @@ router.post(
       result = [],
       view;
 
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       UserId = user;
       Preference.findOne({ where: { UserId }, attributes: ["providers"] })
         .then((sp) => {
@@ -735,44 +760,48 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                firstcurrency: { [Op.regexp]: searchArray[i] },
-              },
-              {
-                secondcurrency: { [Op.regexp]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  firstcurrency: { [Op.regexp]: searchArray[i] },
+                },
+                {
+                  secondcurrency: { [Op.regexp]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                firstcurrency: { [Op.regexp]: searchTerms },
-              },
-              {
-                secondcurrency: { [Op.regexp]: searchTerms },
-              },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  firstcurrency: { [Op.regexp]: searchTerms },
+                },
+                {
+                  secondcurrency: { [Op.regexp]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if ((creator !== null) & (ref !== null)) {
+    if (creator !== null && ref !== null && !isNaN(creator)) {
       where = { ...where, ...{ UserId: creator } };
     }
     let UserId,
       currencies,
       result = [];
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       UserId = user;
       Preference.findOne({ where: { UserId }, attributes: ["currencies"] })
         .then((sp) => {
@@ -855,38 +884,42 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                fullname: { [Op.substring]: searchArray[i] },
-              },
-              {
-                username: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  fullname: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  username: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                fullname: { [Op.substring]: searchTerms },
-              },
-              {
-                username: { [Op.substring]: searchTerms },
-              },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  fullname: { [Op.substring]: searchTerms },
+                },
+                {
+                  username: { [Op.substring]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       let UserId = user;
       where = { ...where, ...{ UserId } };
     }
@@ -946,252 +979,6 @@ router.get(
 );
 
 /*
-@route GET api/adminview/bonus/:id
-@desc Admin view each Bonus
-@access private
-
-
-router.get(
-  "/bonus/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-
-    const bonusid = req.params.id;
-    BonusView.findByPk(bonusid)
-      .then((bonus) => {
-        const content = {},
-          subId = bonus.SubscriptionId;
-        content.bonus = bonus;
-        SubscriptionView.findByPk(subId)
-          .then((sub) => {
-            content.subscription = sub;
-            res.json(content);
-          })
-          .catch((err) => res.status(404).json(err));
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-*/
-/*
-@route GET api/adminview/subscription/:id
-@desc Admin view each Subscription
-@access private
-
-
-router.get(
-  "/subscription/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-
-    const subId = req.params.id;
-    SubscriptionView.findByPk(subId)
-      .then((sub) => {
-        const content = {},
-          subtype = sub.type;
-        content.sub = sub;
-        if (subtype === "p") {
-          Subscription.findByPk(subId, { attributes: ["payID"] })
-            .then((subpay) => {
-              let id = subpay.payID;
-              Payment.findByPk(id)
-                .then((pay) => {
-                  content.pay = pay;
-                  return res.json(content);
-                })
-                .catch((err) => res.status(404).json(err));
-            })
-            .catch((err) => res.status(404).json(err));
-        } else {
-          return res.json(content);
-        }
-      })
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/adminview/user/:id
-@desc Admin view user details
-@access private
-
-
-router.get(
-  "/user/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.params.id;
-    Promise.all([
-      UserView.findByPk(UserId)
-        .then((user) => {
-          const content = {};
-          content.user = user;
-          Subscription.count({ where: { UserId } })
-            .then((sub) => {
-              content.sub = sub;
-              Transaction.count({ where: { UserId } })
-                .then((trans) => {
-                  content.trans = trans;
-                  Bonus.count({ where: { UserId } })
-                    .then((bonus) => {
-                      content.bonus = bonus;
-                      Payment.count({ where: { UserId } })
-                        .then((pay) => {
-                          content.pay = pay;
-                          Referral.count({ where: { referral: UserId } })
-                            .then((ref) => {
-                              content.ref = ref;
-                              return res.json(content);
-                            })
-                            .catch((err) => res.status(404).json(err));
-                        })
-                        .catch((err) => res.status(404).json(err));
-                    })
-                    .catch((err) => res.status(404).json(err));
-                })
-                .catch((err) => res.status(404).json(err));
-            })
-            .catch((err) => res.status(404).json(err));
-        })
-        .catch((err) => res.status(404).json(err)),
-    ]);
-  }
-);
-
-
-@route GET api/adminview/user/transactions/:id
-@desc Admin view transactions
-@access private
-
-
-router.get(
-  "/user/transactions/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.params.id;
-    Transaction.findAll({ where: { UserId } })
-      .then((trans) => {
-        return res.json(trans);
-      })
-
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-
-@route GET api/adminview/user/subscriptions/:id
-@desc Admin view subscriptions
-@access private
-
-
-router.get(
-  "/user/subscriptions/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.params.id;
-    Subscription.findAll({ where: { UserId } })
-      .then((sub) => {
-        return res.json(sub);
-      })
-
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-
-@route GET api/adminview/user/payments/:id
-@desc Admin view User Payments
-@access private
-
-
-router.get(
-  "/user/payments/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.params.id;
-    Payment.findAll({ where: { UserId } })
-      .then((pay) => {
-        return res.json(pay);
-      })
-
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-/*
-@route GET api/adminview/user/bonus/:id
-@desc Admin view Bonus
-@access private
-
-
-router.get(
-  "/user/bonus/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.params.id;
-    Bonus.findAll({ where: { UserId } })
-      .then((bonus) => {
-        return res.json(bonus);
-      })
-
-      .catch((err) => res.status(404).json(err));
-  }
-);
-
-
-@route GET api/adminview/user/signals/:id
-@desc Admin view signal
-@access private
-
-
-router.get(
-  "/user/signals/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { error, isLevel } = checkSuperAdmin(req.user.level);
-    if (!isLevel) {
-      return res.status(400).json(error);
-    }
-    const UserId = req.params.id;
-    Signal.findAll({ where: { UserId } })
-      .then((signal) => {
-        return res.json(signal);
-      })
-
-      .catch((err) => res.status(404).json(err));
-  }
-);
-*/
-
-/*
 @route GET api/admin/referrals
 desc Admin View referrals
 @access private
@@ -1235,30 +1022,34 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              { referral: { [Op.substring]: searchArray[i] } },
-              { referred: { [Op.substring]: searchArray[i] } },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                { referral: { [Op.substring]: searchArray[i] } },
+                { referred: { [Op.substring]: searchArray[i] } },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              { referral: { [Op.substring]: searchTerms } },
-              { referred: { [Op.substring]: searchTerms } },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                { referral: { [Op.substring]: searchTerms } },
+                { referred: { [Op.substring]: searchTerms } },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       let UserId = user;
       where = { ...where, ...{ referralId: UserId } };
     }
@@ -1312,50 +1103,54 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                username: { [Op.substring]: searchArray[i] },
-              },
-              {
-                fullname: { [Op.substring]: searchArray[i] },
-              },
-              {
-                wallet: { [Op.substring]: searchArray[i] },
-              },
-              {
-                accountnumber: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  username: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  fullname: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  wallet: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  accountnumber: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                username: { [Op.substring]: searchTerms },
-              },
-              {
-                fullname: { [Op.substring]: searchTerms },
-              },
-              {
-                wallet: { [Op.substring]: searchTerms },
-              },
-              {
-                accountnumber: { [Op.substring]: searchTerms },
-              },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  username: { [Op.substring]: searchTerms },
+                },
+                {
+                  fullname: { [Op.substring]: searchTerms },
+                },
+                {
+                  wallet: { [Op.substring]: searchTerms },
+                },
+                {
+                  accountnumber: { [Op.substring]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       let UserId = user;
       where = { ...where, ...{ UserId } };
     }
@@ -1419,40 +1214,44 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                summary: { [Op.substring]: searchArray[i] },
-              },
-              {
-                link: { [Op.substring]: searchArray[i] },
-              },
-              {
-                title: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  summary: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  link: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  title: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                summary: { [Op.substring]: searchTerms },
-              },
-              {
-                link: { [Op.substring]: searchTerms },
-              },
-              {
-                title: { [Op.substring]: searchTerms },
-              },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  summary: { [Op.substring]: searchTerms },
+                },
+                {
+                  link: { [Op.substring]: searchTerms },
+                },
+                {
+                  title: { [Op.substring]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 
@@ -1519,50 +1318,54 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                fullname: { [Op.substring]: searchArray[i] },
-              },
-              {
-                username: { [Op.substring]: searchArray[i] },
-              },
-              {
-                wallet: { [Op.substring]: searchArray[i] },
-              },
-              {
-                accountnumber: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  fullname: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  username: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  wallet: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  accountnumber: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                fullname: { [Op.substring]: searchTerms },
-              },
-              {
-                username: { [Op.substring]: searchTerms },
-              },
-              {
-                wallet: { [Op.substring]: searchTerms },
-              },
-              {
-                accountnumber: { [Op.substring]: searchTerms },
-              },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  fullname: { [Op.substring]: searchTerms },
+                },
+                {
+                  username: { [Op.substring]: searchTerms },
+                },
+                {
+                  wallet: { [Op.substring]: searchTerms },
+                },
+                {
+                  accountnumber: { [Op.substring]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 
-    if ((user !== null) & (ref !== null)) {
+    if (user !== null && ref !== null && !isNaN(user)) {
       let UserId = user;
       where = { ...where, ...{ UserId } };
     }
@@ -1634,28 +1437,32 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                wallet: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  wallet: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                wallet: { [Op.substring]: searchTerms },
-              },
-            ],
-          },
-        };
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  wallet: { [Op.substring]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 
@@ -1718,42 +1525,46 @@ router.post(
         let newSearchArray = [],
           newSearchObj = {};
         for (let i = 0; i < searchArray.length; i++) {
-          newSearchObj = {
-            [Op.or]: [
-              {
-                title: { [Op.substring]: searchArray[i] },
-              },
-              {
-                creator: { [Op.substring]: searchArray[i] },
-              },
+          if (validator.isAlphanumeric(searchArray[i])) {
+            newSearchObj = {
+              [Op.or]: [
+                {
+                  title: { [Op.substring]: searchArray[i] },
+                },
+                {
+                  creator: { [Op.substring]: searchArray[i] },
+                },
 
-              {
-                text: { [Op.substring]: searchArray[i] },
-              },
-            ],
-          };
+                {
+                  text: { [Op.substring]: searchArray[i] },
+                },
+              ],
+            };
+          }
           newSearchArray.push(newSearchObj);
         }
         where = { ...where, ...{ [Op.and]: newSearchArray } };
       } else {
         let searchTerms = searchArray[0];
-        where = {
-          ...where,
-          ...{
-            [Op.or]: [
-              {
-                title: { [Op.substring]: searchTerms },
-              },
-              {
-                creator: { [Op.substring]: searchTerms },
-              },
+        if (validator.isAlphanumeric(searchTerms)) {
+          where = {
+            ...where,
+            ...{
+              [Op.or]: [
+                {
+                  title: { [Op.substring]: searchTerms },
+                },
+                {
+                  creator: { [Op.substring]: searchTerms },
+                },
 
-              {
-                text: { [Op.substring]: searchTerms },
-              },
-            ],
-          },
-        };
+                {
+                  text: { [Op.substring]: searchTerms },
+                },
+              ],
+            },
+          };
+        }
       }
     }
 

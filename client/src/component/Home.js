@@ -6,7 +6,7 @@ import logo from "../asset/images/mic-light.png";
 function Home() {
   const auth = useSelector((state) => state.auth),
     navigate = useNavigate();
-  useEffect(() => {
+  const checkAuth = () => {
     if (auth.isAuthenticated) {
       let to;
       if (auth.user.level === 1) {
@@ -20,7 +20,9 @@ function Home() {
       }
       navigate(to, { replace: true });
     }
-  });
+  };
+
+  useEffect(checkAuth, []);
 
   return (
     <div>
