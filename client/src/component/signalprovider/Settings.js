@@ -7,7 +7,11 @@ import { CgProfile } from "react-icons/cg";
 
 import { BiAdjust } from "react-icons/bi";
 
-import { getProviderSettings, saveSettings } from "../../action/providerAction";
+import {
+  getProviderSettings,
+  saveSettings,
+  clearActions,
+} from "../../action/providerAction";
 
 import DisplayForm from "../../layout/DisplayForm";
 import PasswordForm from "../../layout/PasswordForm";
@@ -262,6 +266,7 @@ class Settings extends Component {
 Settings.propTypes = {
   getProviderSettings: PropTypes.func.isRequired,
   saveSettings: PropTypes.func.isRequired,
+  clearActions: PropTypes.func,
   auth: PropTypes.object,
   provider: PropTypes.object,
   errors: PropTypes.any,
@@ -275,4 +280,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getProviderSettings,
   saveSettings,
+  clearActions,
 })(Settings);

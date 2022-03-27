@@ -2,23 +2,27 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import TextPasswordField from "./TextPasswordField";
+import { BsEyeSlash, BsEye } from "react-icons/bs";
 
 function PasswordForm(props) {
   const { onSubmit, error } = props;
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState({});
-  const [pass1, setPass1] = useState(true);
-  const [pass2, setPass2] = useState(true);
-  const [pass3, setPass3] = useState(true);
+  const [pass, setPass] = useState({
+    pass1: true,
+    pass2: true,
+    pass3: true,
+  });
+
   const [loading, setLoading] = useState(false);
 
   const checkPassHandler = (value) => {
     if (value === 1) {
-      setPass1(!pass1);
+      setPass({ ...pass, pass1: !pass.pass1 });
     } else if (value === 2) {
-      setPass2(!pass2);
+      setPass({ ...pass, pass2: !pass.pass2 });
     } else if (value === 3) {
-      setPass3(!pass3);
+      setPass({ ...pass, pass3: !pass.pass3 });
     }
   };
 
@@ -84,8 +88,8 @@ function PasswordForm(props) {
         <TextPasswordField
           id="add-admin-form-password"
           placeholder="Old Password"
-          icon={`far ${pass1 ? "fa-eye" : "fa-eye-slash"}`}
-          type={pass1 ? "password" : "text"}
+          icon={pass.pass1 ? <BsEye /> : <BsEyeSlash />}
+          type={pass.pass1 ? "password" : "text"}
           name="oldpassword"
           value={inputs.oldpassword || ""}
           onChange={changeHandler}
@@ -95,8 +99,8 @@ function PasswordForm(props) {
         <TextPasswordField
           id="add-admin-form-password"
           placeholder="New Password"
-          icon={`far ${pass2 ? "fa-eye" : "fa-eye-slash"}`}
-          type={pass2 ? "password" : "text"}
+          icon={pass.pass2 ? <BsEye /> : <BsEyeSlash />}
+          type={pass.pass2 ? "password" : "text"}
           name="newpassword"
           value={inputs.newpassword || ""}
           onChange={changeHandler}
@@ -106,8 +110,8 @@ function PasswordForm(props) {
         <TextPasswordField
           id="add-admin-form-password"
           placeholder="Confirm New Password"
-          icon={`far ${pass3 ? "fa-eye" : "fa-eye-slash"}`}
-          type={pass3 ? "password" : "text"}
+          icon={pass.pass3 ? <BsEye /> : <BsEyeSlash />}
+          type={pass.pass3 ? "password" : "text"}
           name="newpassword2"
           value={inputs.newpassword2 || ""}
           onChange={changeHandler}

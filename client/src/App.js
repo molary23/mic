@@ -6,7 +6,7 @@ import jwtDecode from "jwt-decode";
 import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
-import { clearCurrentProfile } from "./action/profileAction";
+//import { clearCurrentProfile } from "./action/profileAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
@@ -91,8 +91,6 @@ if (localStorage.jwtToken) {
   if (decoded.exp < currenTime) {
     // Logout User
     store.dispatch(logoutUser());
-    // Clear current Profile
-    store.dispatch(clearCurrentProfile());
     // Redirect to Login
     window.location.href = "/";
   }

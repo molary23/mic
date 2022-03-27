@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
 import errorReducer from "./errorReducer";
-import profileReducer from "./profileReducer";
+//import profileReducer from "./profileReducer";
 import adminReducer from "./adminReducer";
 import searchReducer from "./searchReducer";
 import providerReducer from "./providerReducer";
@@ -13,7 +13,7 @@ import confirmReducer from "./confirmReducer";
 export default combineReducers({
   auth: authReducer,
   errors: errorReducer,
-  profile: profileReducer,
+  //profile: profileReducer,
   admin: adminReducer,
   provider: providerReducer,
   user: userReducer,

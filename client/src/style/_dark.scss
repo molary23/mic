@@ -35,6 +35,7 @@ $off-white: rgba(
     }
     .input-group input {
       background: transparent;
+      color: $off-white;
     }
     .card {
       background: $dark-color;
@@ -128,5 +129,8 @@ $off-white: rgba(
 
   .error-main {
     background: url("../asset/images/error-dark.jpg");
+    background-position: center;
+    background-size: 600px;
+    background-repeat: no-repeat;
   }
 }

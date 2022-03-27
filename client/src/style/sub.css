@@ -1795,6 +1795,7 @@ ul {
 
 .dark-content .dashboard-body .input-group input {
   background: transparent;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .dark-content .dashboard-body .card {
@@ -1909,5 +1910,8 @@ ul {
 
 .dark-content .error-main {
   background: url("../asset/images/error-dark.jpg");
+  background-position: center;
+  background-size: 600px;
+  background-repeat: no-repeat;
 }
 /*# sourceMappingURL=sub.css.map */

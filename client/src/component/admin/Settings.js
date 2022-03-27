@@ -7,7 +7,11 @@ import { CgProfile } from "react-icons/cg";
 
 import { BiAdjust } from "react-icons/bi";
 
-import { getAdminSettings, saveSettings } from "../../action/adminAction";
+import {
+  getAdminSettings,
+  saveSettings,
+  clearActions,
+} from "../../action/adminAction";
 
 import DisplayForm from "../../layout/DisplayForm";
 import PasswordForm from "../../layout/PasswordForm";
@@ -74,7 +78,6 @@ class Settings extends Component {
   }
 
   afterUpdate = (text) => {
-    const { timer } = this.state;
     this.props.getAdminSettings();
     let words;
     if (text === "pass") {
@@ -100,7 +103,7 @@ class Settings extends Component {
       this.setState({
         toast: false,
       });
-    }, timer);
+    }, 5000);
   };
 
   moveActive = (nextTab) => {
@@ -269,6 +272,7 @@ class Settings extends Component {
 Settings.propTypes = {
   getAdminSettings: PropTypes.func.isRequired,
   saveSettings: PropTypes.func.isRequired,
+  clearActions: PropTypes.func,
   auth: PropTypes.object,
   admin: PropTypes.object,
   errors: PropTypes.any,
@@ -282,4 +286,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getAdminSettings,
   saveSettings,
+  clearActions,
 })(Settings);
