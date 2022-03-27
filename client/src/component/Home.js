@@ -20,7 +20,7 @@ function Home() {
       }
       navigate(to, { replace: true });
     }
-  }, []);
+  });
 
   return (
     <div>

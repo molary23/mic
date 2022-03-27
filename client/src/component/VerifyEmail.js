@@ -26,12 +26,25 @@ export class VerifyEmail extends Component {
         sender = ref.split("=")[0];
       if (sender === "refer") {
         let params = search.split("refer=")[1],
-          opt = decrypt(params),
-          values = JSON.parse(opt);
-        this.setState({
-          username: values.username,
-          code: values.code.toUpperCase(),
-        });
+          opt = decrypt(params);
+        try {
+          let values = JSON.parse(opt);
+          this.setState({
+            username: values.username,
+            code: values.code.toUpperCase(),
+          });
+          const userverify = {
+            username: values.username,
+            code: values.code.toLowerCase(),
+          };
+          this.pushData(userverify);
+        } catch (error) {
+          this.setState({
+            error: {
+              username: "Invalid URL code",
+            },
+          });
+        }
       }
     }
   }
@@ -48,7 +61,7 @@ export class VerifyEmail extends Component {
     });
   };
 
-  submitHandler = async (e) => {
+  submitHandler = (e) => {
     e.preventDefault();
     const { username, code } = this.state;
     if (isEmpty(username)) {
@@ -72,34 +85,36 @@ export class VerifyEmail extends Component {
         username: username.trim(),
         code: code.toLowerCase(),
       };
+      this.pushData(userverify);
+    }
+  };
 
-      try {
-        let response = await axios.post(
-          "/api/public/verify/",
-          {
-            userverify,
-          },
-          {}
-        );
-        if (response.data === 1) {
-          this.setState({
-            modal: true,
-            loading: false,
-            username: "",
-            code: "",
-            error: {},
-          });
-        }
-      } catch (error) {
+  pushData = async (data) => {
+    try {
+      let response = await axios.post(
+        "/api/public/verify/",
+        {
+          data,
+        },
+        {}
+      );
+      if (response.data === 1) {
         this.setState({
+          modal: true,
           loading: false,
-        });
-        console.log(error);
-        let err = error.response;
-        this.setState({
-          error: err.data,
+          username: "",
+          code: "",
+          error: {},
         });
       }
+    } catch (error) {
+      this.setState({
+        loading: false,
+      });
+      let err = error.response;
+      this.setState({
+        error: err.data,
+      });
     }
   };
 

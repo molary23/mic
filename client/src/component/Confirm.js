@@ -11,6 +11,7 @@ import TextInputField from "../layout/TextInputField";
 import Modal from "../layout/Modal";
 import Box from "../layout/Box";
 import decrypt from "../util/decrypt";
+import isEmail from "validator/lib/isEmail";
 
 export class Confirm extends Component {
   state = {
@@ -37,19 +38,27 @@ export class Confirm extends Component {
 
       if (sender === "refer") {
         let params = ref[1].split("=")[1],
-          opt = decrypt(params),
-          values = JSON.parse(opt);
-        if (auth === "no") {
-          const usercode = {
-            username: values.username.trim(),
-            code: values.code.toLowerCase(),
-            auth: "no",
-          };
-          this.props.confirmCode(usercode);
-        } else {
+          opt = decrypt(params);
+        try {
+          let values = JSON.parse(opt);
+          if (auth === "no") {
+            const usercode = {
+              username: values.username.trim(),
+              code: values.code.toLowerCase(),
+              auth: "no",
+            };
+            this.props.confirmCode(usercode);
+          } else {
+            this.setState({
+              username: values.username,
+              code: values.code.toUpperCase(),
+            });
+          }
+        } catch (error) {
           this.setState({
-            username: values.username,
-            code: values.code.toUpperCase(),
+            error: {
+              username: "Invalid URL code",
+            },
           });
         }
       }
@@ -75,8 +84,6 @@ export class Confirm extends Component {
       update.modal = true;
       update.sender = "unconfirmed";
     }
-
-    console.log(nextProps.confirm.message.message);
 
     if (nextProps.errors !== prevState.errors) {
       if (nextProps.errors.status === 400) {
@@ -108,10 +115,18 @@ export class Confirm extends Component {
   submitHandler = async (e) => {
     e.preventDefault();
     const { username, code } = this.state;
+    let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
+      tester = pattern.test(username);
     if (isEmpty(username)) {
       this.setState({
         error: {
           username: "Username Field can't be Empty",
+        },
+      });
+    } else if (!tester && !isEmail(username)) {
+      this.setState({
+        error: {
+          username: "Enter a valid Username or Email Address",
         },
       });
     } else if (isEmpty(code)) {

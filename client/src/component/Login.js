@@ -13,6 +13,8 @@ import Modal from "../layout/Modal";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
 import Box from "../layout/Box";
+import isEmail from "validator/lib/isEmail";
+import isEmpty from "../validation/emptyChecker";
 
 class Login extends Component {
   state = {
@@ -27,6 +29,7 @@ class Login extends Component {
     level: 0,
     servererror: {},
     modal: false,
+    sender: null,
   };
 
   componentDidMount() {
@@ -113,6 +116,7 @@ class Login extends Component {
     ) {
       this.setState({
         modal: true,
+        sender: "not verified",
       });
       this.props.clearErrors();
     }
@@ -133,13 +137,21 @@ class Login extends Component {
   submitHandler = async (e) => {
     e.preventDefault();
     const { username, password } = this.state;
-    if (username === "" || username === undefined) {
+    let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
+      tester = pattern.test(username);
+    if (isEmpty(username)) {
       this.setState({
         error: {
           username: "Email Address/Username Field can't be Empty",
         },
       });
-    } else if (password === "" || password === undefined) {
+    } else if (!tester && !isEmail(username)) {
+      this.setState({
+        error: {
+          username: "Enter a valid Username or Email Address",
+        },
+      });
+    } else if (isEmpty(password)) {
       this.setState({
         error: {
           password: "Password Field can't be Empty",
@@ -178,6 +190,7 @@ class Login extends Component {
       level,
       servererror,
       modal,
+      sender,
     } = this.state;
 
     return (
@@ -238,10 +251,7 @@ class Login extends Component {
         </div>
         {navigate && <Navigate to={`${viewer}`} replace={true} />}
         {modal ? (
-          <Modal
-            {...{ modal, sender: "not verified" }}
-            onClick={this.modalHandler}
-          />
+          <Modal {...{ modal, sender }} onClick={this.modalHandler} />
         ) : null}
       </div>
     );

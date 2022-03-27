@@ -18,6 +18,7 @@ import { countrycodes } from "../util/countrycodes";
 
 import { checkHandler } from "../util/LoadFunction";
 import isEmail from "validator/lib/isEmail";
+import isEmpty from "../validation/emptyChecker";
 
 function AddModal(props) {
   const {
@@ -128,48 +129,51 @@ function AddModal(props) {
       // Submit Add Signal
       const submitNewHandler = (e) => {
         e.preventDefault();
-        if (!Object.keys(inputs).includes("addpair") || inputs.addpair === "") {
+        if (
+          !Object.keys(inputs).includes("addpair") ||
+          isEmpty(inputs.addpair)
+        ) {
           setErrors({
             addpair: "Currency Pair Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("addsignaloption") ||
-          inputs.addsignaloption === ""
+          isEmpty(inputs.addsignaloption)
         ) {
           setErrors({
             addsignaloption: "Signal Option Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("addtakeprofit") ||
-          inputs.addtakeprofit === ""
+          isEmpty(inputs.addtakeprofit)
         ) {
           setErrors({
             addtakeprofit: "Take Profit Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("addstoploss") ||
-          inputs.addstoploss === ""
+          isEmpty(inputs.addstoploss)
         ) {
           setErrors({
             addstoploss: "Stop Loss Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("addstartrange") ||
-          inputs.addstartrange === ""
+          isEmpty(inputs.addstartrange)
         ) {
           setErrors({
             addstartrange: "Start Range Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("addendrange") ||
-          inputs.addendrange === ""
+          isEmpty(inputs.addendrange)
         ) {
           setErrors({
             addendrange: "End Range Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("addpip") ||
-          inputs.addpip === ""
+          isEmpty(inputs.addpip)
         ) {
           setErrors({
             addpip: "Pip Field can't be empty",
@@ -286,7 +290,7 @@ function AddModal(props) {
         e.preventDefault();
         if (
           !Object.keys(inputs).includes("signalstatus") ||
-          inputs.signalstatus === ""
+          isEmpty(inputs.signalstatus)
         ) {
           setErrors({
             signalstatus: "You have to select Signal Status",
@@ -343,7 +347,7 @@ function AddModal(props) {
       e.preventDefault();
       if (
         !Object.keys(inputs).includes("addfirstcurrencyname") ||
-        inputs.addfirstcurrencyname === ""
+        isEmpty(inputs.addfirstcurrencyname)
       ) {
         setErrors({
           addfirstcurrencyname: "First Currency Name Field can't be empty",
@@ -355,14 +359,14 @@ function AddModal(props) {
         });
       } else if (
         !Object.keys(inputs).includes("addfirstcurrencycode") ||
-        inputs.addfirstcurrencycode === ""
+        isEmpty(inputs.addfirstcurrencycode)
       ) {
         setErrors({
           addfirstcurrencycode: "First Currency Code Field can't be empty",
         });
       } else if (
         !Object.keys(inputs).includes("addsecondcurrencyname") ||
-        inputs.addsecondcurrencyname === ""
+        isEmpty(inputs.addsecondcurrencyname)
       ) {
         setErrors({
           addsecondcurrencyname: "Second Currency Name Field can't be empty",
@@ -374,7 +378,7 @@ function AddModal(props) {
         });
       } else if (
         !Object.keys(inputs).includes("addsecondcurrencycode") ||
-        inputs.addsecondcurrencycode === ""
+        isEmpty(inputs.addsecondcurrencycode)
       ) {
         setErrors({
           addsecondcurrencycode: "Second Currency Code Field can't be empty",
@@ -473,7 +477,7 @@ function AddModal(props) {
       let tester = pattern.test(inputs.addadminusername);
       if (
         !Object.keys(inputs).includes("addadminemail") ||
-        inputs.addadminemail === ""
+        isEmpty(inputs.addadminemail)
       ) {
         setErrors({
           addadminemail: "Email Address Field can't be empty",
@@ -484,7 +488,7 @@ function AddModal(props) {
         });
       } else if (
         !Object.keys(inputs).includes("addadminusername") ||
-        inputs.addadminusername === ""
+        isEmpty(inputs.addadminusername)
       ) {
         setErrors({
           addadminusername: "Username Field can't be empty",
@@ -500,7 +504,7 @@ function AddModal(props) {
         });
       } else if (
         !Object.keys(inputs).includes("addadminphone") ||
-        inputs.addadminphone === ""
+        isEmpty(inputs.addadminphone)
       ) {
         setErrors({
           addadminphone: "Phone Number Field can't be empty",
@@ -515,7 +519,7 @@ function AddModal(props) {
         });
       } else if (
         !Object.keys(inputs).includes("addadminpassword") ||
-        inputs.addadminpassword === ""
+        isEmpty(inputs.addadminpassword)
       ) {
         setErrors({
           addadminpassword: "Password Field can't be empty",
@@ -526,7 +530,7 @@ function AddModal(props) {
         });
       } else if (
         !Object.keys(inputs).includes("addadminpassword2") ||
-        inputs.addadminpassword2 === ""
+        isEmpty(inputs.addadminpassword2)
       ) {
         setErrors({
           addadminpassword2: "Confirm Password Field can't be empty",
@@ -640,7 +644,7 @@ function AddModal(props) {
         e.preventDefault();
         if (
           !Object.keys(inputs).includes("addanntitle") ||
-          inputs.addanntitle === ""
+          isEmpty(inputs.addanntitle)
         ) {
           setErrors({
             addanntitle: "Announcement Title Field can't be empty",
@@ -655,7 +659,7 @@ function AddModal(props) {
           });
         } else if (
           !Object.keys(inputs).includes("addannstartdate") ||
-          inputs.addannstartdate === ""
+          isEmpty(inputs.addannstartdate)
         ) {
           setErrors({
             addannstartdate: "Announcement Start Date Field can't be empty",
@@ -667,7 +671,7 @@ function AddModal(props) {
           });
         } else if (
           !Object.keys(inputs).includes("addannenddate") ||
-          inputs.addannenddate === ""
+          isEmpty(inputs.addannenddate)
         ) {
           setErrors({
             addannenddate: "Announcement End Date can't be empty",
@@ -679,7 +683,7 @@ function AddModal(props) {
           });
         } else if (
           !Object.keys(inputs).includes("addannsummary") ||
-          inputs.addannsummary === ""
+          isEmpty(inputs.addannsummary)
         ) {
           setErrors({
             addannsummary: "Announcement Summary Field can't be empty",
@@ -763,7 +767,7 @@ function AddModal(props) {
     } else {
       const submitEditAnnhandler = (e) => {
         e.preventDefault();
-        if (anns.editanntitle === "") {
+        if (isEmpty(anns.editanntitle)) {
           setErrors({
             editanntitle: "Announcement Title Field can't be empty",
           });
@@ -775,7 +779,7 @@ function AddModal(props) {
           setErrors({
             editannlink: "Announcement Title can't be more than 30 characters",
           });
-        } else if (anns.editannstartdate === "") {
+        } else if (isEmpty(anns.editannstartdate)) {
           setErrors({
             editannstartdate: "Announcement Start Date Field can't be empty",
           });
@@ -784,7 +788,7 @@ function AddModal(props) {
             editannstartdate:
               "Announcement Start Date can't be more than 10 characters",
           });
-        } else if (anns.editannenddate === "") {
+        } else if (isEmpty(anns.editannenddate)) {
           setErrors({
             editannenddate: "Announcement End Date can't be empty",
           });
@@ -793,7 +797,7 @@ function AddModal(props) {
             editannstartdate:
               "Announcement End Date can't be more than 10 characters",
           });
-        } else if (anns.editannsummary === "") {
+        } else if (isEmpty(anns.editannsummary)) {
           setErrors({
             editannsummary: "Announcement Summary Field can't be empty",
           });
@@ -899,13 +903,13 @@ function AddModal(props) {
 
       const submitAccountHandler = (e) => {
         e.preventDefault();
-        if (!Object.keys(inputs).includes("wallet") || inputs.wallet === "") {
+        if (!Object.keys(inputs).includes("wallet") || isEmpty(inputs.wallet)) {
           setErrors({
             wallet: "Wallet Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("accountnumber") ||
-          inputs.accountnumber === ""
+          isEmpty(inputs.accountnumber)
         ) {
           setErrors({
             accountnumber: "Account Number Field can't be empty",
@@ -1017,13 +1021,13 @@ function AddModal(props) {
 
     const submitWithdrawHandler = (e) => {
       e.preventDefault();
-      if (!Object.keys(inputs).includes("wallet") || inputs.wallet === "") {
+      if (!Object.keys(inputs).includes("wallet") || isEmpty(inputs.wallet)) {
         setErrors({
           wallet: "Wallet Field can't be empty",
         });
       } else if (
         !Object.keys(inputs).includes("amount") ||
-        inputs.amount === ""
+        isEmpty(inputs.amount)
       ) {
         setErrors({
           amount: "Amount Field can't be empty",
@@ -1078,7 +1082,7 @@ function AddModal(props) {
       e.preventDefault();
       if (
         !Object.keys(inputs).includes("forumtitle") ||
-        inputs.forumtitle === ""
+        isEmpty(inputs.forumtitle)
       ) {
         setErrors({
           forumtitle: "Discussion Title Field can't be empty",
@@ -1089,7 +1093,7 @@ function AddModal(props) {
         });
       } else if (
         !Object.keys(inputs).includes("forumtext") ||
-        inputs.forumtext === ""
+        isEmpty(inputs.forumtext)
       ) {
         setErrors({
           forumtext: "Discussion Content Field can't be empty",

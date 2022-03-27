@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import isEmail from "validator/lib/isEmail";
+import isEmpty from "../validation/emptyChecker";
 
 import TextInputField from "../layout/TextInputField";
 import Modal from "../layout/Modal";
@@ -28,12 +30,20 @@ export class Forgot extends Component {
 
   submitHandler = async (e) => {
     e.preventDefault();
-
     const { username } = this.state;
-    if (username === "" || username === undefined) {
+    let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
+      tester = pattern.test(username);
+
+    if (isEmpty(username)) {
       this.setState({
         error: {
           username: "Email Address/Username Field can't be Empty",
+        },
+      });
+    } else if (!tester && !isEmail(username)) {
+      this.setState({
+        error: {
+          username: "Enter a valid Username or Email Address",
         },
       });
     } else {

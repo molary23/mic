@@ -29,7 +29,7 @@ export const confirmCode = (usercode) => async (dispatch) => {
     return result;
   } catch (error) {
     //console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 
@@ -54,7 +54,7 @@ export const resetPass = (pass) => async (dispatch) => {
     return result;
   } catch (error) {
     console.log(error.response.data);
-    dispatch({ type: GET_ERRORS, payload: error.response.data });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 

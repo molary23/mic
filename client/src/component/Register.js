@@ -119,9 +119,16 @@ class Register extends Component {
     e.preventDefault();
     const { username, email, password, password2, referral, phone } =
       this.state;
-    let pattern = new RegExp("^[a-zA-Z0-9._-]+$");
-    let tester = pattern.test(username);
-    if (isEmpty(email)) {
+    let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
+      tester = pattern.test(username),
+      testRef = pattern.test(referral);
+    if (!isEmpty(referral) && !testRef) {
+      this.setState({
+        error: {
+          referral: "Enter Only a valid Username as Referral",
+        },
+      });
+    } else if (isEmpty(email)) {
       this.setState({
         error: {
           email: "Email Address Field can't be Empty",
