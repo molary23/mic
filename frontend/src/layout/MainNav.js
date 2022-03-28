@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logo from "../asset/images/logo.png";
 
-function MainNav() {
-  const [display, setDisplay] = useState(false);
-
-  const [focus, setFocus] = useState(false);
+function MainNav(props) {
+  const { homeRef, aboutRef, serviceRef, faqRef, contactRef } = props,
+    [active, setActive] = useState(0),
+    [scroll, setScroll] = useState(),
+    [display, setDisplay] = useState(false),
+    [focus, setFocus] = useState(false);
 
   const addFocus = () => {
     let winScroll = window.scrollY;
@@ -22,6 +24,95 @@ function MainNav() {
     };
   }, []);
 
+  const scrollToSection = (where, active) => {
+    window.scrollTo({
+      top: where.offsetTop,
+      behavior: "smooth",
+    });
+    setActive((active) => active);
+  };
+
+  const clickMover = (e) => {
+    let linkid = e.target.id;
+    console.log("first", linkid);
+    switch (linkid) {
+      case "homelink": {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        setActive((active) => 0);
+        break;
+      }
+      case "aboutlink": {
+        scrollToSection(aboutRef.current, 1);
+
+        break;
+      }
+      case "servicelink": {
+        scrollToSection(serviceRef.current, 2);
+
+        break;
+      }
+      case "faqlink": {
+        scrollToSection(faqRef.current, 3);
+
+        break;
+      }
+      case "contactlink": {
+        scrollToSection(contactRef.current, 4);
+
+        break;
+      }
+      default:
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        setActive((active) => 0);
+        break;
+    }
+  };
+
+  const changeFocus = () => {
+    const about = aboutRef.current,
+      home = homeRef.current,
+      service = serviceRef.current,
+      faq = faqRef.current,
+      contact = contactRef.current;
+
+    let winScroll = window.scrollY;
+    if (winScroll >= 0 && winScroll < home.clientHeight) {
+      setActive((active) => 0);
+    } else if (
+      winScroll >= about.offsetTop &&
+      winScroll < about.offsetTop + about.clientHeight
+    ) {
+      setActive((active) => 1);
+    } else if (
+      winScroll >= service.offsetTop &&
+      winScroll < service.offsetTop + service.clientHeight
+    ) {
+      setActive((active) => 2);
+    } else if (
+      winScroll >= faq.offsetTop &&
+      winScroll < faq.offsetTop + faq.clientHeight
+    ) {
+      setActive((active) => 3);
+    } else if (
+      winScroll >= contact.offsetTop &&
+      winScroll < contact.offsetTop + contact.clientHeight
+    ) {
+      setActive((active) => 4);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", changeFocus, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", changeFocus);
+    };
+  }, []);
   return (
     <nav
       className={`${
@@ -49,24 +140,59 @@ function MainNav() {
         >
           <ul className="navbar-nav ms-auto right-nav">
             <li className="nav-item">
-              <a className="nav-link" href="#home">
+              <span
+                className={`${
+                  active === 0 ? "active-nav" : ""
+                } nav-link home-link`}
+                onClick={(e) => clickMover(e)}
+                id="homelink"
+              >
                 Home
-              </a>
+              </span>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#about">
+              <span
+                className={`${
+                  active === 1 ? "active-nav" : ""
+                } nav-link about-link`}
+                id="aboutlink"
+                onClick={(e) => clickMover(e)}
+              >
                 About
-              </a>
+              </span>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#service">
+              <span
+                className={`${
+                  active === 2 ? "active-nav" : ""
+                } nav-link service-link`}
+                id="servicelink"
+                onClick={(e) => clickMover(e)}
+              >
                 Services
-              </a>
+              </span>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#contactus">
+              <span
+                className={`${
+                  active === 3 ? "active-nav" : ""
+                } nav-link faq-link`}
+                id="faqlink"
+                onClick={(e) => clickMover(e)}
+              >
+                FAQ
+              </span>
+            </li>
+            <li className="nav-item">
+              <span
+                className={`${
+                  active === 4 ? "active-nav" : ""
+                } nav-link contact-link`}
+                id="contactlink"
+                onClick={(e) => clickMover(e)}
+              >
                 Contact
-              </a>
+              </span>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="/">

@@ -5,10 +5,10 @@ import money from "../asset/images/money.jpg";
 import work from "../asset/images/work.jpg";
 import consistent from "../asset/images/consistent.jpg";
 
-function Service() {
+function Service(props) {
   return (
-    <div>
-      <div className="main-home-service" id="service">
+    <div id="service" ref={props.serviceRef}>
+      <div className="main-home-service">
         <div className="container">
           <div className="service-text-image-box">
             <div className="row">

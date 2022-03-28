@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import TextInputField from "../layout/TextInputField";
 import TextAreaField from "../layout/TextAreaField";
+import Toast from "../layout/Toast";
 
-function Contact() {
+function Contact(props) {
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -61,8 +62,8 @@ function Contact() {
   };
 
   return (
-    <div>
-      <div className="main-home-contact" id="contactus"></div>
+    <div id="contactus" ref={props.contactRef}>
+      <div className="main-home-contact"></div>
       <div className="main-home-contact-box">
         <div className="container-fluid">
           <div className="page-title mb-3">
@@ -144,6 +145,7 @@ function Contact() {
                 </form>
               </div>
             </div>
+            <Toast />
           </div>
         </div>
       </div>

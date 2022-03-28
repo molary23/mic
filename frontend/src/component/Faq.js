@@ -2,9 +2,9 @@ import React from "react";
 
 import Accordion from "../layout/Accordion";
 
-function Faq() {
+function Faq(props) {
   return (
-    <div>
+    <div id="faq" ref={props.faqRef}>
       <div className="main-home-faq"></div>
       <div className="main-home-faq-box">
         <div className="container">

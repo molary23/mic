@@ -121,8 +121,14 @@ router.post(
           res.status(400).json(error);
         } else {
           Currency.create(currencyFields)
-            .then(() => {
-              return res.json(true);
+            .then((currency) => {
+              Currency.findByPk(currency.id, {
+                include: [{ model: User, attributes: ["username"] }],
+              })
+                .then((entries) => {
+                  res.json([true, entries]);
+                })
+                .catch((err) => res.status(404).json(err));
             })
             .catch((err) => res.status(404).json(err));
         }

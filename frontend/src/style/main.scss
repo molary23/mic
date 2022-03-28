@@ -26,36 +26,6 @@
     }
   }
 
-  .main-home-about {
-    min-height: 600px;
-    text-align: center;
-    background: rgb(64, 89, 209);
-    padding: 200px 0px;
-    color: #fff;
-
-    .about-ul {
-      list-style-type: none;
-      text-align: left;
-      font-weight: 500;
-
-      li {
-        margin-bottom: 10px;
-        display: flex;
-        align-items: flex-end;
-      }
-    }
-
-    .list-icon {
-      margin-right: 10px;
-      margin-bottom: 5px;
-      font-size: 30px;
-    }
-
-    h4 {
-      font-size: 18px;
-      font-weight: 500;
-    }
-  }
   .main-home-intro {
     min-height: 600px;
     text-align: center;
@@ -93,6 +63,36 @@
   h1 {
     font-weight: 900;
     text-transform: capitalize;
+  }
+}
+.main-home-about {
+  min-height: 600px;
+  text-align: center;
+  background: rgb(64, 89, 209);
+  padding: 200px 0px;
+  color: #fff;
+
+  .about-ul {
+    list-style-type: none;
+    text-align: left;
+    font-weight: 500;
+
+    li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-end;
+    }
+  }
+
+  .list-icon {
+    margin-right: 10px;
+    margin-bottom: 5px;
+    font-size: 30px;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: 500;
   }
 }
 
@@ -236,6 +236,13 @@ a.btn.nav-link.btn {
   .accordion-control {
     font-weight: 600;
   }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 50%;
+  left: 40%;
 }
 
 @import "responsive.scss";

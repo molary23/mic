@@ -8,7 +8,7 @@ function TextInputField(props) {
       <div className="form-floating">
         <input
           type={type}
-          className="form-control form-control-lg"
+          className="form-control"
           id={id}
           placeholder={label}
           name={name}

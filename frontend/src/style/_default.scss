@@ -141,3 +141,9 @@ nav.top-nav.show-bg {
 .right-nav {
   margin-right: 20px;
 }
+.active-nav {
+  border-bottom: 2px solid $bg-dark;
+}
+.nav-link {
+  cursor: pointer;
+}

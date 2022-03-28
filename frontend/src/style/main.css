@@ -143,6 +143,14 @@ nav.top-nav.show-bg {
   margin-right: 20px;
 }
 
+.active-nav {
+  border-bottom: 2px solid #022854;
+}
+
+.nav-link {
+  cursor: pointer;
+}
+
 /* Main Home */
 .main-home {
   margin-top: 50px;
@@ -172,41 +180,6 @@ nav.top-nav.show-bg {
   background: url("../asset/images/fxtrading.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-.main-home .main-home-about {
-  min-height: 600px;
-  text-align: center;
-  background: #4059d1;
-  padding: 200px 0px;
-  color: #fff;
-}
-
-.main-home .main-home-about .about-ul {
-  list-style-type: none;
-  text-align: left;
-  font-weight: 500;
-}
-
-.main-home .main-home-about .about-ul li {
-  margin-bottom: 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: flex-end;
-}
-
-.main-home .main-home-about .list-icon {
-  margin-right: 10px;
-  margin-bottom: 5px;
-  font-size: 30px;
-}
-
-.main-home .main-home-about h4 {
-  font-size: 18px;
-  font-weight: 500;
 }
 
 .main-home .main-home-intro {
@@ -252,6 +225,41 @@ nav.top-nav.show-bg {
 .main-home h1 {
   font-weight: 900;
   text-transform: capitalize;
+}
+
+.main-home-about {
+  min-height: 600px;
+  text-align: center;
+  background: #4059d1;
+  padding: 200px 0px;
+  color: #fff;
+}
+
+.main-home-about .about-ul {
+  list-style-type: none;
+  text-align: left;
+  font-weight: 500;
+}
+
+.main-home-about .about-ul li {
+  margin-bottom: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+.main-home-about .list-icon {
+  margin-right: 10px;
+  margin-bottom: 5px;
+  font-size: 30px;
+}
+
+.main-home-about h4 {
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .main-home-faq {
@@ -410,6 +418,13 @@ a.btn.nav-link.btn {
   font-weight: 600;
 }
 
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 50%;
+  left: 40%;
+}
+
 @media only screen and (max-width: 767px) {
   .navbar-toggler {
     background: transparent !important;
@@ -452,6 +467,12 @@ a.btn.nav-link.btn {
   }
   .error-main {
     background-size: 500px;
+  }
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 50%;
+    left: 5%;
   }
 }
 /*# sourceMappingURL=main.css.map */

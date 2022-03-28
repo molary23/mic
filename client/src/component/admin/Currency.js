@@ -101,10 +101,22 @@ class Currency extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { content } = this.state;
     if (
       prevProps.admin.addcurrency !== this.props.admin.addcurrency &&
       this.props.admin.addcurrency
     ) {
+      if (this.props.admin.fetching) {
+        this.setState({
+          offset: 0,
+        });
+        this.props.admin.currency.unshift(this.props.admin.newcurrency);
+        this.props.clearActions(content);
+      } else if (this.props.searchTerms.searching) {
+        this.props.searchTerms.currency.unshift(this.props.admin.newcurrency);
+        this.props.clearSearchActions(content);
+      }
+
       this.afterUpdate("added");
     } else if (
       prevProps.admin.updatecurrency !== this.props.admin.updatecurrency &&
@@ -150,23 +162,24 @@ class Currency extends Component {
       modal: false,
       toast: true,
       toasttext: `Currency ${text} successfully`,
-      currentPage: Pagination.currentpage,
-      offset: 0,
     });
     if (text === "added") {
-      this.setState({
-        numOfPages: Math.ceil((currencycount + 1) / limit),
-      });
       this.props.clearAdminAction("add-currency");
+      this.setState({
+        numOfPages: Math.ceil(currencycount / limit),
+      });
     } else {
+      this.setState({
+        offset: 0,
+        currentPage: Pagination.currentpage,
+      });
       this.props.clearAdminAction("update-currency");
+      this.props.clearActions(content);
+      this.props.clearSearchActions(content);
+
+      let searchParams = window.location.search;
+      landingLoad({ limit, offset: 0, self: this, content, searchParams });
     }
-
-    this.props.clearActions(content);
-    this.props.clearSearchActions(content);
-
-    let searchParams = window.location.search;
-    landingLoad({ limit, offset: 0, self: this, content, searchParams });
 
     setTimeout(() => {
       this.setState({
