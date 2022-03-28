@@ -9,6 +9,8 @@ import isEmpty from "../validation/emptyChecker";
 import TextInputField from "../layout/TextInputField";
 import Modal from "../layout/Modal";
 import Box from "../layout/Box";
+import isAlphanumeric from "validator/lib/isAlphanumeric";
+import isEmail from "validator/lib/isEmail";
 
 export class VerifyEmail extends Component {
   state = {
@@ -33,11 +35,15 @@ export class VerifyEmail extends Component {
             username: values.username,
             code: values.code.toUpperCase(),
           });
-          const userverify = {
-            username: values.username,
-            code: values.code.toLowerCase(),
-          };
-          this.pushData(userverify);
+          let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
+            tester = pattern.test(values.username);
+          if (tester && isAlphanumeric(values.code)) {
+            const userverify = {
+              username: values.username,
+              code: values.code.toLowerCase(),
+            };
+            this.pushData(userverify);
+          }
         } catch (error) {
           this.setState({
             error: {
@@ -64,16 +70,30 @@ export class VerifyEmail extends Component {
   submitHandler = (e) => {
     e.preventDefault();
     const { username, code } = this.state;
+    let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
+      tester = pattern.test(username);
     if (isEmpty(username)) {
       this.setState({
         error: {
           username: "Username Field can't be Empty",
         },
       });
+    } else if (!tester && !isEmail(username)) {
+      this.setState({
+        error: {
+          username: "Enter a valid Username or Email Address",
+        },
+      });
     } else if (isEmpty(code)) {
       this.setState({
         error: {
           code: "Code can't be Empty",
+        },
+      });
+    } else if (!isAlphanumeric(code)) {
+      this.setState({
+        error: {
+          code: "Code can only be Alphanumeric",
         },
       });
     } else {

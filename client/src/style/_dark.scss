@@ -31,7 +31,7 @@ $off-white: rgba(
       color: $off-white;
     }
     .toggle-btn .btn {
-      background: $off-white !important;
+      background: rgba($color: $off-white, $alpha: 0.1) !important;
     }
     .input-group input {
       background: transparent;
@@ -124,6 +124,9 @@ $off-white: rgba(
     }
     textarea {
       background: $dark-color;
+    }
+    .settings .nav-link.active {
+      background: rgba($color: $off-white, $alpha: 0.1) !important;
     }
   }
 

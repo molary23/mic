@@ -63,6 +63,7 @@ class Currency extends Component {
     toasttext: null,
     toastcategory: null,
     check: false,
+    data: null,
   };
 
   componentDidMount() {
@@ -138,7 +139,7 @@ class Currency extends Component {
       });
     }
     this.setState({
-      lastScrollTop: toTop <= 0 ? 0 : toTop, // For Mobile or negative scrolling
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 
@@ -153,18 +154,20 @@ class Currency extends Component {
       offset: 0,
     });
     if (text === "added") {
-      this.props.clearAdminAction("add-currency");
       this.setState({
         numOfPages: Math.ceil((currencycount + 1) / limit),
       });
+      this.props.clearAdminAction("add-currency");
     } else {
       this.props.clearAdminAction("update-currency");
     }
+
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
 
     let searchParams = window.location.search;
     landingLoad({ limit, offset: 0, self: this, content, searchParams });
+
     setTimeout(() => {
       this.setState({
         toast: false,
@@ -289,9 +292,15 @@ class Currency extends Component {
       searchcount,
       searchlist,
       searchloading,
-
       currencycount,
     });
+    /*  if (data !== null) {
+      if (!showSearch) {
+        main.unshift(data);
+      } else if (showSearch) {
+        searchMain.unshift(data);
+      }
+    }*/
 
     return (
       <div>

@@ -1790,7 +1790,7 @@ ul {
 }
 
 .dark-content .dashboard-body .toggle-btn .btn {
-  background: rgba(255, 255, 255, 0.7) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-content .dashboard-body .input-group input {
@@ -1906,6 +1906,10 @@ ul {
 
 .dark-content .dashboard-body textarea {
   background: #121212;
+}
+
+.dark-content .dashboard-body .settings .nav-link.active {
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .dark-content .error-main {

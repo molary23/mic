@@ -122,7 +122,7 @@ router.post(
         } else {
           Currency.create(currencyFields)
             .then(() => {
-              res.json(true);
+              return res.json(true);
             })
             .catch((err) => res.status(404).json(err));
         }

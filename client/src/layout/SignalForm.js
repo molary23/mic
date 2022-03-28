@@ -160,7 +160,7 @@ function SignalForm(props) {
 }
 SignalForm.propTypes = {
   onSubmit: PropTypes.func,
-  currencyList: PropTypes.object.isRequired,
+  currencyList: PropTypes.object,
   load: PropTypes.bool,
 };
 export default SignalForm;

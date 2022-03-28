@@ -383,6 +383,16 @@ function AddModal(props) {
         setErrors({
           addsecondcurrencycode: "Second Currency Code Field can't be empty",
         });
+      } else if (inputs.addfirstcurrencyname === inputs.addsecondcurrencyname) {
+        setErrors({
+          addsecondcurrencyname:
+            "Both First and Second Currency Name can't be the same",
+        });
+      } else if (inputs.addfirstcurrencycode === inputs.addsecondcurrencycode) {
+        setErrors({
+          addsecondcurrencycode:
+            "Both First and Second Currency Code can't be the same",
+        });
       } else {
         setErrors({});
         const currency = {

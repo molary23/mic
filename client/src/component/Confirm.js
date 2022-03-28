@@ -12,6 +12,7 @@ import Modal from "../layout/Modal";
 import Box from "../layout/Box";
 import decrypt from "../util/decrypt";
 import isEmail from "validator/lib/isEmail";
+import isAlphanumeric from "validator/lib/isAlphanumeric";
 
 export class Confirm extends Component {
   state = {
@@ -42,12 +43,16 @@ export class Confirm extends Component {
         try {
           let values = JSON.parse(opt);
           if (auth === "no") {
-            const usercode = {
-              username: values.username.trim(),
-              code: values.code.toLowerCase(),
-              auth: "no",
-            };
-            this.props.confirmCode(usercode);
+            let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
+              tester = pattern.test(values.username);
+            if (tester && isAlphanumeric(values.code)) {
+              const usercode = {
+                username: values.username.trim(),
+                code: values.code.toLowerCase(),
+                auth: "no",
+              };
+              this.props.confirmCode(usercode);
+            }
           } else {
             this.setState({
               username: values.username,
@@ -133,6 +138,12 @@ export class Confirm extends Component {
       this.setState({
         error: {
           code: "Code can't be Empty",
+        },
+      });
+    } else if (!isAlphanumeric(code)) {
+      this.setState({
+        error: {
+          code: "Code can only be Alphanumeric",
         },
       });
     } else {
