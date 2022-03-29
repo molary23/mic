@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import logo from "../asset/images/mic-light.png";
+import logo from "../../asset/images/mic-light.png";
 
 function Home() {
   const auth = useSelector((state) => state.auth),

@@ -2,19 +2,19 @@ import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loginuser, clearErrors } from "../action/authAction";
+import { loginuser, clearErrors } from "../../action/authAction";
 
-import TextInputField from "../layout/TextInputField";
-import TextPasswordField from "../layout/TextPasswordField";
-import ProgressBar from "../layout/ProgressBar";
-import LoadCount from "../layout/LoadCount";
-import Modal from "../layout/Modal";
+import TextInputField from "../../layout/TextInputField";
+import TextPasswordField from "../../layout/TextPasswordField";
+import ProgressBar from "../../layout/ProgressBar";
+import LoadCount from "../../layout/LoadCount";
+import Modal from "../../layout/Modal";
 
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
-import Box from "../layout/Box";
+import Box from "../../layout/Box";
 import isEmail from "validator/lib/isEmail";
-import isEmpty from "../validation/emptyChecker";
+import isEmpty from "../../validation/emptyChecker";
 
 class Login extends Component {
   state = {

@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Navigate, Link } from "react-router-dom";
 
-import { resetPass } from "../action/confirmAction";
+import { resetPass } from "../../action/confirmAction";
 
-import isEmpty from "../validation/emptyChecker";
-import TextPasswordField from "../layout/TextPasswordField";
-import Box from "../layout/Box";
-import Modal from "../layout/Modal";
+import isEmpty from "../../validation/emptyChecker";
+import TextPasswordField from "../../layout/TextPasswordField";
+import Box from "../../layout/Box";
+import Modal from "../../layout/Modal";
 
 export class Reset extends Component {
   state = {

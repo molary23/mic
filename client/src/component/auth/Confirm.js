@@ -3,14 +3,14 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import { confirmCode, clearErrors } from "../action/confirmAction";
+import { confirmCode, clearErrors } from "../../action/confirmAction";
 
-import isEmpty from "../validation/emptyChecker";
+import isEmpty from "../../validation/emptyChecker";
 
-import TextInputField from "../layout/TextInputField";
-import Modal from "../layout/Modal";
-import Box from "../layout/Box";
-import decrypt from "../util/decrypt";
+import TextInputField from "../../layout/TextInputField";
+import Modal from "../../layout/Modal";
+import Box from "../../layout/Box";
+import decrypt from "../../util/decrypt";
 import isEmail from "validator/lib/isEmail";
 import isAlphanumeric from "validator/lib/isAlphanumeric";
 

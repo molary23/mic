@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-import decrypt from "../util/decrypt";
+import decrypt from "../../util/decrypt";
 
-import isEmpty from "../validation/emptyChecker";
+import isEmpty from "../../validation/emptyChecker";
 
-import TextInputField from "../layout/TextInputField";
-import Modal from "../layout/Modal";
-import Box from "../layout/Box";
+import TextInputField from "../../layout/TextInputField";
+import Modal from "../../layout/Modal";
+import Box from "../../layout/Box";
 import isAlphanumeric from "validator/lib/isAlphanumeric";
 import isEmail from "validator/lib/isEmail";
 

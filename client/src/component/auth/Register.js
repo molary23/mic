@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import isEmpty from "../validation/emptyChecker";
+import isEmpty from "../../validation/emptyChecker";
 
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-import TextPasswordField from "../layout/TextPasswordField";
-import Modal from "../layout/Modal";
-import Box from "../layout/Box";
+import TextPasswordField from "../../layout/TextPasswordField";
+import Modal from "../../layout/Modal";
+import Box from "../../layout/Box";
 import isEmail from "validator/lib/isEmail";
 let typingTimer;
 class Register extends Component {

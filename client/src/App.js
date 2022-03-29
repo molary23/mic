@@ -6,19 +6,18 @@ import jwtDecode from "jwt-decode";
 import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
-//import { clearCurrentProfile } from "./action/profileAction";
 
 import PrivateRoute from "./util/PrivateRoute";
 
 import PageNotFound from "./util/404Page";
-import Register from "./component/Register";
-import Referral from "./component/Referral";
-import Forgot from "./component/Forgot";
-import Reset from "./component/Reset";
-import Login from "./component/Login";
-import Confirm from "./component/Confirm";
-import VerifyEmail from "./component/VerifyEmail";
-import Home from "./component/Home";
+import Register from "./component/auth/Register";
+import Referral from "./component/auth/Referral";
+import Forgot from "./component/auth/Forgot";
+import Reset from "./component/auth/Reset";
+import Login from "./component/auth/Login";
+import Confirm from "./component/auth/Confirm";
+import VerifyEmail from "./component/auth/VerifyEmail";
+import Home from "./component/auth/Home";
 
 //User
 import Dashboard from "./component/user/Dashboard";

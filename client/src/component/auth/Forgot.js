@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmail from "validator/lib/isEmail";
-import isEmpty from "../validation/emptyChecker";
+import isEmpty from "../../validation/emptyChecker";
 
-import TextInputField from "../layout/TextInputField";
-import Modal from "../layout/Modal";
-import Box from "../layout/Box";
+import TextInputField from "../../layout/TextInputField";
+import Modal from "../../layout/Modal";
+import Box from "../../layout/Box";
 
 export class Forgot extends Component {
   state = {
