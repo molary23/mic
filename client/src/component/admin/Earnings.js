@@ -92,6 +92,14 @@ export class Earnings extends Component {
     ) {
       this.afterUpdate("updated");
     }
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.bonusCount + 1) / this.state.limit,
+      });
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

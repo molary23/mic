@@ -61,7 +61,6 @@ export const setSearchParams = ({
 }) => {
   self.setState({
     offset: 0,
-    limit: 4,
     currentPage: 2,
   });
 

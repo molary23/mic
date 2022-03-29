@@ -60,6 +60,18 @@ export class Referrals extends Component {
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
   }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.refCount + 1) / this.state.limit,
+      });
+    }
+  }
+
   loadMore = () => {
     const {
       limit,

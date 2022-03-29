@@ -2,12 +2,13 @@ import React, { useState } from "react";
 
 import TextInputField from "../layout/TextInputField";
 import TextAreaField from "../layout/TextAreaField";
-import Toast from "../layout/Toast";
+import Modal from "../layout/Modal";
 
 function Contact(props) {
-  const [inputs, setInputs] = useState({});
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [inputs, setInputs] = useState({}),
+    [errors, setErrors] = useState({}),
+    [loading, setLoading] = useState(false),
+    [modal, setModal] = useState(false);
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
@@ -59,6 +60,10 @@ function Contact(props) {
       //submit
       console.log(message);
     }
+  };
+
+  const modalHandler = (close) => {
+    setModal(close);
   };
 
   return (
@@ -145,7 +150,7 @@ function Contact(props) {
                 </form>
               </div>
             </div>
-            <Toast />
+            {modal ? <Modal onClick={modalHandler} modal={modal} /> : null}
           </div>
         </div>
       </div>

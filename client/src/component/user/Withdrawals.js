@@ -111,7 +111,17 @@ export class Withdrawals extends Component {
     ) {
       this.afterUpdate();
     }
+
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.withcount + 1) / this.state.limit,
+      });
+    }
   }
+
   afterUpdate = () => {
     const { limit, content, walletcount, timer } = this.state;
 
@@ -142,18 +152,31 @@ export class Withdrawals extends Component {
   };
 
   loadMore = () => {
-    const { limit, numOfPages, iScrollPos, currentPage, content } = this.state;
-    let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    getMore({
+    const {
       limit,
       numOfPages,
       iScrollPos,
       currentPage,
       content,
-      winScroll,
-      searchParams,
-      self: this,
+      lastScrollTop,
+    } = this.state;
+    let searchParams = window.location.search,
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (toTop > lastScrollTop) {
+      getMore({
+        limit,
+        numOfPages,
+        iScrollPos,
+        currentPage,
+        content,
+        winScroll,
+        searchParams,
+        self: this,
+      });
+    }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
 

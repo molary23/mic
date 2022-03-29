@@ -67,6 +67,17 @@ export class Earnings extends Component {
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.bonuscount + 1) / this.state.limit,
+      });
+    }
+  }
+
   loadMore = () => {
     const {
       limit,

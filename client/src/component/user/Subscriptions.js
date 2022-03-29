@@ -82,6 +82,17 @@ export class Subscriptions extends Component {
     this.props.clearSearchActions(this.state.content);
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.subcount + 1) / this.state.limit,
+      });
+    }
+  }
+
   loadMore = () => {
     const {
       limit,
@@ -179,6 +190,8 @@ export class Subscriptions extends Component {
       searchloading,
       subcount,
     });
+
+    console.log("first, rendering");
 
     return (
       <div>

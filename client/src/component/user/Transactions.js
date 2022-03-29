@@ -70,6 +70,24 @@ export class Transactions extends Component {
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
+  componentWillUnmount() {
+    const { content } = this.state;
+    window.removeEventListener("scroll", this.loadMore);
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.transcount + 1) / this.state.limit,
+      });
+    }
+  }
+
   loadMore = () => {
     const {
       limit,
@@ -80,8 +98,8 @@ export class Transactions extends Component {
       lastScrollTop,
     } = this.state;
     let searchParams = window.location.search,
-      winScroll = window.scrollY;
-    let toTop = window.pageYOffset || document.documentElement.scrollTop;
+      winScroll = window.scrollY,
+      toTop = window.pageYOffset || document.documentElement.scrollTop;
     if (toTop > lastScrollTop) {
       getMore({
         limit,
@@ -98,13 +116,6 @@ export class Transactions extends Component {
       lastScrollTop: toTop <= 0 ? 0 : toTop,
     });
   };
-
-  componentWillUnmount() {
-    const { content } = this.state;
-    window.removeEventListener("scroll", this.loadMore);
-    this.props.clearActions(content);
-    this.props.clearSearchActions(content);
-  }
 
   changeHandler = (e) => {
     const { url, content, limit, offset, timer } = this.state;

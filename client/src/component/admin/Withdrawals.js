@@ -84,6 +84,15 @@ export class Withdrawals extends Component {
     ) {
       this.afterUpdate();
     }
+
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.withcount + 1) / this.state.limit,
+      });
+    }
   }
 
   afterUpdate = () => {

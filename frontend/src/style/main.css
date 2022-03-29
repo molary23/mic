@@ -151,6 +151,11 @@ nav.top-nav.show-bg {
   cursor: pointer;
 }
 
+/* Modal */
+.modal {
+  background: rgba(31, 31, 31, 0.7);
+}
+
 /* Main Home */
 .main-home {
   margin-top: 50px;
@@ -418,13 +423,6 @@ a.btn.nav-link.btn {
   font-weight: 600;
 }
 
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 50%;
-  left: 40%;
-}
-
 @media only screen and (max-width: 767px) {
   .navbar-toggler {
     background: transparent !important;
@@ -467,12 +465,6 @@ a.btn.nav-link.btn {
   }
   .error-main {
     background-size: 500px;
-  }
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 50%;
-    left: 5%;
   }
 }
 /*# sourceMappingURL=main.css.map */

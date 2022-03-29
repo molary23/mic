@@ -91,6 +91,14 @@ export class Payments extends Component {
     ) {
       this.afterUpdate();
     }
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.payCount + 1) / this.state.limit,
+      });
+    }
   }
 
   afterUpdate = () => {
@@ -173,9 +181,6 @@ export class Payments extends Component {
   clickHandler = (value) => {
     let action = value[0],
       id = value[1];
-
-    console.log(action, id);
-
     this.setState({
       check: true,
       checktext: `Are you sure you want to ${action} this Payment?`,

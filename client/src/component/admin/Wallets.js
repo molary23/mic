@@ -121,6 +121,15 @@ export class Wallets extends Component {
     ) {
       this.afterUpdate("updated");
     }
+
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.walletcount + 1) / this.state.limit,
+      });
+    }
   }
 
   afterUpdate = (text) => {
@@ -141,12 +150,11 @@ export class Wallets extends Component {
     } else {
       this.props.clearAdminAction("update-wallet");
     }
-
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
-
     let searchParams = window.location.search;
     landingLoad({ limit, offset: 0, self: this, content, searchParams });
+
     setTimeout(() => {
       this.setState({
         toast: false,
@@ -303,7 +311,7 @@ export class Wallets extends Component {
 
         <div className="bonus card holder-card ">
           <div className="page-dash-title mb-4">
-            <h1>Bonus</h1>
+            <h1>Wallets</h1>
           </div>
           <div className="container-fluid mb-4">
             <div className="row">

@@ -98,6 +98,15 @@ export class Signals extends Component {
         isLoading: false,
       });
     }
+
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.signalcount + 1) / this.state.limit,
+      });
+    }
   }
 
   changeHandler = (e) => {

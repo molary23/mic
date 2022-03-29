@@ -118,6 +118,15 @@ class ViewAdmins extends Component {
     ) {
       this.afterUpdate("updated");
     }
+
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.adCount + 1) / this.state.limit,
+      });
+    }
   }
 
   afterUpdate = (text) => {

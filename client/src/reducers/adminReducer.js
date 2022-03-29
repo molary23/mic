@@ -146,7 +146,6 @@ const initialState = {
   changeemail: false,
   getanalytics: null,
   updatepayment: false,
-  newcurrency: null,
 };
 
 export default function adminReducer(state = initialState, action) {
@@ -277,8 +276,7 @@ export default function adminReducer(state = initialState, action) {
     case ADD_NEW_CURRENCY:
       return {
         ...state,
-        addcurrency: action.payload[0],
-        newcurrency: action.payload[1],
+        addcurrency: action.payload,
         curCount: state.curCount + 1,
         loading: false,
       };
@@ -505,7 +503,7 @@ export default function adminReducer(state = initialState, action) {
       return { ...state, updatewithdrawals: false };
     }
     case CLEAR_ADD_NEW_CURRENCY: {
-      return { ...state, addcurrency: false, newcurrency: null };
+      return { ...state, addcurrency: false };
     }
     case CLEAR_ADD_NEW_ADMIN: {
       return { ...state, addadmin: false };

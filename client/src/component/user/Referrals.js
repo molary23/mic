@@ -94,6 +94,9 @@ export class Referrals extends Component {
         self: this,
       });
     }
+    this.setState({
+      lastScrollTop: toTop <= 0 ? 0 : toTop,
+    });
   };
 
   componentWillUnmount() {
@@ -101,6 +104,17 @@ export class Referrals extends Component {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.refcount + 1) / this.state.limit,
+      });
+    }
   }
 
   changeHandler = (e) => {

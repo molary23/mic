@@ -111,6 +111,15 @@ class Forums extends Component {
     ) {
       this.afterUpdate("updated");
     }
+
+    if (
+      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
+      this.props.searchTerms.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.searchTerms.forumscount + 1) / this.state.limit,
+      });
+    }
   }
   afterUpdate = (text) => {
     const { limit, content, forumcount, timer } = this.state;
