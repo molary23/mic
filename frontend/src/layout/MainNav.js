@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../asset/images/logo.png";
 
 function MainNav(props) {
@@ -6,7 +7,10 @@ function MainNav(props) {
     [active, setActive] = useState(0),
     [scroll, setScroll] = useState(),
     [display, setDisplay] = useState(false),
-    [focus, setFocus] = useState(false);
+    [focus, setFocus] = useState(false),
+    location = useLocation(),
+    navigate = useNavigate(),
+    page = location.pathname.split("/")[1];
 
   const addFocus = () => {
     let winScroll = window.scrollY;
@@ -34,43 +38,42 @@ function MainNav(props) {
 
   const clickMover = (e) => {
     let linkid = e.target.id;
-    console.log("first", linkid);
-    switch (linkid) {
-      case "homelink": {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        setActive((active) => 0);
-        break;
+    if (page !== "") {
+      navigate("/", { replace: true });
+    } else {
+      switch (linkid) {
+        case "homelink": {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+          setActive((active) => 0);
+          break;
+        }
+        case "aboutlink": {
+          scrollToSection(aboutRef.current, 1);
+          break;
+        }
+        case "servicelink": {
+          scrollToSection(serviceRef.current, 2);
+          break;
+        }
+        case "faqlink": {
+          scrollToSection(faqRef.current, 3);
+          break;
+        }
+        case "contactlink": {
+          scrollToSection(contactRef.current, 4);
+          break;
+        }
+        default:
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+          setActive((active) => 0);
+          break;
       }
-      case "aboutlink": {
-        scrollToSection(aboutRef.current, 1);
-
-        break;
-      }
-      case "servicelink": {
-        scrollToSection(serviceRef.current, 2);
-
-        break;
-      }
-      case "faqlink": {
-        scrollToSection(faqRef.current, 3);
-
-        break;
-      }
-      case "contactlink": {
-        scrollToSection(contactRef.current, 4);
-
-        break;
-      }
-      default:
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        setActive((active) => 0);
-        break;
     }
   };
 

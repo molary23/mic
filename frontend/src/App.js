@@ -1,32 +1,16 @@
-import React, { useRef } from "react";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 import "./style/main.css";
-
-import Home from "./component/Home";
-import About from "./component/About";
-import Service from "./component/Service";
-import Contact from "./component/Contact";
-import Faq from "./component/Faq";
-import MainNav from "./layout/MainNav";
-import Footer from "./layout/Footer";
-import SubFooter from "./layout/SubFooter";
+import Main from "./component/Main";
+import ErrorPage from "./util/ErrorPage";
 
 function App() {
-  const serviceRef = useRef(),
-    contactRef = useRef(),
-    aboutRef = useRef(),
-    homeRef = useRef(),
-    faqRef = useRef();
-
   return (
     <div className="App">
-      <MainNav {...{ homeRef, aboutRef, serviceRef, faqRef, contactRef }} />
-      <Home homeRef={homeRef} />
-      <About aboutRef={aboutRef} />
-      <Service serviceRef={serviceRef} />
-      <Faq faqRef={faqRef} />
-      <Contact contactRef={contactRef} />
-      <SubFooter />
-      <Footer />
+      <Routes>
+        <Route path="/" exact element={<Main />} />
+        <Route path="*" exact element={<ErrorPage />} />
+      </Routes>
     </div>
   );
 }
