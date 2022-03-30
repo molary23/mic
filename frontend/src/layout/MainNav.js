@@ -198,12 +198,16 @@ function MainNav(props) {
               </span>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">
+              <a className="nav-link" href="//dashboard.micearnbusiness.org/">
                 Login
               </a>
             </li>
             <li className="nav-item">
-              <a type="button" className="btn nav-link" href="/">
+              <a
+                type="button"
+                className="btn nav-link default-btn"
+                href="//dashboard.micearnbusiness.org/register"
+              >
                 Register
               </a>
             </li>

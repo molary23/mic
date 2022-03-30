@@ -2,6 +2,7 @@ import React from "react";
 
 import MainNav from "../layout/MainNav";
 import Footer from "../layout/Footer";
+import SubFooter from "../layout/SubFooter";
 
 function PageNotFound() {
   return (
@@ -10,6 +11,7 @@ function PageNotFound() {
       <section>
         <div className="error-main"></div>
       </section>
+      <SubFooter />
       <Footer />
     </div>
   );

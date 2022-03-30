@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 import TextInputField from "../layout/TextInputField";
 import TextAreaField from "../layout/TextAreaField";
@@ -8,14 +9,15 @@ function Contact(props) {
   const [inputs, setInputs] = useState({}),
     [errors, setErrors] = useState({}),
     [loading, setLoading] = useState(false),
-    [modal, setModal] = useState(false);
+    [modal, setModal] = useState(false),
+    [sender, setSender] = useState(null);
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     if (!Object.keys(inputs).includes("name") || inputs.name === "") {
       setErrors({
@@ -49,6 +51,7 @@ function Contact(props) {
       });
     } else {
       setLoading(true);
+      setErrors({});
       const message = {
         name: inputs.name.toLowerCase(),
         email: inputs.email.toLowerCase(),
@@ -57,8 +60,24 @@ function Contact(props) {
         message: inputs.message,
       };
 
-      //submit
-      console.log(message);
+      try {
+        let response = await axios.post(
+          "/api/public/register/",
+          {
+            message,
+          },
+          {}
+        );
+        if (response.data === 1) {
+          setInputs({});
+          setLoading(false);
+          setSender("success");
+          setModal(true);
+        }
+      } catch (error) {
+        setSender("error");
+        setModal(true);
+      }
     }
   };
 
@@ -140,7 +159,7 @@ function Contact(props) {
                   />
                   <button
                     type="submit"
-                    className="btn btn-primary btn-block btn-lg"
+                    className="btn default-btn btn-block btn-lg"
                   >
                     Send Message
                     {loading && (
@@ -150,7 +169,9 @@ function Contact(props) {
                 </form>
               </div>
             </div>
-            {modal ? <Modal onClick={modalHandler} modal={modal} /> : null}
+            {modal ? (
+              <Modal onClick={modalHandler} modal={modal} sender={sender} />
+            ) : null}
           </div>
         </div>
       </div>

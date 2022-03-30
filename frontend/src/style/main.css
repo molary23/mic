@@ -94,8 +94,7 @@ textarea {
   height: 120px !important;
 }
 
-button,
-.btn {
+.default-btn {
   background: #06c2f7 !important;
   color: #fff !important;
   font-weight: 400;

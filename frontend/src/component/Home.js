@@ -19,7 +19,11 @@ function Home(props) {
                   very low and get the maximum profit. All results are verified.
                   Check your Dashboard for signal performance updates.
                 </p>
-                <a type="button" href="/" className="btn ">
+                <a
+                  type="button"
+                  href="//dashboard.micearnbusiness.org/register"
+                  className="btn default-btn"
+                >
                   Register
                 </a>
               </div>
