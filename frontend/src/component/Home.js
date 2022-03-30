@@ -10,7 +10,7 @@ function Home(props) {
     <div className="main-home" id="home" ref={props.homeRef}>
       <div className="main-home-top">
         <div className="">
-          <div className="row">
+          <div className="row flex-column-reverse flex-md-row">
             <div className="col-md-5 col-12">
               <div className="home-top-text">
                 <h1 className="mb-4">Why MIC Earn Business</h1>

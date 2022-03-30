@@ -77,6 +77,17 @@ export class Payments extends Component {
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.userSearch.searching !== this.props.userSearch.searching &&
+      this.props.userSearch.searching
+    ) {
+      this.setState({
+        numOfPages: (this.props.userSearch.bonuscount + 1) / this.state.limit,
+      });
+    }
+  }
+
   loadMore = () => {
     const {
       limit,

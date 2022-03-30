@@ -5,7 +5,6 @@ import logo from "../asset/images/logo.png";
 function MainNav(props) {
   const { homeRef, aboutRef, serviceRef, faqRef, contactRef } = props,
     [active, setActive] = useState(0),
-    [scroll, setScroll] = useState(),
     [display, setDisplay] = useState(false),
     [focus, setFocus] = useState(false),
     location = useLocation(),
@@ -115,6 +114,7 @@ function MainNav(props) {
     return () => {
       window.removeEventListener("scroll", changeFocus);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <nav

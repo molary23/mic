@@ -100,11 +100,11 @@ export class Signals extends Component {
     }
 
     if (
-      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
-      this.props.searchTerms.searching
+      prevProps.userSearch.searching !== this.props.userSearch.searching &&
+      this.props.userSearch.searching
     ) {
       this.setState({
-        numOfPages: (this.props.searchTerms.signalcount + 1) / this.state.limit,
+        numOfPages: (this.props.userSearch.signalcount + 1) / this.state.limit,
       });
     }
   }

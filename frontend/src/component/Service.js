@@ -1,11 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import time from "../asset/images/time.jpg";
-import money from "../asset/images/money.jpg";
-import work from "../asset/images/work.jpg";
-import consistent from "../asset/images/consistent.jpg";
+import time from "../asset/images/time.png";
+import money from "../asset/images/money.png";
+import work from "../asset/images/work.png";
+import consistent from "../asset/images/consistent.png";
 
 function Service(props) {
+  const [scale, setScale] = useState();
+
+  const scaleFocus = () => {
+    const money = document.getElementById("saveMoney"),
+      time = document.getElementById("saveTime"),
+      hardWork = document.getElementById("hardWork"),
+      consistent = document.getElementById("consistent"),
+      winScroll = window.scrollY + 50;
+
+    if (
+      winScroll >= money.offsetTop &&
+      winScroll < money.offsetTop + money.clientHeight
+    ) {
+      setScale((scale) => 0);
+    } else if (
+      winScroll >= time.offsetTop &&
+      winScroll < time.offsetTop + time.clientHeight
+    ) {
+      setScale((scale) => 1);
+    } else if (
+      winScroll >= hardWork.offsetTop &&
+      winScroll < hardWork.offsetTop + hardWork.clientHeight
+    ) {
+      setScale((scale) => 2);
+    } else if (
+      winScroll >= consistent.offsetTop &&
+      winScroll < consistent.offsetTop + consistent.clientHeight
+    ) {
+      setScale((scale) => 3);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scaleFocus, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", scaleFocus);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div id="service" ref={props.serviceRef}>
       <div className="main-home-service">
@@ -13,7 +53,10 @@ function Service(props) {
           <div className="service-text-image-box">
             <div className="row">
               <div className="col-sm-6">
-                <div className="service-image">
+                <div
+                  className={`${scale === 0 ? "scaled" : ""} service-image`}
+                  id="saveMoney"
+                >
                   <img
                     src={money}
                     alt="MIC Business help you save money"
@@ -35,8 +78,8 @@ function Service(props) {
             </div>
           </div>
           <div className="service-text-image-box">
-            <div className="row">
-              <div className="col-sm-6">
+            <div className="row flex-column-reverse flex-md-row">
+              <div className="col-md-6">
                 <div className="service-text">
                   <h1 className="">We save you time</h1>
                   <p>
@@ -47,8 +90,11 @@ function Service(props) {
                   </p>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="service-image">
+              <div className="col-md-6">
+                <div
+                  className={`${scale === 1 ? "scaled" : ""} service-image`}
+                  id="saveTime"
+                >
                   <img
                     src={time}
                     alt="MIC Business save time by getting signal to you fast"
@@ -61,7 +107,10 @@ function Service(props) {
           <div className="service-text-image-box">
             <div className="row">
               <div className="col-sm-6">
-                <div className="service-image">
+                <div
+                  className={`${scale === 2 ? "scaled" : ""} service-image`}
+                  id="hardWork"
+                >
                   <img
                     src={work}
                     alt="MIC Business get the hard part of the job done"
@@ -83,8 +132,8 @@ function Service(props) {
             </div>
           </div>
           <div className="service-text-image-box">
-            <div className="row">
-              <div className="col-sm-6">
+            <div className="row flex-column-reverse flex-md-row">
+              <div className="col-md-6">
                 <div className="service-text">
                   <h1 className="">We are consistent</h1>
                   <p>
@@ -95,8 +144,11 @@ function Service(props) {
                   </p>
                 </div>
               </div>
-              <div className="col-sm-6">
-                <div className="service-image">
+              <div className="col-md-6">
+                <div
+                  className={`${scale === 3 ? "scaled" : ""} service-image`}
+                  id="consistent"
+                >
                   <img
                     src={consistent}
                     alt="MIC Business team are consistent in delivering signals"

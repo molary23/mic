@@ -6,7 +6,7 @@ import { RiExchangeDollarFill, RiShieldUserLine } from "react-icons/ri";
 import { HiOutlineChatAlt2 } from "react-icons/hi";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 
-import dashboard from "../asset/images/mic dashboard.jpeg";
+import dashboard from "../asset/images/dashboard.gif";
 
 function About(props) {
   return (
@@ -15,8 +15,8 @@ function About(props) {
       <div className="main-home-about" id="about">
         <div className="container">
           <h1 className="mb-5">Searching For Consistent Profitability?</h1>
-          <div className="row pt-5">
-            <div className="col-md-8 col-12">
+          <div className="row pt-5 flex-column-reverse flex-md-row">
+            <div className="col-md-6 col-12">
               <ul className="about-ul">
                 <li className="mb-4">
                   <span className="list-icon">
@@ -61,12 +61,14 @@ function About(props) {
                 </li>
               </ul>
             </div>
-            <div className="col-md-4 col-12">
-              <img
-                src={dashboard}
-                alt="MIC Business save time by getting signal to you fast"
-                className="img-responsive"
-              />
+            <div className="col-md-6 col-12 mb-5">
+              <div className="about-image">
+                <img
+                  src={dashboard}
+                  alt="MIC Business save time by getting signal to you fast"
+                  className="img-responsive"
+                />
+              </div>
             </div>
           </div>
         </div>

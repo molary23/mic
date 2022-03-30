@@ -158,12 +158,10 @@ nav.top-nav.show-bg {
 }
 
 /* Main Home */
-.main-home {
-  margin-top: 50px;
-}
-
 .main-home .main-home-top {
+  padding-top: 50px;
   min-height: 500px;
+  background: #edf3f4;
 }
 
 .main-home .main-home-top .home-top-text {
@@ -177,13 +175,9 @@ nav.top-nav.show-bg {
   font-weight: 900;
 }
 
-.main-home .main-home-top .home-top-text a {
-  margin-top: 20px;
-}
-
 .main-home .main-home-top .home-top-image {
   height: 500px;
-  background: url("../asset/images/fxtrading.jpg");
+  background: url("../asset/images/trading.png");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -219,18 +213,18 @@ nav.top-nav.show-bg {
   text-align: center;
 }
 
-.main-home .main-home-middle {
+.main-home h1 {
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.main-home-middle {
   height: 600px;
   background: url("../asset/images/trading.jpg");
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-.main-home h1 {
-  font-weight: 900;
-  text-transform: capitalize;
 }
 
 .main-home-about {
@@ -245,6 +239,7 @@ nav.top-nav.show-bg {
   list-style-type: none;
   text-align: left;
   font-weight: 500;
+  padding: 0px;
 }
 
 .main-home-about .about-ul li {
@@ -279,7 +274,7 @@ nav.top-nav.show-bg {
 
 .main-home-contact {
   height: 600px;
-  background: url("../asset/images/contactus.jpg");
+  background: url("../asset/images/contact.jpg");
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
@@ -289,18 +284,18 @@ nav.top-nav.show-bg {
 .main-home-contact-box {
   min-height: 600px;
   padding: 100px 0px;
-  background: #dee9ff;
+  background: #e1f2f9;
 }
 
 .contact-image {
-  height: 600px;
-  background: url("../asset/images/contact.jpg");
+  height: 400px;
+  background: url("../asset/images/contact.png");
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 .contact-form {
-  margin: 150px auto 0px;
+  margin: 20px auto 0px;
   width: 95%;
 }
 
@@ -321,12 +316,14 @@ nav.top-nav.show-bg {
 
 .main-home-service .service-text-image-box .service-image {
   min-height: 400px;
-  width: 90%;
+  width: 100%;
+  -webkit-transform: scale(0.8);
+  transform: scale(0.8);
 }
 
-.main-home-service .service-text-image-box .service-image:hover {
-  -webkit-transform: scale(1.2);
-  transform: scale(1.2);
+.main-home-service .service-text-image-box .scaled {
+  -webkit-transform: scale(1.2) !important;
+  transform: scale(1.2) !important;
 }
 
 .main-home-service .service-text-image-box .service-text {
@@ -336,7 +333,8 @@ nav.top-nav.show-bg {
 
 .main-home-service .service-text-image-box .service-text h1 {
   margin-bottom: 30px;
-  font-weight: 700;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 a.btn.nav-link.btn {
@@ -403,7 +401,7 @@ a.btn.nav-link.btn {
 
 .error-main {
   height: 600px;
-  background: url("../asset/images/error404.jpg");
+  background: url("../asset/images/error404.png");
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
@@ -441,7 +439,7 @@ a.btn.nav-link.btn {
   }
   .main-home .main-home-top .home-top-image {
     height: 500px;
-    background: url("../asset/images/fxtrading.jpg");
+    background: url("../asset/images/trading.png");
     background-size: 400px;
     background-repeat: no-repeat;
     background-attachment: fixed;
