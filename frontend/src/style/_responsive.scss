@@ -6,31 +6,34 @@
     background: transparent !important;
     border: unset;
   }
-  .main-home-service .service-text-image-box {
-    padding-top: 50px;
-    text-align: center;
+  .main-home-service {
+    padding-bottom: 30px;
+    .service-text-image-box {
+      padding-top: 50px;
+      text-align: center;
 
-    .service-image {
-      margin: 0px auto;
-    }
-    .service-text {
-      margin: 25px auto;
+      .service-image {
+        margin: 0px auto;
+      }
+      .service-text {
+        margin: 25px auto;
+      }
     }
   }
   .main-home .main-home-top .home-top-image {
-    height: 500px;
-    background: url("../asset/images/trading.png");
-    background-size: 400px;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-  }
-
-  .main-home .main-home-middle {
+    height: 300px;
     background-size: 400px;
   }
 
+  .main-home-middle {
+    height: 200px;
+    background-size: 400px;
+  }
+  .main-home .main-home-intro {
+    padding: 20px 0px;
+  }
   .main-home-contact {
+    height: 200px;
     background-size: 400px;
   }
   .contact-image {
@@ -42,10 +45,21 @@
     margin-top: 20px;
   }
   .main-home-faq {
+    height: 200px;
     background-size: 400px;
   }
   .error-main {
     background-size: 500px;
+  }
+  .main-home-faq-box {
+    padding-bottom: 30px;
+  }
+
+  .intro-1,
+  .intro-2,
+  .intro-3 {
+    width: 90%;
+    margin: 0px auto 20px;
   }
 }
 

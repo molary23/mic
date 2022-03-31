@@ -11,7 +11,7 @@
       width: 80%;
       margin: 50px auto 0px;
       h1 {
-        font-size: 3.5em;
+        font-size: clamp(2.5vw, 2.5em, 3.5em);
         font-weight: 900;
       }
     }
@@ -144,16 +144,19 @@
     .service-image {
       min-height: 400px;
       width: 100%;
-      -webkit-transform: scale(0.8);
-      -ms-transform: scale(0.8);
-      -o-transform: scale(0.8);
-      transform: scale(0.8);
+      -webkit-transform: scale(0.7);
+      -ms-transform: scale(0.7);
+      -o-transform: scale(0.7);
+      transform: scale(0.7);
+      -webkit-transition: all 0.25s ease;
+      -o-transition: all 0.25s ease;
+      transition: all 0.25s ease;
     }
     .scaled {
-      -webkit-transform: scale(1.2) !important;
-      -ms-transform: scale(1.2) !important;
-      -o-transform: scale(1.2) !important;
-      transform: scale(1.2) !important;
+      -webkit-transform: scale(1) !important;
+      -ms-transform: scale(1) !important;
+      -o-transform: scale(1) !important;
+      transform: scale(1) !important;
     }
     .service-text {
       width: 80%;

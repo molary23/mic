@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import time from "../asset/images/time.png";
 import money from "../asset/images/money.png";
@@ -6,33 +6,36 @@ import work from "../asset/images/work.png";
 import consistent from "../asset/images/consistent.png";
 
 function Service(props) {
-  const [scale, setScale] = useState();
+  const [scale, setScale] = useState(),
+    moneyRef = useRef(),
+    timeRef = useRef(),
+    workRef = useRef(),
+    consistentRef = useRef();
 
   const scaleFocus = () => {
-    const money = document.getElementById("saveMoney"),
-      time = document.getElementById("saveTime"),
-      hardWork = document.getElementById("hardWork"),
-      consistent = document.getElementById("consistent"),
+    const moneyId = moneyRef.current,
+      timeId = timeRef.current,
+      hardWorkId = workRef.current,
+      consistentId = consistentRef.current,
       winScroll = window.scrollY + 50;
-
     if (
-      winScroll >= money.offsetTop &&
-      winScroll < money.offsetTop + money.clientHeight
+      winScroll >= moneyId.offsetTop &&
+      winScroll < moneyId.offsetTop + moneyId.clientHeight
     ) {
       setScale((scale) => 0);
     } else if (
-      winScroll >= time.offsetTop &&
-      winScroll < time.offsetTop + time.clientHeight
+      winScroll >= timeId.offsetTop &&
+      winScroll < timeId.offsetTop + timeId.clientHeight
     ) {
       setScale((scale) => 1);
     } else if (
-      winScroll >= hardWork.offsetTop &&
-      winScroll < hardWork.offsetTop + hardWork.clientHeight
+      winScroll >= hardWorkId.offsetTop &&
+      winScroll < hardWorkId.offsetTop + hardWorkId.clientHeight
     ) {
       setScale((scale) => 2);
     } else if (
-      winScroll >= consistent.offsetTop &&
-      winScroll < consistent.offsetTop + consistent.clientHeight
+      winScroll >= consistentId.offsetTop &&
+      winScroll < consistentId.offsetTop + consistentId.clientHeight
     ) {
       setScale((scale) => 3);
     }
@@ -51,7 +54,7 @@ function Service(props) {
       <div className="main-home-service">
         <div className="container">
           <div className="service-text-image-box">
-            <div className="row">
+            <div className="row" ref={moneyRef}>
               <div className="col-sm-6">
                 <div
                   className={`${scale === 0 ? "scaled" : ""} service-image`}
@@ -78,7 +81,7 @@ function Service(props) {
             </div>
           </div>
           <div className="service-text-image-box">
-            <div className="row flex-column-reverse flex-md-row">
+            <div className="row flex-column-reverse flex-md-row" ref={timeRef}>
               <div className="col-md-6">
                 <div className="service-text">
                   <h1 className="">We save you time</h1>
@@ -105,7 +108,7 @@ function Service(props) {
             </div>
           </div>
           <div className="service-text-image-box">
-            <div className="row">
+            <div className="row" ref={workRef}>
               <div className="col-sm-6">
                 <div
                   className={`${scale === 2 ? "scaled" : ""} service-image`}
@@ -132,7 +135,10 @@ function Service(props) {
             </div>
           </div>
           <div className="service-text-image-box">
-            <div className="row flex-column-reverse flex-md-row">
+            <div
+              className="row flex-column-reverse flex-md-row"
+              ref={consistentRef}
+            >
               <div className="col-md-6">
                 <div className="service-text">
                   <h1 className="">We are consistent</h1>

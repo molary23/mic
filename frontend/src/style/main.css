@@ -1,4 +1,11 @@
 /*
+ Description:  MIC Earn Business Home Page
+ Author:       Hassan A. Adeola
+ Author URI:   https://www.github.com/molary23
+ Template:     ReactApp
+ Version:      1.0.0
+*/
+/*
   1. Use a more-intuitive box-sizing model.
 */
 *, *::before, *::after {
@@ -138,10 +145,6 @@ nav.top-nav.show-bg {
   background: rgba(255, 255, 255, 0.9);
 }
 
-.right-nav {
-  margin-right: 20px;
-}
-
 .active-nav {
   background: #dfe0e5;
   border-bottom: 2px solid #022854;
@@ -170,7 +173,7 @@ nav.top-nav.show-bg {
 }
 
 .main-home .main-home-top .home-top-text h1 {
-  font-size: 3.5em;
+  font-size: clamp(2.5vw, 2.5em, 3.5em);
   font-weight: 900;
 }
 
@@ -316,13 +319,15 @@ nav.top-nav.show-bg {
 .main-home-service .service-text-image-box .service-image {
   min-height: 400px;
   width: 100%;
-  -webkit-transform: scale(0.8);
-  transform: scale(0.8);
+  -webkit-transform: scale(0.7);
+  transform: scale(0.7);
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .main-home-service .service-text-image-box .scaled {
-  -webkit-transform: scale(1.2) !important;
-  transform: scale(1.2) !important;
+  -webkit-transform: scale(1) !important;
+  transform: scale(1) !important;
 }
 
 .main-home-service .service-text-image-box .service-text {
@@ -426,6 +431,9 @@ a.btn.nav-link.btn {
     background: transparent !important;
     border: unset;
   }
+  .main-home-service {
+    padding-bottom: 30px;
+  }
   .main-home-service .service-text-image-box {
     padding-top: 50px;
     text-align: center;
@@ -437,17 +445,18 @@ a.btn.nav-link.btn {
     margin: 25px auto;
   }
   .main-home .main-home-top .home-top-image {
-    height: 500px;
-    background: url("../asset/images/trading.png");
+    height: 300px;
     background-size: 400px;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
   }
-  .main-home .main-home-middle {
+  .main-home-middle {
+    height: 200px;
     background-size: 400px;
+  }
+  .main-home .main-home-intro {
+    padding: 20px 0px;
   }
   .main-home-contact {
+    height: 200px;
     background-size: 400px;
   }
   .contact-image {
@@ -459,10 +468,20 @@ a.btn.nav-link.btn {
     margin-top: 20px;
   }
   .main-home-faq {
+    height: 200px;
     background-size: 400px;
   }
   .error-main {
     background-size: 500px;
+  }
+  .main-home-faq-box {
+    padding-bottom: 30px;
+  }
+  .intro-1,
+  .intro-2,
+  .intro-3 {
+    width: 90%;
+    margin: 0px auto 20px;
   }
 }
 /*# sourceMappingURL=main.css.map */

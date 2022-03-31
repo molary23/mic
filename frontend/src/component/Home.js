@@ -9,7 +9,7 @@ function Home(props) {
   return (
     <div className="main-home" id="home" ref={props.homeRef}>
       <div className="main-home-top">
-        <div className="">
+        <div className="container-fluid">
           <div className="row flex-column-reverse flex-md-row">
             <div className="col-md-5 col-12">
               <div className="home-top-text">
