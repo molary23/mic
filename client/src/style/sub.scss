@@ -105,6 +105,9 @@ img {
   width: 30px;
   margin-right: 10px;
   margin-top: 5px;
+  height: 30px;
+  background: rgba($color: $def-blue, $alpha: 0.1);
+  border-radius: 15px;
 }
 span.nav-sub-icon {
   svg {
@@ -1239,7 +1242,7 @@ ul {
 
 .error-main {
   height: 700px;
-  background: url("../asset/images/error404.jpg");
+  background: url("../asset/images/error404.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

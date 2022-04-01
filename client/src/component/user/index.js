@@ -11,8 +11,6 @@ import ProgressBar from "../../layout/ProgressBar";
 import AnnCard from "../../layout/AnnCard";
 import Spinner from "../../layout/Spinner";
 
-import keys from "../../util/config/keys";
-
 import {
   FaTwitterSquare,
   FaFacebookSquare,
@@ -28,7 +26,7 @@ export class Index extends Component {
     this.state = {
       copy: false,
       premiuminfo:
-        JSON.parse(localStorage.getItem("premium")) ?? this.props.user.premium,
+        this.props.user.premium ?? JSON.parse(localStorage.getItem("premium")),
       userinfo:
         this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
       daysleft: 0,

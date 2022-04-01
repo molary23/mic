@@ -127,10 +127,10 @@ class Pay extends Component {
 
                       <ul className="table-list">
                         <li>
-                          10 GB <span>De almacenamiento</span>
+                          30 days <span>Unlimited Signal Updates</span>
                         </li>
                         <li>
-                          1 Dominio <span>incluido</span>
+                          24/7 <span>customer support</span>
                         </li>
                       </ul>
 
@@ -158,10 +158,10 @@ class Pay extends Component {
 
                       <ul className="table-list">
                         <li>
-                          1 <span>De almacenamiento</span>
+                          365 days <span>Unlimited Signal Updates</span>
                         </li>
                         <li>
-                          5 Dominios <span>incluidos</span>
+                          24/7 <span>customer support</span>
                         </li>
                       </ul>
 
