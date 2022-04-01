@@ -70,7 +70,6 @@ export const getAllCounts = (level) => async (dispatch) => {
 
     return result;
   } catch (error) {
-    console.log(error.response.data);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
@@ -111,7 +110,6 @@ export const getMode = (user) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response.data);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };

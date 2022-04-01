@@ -3,6 +3,7 @@ import {
   ACTION_LOADING,
   CLEAR_PROVIDERS_SIGNALS_SEARCH,
   GET_SEARCH_PROVIDER_SIGNALS,
+  GET_ERRORS,
 } from "./types";
 
 export const searchContent = (content, searchData) => async (dispatch) => {
@@ -22,8 +23,7 @@ export const searchContent = (content, searchData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
-    dispatch({ type, payload: [] });
+    dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
 

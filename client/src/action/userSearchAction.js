@@ -50,7 +50,6 @@ export const searchContent = (content, paginate) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };

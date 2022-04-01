@@ -12,7 +12,6 @@ const express = require("express"),
   userview = require("./router/api/userview"),
   count = require("./router/api/count"),
   download = require("./router/api/download"),
-  cron = require("./router/api/cron"),
   payments = require("./router/api/payments");
 
 app.use(helmet());
@@ -36,7 +35,6 @@ app.use("/api/adminview", adminview);
 app.use("/api/userview", userview);
 app.use("/api/count", count);
 app.use("/api/download", download);
-app.use("/api/cron", cron);
 
 const port = process.env.PORT || 5001;
 

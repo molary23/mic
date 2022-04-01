@@ -95,7 +95,6 @@ export const searchContent = (content, searchData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };

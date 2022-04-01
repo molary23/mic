@@ -28,9 +28,11 @@ function Home() {
   return (
     <div>
       <div className="home-page">
-        <div className="home-box">
-          <img alt="MIC Earn Business Logo" src={logo} className="mb-5" />
-          <Outlet />
+        <div className="container-fluid">
+          <div className="home-box">
+            <img alt="MIC Earn Business Logo" src={logo} className="mb-5" />
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>

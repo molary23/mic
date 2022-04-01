@@ -42,7 +42,6 @@ export const getContent = (content, paginate) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
@@ -77,7 +76,6 @@ export const getCurrency = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
@@ -94,7 +92,6 @@ export const getFollowers = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
@@ -111,7 +108,6 @@ export const addSignal = (signal) => async (dispatch) => {
     dispatch(getAllCounts(2));
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
@@ -137,7 +133,6 @@ export const editSignal = (signal, id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
@@ -154,7 +149,6 @@ export const getProviderSettings = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
@@ -188,7 +182,6 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     }
     return result;
   } catch (error) {
-    console.log(error.response);
     dispatch({ type: GET_ERRORS, payload: error.response });
   }
 };
