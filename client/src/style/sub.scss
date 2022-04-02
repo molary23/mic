@@ -1241,10 +1241,10 @@ ul {
 }
 
 .error-main {
-  height: 700px;
+  height: 500px;
   background: url("../asset/images/error404.png");
   background-position: center;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
 }
 

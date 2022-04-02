@@ -1641,10 +1641,10 @@ ul {
 }
 
 .error-main {
-  height: 700px;
+  height: 500px;
   background: url("../asset/images/error404.png");
   background-position: center;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
 }
 
@@ -1747,9 +1747,6 @@ ul {
   }
   .crypto-card.card {
     margin-right: 20px;
-  }
-  .error-main {
-    background-size: 500px;
   }
   .main--nav .navbar-toggler {
     margin-left: 100px;

@@ -9,7 +9,9 @@ function PageNotFound() {
     <div>
       <MainNav />
       <section>
-        <div className="error-main"></div>
+        <div className="error-holder">
+          <div className="error-main"></div>
+        </div>
       </section>
       <SubFooter />
       <Footer />

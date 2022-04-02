@@ -259,13 +259,15 @@ a.btn.nav-link.btn {
   padding-top: 20px;
 }
 
-.error-main {
-  height: 600px;
-  background: url("../asset/images/error404.png");
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+.error-holder {
+  margin: 80px auto;
+  .error-main {
+    height: 500px;
+    background: url("../asset/images/error404.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
 }
 
 .card-header {

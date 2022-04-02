@@ -22,19 +22,19 @@
   }
   .main-home .main-home-top .home-top-image {
     height: 300px;
-    background-size: 400px;
+    background-size: contain;
   }
 
   .main-home-middle {
     height: 150px;
-    background-size: 400px;
+    background-size: contain;
   }
   .main-home .main-home-intro {
     padding: 150px 0px;
   }
   .main-home-contact {
     height: 150px;
-    background-size: 400px;
+    background-size: contain;
   }
   .main-home-refer {
     height: 150px;
@@ -42,7 +42,7 @@
   }
   .contact-image {
     background-attachment: fixed;
-    background-size: 400px;
+    background-size: contain;
     height: 300px;
   }
   .contact-form {
@@ -50,11 +50,9 @@
   }
   .main-home-faq {
     height: 200px;
-    background-size: 400px;
+    background-size: contain;
   }
-  .error-main {
-    background-size: 500px;
-  }
+
   .main-home-faq-box {
     padding-bottom: 30px;
   }
