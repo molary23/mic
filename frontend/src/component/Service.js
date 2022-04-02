@@ -4,19 +4,25 @@ import time from "../asset/images/time.png";
 import money from "../asset/images/money.png";
 import work from "../asset/images/work.png";
 import consistent from "../asset/images/consistent.png";
+import accuracy from "../asset/images/accuracy.png";
+import support from "../asset/images/support.png";
 
 function Service(props) {
   const [scale, setScale] = useState(),
     moneyRef = useRef(),
     timeRef = useRef(),
     workRef = useRef(),
-    consistentRef = useRef();
+    consistentRef = useRef(),
+    accurateRef = useRef(),
+    supportRef = useRef();
 
   const scaleFocus = () => {
     const moneyId = moneyRef.current,
       timeId = timeRef.current,
       hardWorkId = workRef.current,
       consistentId = consistentRef.current,
+      accurateId = accurateRef.current,
+      supportId = supportRef.current,
       winScroll = window.scrollY + 50;
     if (
       winScroll >= moneyId.offsetTop &&
@@ -38,6 +44,16 @@ function Service(props) {
       winScroll < consistentId.offsetTop + consistentId.clientHeight
     ) {
       setScale((scale) => 3);
+    } else if (
+      winScroll >= accurateId.offsetTop &&
+      winScroll < accurateId.offsetTop + accurateId.clientHeight
+    ) {
+      setScale((scale) => 4);
+    } else if (
+      winScroll >= supportId.offsetTop &&
+      winScroll < supportId.offsetTop + supportId.clientHeight
+    ) {
+      setScale((scale) => 5);
     }
   };
 
@@ -158,6 +174,62 @@ function Service(props) {
                   <img
                     src={consistent}
                     alt="MIC Business team are consistent in delivering signals"
+                    className="img-responsive"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="service-text-image-box">
+            <div className="row" ref={accurateRef}>
+              <div className="col-sm-6">
+                <div
+                  className={`${scale === 4 ? "scaled" : ""} service-image`}
+                  id="accuracy"
+                >
+                  <img
+                    src={accuracy}
+                    alt="MIC Business signals are accurate and timely"
+                    className="img-responsive"
+                  />
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="service-text">
+                  <h1 className="">Unbeatable Accuracy</h1>
+                  <p>
+                    With an accuracy of 85% or higher, you can keep your
+                    drawdown very low and get the maximum profit. All results
+                    are verified. Check your Dashboard for signal performance
+                    updates.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="service-text-image-box">
+            <div
+              className="row flex-column-reverse flex-md-row"
+              ref={supportRef}
+            >
+              <div className="col-md-6">
+                <div className="service-text">
+                  <h1 className="">24/7 Support</h1>
+                  <p>
+                    You can contact us at any time of the day. We will contact
+                    you in the shortest time. You can always send us a message
+                    with your question. We are always there for you.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div
+                  className={`${scale === 5 ? "scaled" : ""} service-image`}
+                  id="support"
+                >
+                  <img
+                    src={support}
+                    alt="MIC Business support team are available 24/7"
                     className="img-responsive"
                   />
                 </div>

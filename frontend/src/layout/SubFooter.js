@@ -20,12 +20,11 @@ function SubFooter() {
                 alt="MIC Earn Business Logo"
                 className="nav-logo mb-4"
               />
-              <h2>MIC Earn Business</h2>
+              <h2>We provide Trading and Investment Signals </h2>
               <p>
-                On the other hand, we denounce with righteous indignation and
-                dislike men who are so beguiled and demoralized by the charms of
-                pleasure of the moment, so blinded by desire, that they cannot
-                foresee the pain
+                Our goal is to help a minimum of 150,000,000 people become
+                massively profitable in their trading and investments this year
+                through our services.
               </p>
             </div>
           </div>

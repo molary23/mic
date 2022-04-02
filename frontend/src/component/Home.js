@@ -13,11 +13,10 @@ function Home(props) {
           <div className="row flex-column-reverse flex-md-row">
             <div className="col-md-5 col-12">
               <div className="home-top-text">
-                <h1 className="mb-4">Why MIC Earn Business</h1>
+                <h1 className="mb-4">Increase Your Profit With Our Signals</h1>
                 <p>
-                  With an accuracy of 85% or higher, you can keep your drawdown
-                  very low and get the maximum profit. All results are verified.
-                  Check your Dashboard for signal performance updates.
+                  Trade Forex, Indexes and Cryptocurrency following signals
+                  provided by our team expert forex traders.
                 </p>
                 <a
                   type="button"
@@ -36,48 +35,12 @@ function Home(props) {
       </div>
       <div className="main-home-intro">
         <div className="container">
-          <div className="row">
-            <div className="col-sm">
-              <div className="intro-1">
-                <div className="intro-icon mb-5">
-                  <GiArcheryTarget />
-                </div>
-                <h4 className="mt-2 mb-4">Unbeatable Accuracy</h4>
-                <p>
-                  With an accuracy of 85% or higher, you can keep your drawdown
-                  very low and get the maximum profit. All results are verified.
-                  Check your Dashboard for signal performance updates.
-                </p>
-              </div>
-            </div>
-            <div className="col-sm">
-              <div className="intro-2">
-                <div className="intro-icon mb-5">
-                  <HiOutlineUserGroup />
-                </div>
-                <h4 className="mt-2 mb-4">Refer and Earn</h4>
-                <p>
-                  With us there is more than one way to earn, refer families and
-                  friends and end cashback reward that could be withdrawn or
-                  used for premium subscription.
-                </p>
-              </div>
-            </div>
-            <div className="col-sm">
-              <div className="intro-3">
-                <div className="intro-icon mb-5">
-                  <MdOutlineSupportAgent />
-                </div>
-
-                <h4 className="mt-2 mb-4">24/7 Support</h4>
-                <p>
-                  You can contact us at any time of the day. We will contact you
-                  in the shortest time. You can always send us a message with
-                  your question. We are always there for you.
-                </p>
-              </div>
-            </div>
-          </div>
+          <h1 className="mb-4">Why MIC Earn Business</h1>
+          <p>
+            With an accuracy of 85% or higher, you can keep your drawdown very
+            low and get the maximum profit. All results are verified. Check your
+            Dashboard for signal performance updates.
+          </p>
         </div>
       </div>
     </div>
