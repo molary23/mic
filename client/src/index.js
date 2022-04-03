@@ -7,11 +7,12 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
 import ThemeContextWrapper from "./theme/ThemeContextWrapper";
+import history from "./util/History";
 
 ReactDOM.render(
   <Provider store={store}>
     <ThemeContextWrapper>
-      <BrowserRouter>
+      <BrowserRouter history={history}>
         <React.StrictMode>
           <App />
         </React.StrictMode>
