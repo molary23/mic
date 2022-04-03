@@ -33,7 +33,7 @@ export default function ThemeContextWrapper(props) {
         document.body.classList.add("dark-content");
         break;
       default:
-        document.body.classList.add("white-content");
+        document.body.classList.remove("dark-content");
         break;
     }
   }, [theme]);

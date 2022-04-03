@@ -254,7 +254,7 @@ router.get(
                           where: {
                             [Op.and]: [
                               { status: "a" },
-                              { userid: preference.providers },
+                              { userid: JSON.parse(preference.providers) },
                             ],
                           },
                           attributes: ["username", "userid"],
@@ -265,7 +265,7 @@ router.get(
                               where: {
                                 [Op.and]: [
                                   { status: "a" },
-                                  { id: preference.currencies },
+                                  { id: JSON.parse(preference.currencies) },
                                 ],
                               },
                               attributes: [
@@ -326,7 +326,7 @@ router.get(
                               where: {
                                 [Op.and]: [
                                   { status: "a" },
-                                  { id: preference.currencies },
+                                  { id: JSON.parse(preference.currencies) },
                                 ],
                               },
                               attributes: [
@@ -350,7 +350,7 @@ router.get(
                           where: {
                             [Op.and]: [
                               { status: "a" },
-                              { userid: preference.providers },
+                              { userid: JSON.parse(preference.providers) },
                             ],
                           },
                           attributes: ["username", "userid"],
@@ -410,9 +410,10 @@ router.post(
     Preference.findOne({ where: { UserId: id }, attributes: ["providers"] })
       .then((prList) => {
         if (prList.providers !== null) {
-          providers = [...providers, ...prList.providers];
+          providers = [...providers, ...JSON.parse(prList.providers)];
         }
         providers = [...new Set(providers)];
+        providers = JSON.stringify(providers);
         Preference.update({ providers }, { where: { UserId: id } })
           .then(() => {
             res.json(true);
@@ -477,9 +478,10 @@ router.post(
     Preference.findOne({ where: { UserId: id }, attributes: ["currencies"] })
       .then((curList) => {
         if (curList.currencies !== null) {
-          currencies = [...currencies, ...curList.currencies];
+          currencies = [...currencies, ...JSON.parse(curList.currencies)];
         }
         currencies = [...new Set(currencies)];
+        currencies = JSON.stringify(currencies);
         Preference.update({ currencies }, { where: { UserId: id } })
           .then(() => {
             res.json(true);

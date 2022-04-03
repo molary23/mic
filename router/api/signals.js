@@ -108,10 +108,12 @@ router.post(
     Currency.findOne({
       where: {
         [Op.and]: [
-          { firstcurrency: { [Op.regexp]: currencyFields.firstcurrency[0] } },
-          { firstcurrency: { [Op.regexp]: currencyFields.firstcurrency[1] } },
-          { secondcurrency: { [Op.regexp]: currencyFields.secondcurrency[0] } },
-          { secondcurrency: { [Op.regexp]: currencyFields.secondcurrency[1] } },
+          { firstcurrency: { [Op.substring]: currencyFields.firstcurrency } },
+          {
+            secondcurrency: {
+              [Op.substring]: currencyFields.secondcurrency,
+            },
+          },
         ],
       },
     })

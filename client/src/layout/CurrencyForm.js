@@ -71,12 +71,16 @@ function CurrencyForm(props) {
 
   for (let i = 0; i < currencyList.length; i++) {
     options = {
-      value: `${currencyList[i].firstcurrency[1].toUpperCase()}/${currencyList[
-        i
-      ].secondcurrency[1].toUpperCase()}`,
-      option: `${currencyList[i].firstcurrency[1].toUpperCase()}/${currencyList[
-        i
-      ].secondcurrency[1].toUpperCase()}`,
+      value: `${JSON.parse(
+        currencyList[i].firstcurrency
+      )[1].toUpperCase()}/${JSON.parse(
+        currencyList[i].secondcurrency
+      )[1].toUpperCase()}`,
+      option: `${JSON.parse(
+        currencyList[i].firstcurrency
+      )[1].toUpperCase()}/${JSON.parse(
+        currencyList[i].secondcurrency
+      )[1].toUpperCase()}`,
       data: currencyList[i].id,
     };
 
@@ -167,7 +171,7 @@ function CurrencyForm(props) {
 
 CurrencyForm.propTypes = {
   onSubmit: PropTypes.func,
-  currencyList: PropTypes.object.isRequired,
+  currencyList: PropTypes.array.isRequired,
   load: PropTypes.bool,
 };
 

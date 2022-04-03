@@ -131,11 +131,13 @@ class Signals extends Component {
     }
 
     if (
-      prevProps.searchTerms.searching !== this.props.searchTerms.searching &&
-      this.props.searchTerms.searching
+      prevProps.providerSearch.searching !==
+        this.props.providerSearch.searching &&
+      this.props.providerSearch.searching
     ) {
       this.setState({
-        numOfPages: (this.props.searchTerms.signalcount + 1) / this.state.limit,
+        numOfPages:
+          (this.props.providerSearch.signalcount + 1) / this.state.limit,
       });
     }
   }

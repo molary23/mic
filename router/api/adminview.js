@@ -783,10 +783,10 @@ router.post(
             ...{
               [Op.or]: [
                 {
-                  firstcurrency: { [Op.regexp]: searchTerms },
+                  firstcurrency: { [Op.substring]: searchTerms },
                 },
                 {
-                  secondcurrency: { [Op.regexp]: searchTerms },
+                  secondcurrency: { [Op.substring]: searchTerms },
                 },
               ],
             },

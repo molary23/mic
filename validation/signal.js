@@ -12,7 +12,7 @@ module.exports = function validateSignalInput(data) {
   data.endrange = !isEmpty(data.endrange) ? data.endrange : "";
   data.pip = !isEmpty(data.pip) ? data.pip : "";
 
-  if (isNaN(data.currencypair) || validator.isEmpty(data.currencypair)) {
+  if (isNaN(data.currencypair) || isEmpty(data.currencypair)) {
     errors.currencypair = "Currency Pair Field must be selected!";
   }
   if (validator.isEmpty(data.signaloption)) {

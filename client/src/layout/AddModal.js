@@ -117,9 +117,9 @@ function AddModal(props) {
       optObj = {
         value: currencies[i].id,
         option: `${
-          currencies[i].firstcurrency[1].toUpperCase() +
+          JSON.parse(currencies[i].firstcurrency)[1].toUpperCase() +
           "/" +
-          currencies[i].secondcurrency[1].toUpperCase()
+          JSON.parse(currencies[i].secondcurrency)[1].toUpperCase()
         }`,
       };
       optArray.push(optObj);
@@ -186,8 +186,8 @@ function AddModal(props) {
           const signal = {
             pair: parseInt(inputs.addpair),
             signaloption: inputs.addsignaloption,
-            takeprofit: takeprofit,
-            stoploss: stoploss,
+            takeprofit: JSON.stringify(takeprofit),
+            stoploss: JSON.stringify(stoploss),
             startrange: inputs.addstartrange,
             endrange: inputs.addendrange,
             pip: inputs.addpip,
@@ -396,14 +396,14 @@ function AddModal(props) {
       } else {
         setErrors({});
         const currency = {
-          firstcurrencypair: [
+          firstcurrencypair: JSON.stringify([
             inputs.addfirstcurrencycode.toLowerCase(),
             inputs.addfirstcurrencyname.toLowerCase(),
-          ],
-          secondcurrencypair: [
+          ]),
+          secondcurrencypair: JSON.stringify([
             inputs.addsecondcurrencycode.toLowerCase(),
             inputs.addsecondcurrencyname.toLowerCase(),
-          ],
+          ]),
         };
         onSubmit(["add", currency]);
       }

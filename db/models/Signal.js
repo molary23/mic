@@ -17,10 +17,10 @@ Signal.init(
       allowNull: false,
     },
     takeprofit: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING(50),
     },
     stoploss: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING(50),
     },
     startrange: {
       type: DataTypes.DOUBLE,

@@ -22,7 +22,6 @@ function SignalForm(props) {
     if (prId === undefined || prId.length === 0) {
       setErrors("Kindly select a Provider.");
     } else {
-      console.log(prId);
       onSubmit(["selected", prId]);
       setLoading(load);
     }

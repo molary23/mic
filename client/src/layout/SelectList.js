@@ -44,10 +44,16 @@ function SelectList(props) {
           className="list-group-item d-flex justify-content-between align-items-center"
           key={i}
         >
-          {`${item.firstcurrency[1].toUpperCase()}/${item.secondcurrency[1].toUpperCase()}`}
+          {`${JSON.parse(item.firstcurrency)[1].toUpperCase()}/${JSON.parse(
+            item.secondcurrency
+          )[1].toUpperCase()}`}
           <span className="remove-selected-item">
             <span
-              title={`Remove ${item.firstcurrency[1].toUpperCase()}/${item.secondcurrency[1].toUpperCase()}`}
+              title={`Remove ${JSON.parse(
+                item.firstcurrency
+              )[1].toUpperCase()}/${JSON.parse(
+                item.secondcurrency
+              )[1].toUpperCase()}`}
               onClick={() => clickHandler(item.id)}
             >
               <IoIosRemoveCircleOutline />

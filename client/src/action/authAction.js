@@ -17,7 +17,7 @@ import setAuthToken from "../util/setAuthToken";
 export const loginuser = (userData) => async (dispatch) => {
   dispatch(clearErrors());
   try {
-    let response = await axios.post("/api/public/login/", userData, {});
+    let response = await axios.post("/api/view/login/", userData, {});
     const { token } = response.data;
     localStorage.setItem("jwtToken", token);
     // Set Token to Auth Header

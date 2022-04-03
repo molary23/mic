@@ -55,7 +55,7 @@ export class Forgot extends Component {
       };
       try {
         let response = await axios.post(
-          "/api/public/forgot",
+          "/api/view/forgot",
           {
             user,
           },

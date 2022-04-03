@@ -806,18 +806,18 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td className="currency-name">
-            {`${item.firstcurrency[1]} /
-              ${item.secondcurrency[1]}`}
+            {`${JSON.parse(item.firstcurrency)[1]} /
+              ${JSON.parse(item.secondcurrency)[1]}`}
           </td>
           <td>
             {
               <>
                 <span className="currency-flag">
                   {countrycodes.includes(
-                    item.firstcurrency[0].toUpperCase()
+                    JSON.parse(item.firstcurrency)[0].toUpperCase()
                   ) ? (
                     <Flag
-                      code={item.firstcurrency[0].toUpperCase()}
+                      code={JSON.parse(item.firstcurrency)[0].toUpperCase()}
                       size="L"
                       border="NONE"
                     />
@@ -827,10 +827,10 @@ function TableBody(props) {
                 </span>
                 <span className="currency-flag">
                   {countrycodes.includes(
-                    item.secondcurrency[0].toUpperCase()
+                    JSON.parse(item.secondcurrency)[0].toUpperCase()
                   ) ? (
                     <Flag
-                      code={item.secondcurrency[0].toUpperCase()}
+                      code={JSON.parse(item.secondcurrency)[0].toUpperCase()}
                       size="L"
                       border="NONE"
                     />
@@ -910,17 +910,18 @@ function TableBody(props) {
         <tr key={i}>
           <td>{i + 1}</td>
           <td className="currency-name">
-            {item.firstcurrency[1]} / {item.secondcurrency[1]}
+            {JSON.parse(item.firstcurrency)[1]} /{" "}
+            {JSON.parse(item.secondcurrency)[1]}
           </td>
           <td>
             {
               <>
                 <span className="currency-flag">
                   {countrycodes.includes(
-                    item.firstcurrency[0].toUpperCase()
+                    JSON.parse(item.firstcurrency)[0].toUpperCase()
                   ) ? (
                     <Flag
-                      code={item.firstcurrency[0].toUpperCase()}
+                      code={JSON.parse(item.firstcurrency)[0].toUpperCase()}
                       size="L"
                       border="NONE"
                     />
@@ -930,10 +931,10 @@ function TableBody(props) {
                 </span>
                 <span className="currency-flag">
                   {countrycodes.includes(
-                    item.secondcurrency[0].toUpperCase()
+                    JSON.parse(item.secondcurrency)[0].toUpperCase()
                   ) ? (
                     <Flag
-                      code={item.secondcurrency[0].toUpperCase()}
+                      code={JSON.parse(item.secondcurrency)[0].toUpperCase()}
                       size="L"
                       border="NONE"
                     />
@@ -951,9 +952,9 @@ function TableBody(props) {
             {item.status === "s" && "successful"}
           </td>
           <td>
-            {item.takeprofit.map((tp, i) => {
+            {JSON.parse(item.takeprofit).map((tp, i) => {
               let profit;
-              if (i === item.takeprofit.length - 1) {
+              if (i === JSON.parse(item.takeprofit).length - 1) {
                 profit = <span key={i}>{tp}</span>;
               } else {
                 profit = <span key={i}>{tp}, </span>;
@@ -962,9 +963,9 @@ function TableBody(props) {
             })}
           </td>
           <td>
-            {item.stoploss.map((sl, i) => {
+            {JSON.parse(item.stoploss).map((sl, i) => {
               let loss;
-              if (i === item.stoploss.length - 1) {
+              if (i === JSON.parse(item.stoploss).length - 1) {
                 loss = <span key={i}>{sl}</span>;
               } else {
                 loss = <span key={i}>{sl}, </span>;

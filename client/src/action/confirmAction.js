@@ -17,7 +17,7 @@ export const confirmCode = (usercode) => async (dispatch) => {
   dispatch(clearConfirmAction());
 
   try {
-    let response = await axios.post("/api/public/confirm", usercode),
+    let response = await axios.post("/api/view/confirm", usercode),
       message = response.data;
     if (message.message) {
       localStorage.setItem("confirm", message.value);
@@ -44,7 +44,7 @@ export const resetPass = (pass) => async (dispatch) => {
   dispatch(clearErrors());
   dispatch(clearResetAction());
   try {
-    let response = await axios.post("/api/public/reset/", pass);
+    let response = await axios.post("/api/view/reset/", pass);
     const result = await dispatch({
       type: USER_RESET_PASSWORD_ACTION,
       payload: response.data,

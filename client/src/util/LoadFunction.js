@@ -249,7 +249,7 @@ export const checkHandler = (input, target, setIcon, setErrors) => {
       [input]: true,
     });
     axios
-      .post(`/api/public/${page}/`, req, {})
+      .post(`/api/view/${page}/`, req, {})
       .then((res) => {
         response = res.data.text;
         setErrors({

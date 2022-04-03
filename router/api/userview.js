@@ -40,7 +40,7 @@ const express = require("express"),
 
 /*
 @route GET api/userview/signals
-@desc Admin View signals
+@desc User View signals
 @access private
 */
 
@@ -76,10 +76,10 @@ router.post(
                   provider: { [Op.substring]: searchArray[i] },
                 },
                 {
-                  firstcurrency: { [Op.regexp]: searchArray[i] },
+                  firstcurrency: { [Op.substring]: searchArray[i] },
                 },
                 {
-                  secondcurrency: { [Op.regexp]: searchArray[i] },
+                  secondcurrency: { [Op.substring]: searchArray[i] },
                 },
               ],
             };
@@ -98,10 +98,10 @@ router.post(
                   provider: { [Op.substring]: searchTerms },
                 },
                 {
-                  firstcurrency: { [Op.regexp]: searchTerms },
+                  firstcurrency: { [Op.substring]: searchTerms },
                 },
                 {
-                  secondcurrency: { [Op.regexp]: searchTerms },
+                  secondcurrency: { [Op.substring]: searchTerms },
                 },
               ],
             },
@@ -118,10 +118,10 @@ router.post(
         let currencies = pref.currencies;
         providers = pref.providers;
         if (currencies !== null) {
-          where = { ...where, ...{ CurrencyId: currencies } };
+          where = { ...where, ...{ CurrencyId: JSON.parse(currencies) } };
         }
         if (providers !== null) {
-          where = { ...where, ...{ providerid: providers } };
+          where = { ...where, ...{ providerid: JSON.parse(providers) } };
         }
         const query = {
           order: [["signalid", "DESC"]],

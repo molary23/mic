@@ -32,10 +32,10 @@ function Signal(props) {
                 <>
                   <span className="currency-flag">
                     {countrycodes.includes(
-                      signal.firstcurrency[0].toUpperCase()
+                      JSON.parse(signal.firstcurrency)[0].toUpperCase()
                     ) ? (
                       <Flag
-                        code={signal.firstcurrency[0].toUpperCase()}
+                        code={JSON.parse(signal.firstcurrency)[0].toUpperCase()}
                         size="L"
                         border="NONE"
                       />
@@ -45,10 +45,12 @@ function Signal(props) {
                   </span>
                   <span className="currency-flag">
                     {countrycodes.includes(
-                      signal.secondcurrency[0].toUpperCase()
+                      JSON.parse(signal.secondcurrency)[0].toUpperCase()
                     ) ? (
                       <Flag
-                        code={signal.secondcurrency[0].toUpperCase()}
+                        code={JSON.parse(
+                          signal.secondcurrency
+                        )[0].toUpperCase()}
                         size="L"
                         border="NONE"
                       />
@@ -94,7 +96,7 @@ function Signal(props) {
           </div>
         </div>
         <div className="signal-take-profit">
-          {signal.takeprofit.map((tp, i) => {
+          {JSON.parse(signal.takeprofit).map((tp, i) => {
             return (
               <div className="signal-sold-at" key={i}>
                 <div className="signal-sold-title signal-title">
@@ -115,7 +117,7 @@ function Signal(props) {
           </div>
         )}
         <div className="signal-stop-loss">
-          {signal.stoploss.map((sl, i) => {
+          {JSON.parse(signal.stoploss).map((sl, i) => {
             return (
               <div className="signal-bought-at" key={i}>
                 <div className="signal-bought-title signal-title">

@@ -10,7 +10,7 @@ const express = require("express"),
   users = require("./router/api/users"),
   admin = require("./router/api/admin"),
   signals = require("./router/api/signals"),
-  public = require("./router/api/public"),
+  view = require("./router/api/view"),
   adminview = require("./router/api/adminview"),
   userview = require("./router/api/userview"),
   count = require("./router/api/count"),
@@ -32,7 +32,7 @@ require("./config/passport")(passport);
 app.use("/api/users", users);
 app.use("/api/admin", admin);
 app.use("/api/signals", signals);
-app.use("/api/public", public);
+app.use("/api/view", view);
 app.use("/api/payments", payments);
 app.use("/api/adminview", adminview);
 app.use("/api/userview", userview);

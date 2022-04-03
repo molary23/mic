@@ -112,7 +112,7 @@ export class VerifyEmail extends Component {
   pushData = async (data) => {
     try {
       let response = await axios.post(
-        "/api/public/verify/",
+        "/api/view/verify/",
         {
           data,
         },

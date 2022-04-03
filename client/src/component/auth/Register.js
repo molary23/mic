@@ -70,7 +70,7 @@ class Register extends Component {
           },
         });
         axios
-          .post(`/api/public/${input}/`, req, {})
+          .post(`/api/view/${input}/`, req, {})
           .then((res) => {
             response = res.data.text;
             this.setState({
@@ -204,7 +204,7 @@ class Register extends Component {
 
       try {
         let response = await axios.post(
-          "/api/public/register/",
+          "/api/view/register/",
           {
             user,
           },

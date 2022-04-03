@@ -15,10 +15,10 @@ SignalView.init(
       type: DataTypes.ENUM("b", "s"),
     },
     takeprofit: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING(50),
     },
     stoploss: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING(50),
     },
     startrange: {
       type: DataTypes.DOUBLE,
@@ -39,10 +39,10 @@ SignalView.init(
       type: DataTypes.DATE,
     },
     firstcurrency: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(50),
     },
     secondcurrency: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(50),
     },
     currencyid: {
       type: DataTypes.INTEGER.UNSIGNED,

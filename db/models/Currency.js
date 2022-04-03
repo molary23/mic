@@ -13,11 +13,11 @@ Currency.init(
       primaryKey: true,
     },
     firstcurrency: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     secondcurrency: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     status: {

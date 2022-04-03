@@ -198,7 +198,12 @@ function MainNav(props) {
               </span>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="//dashboard.micearnbusiness.org/">
+              <a
+                className="nav-link"
+                href="//dashboard.micearnbusiness.org/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Login
               </a>
             </li>
@@ -207,6 +212,8 @@ function MainNav(props) {
                 type="button"
                 className="btn nav-link default-btn"
                 href="//dashboard.micearnbusiness.org/register"
+                target="_blank"
+                rel="noreferrer"
               >
                 Register
               </a>
