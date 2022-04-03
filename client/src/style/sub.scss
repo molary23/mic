@@ -1,12 +1,19 @@
 @import "default.scss";
 
 .home-page {
+  background: url("../asset/images/building.jpg");
   min-height: 700px;
-  background: #000428;
-  background: -webkit-linear-gradient(to left, #000428, #004e92) no-repeat;
-  background: linear-gradient(to left, #000428, #004e92) no-repeat;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  .home-page-box {
+    min-height: 700px;
+    background: rgba($color: #000428, $alpha: 0.8);
+    padding-top: 50px;
+    padding-bottom: 50px;
+    opacity: 1;
+  }
 
   .home-box {
     width: 500px;

@@ -317,12 +317,20 @@ svg {
 }
 
 .home-page {
+  background: url("../asset/images/building.jpg");
   min-height: 700px;
-  background: #000428;
-  background: -webkit-gradient(linear, right top, left top, from(#000428), to(#004e92)) no-repeat;
-  background: linear-gradient(to left, #000428, #004e92) no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.home-page .home-page-box {
+  min-height: 700px;
+  background: rgba(0, 4, 40, 0.8);
   padding-top: 50px;
   padding-bottom: 50px;
+  opacity: 1;
 }
 
 .home-page .home-box {
