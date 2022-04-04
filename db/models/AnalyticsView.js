@@ -1,54 +1,42 @@
 const { DataTypes, Model } = require("sequelize");
 sequelize = require("../../config/dbcon");
 
-class CountView extends Model {}
+class AnalyticsView extends Model {}
 
-CountView.init(
+AnalyticsView.init(
   {
     // Model attributes are defined here
-    users: {
+    premium: {
+      type: DataTypes.INTEGER,
+    },
+    currencies: {
       type: DataTypes.INTEGER,
     },
     signals: {
       type: DataTypes.INTEGER,
     },
+    bonus: {
+      type: DataTypes.INTEGER,
+    },
     payments: {
-      type: DataTypes.INTEGER,
-    },
-    transactions: {
-      type: DataTypes.INTEGER,
-    },
-    subscriptions: {
       type: DataTypes.INTEGER,
     },
     bonus: {
       type: DataTypes.INTEGER,
     },
-    providers: {
+    withdrawals: {
       type: DataTypes.INTEGER,
     },
     referrals: {
       type: DataTypes.INTEGER,
     },
-    currency: {
+    debit: {
       type: DataTypes.INTEGER,
     },
-    admins: {
+    credit: {
       type: DataTypes.INTEGER,
     },
-    accounts: {
-      type: DataTypes.INTEGER,
-    },
-    announcements: {
-      type: DataTypes.INTEGER,
-    },
-    withdrawals: {
-      type: DataTypes.INTEGER,
-    },
-    wallets: {
-      type: DataTypes.INTEGER,
-    },
-    forums: {
+    sub: {
       type: DataTypes.INTEGER,
     },
   },
@@ -63,8 +51,8 @@ CountView.init(
     updatedAt: false,
     // Other model options go here
     sequelize, // We need to pass the connection instance
-    modelName: "CountView", // We need to choose the model name
+    modelName: "AnalyticsView", // We need to choose the model name
   }
 );
-CountView.sync = () => Promise.resolve();
-module.exports = CountView;
+AnalyticsView.sync = () => Promise.resolve();
+module.exports = AnalyticsView;

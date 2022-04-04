@@ -1,3 +1,5 @@
+const CountView = require("../../db/models/CountView");
+
 const express = require("express"),
   router = express.Router(),
   passport = require("passport"),
@@ -41,29 +43,30 @@ router.get(
     if (!isLevel) {
       return res.status(400).json(error);
     }
-    const count = {};
 
-    try {
-      count.users = await UserView.count();
-      count.signals = await SignalView.count();
-      count.payments = await Payment.count();
-      count.transactions = await TransactionView.count();
-      count.subscriptions = await SubscriptionView.count();
-      count.bonus = await BonusView.count();
-      count.providers = await ProviderView.count();
-      count.referrals = await ReferralView.count();
-      count.currency = await Currency.count();
-      count.admins = await SuperView.count();
-      count.providers = await ProviderView.count();
-      count.accounts = await AccountView.count();
-      count.announcement = await Announcement.count();
-      count.withdrawals = await WithdrawalView.count();
-      count.wallets = await Wallet.count();
-      count.forums = await Forum.count();
-      res.json(count);
-    } catch (error) {
-      res.status(404).json(error);
-    }
+    CountView.findOne({
+      attributes: [
+        "users",
+        "signals",
+        "payments",
+        "transactions",
+        "subscriptions",
+        "bonus",
+        "providers",
+        "referrals",
+        "currency",
+        "admins",
+        "accounts",
+        "announcements",
+        "withdrawals",
+        "wallets",
+        "forums",
+      ],
+    })
+      .then((count) => {
+        return res.json(count);
+      })
+      .catch((err) => res.status(404).json(err));
   }
 );
 

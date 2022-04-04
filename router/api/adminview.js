@@ -34,6 +34,7 @@ const express = require("express"),
   UserView = require("../../db/models/UserView"),
   SuperView = require("../../db/models/SuperView"),
   AccountView = require("../../db/models/AccountView"),
+  AnalyticView = require("../../db/models/AnalyticsView"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck"),
   dateformat = require("../../util/dateformat"),
@@ -1921,7 +1922,7 @@ router.get(
             }
           }
         })
-        .catch((err) => res.status(404).json(`U ${err}`)),
+        .catch((err) => res.status(404).json(err)),
     ]);
   }
 );
@@ -1941,68 +1942,24 @@ router.get(
       return res.status(400).json(error);
     }
 
-    let removeday = new Date(new Date().setDate(new Date().getDate() - 7));
-
-    const count = {},
-      today = dateformat(new Date()),
-      week = dateformat(removeday);
-
-    try {
-      count.premium = await UserView.count({
-        where: {
-          premiumstatus: "a",
-        },
-      });
-      count.providers = await ProviderView.count({ where: { status: "a" } });
-      count.currencies = await Currency.count({ where: { status: "a" } });
-      count.signals = await SignalView.count({
-        where: sequelize.where(
-          sequelize.fn("date", sequelize.col("createdAt")),
-          "=",
-          today
-        ),
-      });
-      count.bonus = await Bonus.count({ where: { status: "p" } });
-      count.withdrawals = await WithdrawalView.count({
-        where: sequelize.where(
-          sequelize.fn("date", sequelize.col("createdAt")),
-          ">=",
-          week
-        ),
-        status: "p",
-      });
-      count.payments = await Payment.count({
-        where: sequelize.where(
-          sequelize.fn("date", sequelize.col("createdAt")),
-          ">=",
-          week
-        ),
-        status: "s",
-      });
-      count.referrals = await Referral.count({
-        where: sequelize.where(
-          sequelize.fn("date", sequelize.col("createdAt")),
-          "=",
-          today
-        ),
-      });
-      count.credit = await Transaction.count({
-        where: { type: "c" },
-      });
-      count.debit = await Transaction.count({
-        where: { type: "d" },
-      });
-      count.sub = await SubscriptionView.count({
-        where: sequelize.where(
-          sequelize.fn("date", sequelize.col("createdAt")),
-          "=",
-          today
-        ),
-      });
-      res.json(count);
-    } catch (error) {
-      res.status(404).json(error);
-    }
+    AnalyticView.findOne({
+      attributes: [
+        "premium",
+        "currencies",
+        "signals",
+        "bonus",
+        "payments",
+        "withdrawals",
+        "referrals",
+        "debit",
+        "credit",
+        "sub",
+      ],
+    })
+      .then((analytics) => {
+        return res.json(analytics);
+      })
+      .catch((err) => res.status(404).json(err));
   }
 );
 
