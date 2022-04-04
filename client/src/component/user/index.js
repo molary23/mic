@@ -67,7 +67,7 @@ export class Index extends Component {
 
   shareRef = (value) => {
     let text = encodeURIComponent("Join MIC Earn Business");
-    let url = "http://localhost:3000/referral/:mol";
+    let url = "//dashboard.micearnbusiness.org/referral/:mol";
     let hash_tags = "crypto,forex";
 
     let params = "menubar=no,toolbar=no,status=no,width=570,height=570"; // for window
@@ -256,7 +256,10 @@ export class Index extends Component {
                   <div className="dash-basic dash-card">
                     <h4 className="mb-2">Referrals </h4>
                     <h1 className="mb-2">{referral}</h1>
-                    <code>http://localhost:3000/referral/:{username}</code>
+                    <code>
+                      https://dashboard.micearnbusiness.org/referral/:
+                      {username}
+                    </code>
                     <div className={`tiptool ${copy && "showTip"}`}>
                       <span className="tooltiptext">Copied to Clipboard</span>
                     </div>
@@ -264,7 +267,7 @@ export class Index extends Component {
                       type="hidden"
                       ref={this.myRef}
                       id="copy-code"
-                      value={`http://localhost:3000/referral/:${username}`}
+                      value={`https://dashboard.micearnbusiness.org/referral/:${username}`}
                       readOnly
                     />
                     <p className="mb-1">Invite More</p>
@@ -306,7 +309,7 @@ export class Index extends Component {
                   <div className="dash-qr dash-card">
                     <div className="qr-code">
                       <QRCode
-                        value={`http://localhost:3000/referral/:${username}`}
+                        value={`https://dashboard.micearnbusiness.org/referral/:${username}`}
                         size={200}
                         level={"Q"}
                       />

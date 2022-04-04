@@ -312,10 +312,18 @@ nav.top-nav.show-bg {
 
 .main-home-refer-box {
   min-height: 600px;
-  padding: 100px 0px;
+  padding: 100px 0px 200px;
   background: #7d8ec6;
   color: #fff;
   text-align: center;
+}
+
+.main-home-refer-box h3 {
+  font-size: 1.5em;
+}
+
+.main-home-refer-box .refer-steps {
+  margin-top: 100px;
 }
 
 .main-home-refer-box .refer-icon {
@@ -332,7 +340,7 @@ nav.top-nav.show-bg {
   height: 60px;
   border-radius: 30px;
   padding: 15px;
-  background: rgba(187, 231, 251, 0.5);
+  background: rgba(252, 252, 252, 0.3);
   color: #fff;
   text-align: center;
   margin-bottom: 20px;
@@ -388,7 +396,7 @@ a.btn.nav-link.btn {
 }
 
 .sub-footer h2 {
-  font-size: clamp(1.5vw, 18px, 3.5vh);
+  font-size: clamp(1.2vw, 18px, 2.5vh);
   margin-bottom: 20px;
   font-weight: 900;
 }

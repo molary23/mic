@@ -20,11 +20,13 @@ function SubFooter() {
                 alt="MIC Earn Business Logo"
                 className="nav-logo mb-4"
               />
-              <h2>We provide Trading and Investment Signals </h2>
+              <h2>
+                Your Trusted Provider of Accurate Trading and Investment Signals
+              </h2>
               <p>
-                Our goal is to help a minimum of 150,000,000 people become
-                massively profitable in their trading and investments this year
-                through our services.
+                Our goal is to help over 1,000,000 traders with little or no
+                prior experience in forex trading to become massively profitable
+                in their trading with minimum effort required.
               </p>
             </div>
           </div>
