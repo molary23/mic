@@ -5,6 +5,7 @@ import About from "../component/About";
 import Service from "../component/Service";
 import Contact from "../component/Contact";
 import Faq from "../component/Faq";
+import Start from "../component/Start";
 import Refer from "../component/Refer";
 import MainNav from "../layout/MainNav";
 import Footer from "../layout/Footer";
@@ -23,6 +24,7 @@ function Main() {
       <Home homeRef={homeRef} />
       <About aboutRef={aboutRef} />
       <Service serviceRef={serviceRef} />
+      <Start />
       <Refer />
       <Faq faqRef={faqRef} />
       <Contact contactRef={contactRef} />

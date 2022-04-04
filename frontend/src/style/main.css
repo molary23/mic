@@ -474,6 +474,36 @@ a.btn.nav-link.btn {
   font-weight: 600;
 }
 
+.main-home-start-box {
+  background: #f2f2f2;
+  min-height: 600px;
+  padding: 100px 0px;
+}
+
+.main-home-start-box .start-title {
+  text-align: center;
+}
+
+.main-home-start-box h2 {
+  text-transform: capitalize;
+}
+
+.main-home-start-box .start-card {
+  min-height: 200px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  padding: 20px;
+  -webkit-box-shadow: 1px 2px 2px #888888;
+          box-shadow: 1px 2px 2px #888888;
+  color: #4f4f4f;
+}
+
+.main-home-start-box .start-card .start-step p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 @media only screen and (max-width: 767px) {
   .navbar-toggler {
     background: transparent !important;
