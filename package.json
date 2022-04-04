@@ -20,6 +20,7 @@
   "author": "Hassan A. Adeola",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.6.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "bootstrap": "^5.1.3",

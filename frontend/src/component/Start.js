@@ -13,7 +13,7 @@ function Start() {
             <div className="row ">
               <div className="col-md-3 col-12">
                 <div className="start-card">
-                  <h1 className="start-icon">1.</h1>
+                  <h3 className="start-icon">01</h3>
                   <div className="start-step">
                     <h2>subscribe</h2>
                     <p>
@@ -25,7 +25,7 @@ function Start() {
               </div>
               <div className="col-md-3 col-12">
                 <div className="start-card">
-                  <h1 className="start-icon">2.</h1>
+                  <h3 className="start-icon">02</h3>
                   <div className="start-step">
                     <h2>copy</h2>
                     <p>
@@ -37,7 +37,7 @@ function Start() {
               </div>
               <div className="col-md-3 col-12">
                 <div className="start-card">
-                  <h1 className="start-icon">3.</h1>
+                  <h3 className="start-icon">03</h3>
                   <div className="start-step">
                     <h2>trade</h2>
                     <p>
@@ -49,7 +49,7 @@ function Start() {
               </div>
               <div className="col-md-3 col-12">
                 <div className="start-card">
-                  <h1 className="start-icon">4.</h1>
+                  <h3 className="start-icon">04</h3>
                   <div className="start-step">
                     <h2>profit</h2>
                     <p>
