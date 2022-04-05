@@ -27,8 +27,8 @@ function Accordion(props) {
   );
 }
 Accordion.propTypes = {
-  title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
+  title: PropTypes.any.isRequired,
+  content: PropTypes.any.isRequired,
   active: PropTypes.bool.isRequired,
 };
 export default Accordion;

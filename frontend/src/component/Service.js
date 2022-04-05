@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 
 import time from "../asset/images/time.png";
 import money from "../asset/images/money.png";
@@ -16,53 +16,51 @@ function Service(props) {
     accurateRef = useRef(),
     supportRef = useRef();
 
-  const scaleFocus = () => {
-    const moneyId = moneyRef.current,
-      timeId = timeRef.current,
-      hardWorkId = workRef.current,
-      consistentId = consistentRef.current,
-      accurateId = accurateRef.current,
-      supportId = supportRef.current,
-      winScroll = window.scrollY + 50;
-    if (
-      winScroll >= moneyId.offsetTop &&
-      winScroll < moneyId.offsetTop + moneyId.clientHeight
-    ) {
-      setScale((scale) => 0);
-    } else if (
-      winScroll >= timeId.offsetTop &&
-      winScroll < timeId.offsetTop + timeId.clientHeight
-    ) {
-      setScale((scale) => 1);
-    } else if (
-      winScroll >= hardWorkId.offsetTop &&
-      winScroll < hardWorkId.offsetTop + hardWorkId.clientHeight
-    ) {
-      setScale((scale) => 2);
-    } else if (
-      winScroll >= consistentId.offsetTop &&
-      winScroll < consistentId.offsetTop + consistentId.clientHeight
-    ) {
-      setScale((scale) => 3);
-    } else if (
-      winScroll >= accurateId.offsetTop &&
-      winScroll < accurateId.offsetTop + accurateId.clientHeight
-    ) {
-      setScale((scale) => 4);
-    } else if (
-      winScroll >= supportId.offsetTop &&
-      winScroll < supportId.offsetTop + supportId.clientHeight
-    ) {
-      setScale((scale) => 5);
-    }
-  };
-
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const scaleFocus = () => {
+      const moneyId = moneyRef.current,
+        timeId = timeRef.current,
+        hardWorkId = workRef.current,
+        consistentId = consistentRef.current,
+        accurateId = accurateRef.current,
+        supportId = supportRef.current,
+        winScroll = window.scrollY + 50;
+      if (
+        winScroll >= moneyId.offsetTop &&
+        winScroll < moneyId.offsetTop + moneyId.clientHeight
+      ) {
+        setScale((scale) => 0);
+      } else if (
+        winScroll >= timeId.offsetTop &&
+        winScroll < timeId.offsetTop + timeId.clientHeight
+      ) {
+        setScale((scale) => 1);
+      } else if (
+        winScroll >= hardWorkId.offsetTop &&
+        winScroll < hardWorkId.offsetTop + hardWorkId.clientHeight
+      ) {
+        setScale((scale) => 2);
+      } else if (
+        winScroll >= consistentId.offsetTop &&
+        winScroll < consistentId.offsetTop + consistentId.clientHeight
+      ) {
+        setScale((scale) => 3);
+      } else if (
+        winScroll >= accurateId.offsetTop &&
+        winScroll < accurateId.offsetTop + accurateId.clientHeight
+      ) {
+        setScale((scale) => 4);
+      } else if (
+        winScroll >= supportId.offsetTop &&
+        winScroll < supportId.offsetTop + supportId.clientHeight
+      ) {
+        setScale((scale) => 5);
+      }
+    };
     window.addEventListener("scroll", scaleFocus, { passive: true });
     return () => {
       window.removeEventListener("scroll", scaleFocus);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

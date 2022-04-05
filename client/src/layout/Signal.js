@@ -62,9 +62,9 @@ function Signal(props) {
               }
             </div>
             <div className="currency-name">
-              {`${signal.firstcurrency[1]}
+              {`${JSON.parse(signal.firstcurrency)[1]}
                 /
-                ${signal.secondcurrency[1]}`}
+                ${JSON.parse(signal.secondcurrency)[1]}`}
             </div>
             <div className="currency-return signal-align-right">{result}</div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../asset/images/logo.png";
 
@@ -19,13 +19,6 @@ function MainNav(props) {
       setFocus(false);
     }
   };
-
-  useEffect(() => {
-    window.addEventListener("scroll", addFocus, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", addFocus);
-    };
-  }, []);
 
   const scrollToSection = (where, active) => {
     window.scrollTo({
@@ -110,13 +103,16 @@ function MainNav(props) {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.addEventListener("scroll", changeFocus, { passive: true });
+    window.addEventListener("scroll", addFocus, { passive: true });
     return () => {
       window.removeEventListener("scroll", changeFocus);
+      window.removeEventListener("scroll", addFocus);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <nav
       className={`${

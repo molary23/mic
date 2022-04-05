@@ -496,6 +496,7 @@ a.btn.nav-link.btn {
 .main-home-start-box h2 {
   text-transform: capitalize;
   font-size: 20px;
+  font-weight: 600;
 }
 
 .main-home-start-box .start-card {
@@ -513,15 +514,14 @@ a.btn.nav-link.btn {
 
 .main-home-start-box .start-card .start-icon {
   color: #4059d1;
+  margin-bottom: 20px;
+  font-weight: 100;
 }
 
 @media only screen and (max-width: 767px) {
   .navbar-toggler {
     background: transparent !important;
     border: unset;
-  }
-  .main-home-service {
-    padding-bottom: 30px;
   }
   .main-home-service .service-text-image-box {
     padding-top: 50px;
@@ -542,7 +542,9 @@ a.btn.nav-link.btn {
     background-size: contain;
   }
   .main-home .main-home-intro {
-    padding: 150px 0px;
+    padding: 50px 0px;
+    width: 90%;
+    margin: 0px auto;
   }
   .main-home-contact {
     height: 150px;
@@ -564,14 +566,23 @@ a.btn.nav-link.btn {
     height: 200px;
     background-size: contain;
   }
-  .main-home-faq-box {
-    padding-bottom: 30px;
+  .main-home-faq-box,
+  .main-home-contact-box,
+  .main-home-refer-box,
+  .main-home-start-box,
+  .main-home-service,
+  .main-home-about {
+    padding-bottom: 50px;
   }
-  .intro-1,
-  .intro-2,
-  .intro-3 {
+  .start-card,
+  .refer-step {
     width: 90%;
-    margin: 0px auto 20px;
+    margin: 0px auto;
+  }
+  .main-home .main-home-top .home-top-text {
+    padding: 20px 0px;
+    margin: 50px auto;
+    width: 90%;
   }
 }
 /*# sourceMappingURL=main.css.map */

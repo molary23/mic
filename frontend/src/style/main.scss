@@ -302,6 +302,7 @@ a.btn.nav-link.btn {
   h2 {
     text-transform: capitalize;
     font-size: 20px;
+    font-weight: 600;
   }
   .start-card {
     min-height: 200px;
@@ -315,6 +316,8 @@ a.btn.nav-link.btn {
     margin-bottom: 50px;
     .start-icon {
       color: rgb(64, 89, 209);
+      margin-bottom: 20px;
+      font-weight: 100;
     }
   }
 }

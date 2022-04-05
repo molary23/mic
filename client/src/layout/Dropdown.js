@@ -37,9 +37,10 @@ function Dropdown(props) {
 
   return (
     <div className="Dropdown">
-      <Link
+      <a
+        // eslint-disable-next-line jsx-a11y/anchor-is-valid
         // className="nav-link dropdown-toggle"
-        to="#"
+        href="#"
         // role="button"
         data-bs-toggle="dropdown"
         onClick={linkHandler}
@@ -55,8 +56,7 @@ function Dropdown(props) {
             className="rounded-pill"
           />
         </div>
-      </Link>
-
+      </a>
       <ul className={`dropdown-menu ${display ? "show" : ""}`}>
         <li className="dropdown-item">
           <a

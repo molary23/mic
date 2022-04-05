@@ -7,7 +7,6 @@
     border: unset;
   }
   .main-home-service {
-    padding-bottom: 30px;
     .service-text-image-box {
       padding-top: 50px;
       text-align: center;
@@ -30,7 +29,9 @@
     background-size: contain;
   }
   .main-home .main-home-intro {
-    padding: 150px 0px;
+    padding: 50px 0px;
+    width: 90%;
+    margin: 0px auto;
   }
   .main-home-contact {
     height: 150px;
@@ -53,15 +54,24 @@
     background-size: contain;
   }
 
-  .main-home-faq-box {
-    padding-bottom: 30px;
+  .main-home-faq-box,
+  .main-home-contact-box,
+  .main-home-refer-box,
+  .main-home-start-box,
+  .main-home-service,
+  .main-home-about {
+    padding-bottom: 50px;
+  }
+  .start-card,
+  .refer-step {
+    width: 90%;
+    margin: 0px auto;
   }
 
-  .intro-1,
-  .intro-2,
-  .intro-3 {
+  .main-home .main-home-top .home-top-text {
+    padding: 20px 0px;
+    margin: 50px auto;
     width: 90%;
-    margin: 0px auto 20px;
   }
 }
 

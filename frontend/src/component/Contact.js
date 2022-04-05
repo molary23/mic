@@ -95,7 +95,7 @@ function Contact(props) {
             <h4 className="mb-5">We are only one Buzz away</h4>
           </div>
           <div className="row">
-            <div className="col-md-6 col-12">
+            <div className="col-md-6 d-none d-md-block">
               <div className="contact-image"></div>
             </div>
             <div className="col-md-6 col-12">
