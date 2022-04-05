@@ -325,6 +325,10 @@ nav.top-nav.show-bg {
   margin-top: 100px;
 }
 
+.main-home-refer-box .refer-step {
+  margin-bottom: 50px;
+}
+
 .main-home-refer-box .refer-icon {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -504,6 +508,7 @@ a.btn.nav-link.btn {
           box-shadow: 1px 1px 1px #e0e0e0;
   color: #4f4f4f;
   text-align: center;
+  margin-bottom: 50px;
 }
 
 .main-home-start-box .start-card .start-icon {

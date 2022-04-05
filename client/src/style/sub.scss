@@ -12,7 +12,6 @@
     background: rgba($color: #000428, $alpha: 0.8);
     padding-top: 50px;
     padding-bottom: 50px;
-    opacity: 1;
   }
 
   .home-box {
@@ -28,9 +27,10 @@
 
     .form-box {
       background: #fff;
-      box-shadow: 1px 2px 3px rgb(48, 48, 48);
+      box-shadow: 1px 1px 2px rgb(48, 48, 48);
       padding: 20px;
       border-radius: 5px;
+      backdrop-filter: blur(2px);
 
       h1 {
         font-size: clamp(1.5vw, 15px, 1.5vh);
