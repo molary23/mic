@@ -1,10 +1,5 @@
 import React from "react";
 
-import { GiArcheryTarget } from "react-icons/gi";
-
-import { HiOutlineUserGroup } from "react-icons/hi";
-import { MdOutlineSupportAgent } from "react-icons/md";
-
 function Home(props) {
   return (
     <div className="main-home" id="home" ref={props.homeRef}>

@@ -10,7 +10,7 @@ function Refer() {
       <div className="main-home-refer"></div>
       <div className="main-home-refer-box">
         <div className="container">
-          <div className="refer-title mb-5">
+          <div className="page-title mb-5">
             <h1 className="mb-5">Refer and Earn</h1>
             <h3 className="mb-5">
               With us there is more than one way to earn, refer families and

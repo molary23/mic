@@ -33,6 +33,7 @@ function MainNav(props) {
       behavior: "smooth",
     });
     setActive((active) => active);
+    setDisplay(!display);
   };
 
   const clickMover = (e) => {

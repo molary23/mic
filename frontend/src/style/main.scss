@@ -166,6 +166,10 @@
   }
 }
 
+.page-title h1 {
+  font-weight: 900;
+}
+
 .main-home-faq-box {
   min-height: 600px;
   padding: 100px 0px;
@@ -186,6 +190,7 @@
       -ms-transform: scale(0.8);
       -o-transform: scale(0.8);
       transform: scale(0.8);
+      transition: all 2ms;
     }
     .scaled {
       -webkit-transform: scale(1) !important;

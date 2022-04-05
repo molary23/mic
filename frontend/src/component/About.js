@@ -14,7 +14,9 @@ function About(props) {
       <div className="main-home-middle"></div>
       <div className="main-home-about" id="about">
         <div className="container">
-          <h1 className="mb-5">Searching For Consistent Profitability?</h1>
+          <div className="page-title mb-3">
+            <h1 className="mb-5">Searching For Consistent Profitability?</h1>
+          </div>
           <div className="row pt-5 flex-column-reverse flex-md-row">
             <div className="col-md-6 col-12">
               <ul className="about-ul">

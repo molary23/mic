@@ -6,7 +6,7 @@ function Start() {
       <div className="main-home-start"></div>
       <div className="main-home-start-box">
         <div className="container">
-          <div className="start-title mb-5">
+          <div className="page-title mb-5">
             <h1>Get Started in 4 Easy Steps</h1>
           </div>
           <div className="start-steps">
