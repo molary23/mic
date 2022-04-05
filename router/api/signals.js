@@ -1,4 +1,5 @@
 const Preference = require("../../db/models/Preference");
+const UserView = require("../../db/models/UserView");
 
 const express = require("express"),
   router = express.Router(),
@@ -70,7 +71,91 @@ router.post(
         } else {
           Signal.create(signalFields)
             .then(() => {
-              res.json(true);
+              Preference.findAll({
+                where: {
+                  [Op.and]: [
+                    {
+                      [Op.or]: [
+                        {
+                          providers: null,
+                        },
+                        {
+                          providers: { [Op.substring]: ` ${userID},` },
+                        },
+                        {
+                          providers: { [Op.substring]: ` ${userID}]` },
+                        },
+                      ],
+                    },
+                    {
+                      [Op.or]: [
+                        {
+                          currencies: null,
+                        },
+                        {
+                          currencies: {
+                            [Op.substring]: ` ${signal.CurrencyId},`,
+                          },
+                        },
+                        {
+                          currencies: {
+                            [Op.substring]: ` ${signal.CurrencyId}]`,
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      notify: "y",
+                    },
+                    {
+                      verify: "y",
+                    },
+                  ],
+                },
+                attributes: ["UserId"],
+                raw: true,
+              })
+                .then((user) => {
+                  let userArr = [];
+                  for (let i = 0; i < user.length; i++) {
+                    userArr.push(user[i].UserId);
+                  }
+                  UserView.findAll({
+                    where: {
+                      UserId: userArr,
+                    },
+                    attributes: ["email"],
+                  })
+                    .then((users) => {
+                      let emailArr = [];
+                      for (let i = 0; i < users.length; i++) {
+                        emailArr.push(users[i].email);
+                      }
+                      const msg = {
+                        to: emailArr,
+                        from: "info@micearnbusiness.org",
+                        subject: "Verify Your Email Address",
+                        text: "and easy to do anywhere, even with Node.js",
+                        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+                      };
+                      /*
+sgMail
+  .sendMultiple(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+                                          
+                                          
+                                          */
+                      return res.json(true);
+                    })
+                    .catch((err) => res.status(404).json(err));
+                })
+                .catch((err) => res.status(404).json(err));
             })
             .catch((err) => res.status(404).json(err));
         }
@@ -148,19 +233,101 @@ router.post(
       return res.status(400).json(error);
     }
     const signalID = req.params.id.split(":")[1],
-      userID = req.user.id;
+      userID = req.user.id,
+      signalFields = {};
+    if (req.body.status) signalFields.status = req.body.status;
     Signal.findOne({
       where: { id: signalID },
-      attributes: ["UserId"],
     })
       .then((signal) => {
         if (signal.UserId === userID) {
-          const signalFields = {};
-          if (req.body.status) signalFields.status = req.body.status;
           Signal.update(signalFields, { where: { id: signalID } })
             .then(() => {
-              // Send Mail with Signal ID = signalID
-              res.json(true);
+              Preference.findAll({
+                where: {
+                  [Op.and]: [
+                    {
+                      [Op.or]: [
+                        {
+                          providers: null,
+                        },
+                        {
+                          providers: { [Op.substring]: ` ${userID},` },
+                        },
+                        {
+                          providers: { [Op.substring]: ` ${userID}]` },
+                        },
+                      ],
+                    },
+                    {
+                      [Op.or]: [
+                        {
+                          currencies: null,
+                        },
+                        {
+                          currencies: {
+                            [Op.substring]: ` ${signal.CurrencyId},`,
+                          },
+                        },
+                        {
+                          currencies: {
+                            [Op.substring]: ` ${signal.CurrencyId}]`,
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      notify: "y",
+                    },
+                    {
+                      verify: "y",
+                    },
+                  ],
+                },
+                attributes: ["UserId"],
+                raw: true,
+              })
+                .then((user) => {
+                  let userArr = [];
+                  for (let i = 0; i < user.length; i++) {
+                    userArr.push(user[i].UserId);
+                  }
+                  UserView.findAll({
+                    where: {
+                      UserId: userArr,
+                    },
+                    attributes: ["email"],
+                  })
+                    .then((users) => {
+                      let emailArr = [];
+                      for (let i = 0; i < users.length; i++) {
+                        emailArr.push(users[i].email);
+                      }
+                      const msg = {
+                        to: emailArr,
+                        from: "info@micearnbusiness.org",
+                        subject: "Verify Your Email Address",
+                        text: "and easy to do anywhere, even with Node.js",
+                        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+                      };
+                      /*
+sgMail
+  .sendMultiple(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+                                          
+                                          
+                                          */
+                      return res.json(true);
+                    })
+                    .catch((err) => res.status(404).json(err));
+                })
+                .catch((err) => res.status(404).json(err));
             })
             .catch((err) => res.status(404).json(err));
         } else {

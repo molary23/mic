@@ -88,6 +88,26 @@ router.post(
                               .then(() => {
                                 Verify.create(UserId)
                                   .then(() => {
+                                    const msg = {
+                                      to: userField.email,
+                                      from: "info@micearnbusiness.org",
+                                      subject: "Verify Your Email Address",
+                                      text: "and easy to do anywhere, even with Node.js",
+                                      html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+                                    };
+                                    /*
+sgMail
+  .send(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+                                          
+                                          
+                                          */
                                     return res.json(true);
                                   })
                                   .catch((err) => res.json(err));

@@ -1,13 +1,12 @@
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
-  Sequelize = require("sequelize"),
   gravatar = require("gravatar"),
-  passport = require("passport"),
   { Op } = require("sequelize"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
+  sgMail = require("@sendgrid/mail"),
   User = require("../../db/models/User"),
   Verify = require("../../db/models/Verify"),
   Referral = require("../../db/models/Referral"),
@@ -15,14 +14,13 @@ const express = require("express"),
   Premium = require("../../db/models/Premium"),
   Settings = require("../../db/models/Settings"),
   Preference = require("../../db/models/Preference"),
+  UserView = require("../../db/models/UserView"),
   // Bring in View
-  SignalView = require("../../db/models/SignalView"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   validateLoginInput = require("../../validation/login"),
   validateConfirmInput = require("../../validation/confirm"),
   validateResetInput = require("../../validation/reset"),
-  validatePassInput = require("../../validation/password"),
   encrypt = require("../../util/encrypt");
 
 /*
@@ -31,12 +29,101 @@ const express = require("express"),
 @access public
 */
 router.get("/finder", (req, res) => {
-  let details = {
+  /* let details = {
     code: "q6u2jp",
     username: "mol",
   };
   details = JSON.stringify(details);
-  return res.json(encrypt(details));
+  return res.json(encrypt(details));*/
+
+  let userID = 1;
+
+  Preference.findAll({
+    where: {
+      [Op.and]: [
+        {
+          [Op.or]: [
+            {
+              providers: null,
+            },
+            {
+              providers: { [Op.substring]: ` ${userID},` },
+            },
+            {
+              providers: { [Op.substring]: ` ${userID}]` },
+            },
+          ],
+        },
+        {
+          [Op.or]: [
+            {
+              currencies: null,
+            },
+            {
+              currencies: {
+                [Op.substring]: ` ${2},`,
+              },
+            },
+            {
+              currencies: {
+                [Op.substring]: ` ${2}]`,
+              },
+            },
+          ],
+        },
+        {
+          notify: "y",
+        },
+        {
+          verify: "y",
+        },
+      ],
+    },
+    attributes: ["UserId"],
+    raw: true,
+  })
+    .then((user) => {
+      let userArr = [];
+      for (let i = 0; i < user.length; i++) {
+        userArr.push(user[i].UserId);
+      }
+
+      UserView.findAll({
+        where: {
+          UserId: userArr,
+        },
+        attributes: ["email"],
+      })
+        .then((users) => {
+          let emailArr = [];
+          for (let i = 0; i < users.length; i++) {
+            emailArr.push(users[i].email);
+          }
+
+          return res.json(emailArr);
+          /*   const msg = {
+            to: userField.email,
+            from: "info@micearnbusiness.org",
+            subject: "Verify Your Email Address",
+            text: "and easy to do anywhere, even with Node.js",
+            html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+          };
+          
+sgMail
+  .send(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });*/
+
+          res.json(true);
+        })
+        .catch((err) => res.status(404).json(`A ${err}`));
+    })
+    .catch((err) => res.status(404).json(`B ${err}`));
 });
 
 /*
@@ -126,7 +213,33 @@ router.post("/register", (req, res) => {
                                       verifyFields.UserId = UserId;
                                       Verify.create(verifyFields)
                                         .then(() => {
-                                          // send mail to user
+                                          let urldata = {
+                                            code: verify,
+                                            username: userField.username,
+                                          };
+                                          urldata = JSON.stringify(urldata);
+                                          urldata = encrypt(urldata);
+                                          const msg = {
+                                            to: userField.email,
+                                            from: "info@micearnbusiness.org",
+                                            subject:
+                                              "Verify Your Email Address",
+                                            text: "and easy to do anywhere, even with Node.js",
+                                            html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+                                          };
+                                          /*
+sgMail
+  .send(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+                                          
+                                          
+                                          */
                                           return res.json(1);
                                         })
                                         .catch((err) =>
@@ -194,7 +307,26 @@ router.post("/register", (req, res) => {
                             verifyFields.UserId = UserId;
                             Verify.create(verifyFields)
                               .then(() => {
-                                // send mail to user
+                                const msg = {
+                                  to: userField.email,
+                                  from: "info@micearnbusiness.org",
+                                  subject: "Verify Your Email Address",
+                                  text: "and easy to do anywhere, even with Node.js",
+                                  html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+                                };
+                                /*
+sgMail
+  .send(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+                                          
+                                          
+                                          */
                                 return res.json(1);
                               })
                               .catch((err) => res.status(404).json(err));
@@ -476,7 +608,27 @@ router.post("/login", (req, res) => {
                     }
                   )
                     .then(() => {
-                      // Send Mail
+                      const msg = {
+                        to: userField.email,
+                        from: "info@micearnbusiness.org",
+                        subject: "Verify Your Email Address",
+                        text: "and easy to do anywhere, even with Node.js",
+                        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+                      };
+                      /*
+sgMail
+  .send(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+                                          
+                                          
+                                          */
+
                       errors.verify = 0;
                       return res.status(400).json(errors);
                     })
@@ -665,19 +817,6 @@ router.post("/reset", (req, res) => {
       });
     })
     .catch((err) => res.status(404).json(err));
-});
-
-/*
-@route POST api/public/contact/
-@desc Viewer sends message
-@access public
-*/
-
-router.post("/contact", (req, res) => {
-  const { name, phone, email, subject, message } = req.body.message;
-  const ourmail = "we@us.com";
-
-  // Send Message here
 });
 
 module.exports = router;
