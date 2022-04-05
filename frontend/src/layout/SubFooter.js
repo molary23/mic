@@ -43,7 +43,9 @@ function SubFooter() {
                 <a href="tel:+2348011111">+234809846724</a>
               </address>
               <address>
-                <a href="mainto:hello@mic.com">hello@mic.com</a>
+                <a href="mainto:info@micearnbusiness.org">
+                  info@micearnbusiness.org
+                </a>
               </address>
             </div>
           </div>

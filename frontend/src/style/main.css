@@ -230,7 +230,7 @@ nav.top-nav.show-bg {
 }
 
 .main-home-about {
-  min-height: 600px;
+  min-height: 950px;
   text-align: center;
   background: #4059d1;
   padding: 200px 0px;
@@ -352,12 +352,13 @@ nav.top-nav.show-bg {
 }
 
 .main-home-service {
-  min-height: 600px;
-  padding-bottom: 200px;
+  min-height: 3600px;
+  padding-bottom: 100px;
 }
 
 .main-home-service .service-text-image-box {
-  padding-top: 200px;
+  padding-top: 100px;
+  min-height: 500px;
 }
 
 .main-home-service .service-text-image-box .service-image {
@@ -368,8 +369,8 @@ nav.top-nav.show-bg {
 }
 
 .main-home-service .service-text-image-box .scaled {
-  -webkit-transform: scale(1.2) !important;
-  transform: scale(1.2) !important;
+  -webkit-transform: scale(1) !important;
+  transform: scale(1) !important;
 }
 
 .main-home-service .service-text-image-box .service-text {

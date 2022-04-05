@@ -307,6 +307,12 @@ sgMail
                             verifyFields.UserId = UserId;
                             Verify.create(verifyFields)
                               .then(() => {
+                                let urldata = {
+                                  code: verify,
+                                  username: userField.username,
+                                };
+                                urldata = JSON.stringify(urldata);
+                                urldata = encrypt(urldata);
                                 const msg = {
                                   to: userField.email,
                                   from: "info@micearnbusiness.org",
@@ -608,6 +614,12 @@ router.post("/login", (req, res) => {
                     }
                   )
                     .then(() => {
+                      let urldata = {
+                        code,
+                        username,
+                      };
+                      urldata = JSON.stringify(urldata);
+                      urldata = encrypt(urldata);
                       const msg = {
                         to: userField.email,
                         from: "info@micearnbusiness.org",
@@ -696,7 +708,32 @@ router.post("/forgot", (req, res) => {
         },
       })
         .then(() => {
-          // Send  Mail to User
+          let urldata = {
+            code: verifyField.verify,
+            username,
+          };
+          urldata = JSON.stringify(urldata);
+          urldata = encrypt(urldata);
+          const msg = {
+            to: userField.email,
+            from: "info@micearnbusiness.org",
+            subject: "Verify Your Email Address",
+            text: "and easy to do anywhere, even with Node.js",
+            html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+          };
+          /*
+sgMail
+  .send(msg)
+  .then(() => {}, error => {
+    console.error(error);
+
+    if (error.response) {
+      console.error(error.response.body)
+    }
+  });
+                                          
+                                          
+                                          */
           res.json(1);
         })
         .catch((err) => res.status(404).json(err));
