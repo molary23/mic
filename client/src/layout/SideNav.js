@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -22,8 +22,6 @@ import {
 
 function SideNav(props) {
   const { act, onClick } = props;
-  let navigate = useNavigate();
-  let location = useLocation();
   const [show, setShow] = useState(false);
 
   let display;

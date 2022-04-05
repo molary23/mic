@@ -34,24 +34,6 @@ class Login extends Component {
 
   componentDidMount() {
     this.props.clearErrors();
-    /*  if (this.props.auth.isAuthenticated) {
-      if (this.props.auth.user.level === 1) {
-        this.setState({
-          navigate: true,
-          viewer: "/user",
-        });
-      } else if (this.props.auth.user.level === 2) {
-        this.setState({
-          navigate: true,
-          viewer: "/sp",
-        });
-      } else if (this.props.auth.user.level === 3) {
-        this.setState({
-          navigate: true,
-          viewer: "/admin",
-        });
-      }
-    }*/
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

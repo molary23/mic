@@ -191,8 +191,6 @@ export class Subscriptions extends Component {
       subcount,
     });
 
-    console.log("first, rendering");
-
     return (
       <div>
         {loader && <ProgressBar />}

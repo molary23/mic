@@ -212,7 +212,7 @@ function MainNav(props) {
               <a
                 type="button"
                 className="btn nav-link default-btn"
-                href="//dashboard.micearnbusiness.org/register"
+                href="//dashboard.micearnbusiness.org/#/register"
                 target="_blank"
                 rel="noreferrer"
               >

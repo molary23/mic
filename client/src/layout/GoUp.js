@@ -38,7 +38,7 @@ function GoUp() {
     };
   }, []);
 
-  useEffect(changeAuto, [hour]);
+  useEffect(changeAuto, [hour, mode]);
 
   return (
     <div

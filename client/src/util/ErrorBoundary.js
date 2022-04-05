@@ -3,7 +3,13 @@ import React, { Component } from "react";
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { error: null, errorInfo: null };
+    this.state = { error: null, errorInfo: null, location: null };
+  }
+
+  componentDidMount() {
+    this.setState({
+      location: window.location,
+    });
   }
 
   componentDidCatch(error, errorInfo) {
@@ -16,8 +22,10 @@ class ErrorBoundary extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let location = window.location;
-    if (prevProps.pathname !== location.pathname) {
+    if (
+      prevProps.pathname !== this.state.location.pathname &&
+      this.state.hasError
+    ) {
       this.setState({ hasError: false });
     }
   }

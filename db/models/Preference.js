@@ -13,10 +13,10 @@ Preference.init(
       primaryKey: true,
     },
     currencies: {
-      type: DataTypes.STRING(),
+      type: DataTypes.JSON,
     },
     providers: {
-      type: DataTypes.STRING(),
+      type: DataTypes.JSON,
     },
     notify: {
       type: DataTypes.ENUM("y", "n"),

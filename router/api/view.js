@@ -649,7 +649,7 @@ sgMail
                   jwt.sign(
                     payload,
                     keys.secretOrKey,
-                    { expiresIn: 3600 },
+                    { expiresIn: 43200 },
                     (_err, token) => {
                       return res.json({
                         message: "Success",
