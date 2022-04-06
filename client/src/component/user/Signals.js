@@ -178,7 +178,7 @@ export class Signals extends Component {
             </div>
             <div className="container-fluid mb-4">
               <div className="row">
-                <div className="col-md-4 mb-2">
+                <div className="col-md-6 mb-2">
                   <SearchInput
                     sender={sender}
                     placeholder="Search by Currency"
@@ -188,7 +188,7 @@ export class Signals extends Component {
                     value={search}
                   />
                 </div>
-                <div className="col-md-4 mb-2">
+                <div className="col-md-6 mb-2">
                   <div className="transactions-total table-figure">
                     <h6>
                       {totalText}
@@ -210,7 +210,7 @@ export class Signals extends Component {
                 <div className="row">
                   {signal.map((signal, i) => {
                     return (
-                      <div className="col-md-4 col-xs-12 col-sm-12" key={i}>
+                      <div className="col-lg-4 col-12 col-md-6" key={i}>
                         <div className="signal-one mb-4">
                           <Signal propkey={i} signal={signal} />
                         </div>

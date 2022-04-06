@@ -176,7 +176,7 @@ export class Subscriptions extends Component {
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-3 mb-2">
+              <div className="col-lg-3 col-md-6 col-12 mb-2">
                 <SearchInput
                   sender={sender}
                   placeholder="Search by User Name"
@@ -186,7 +186,7 @@ export class Subscriptions extends Component {
                 />
               </div>
 
-              <div className="col-md-2 mb-2">
+              <div className="col-lg-2 col-md-6 col-12 mb-2">
                 <Select
                   sender={sender}
                   options={typeOptions}
@@ -195,7 +195,7 @@ export class Subscriptions extends Component {
                   value={type}
                 />
               </div>
-              <div className="col-md-2 mb-2">
+              <div className="col-lg-2 col-md-4 col-12 mb-2">
                 <Select
                   sender={sender}
                   options={planOptions}
@@ -204,7 +204,7 @@ export class Subscriptions extends Component {
                   value={plan}
                 />
               </div>
-              <div className="col-md-2 mb-2">
+              <div className="col-lg-2 col-md-4 col-12 mb-2">
                 <button
                   type="button"
                   className="btn download-btn"
@@ -213,7 +213,7 @@ export class Subscriptions extends Component {
                   Download <RiFileExcel2Line />
                 </button>
               </div>
-              <div className="col-md-3 mb-2">
+              <div className="col-lg-3 col-md-4 col-12 mb-2">
                 <div className="transactions-total table-figure">
                   <h6>
                     {totalText}

@@ -153,7 +153,6 @@ class Settings extends Component {
       settings = provider.providersettings;
       mode = settings.settings.mode;
       profile = provider.providersettings.profile;
-      console.log(mode);
     }
 
     return (

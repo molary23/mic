@@ -25,6 +25,8 @@ function Footer() {
   const confirmHandler = (option) => {
     if (option) {
       dispatch(logoutUser());
+    } else {
+      window.history.pushState({}, "", location.pathname);
     }
     setCheck(false);
   };

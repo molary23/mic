@@ -43,7 +43,9 @@ class Announcements extends Component {
     iScrollPos: Pagination.scrollposition,
     currentPage: Pagination.currentpage,
     url: new URL(window.location),
-    announcementcount: JSON.parse(localStorage.getItem("counts")).announcements,
+    announcementcount:
+      JSON.parse(localStorage.getItem("counts")).announcements ??
+      this.props.auth.allCounts.announcements,
     content: "announcements",
     modal: false,
     error: {},
@@ -79,8 +81,9 @@ class Announcements extends Component {
   }
 
   componentWillUnmount() {
-    this.props.clearActions(this.state.content);
-    this.props.clearSearchActions(this.state.content);
+    const { content } = this.state;
+    this.props.clearActions(content);
+    this.props.clearSearchActions(content);
     window.removeEventListener("scroll", this.loadMore);
   }
 
@@ -265,10 +268,10 @@ class Announcements extends Component {
       checktitle,
     } = this.state;
 
-    const { admin, searchTerms } = this.props;
-    const { loading, fetching } = admin;
-    const { searching } = searchTerms;
-    const count = admin.annCount,
+    const { admin, searchTerms } = this.props,
+      { loading, fetching } = admin,
+      { searching } = searchTerms,
+      count = admin.annCount,
       list = admin.ann,
       searchcount = searchTerms.annCount,
       searchlist = searchTerms.ann,
@@ -299,14 +302,13 @@ class Announcements extends Component {
     return (
       <div>
         {loader && <ProgressBar />}
-
         <div className="transactions card holder-card ">
           <div className="page-dash-title mb-4">
-            <h1>Accounts</h1>
+            <h1>Announcements</h1>
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-4 mb-2">
+              <div className="col-lg-4 col-md-6 col-12 mb-2">
                 <SearchInput
                   sender={sender}
                   placeholder="Search by Title, Summary, Link"
@@ -315,12 +317,12 @@ class Announcements extends Component {
                   value={search}
                 />
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="col-lg-2 col-md-6 col-12 mb-3">
                 <button type="button" className="btn download-btn">
                   Download <i className="far fa-file-excel" />
                 </button>
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="col-lg-2 col-md-6 col-12 mb-3">
                 <button
                   type="button"
                   className="btn add-btn btn-sm"
@@ -329,7 +331,7 @@ class Announcements extends Component {
                   Create <HiOutlineSpeakerphone />
                 </button>
               </div>
-              <div className="col-md-4 mb-2">
+              <div className="col-lg-4 col-md-6 col-12 mb-2">
                 <div className="transactions-total table-figure">
                   <h6>
                     {totalText}
@@ -393,10 +395,13 @@ Announcements.propTypes = {
   searchContent: PropTypes.func.isRequired,
   clearActions: PropTypes.func.isRequired,
   clearSearchActions: PropTypes.func.isRequired,
+  admin: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.any,
   renderArrange: PropTypes.func,
   getMore: PropTypes.func,
   setSearchParams: PropTypes.func,
-  loadFromParams: PropTypes.func,
+  landingLoad: PropTypes.func,
   deleteAnn: PropTypes.func,
   clearAdminAction: PropTypes.func,
   addAnn: PropTypes.func,

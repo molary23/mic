@@ -40,28 +40,10 @@ export class SubNav extends Component {
   }
 
   componentWillUnmount() {
-    //  this.props.clearErrors();
     this.setState({
       isMounted: false,
     });
   }
-
-  /* static getDerivedStateFromProps(nextProps, prevState) {
-    let update = {};
-    if (
-      nextProps.errors !== prevState.errors &&
-      this.props.errors.status !== undefined
-    ) {
-      update.error = nextProps.errors.data;
-      update.isLoading = false;
-    } else if (
-      nextProps.errors !== prevState.errors &&
-      Object.keys(nextProps.errors).length === 0
-    ) {
-      update.error = {};
-    }
-    return update;
-  }*/
 
   componentDidUpdate(prevProps) {
     let servererror;
@@ -120,11 +102,6 @@ export class SubNav extends Component {
       close: !this.state.close,
     });
     this.props.onClick();
-    /*  if (this.state.close) {
-      this.props.onClick(false);
-    } else {
-      this.props.onClick(true);
-    }*/
   };
 
   openMobile = () => {

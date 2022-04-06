@@ -38,10 +38,7 @@ function Dropdown(props) {
   return (
     <div className="Dropdown">
       <a
-        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        // className="nav-link dropdown-toggle"
         href="#"
-        // role="button"
         data-bs-toggle="dropdown"
         onClick={linkHandler}
         onBlur={() => {

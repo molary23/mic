@@ -221,7 +221,7 @@ span.nav-sub-icon {
   padding-top: 80px;
 }
 .dashboard-content {
-  min-height: 700px;
+  min-height: 1200px;
   margin-left: 200px;
   padding: 25px 50px;
   .card {
@@ -500,6 +500,9 @@ span.nav-sub-icon {
 .signal-page {
   min-height: 1000px;
   margin-bottom: 50px;
+}
+.signal-content.card {
+  min-height: 400px;
 }
 .signal-detail {
   display: grid;

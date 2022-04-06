@@ -6,16 +6,16 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./store";
 import ThemeContextWrapper from "./theme/ThemeContextWrapper";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <Provider store={store}>
     <ThemeContextWrapper>
-      <HashRouter>
+      <BrowserRouter>
         <React.StrictMode>
           <App />
         </React.StrictMode>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeContextWrapper>
   </Provider>,
   document.getElementById("root")

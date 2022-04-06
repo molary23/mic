@@ -160,7 +160,7 @@ export class Index extends Component {
             </div>
             <div className="dash-info mb-5">
               <div className="row">
-                <div className="col-md-3 col-xs-12">
+                <div className="col-lg-3 col-md-6 col-12">
                   <div
                     className={`dash-premium dash-info-card dash-card ${
                       (premiumstatus === "a" && "premium-active") ||
@@ -188,7 +188,7 @@ export class Index extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3 col-xs-12">
+                <div className="col-lg-3 col-md-6 col-12">
                   <div className="dash-info-card dash-card dash-balance">
                     <p className="mb-1">Balance</p>
                     <h4 className="mb-1">${(credit - debit).toFixed(2)}</h4>
@@ -206,7 +206,7 @@ export class Index extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3 col-xs-12">
+                <div className="col-lg-3 col-md-6 col-12">
                   <div className="dash-info-card dash-card dash-transaction">
                     <p className="mb-1">Transactions</p>
                     <h4 className="mb-1">{transactions}</h4>
@@ -227,7 +227,7 @@ export class Index extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3 col-xs-12">
+                <div className="col-lg-3 col-md-6 col-12">
                   <div className="dash-info-card dash-card dash-sub">
                     <p className="mb-1">Subscriptions</p>
                     <h4 className="mb-1">{sub}</h4>
@@ -252,7 +252,7 @@ export class Index extends Component {
             </div>
             <div className="dash-intro mb-5">
               <div className="row">
-                <div className="col-md-5 col-xs-12">
+                <div className="col-lg-5 col-md-12 col-12">
                   <div className="dash-basic dash-card">
                     <h4 className="mb-2">Referrals </h4>
                     <h1 className="mb-2">{referral}</h1>
@@ -305,7 +305,7 @@ export class Index extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3 col-xs-12">
+                <div className="col-lg-3 col-md-12 col-12">
                   <div className="dash-qr dash-card">
                     <div className="qr-code">
                       <QRCode
@@ -316,7 +316,7 @@ export class Index extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-4 col-xs-12">
+                <div className="col-lg-4 col-md-12 col-12">
                   <div className="dash-bonus dash-card">
                     <h4 className="mb-3">Bonus Index</h4>
                     <h1 className="mb-3">${bonus.toFixed(2)}</h1>

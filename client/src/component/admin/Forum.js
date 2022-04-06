@@ -267,8 +267,8 @@ class Forum extends Component {
                     />
                   ) : (
                     <p>
-                      There is no reply to this Discussion yet. Be the first to
-                      reply.
+                      There is no reply to this Discussion yet.{" "}
+                      {post.status !== "c" && "Be the first to reply."}
                     </p>
                   )}
                 </div>

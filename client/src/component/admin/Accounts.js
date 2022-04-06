@@ -49,9 +49,7 @@ class Accounts extends Component {
     landingLoad({ limit, offset, self: this, content, searchParams });
     this.setState({
       numOfPages: Math.ceil(accountcount / limit),
-      startLoad: true,
     });
-
     window.addEventListener("scroll", this.loadMore, { passive: true });
   }
 
@@ -111,12 +109,10 @@ class Accounts extends Component {
   };
   render() {
     const { sender, accountcount, search } = this.state;
-
-    const { admin, searchTerms } = this.props;
-    const { loading } = admin;
-    const { fetching } = admin;
-    const { searching } = searchTerms;
-    const count = admin.accCount,
+    const { admin, searchTerms } = this.props,
+      { loading, fetching } = admin,
+      { searching } = searchTerms,
+      count = admin.accCount,
       list = admin.accounts,
       searchcount = searchTerms.accCount,
       searchlist = searchTerms.accounts,
@@ -147,14 +143,13 @@ class Accounts extends Component {
     return (
       <div>
         {loader && <ProgressBar />}
-
         <div className="transactions card holder-card ">
           <div className="page-dash-title mb-4">
             <h1>Accounts</h1>
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-4 mb-2">
+              <div className="col-md-5 mb-2">
                 <SearchInput
                   sender={sender}
                   placeholder="Search by Name, Username, Wallet and Account Number"
@@ -172,7 +167,7 @@ class Accounts extends Component {
                   Download <RiFileExcel2Line />
                 </button>
               </div>
-              <div className="col-md-4 mb-2">
+              <div className="col-md-3 mb-2">
                 <div className="transactions-total table-figure">
                   <h6>
                     {totalText}

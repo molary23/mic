@@ -15,10 +15,10 @@ SignalView.init(
       type: DataTypes.ENUM("b", "s"),
     },
     takeprofit: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.TEXT,
     },
     stoploss: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.TEXT,
     },
     startrange: {
       type: DataTypes.DOUBLE,

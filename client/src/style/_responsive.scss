@@ -1,6 +1,9 @@
 @media only screen and (min-width: 768px) and (max-width: 959px) {
   .pricing-wrapper {
-    width: 768px;
+    width: 100%;
+    .table-list li {
+      font-size: 16px;
+    }
   }
 
   .pricing-table {
@@ -9,6 +12,24 @@
 
   .table-list li {
     font-size: 1.3em;
+  }
+
+  .dash-card {
+    margin-bottom: 20px;
+  }
+
+  .dashboard-content {
+    padding: 10px;
+  }
+
+  table.mytable {
+    width: 200% !important;
+  }
+  tr {
+    width: 100px;
+  }
+  .settings-form-card {
+    width: 80%;
   }
 }
 

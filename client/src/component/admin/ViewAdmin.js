@@ -227,9 +227,18 @@ class ViewAdmin extends Component {
                       <CardDetails
                         {...{ label: "Username", value: admininfo.username }}
                       />
+
                       <CardDetails
-                        {...{ label: "Phone", value: admininfo.Profile.phone }}
+                        {...{
+                          label: "Phone",
+                          value: `${
+                            admininfo.Profile !== null
+                              ? admininfo.Profile.phone
+                              : ""
+                          }`,
+                        }}
                       />
+
                       {admininfo.status === "a" ? (
                         <CardDetails
                           {...{

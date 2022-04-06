@@ -71,10 +71,6 @@ export class Index extends Component {
       debit = analytics.debit;
       sub = analytics.sub;
     }
-
-    /*const { auth } = this.props;
-    const { allCounts } = auth.allCounts;
-    console.log(allCounts);*/
     return (
       <div className="dash-contents">
         {loader && <ProgressBar />}
@@ -89,7 +85,7 @@ export class Index extends Component {
               </h1>
             </div>
             <div className="row">
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="sub-box dash-card admin-dash users">
                   <div className="row">
                     <div className="col-4">
@@ -128,7 +124,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="referrals-box dash-card admin-dash providers">
                   <div className="row">
                     <div className="col-4">
@@ -164,7 +160,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="bonus-box dash-card admin-dash signals">
                   <div className="row">
                     <div className="col-4">
@@ -200,7 +196,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="bonus-box dash-card admin-dash bonus">
                   <div className="row">
                     <div className="col-4">
@@ -236,7 +232,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="withdrawal-box dash-card admin-dash payouts">
                   <div className="row">
                     <div className="col-4">
@@ -278,7 +274,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="currency-box dash-card admin-dash currencies">
                   <div className="row">
                     <div className="col-4">
@@ -317,7 +313,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="currency-box dash-card admin-dash transactions">
                   <div className="row">
                     <div className="col-4">
@@ -363,7 +359,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="currency-box dash-card admin-dash subscriptions">
                   <div className="row">
                     <div className="col-4">
@@ -399,7 +395,7 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-6 col-lg-4 col-12 mb-3">
                 <div className="currency-box dash-card admin-dash referrals">
                   <div className="row">
                     <div className="col-4">

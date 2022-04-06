@@ -112,7 +112,7 @@ const initialState = {
   signals: [],
   signalCount: 0,
   accounts: [],
-  accCounts: 0,
+  accCount: 0,
   ann: [],
   annCount: 0,
   withcount: 0,

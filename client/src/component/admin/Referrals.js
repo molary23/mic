@@ -168,7 +168,7 @@ export class Referrals extends Component {
           </div>
           <div className="container-fluid mb-3">
             <div className="row">
-              <div className="col-md-4 mb-2">
+              <div className="col-lg-4 col-md-5 col-12 mb-2">
                 <SearchInput
                   placeholder="Search by Name"
                   type="text"
@@ -177,7 +177,7 @@ export class Referrals extends Component {
                   onChange={this.changeHandler}
                 />
               </div>
-              <div className="col-md-2 mb-3">
+              <div className="col-lg-4 col-md-4 col-12 mb-3">
                 <button
                   type="button"
                   className="btn download-btn"
@@ -186,7 +186,7 @@ export class Referrals extends Component {
                   Download <RiFileExcel2Line />
                 </button>
               </div>
-              <div className="col-md-3 mb-2">
+              <div className="col-lg-4 col-md-3 col-12 mb-2">
                 <div className="table-figure">
                   <h6>
                     {totalText}

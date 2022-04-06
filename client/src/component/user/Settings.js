@@ -210,7 +210,6 @@ class Settings extends Component {
     this.setState({
       loading: true,
     });
-    //console.log(value);
     this.props.saveSettings("account", value);
   };
 

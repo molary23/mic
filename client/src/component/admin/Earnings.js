@@ -291,7 +291,7 @@ export class Earnings extends Component {
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-3 mb-2">
+              <div className="col-lg-3 col-md-6  col-12 mb-2">
                 <SearchInput
                   sender={sender}
                   placeholder="Search by Username"
@@ -300,7 +300,7 @@ export class Earnings extends Component {
                   value={search}
                 />
               </div>
-              <div className="col-md-3 mb-3">
+              <div className="col-lg-3 col-md-6  col-12 mb-3">
                 <Select
                   sender={sender}
                   options={statusOpt}
@@ -310,7 +310,7 @@ export class Earnings extends Component {
                 />
               </div>
 
-              <div className="col-md-3 mb-3">
+              <div className="col-lg-3 col-md-6  col-12 mb-3">
                 <button
                   type="button"
                   className="btn download-btn"
@@ -320,7 +320,7 @@ export class Earnings extends Component {
                 </button>
               </div>
 
-              <div className="col-md-3 mb-2">
+              <div className="col-lg-3 col-md-6  col-12 mb-2">
                 <div className="transactions-total table-figure">
                   <h6>
                     {totalText}

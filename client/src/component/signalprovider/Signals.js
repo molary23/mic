@@ -320,10 +320,10 @@ class Signals extends Component {
         <div className="transactions card holder-card ">
           <div className="page-dash-title mb-4">
             <div className="row">
-              <div className="col-md-3">
+              <div className="col-md-12 col-lg-3 col-12">
                 <h1>Signals</h1>
               </div>
-              <div className="col-md-3 mt-3">
+              <div className="col-md-4 col-lg-3 col-12 mt-3">
                 <div className="transactions-total table-figure">
                   <h6>
                     <BiGroup />
@@ -334,7 +334,7 @@ class Signals extends Component {
                   </h6>
                 </div>
               </div>
-              <div className="col-md-3 mt-3">
+              <div className="col-md-4 col-lg-3 col-12 mt-3">
                 <div className="transactions-total table-figure">
                   <h6>
                     <CgSignal />
@@ -345,7 +345,7 @@ class Signals extends Component {
                   </h6>
                 </div>
               </div>
-              <div className="col-md-3 mt-3">
+              <div className="col-md-4 col-lg-3 col-12 mt-3">
                 <div className="transactions-total table-figure">
                   <h6>
                     <BsCurrencyExchange /> Currency Pair
@@ -359,7 +359,7 @@ class Signals extends Component {
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-3 mb-2">
+              <div className="col-lg-3 col-md-6 col-12 mb-2">
                 <SearchInput
                   sender={sender}
                   placeholder="Search by Signals, Currency Pair"
@@ -369,7 +369,7 @@ class Signals extends Component {
                   value={search}
                 />
               </div>
-              <div className="col-md-3 mb-2">
+              <div className="col-lg-3 col-md-6 col-12 mb-2">
                 <Select
                   sender={sender}
                   options={statusOpt}
@@ -378,7 +378,7 @@ class Signals extends Component {
                   value={status}
                 />
               </div>
-              <div className="col-md-2 mb-2">
+              <div className="col-lg-2 col-md-6 col-12 mb-2">
                 <Select
                   sender={sender}
                   options={signalOpt}
@@ -388,7 +388,7 @@ class Signals extends Component {
                 />
               </div>
 
-              <div className="col-md-2 mb-2">
+              <div className="col-lg-2 col-md-3 col-12 mb-2">
                 <button
                   type="button"
                   className="btn btn-sm add-btn"
@@ -397,7 +397,7 @@ class Signals extends Component {
                   Add New <MdAddChart />
                 </button>
               </div>
-              <div className="col-md-2 mb-2">
+              <div className="col-lg-2 col-md-3 col-12 mb-2">
                 <button
                   type="button"
                   className="btn btn-sm download-btn"

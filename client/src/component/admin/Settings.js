@@ -160,7 +160,6 @@ class Settings extends Component {
       settings = admin.adminsettings;
       mode = settings.settings.mode;
       profile = admin.adminsettings.profile;
-      console.log(mode);
     }
 
     return (

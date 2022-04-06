@@ -206,7 +206,7 @@ export class Payments extends Component {
           </div>
           <div className="container-fluid mb-4">
             <div className="row">
-              <div className="col-md-3">
+              <div className="col-lg-3 col-md-6 col-12">
                 <SearchInput
                   placeholder="Search by Name"
                   type="text"
@@ -215,7 +215,7 @@ export class Payments extends Component {
                   onChange={this.changeHandler}
                 />
               </div>
-              <div className="col-md-2">
+              <div className="col-lg-2 col-md-6 col-12">
                 <Select
                   sender={sender}
                   options={statusOptions}
@@ -224,7 +224,7 @@ export class Payments extends Component {
                   value={status}
                 />
               </div>
-              <div className="col-md-2">
+              <div className="col-lg-2 col-md-6 col-12">
                 <Select
                   sender={sender}
                   options={gatewayOptions}
@@ -233,7 +233,7 @@ export class Payments extends Component {
                   value={gateway}
                 />
               </div>
-              <div className="col-md-2">
+              <div className="col-lg-2 col-md-4 col-12">
                 <button
                   type="button"
                   className="btn download-btn"
@@ -242,7 +242,7 @@ export class Payments extends Component {
                   Download <RiFileExcel2Line />
                 </button>
               </div>
-              <div className="col-md-3">
+              <div className="col-lg-3 col-md-2 col-12">
                 <div className="transactions-total table-figure">
                   <h6>
                     {totalText}

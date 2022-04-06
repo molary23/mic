@@ -5,9 +5,8 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 
 import { FaRegEye } from "react-icons/fa";
 import { FcIdea } from "react-icons/fc";
-import { IoLockClosedOutline } from "react-icons/io5";
+import { IoLockClosedOutline, IoPricetagsOutline } from "react-icons/io5";
 import { RiMapPinUserLine } from "react-icons/ri";
-import { BsFileEarmarkFont } from "react-icons/bs";
 
 import DateFormat from "./DateFormat";
 import { Link } from "react-router-dom";
@@ -36,7 +35,7 @@ function ForumCard(props) {
           <div className="forum-from">
             {item.right !== "p" && (
               <span className="forum-right ">
-                <BsFileEarmarkFont />
+                <IoPricetagsOutline />
                 {item.id.toString().length < 5
                   ? item.id.toString().padStart(5, "0")
                   : item.id}
