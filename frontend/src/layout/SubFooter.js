@@ -55,13 +55,16 @@ function SubFooter() {
               <a href="/" className="facebook-icon-a">
                 <AiFillFacebook />
               </a>
-              <a href="/" className="twitter-icon-a">
+              <a href="https://twitter.com/MicEarn" className="twitter-icon-a">
                 <AiFillTwitterSquare />
               </a>
               <a href="/" className="linkedin-icon-a">
                 <AiFillLinkedin />
               </a>
-              <a href="/" className="instagram-icon-a">
+              <a
+                href="https://www.instagram.com/micearn/"
+                className="instagram-icon-a"
+              >
                 <AiFillInstagram />
               </a>
             </div>

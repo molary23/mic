@@ -12,13 +12,15 @@ function Refer() {
         <div className="container">
           <div className="page-title mb-5">
             <h1 className="mb-5">Refer and Earn</h1>
-            <h3 className="mb-5">
-              With us there is more than one way to earn, refer families and
-              friends to register and subscribe to our premium plans and earn
-              cash back rewards, rewards can be withdrawn and used for your
-              premium subscription.
-            </h3>
-            <h4 className="mb-5">You can earn in this 3 simple steps</h4>
+            <div className="refer-with-us">
+              <h3 className="mb-5">
+                With us there is more than one way to earn, refer families and
+                friends to register and subscribe to our premium plans and earn
+                cash back rewards, rewards can be withdrawn and used for your
+                premium subscription.
+              </h3>
+              <h4 className="mb-5">You can earn in this 3 simple steps</h4>
+            </div>
           </div>
           <div className="refer-steps">
             <div className="row ">
@@ -64,6 +66,17 @@ function Refer() {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="refer-register">
+              <a
+                type="button"
+                href="//dashboard.micearnbusiness.org/register"
+                className="btn default-btn"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Join Now
+              </a>
             </div>
           </div>
         </div>

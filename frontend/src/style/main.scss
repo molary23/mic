@@ -3,7 +3,7 @@
 /* Main Home */
 .main-home {
   .main-home-top {
-    padding-top: 50px;
+    padding: 50px 0px;
     min-height: 500px;
     background: #edf3f4;
     .home-top-text {
@@ -284,12 +284,8 @@ a.btn.nav-link.btn {
     font-weight: 600;
   }
 }
-
-.main-home-start-box {
-  background: rgb(64, 89, 209);
-  min-height: 600px;
-  padding: 100px 0px;
-  color: #fff;
+.home-get-started {
+  margin-top: 50px;
   .start-title {
     text-align: center;
   }
@@ -299,8 +295,8 @@ a.btn.nav-link.btn {
     font-weight: 600;
   }
   .start-card {
-    min-height: 200px;
-    background: #fff;
+    min-height: 250px;
+    background: #fcf6ec;
     border: 1px solid #f7f7f7;
     border-radius: 20px;
     padding: 20px;
