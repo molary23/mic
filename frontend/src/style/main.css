@@ -374,13 +374,6 @@ nav.top-nav.show-bg {
   width: 100%;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
-  -webkit-transition: all 2ms;
-  transition: all 2ms;
-}
-
-.main-home-service .service-text-image-box .scaled {
-  -webkit-transform: scale(1) !important;
-  transform: scale(1) !important;
 }
 
 .main-home-service .service-text-image-box .service-text {
@@ -518,6 +511,61 @@ a.btn.nav-link.btn {
   font-weight: 100;
 }
 
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+  .main-home .main-home-top {
+    min-height: 300px;
+    padding-bottom: 50px;
+  }
+  .main-home .main-home-top .home-top-image {
+    height: 300px;
+    background-size: contain;
+  }
+  .main-home .main-home-top .home-top-text {
+    padding: 40px 0px 0px;
+    margin: 20px auto;
+    width: 90%;
+  }
+  .main-home .main-home-top .home-top-text h1 {
+    font-size: 20px;
+  }
+  .main-home-middle,
+  .main-home-refer,
+  .main-home-faq,
+  .main-home-contact {
+    height: 300px;
+    background-size: contain;
+  }
+  .main-home-service {
+    min-height: 1600px;
+    padding: 50px 0px 10px;
+  }
+  .main-home-contact-box {
+    padding-bottom: 50px;
+  }
+  .main-home-refer-box {
+    padding-bottom: 50px;
+  }
+  .sub-footer {
+    padding: 50px 0px;
+  }
+  .main-home-service .service-text-image-box {
+    min-height: 250px;
+    padding: 10px 0px;
+  }
+  .main-home-service .service-text-image-box .service-text {
+    margin-top: 20px;
+  }
+  .main-home-about {
+    padding: 100px 0px;
+    min-height: 600px;
+  }
+  .contact-image {
+    min-height: 300px;
+    background-size: contain;
+    margin-top: 50px;
+  }
+}
+
 @media only screen and (max-width: 767px) {
   .navbar-toggler {
     background: transparent !important;
@@ -552,7 +600,7 @@ a.btn.nav-link.btn {
   }
   .main-home-refer {
     height: 150px;
-    background-size: 400px;
+    background-size: contain;
   }
   .contact-image {
     background-attachment: fixed;

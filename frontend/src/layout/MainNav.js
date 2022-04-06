@@ -197,7 +197,7 @@ function MainNav(props) {
             <li className="nav-item">
               <a
                 className="nav-link"
-                href="//dashboard.micearnbusiness.org/"
+                href="//dashboard.micearnbusiness.org/#/"
                 target="_blank"
                 rel="noreferrer"
               >

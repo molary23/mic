@@ -11,7 +11,7 @@ function Start() {
           </div>
           <div className="start-steps">
             <div className="row ">
-              <div className="col-md-3 col-12">
+              <div className="col-lg-3 col-md-6 col-12">
                 <div className="start-card">
                   <h3 className="start-icon">01</h3>
                   <div className="start-step">
@@ -23,7 +23,7 @@ function Start() {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 col-12">
+              <div className="col-lg-3 col-md-6 col-12">
                 <div className="start-card">
                   <h3 className="start-icon">02</h3>
                   <div className="start-step">
@@ -35,7 +35,7 @@ function Start() {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 col-12">
+              <div className="col-lg-3 col-md-6 col-12">
                 <div className="start-card">
                   <h3 className="start-icon">03</h3>
                   <div className="start-step">
@@ -47,7 +47,7 @@ function Start() {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3 col-12">
+              <div className="col-lg-3 col-md-6 col-12">
                 <div className="start-card">
                   <h3 className="start-icon">04</h3>
                   <div className="start-step">
