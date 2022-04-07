@@ -95,7 +95,11 @@ function ProfileForm(props) {
           error={errors.phone}
         />
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Edit Profile
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>

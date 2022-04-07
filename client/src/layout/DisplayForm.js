@@ -123,6 +123,7 @@ function DisplayForm(props) {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Change Display Mode
                 {loading && (

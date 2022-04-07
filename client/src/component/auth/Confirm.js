@@ -93,13 +93,14 @@ export class Confirm extends Component {
     if (nextProps.errors !== prevState.errors) {
       if (nextProps.errors.status === 400) {
         update.servererror = nextProps.errors.data;
+        update.loading = false;
       }
       if (nextProps.errors.status === 404) {
         update.servererror = {
           network: "There has been a network error. Refresh and try again.",
         };
+        update.loading = false;
       }
-      update.loading = false;
     }
 
     return update;
@@ -193,6 +194,7 @@ export class Confirm extends Component {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Confirm Code
                 {loading && (

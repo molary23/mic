@@ -137,6 +137,7 @@ function CurrencyForm(props) {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Add Currency
                 {loading && (
@@ -149,6 +150,7 @@ function CurrencyForm(props) {
                 type="submit"
                 className="btn default-btn btn-lg btn-block secondbtn"
                 onClick={submitAllHandler}
+                disabled={loading && true}
               >
                 Add All <MdOutlineSelectAll />
                 {loading && (

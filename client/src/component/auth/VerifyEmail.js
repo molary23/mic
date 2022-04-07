@@ -166,6 +166,7 @@ export class VerifyEmail extends Component {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Verify Code
                 {loading && (

@@ -37,7 +37,7 @@ function Toast(props) {
 }
 
 Toast.propTypes = {
-  text: PropTypes.string.isRequired,
+  text: PropTypes.any.isRequired,
   category: PropTypes.string,
 };
 

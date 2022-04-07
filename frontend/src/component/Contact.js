@@ -62,7 +62,7 @@ function Contact(props) {
 
       try {
         let response = await axios.post(
-          "/mail/send.php",
+          "https://micearnbusiness.org/mail/send.php",
           {
             message,
           },

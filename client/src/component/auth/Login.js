@@ -69,22 +69,18 @@ class Login extends Component {
     if (nextProps.errors !== prevState.errors) {
       if (nextProps.errors.status === 400) {
         update.servererror = nextProps.errors.data;
+        update.loading = false;
       }
       if (nextProps.errors.status === 404) {
         update.servererror = {
           network: "There has been a network error. Refresh and try again.",
         };
+        update.loading = false;
       }
-      update.loading = false;
     }
 
-    if (
-      nextProps.auth.isAuthenticated &&
-      (Object.keys(nextProps.auth.allCounts).length > 0 ||
-        Object.keys(nextProps.auth.providerCounts).length > 0 ||
-        Object.keys(nextProps.auth.userCounts).length > 0)
-    ) {
-      update.loading = false;
+    if (nextProps.auth.isAuthenticated && nextProps.auth.counted) {
+      update.move = false;
       update.navigate = true;
     }
 
@@ -183,6 +179,7 @@ class Login extends Component {
             <LoadCount sender={"login"} level={level} />
           </>
         )}
+
         <Box sender={"login"}>
           <form className="login-form" onSubmit={this.submitHandler}>
             <TextInputField
@@ -214,6 +211,7 @@ class Login extends Component {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Login
                 {loading && (

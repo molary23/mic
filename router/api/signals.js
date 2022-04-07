@@ -48,8 +48,10 @@ router.post(
     signalFields.CurrencyId = req.body.pair;
     if (req.body.pair) signalFields.CurrencyId = req.body.pair;
     if (req.body.option) signalFields.signaloption = req.body.option;
-    if (req.body.takeprofit) signalFields.takeprofit = req.body.takeprofit;
-    if (req.body.stoploss) signalFields.stoploss = req.body.stoploss;
+    if (req.body.takeprofit)
+      signalFields.takeprofit = JSON.stringify(req.body.takeprofit);
+    if (req.body.stoploss)
+      signalFields.stoploss = JSON.stringify(req.body.stoploss);
     if (req.body.startrange)
       signalFields.startrange = parseFloat(req.body.startrange);
     if (req.body.endrange)
@@ -80,10 +82,14 @@ router.post(
                           providers: null,
                         },
                         {
-                          providers: { [Op.substring]: ` ${userID},` },
+                          providers: {
+                            [Op.substring]: ` ${signalFields.UserId},`,
+                          },
                         },
                         {
-                          providers: { [Op.substring]: ` ${userID}]` },
+                          providers: {
+                            [Op.substring]: ` ${signalFields.UserId}]`,
+                          },
                         },
                       ],
                     },
@@ -94,12 +100,12 @@ router.post(
                         },
                         {
                           currencies: {
-                            [Op.substring]: ` ${signal.CurrencyId},`,
+                            [Op.substring]: ` ${signalFields.CurrencyId},`,
                           },
                         },
                         {
                           currencies: {
-                            [Op.substring]: ` ${signal.CurrencyId}]`,
+                            [Op.substring]: ` ${signalFields.CurrencyId}]`,
                           },
                         },
                       ],
@@ -138,19 +144,18 @@ router.post(
                         text: "and easy to do anywhere, even with Node.js",
                         html: "<strong>and easy to do anywhere, even with Node.js</strong>",
                       };
-                      /*
-sgMail
-  .sendMultiple(msg)
-  .then(() => {}, error => {
-    console.error(error);
 
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
-                                          
-                                          
-                                          */
+                      /*  sgMail.sendMultiple(msg).then(
+                        () => {},
+                        (error) => {
+                          console.error(error);
+
+                          if (error.response) {
+                            console.error(error.response.body);
+                          }
+                        }
+                      );*/
+
                       return res.json(true);
                     })
                     .catch((err) => res.status(404).json(err));
@@ -186,8 +191,8 @@ router.post(
       return res.status(400).json(error);
     }
     const currencyFields = {};
-    currencyFields.firstcurrency = req.body.firstcurrencypair;
-    currencyFields.secondcurrency = req.body.secondcurrencypair;
+    currencyFields.firstcurrency = JSON.stringify(req.body.firstcurrencypair);
+    currencyFields.secondcurrency = JSON.stringify(req.body.secondcurrencypair);
     currencyFields.UserId = req.user.id;
 
     Currency.findOne({

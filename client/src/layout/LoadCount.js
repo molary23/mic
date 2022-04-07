@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -6,10 +6,14 @@ import { getAllCounts, getMode } from "../action/authAction";
 
 function LoadCount(props) {
   const { sender, level, getAllCounts, getMode } = props;
-  if (sender === "login") {
-    getAllCounts(level);
-    getMode(level);
-  }
+
+  useEffect(() => {
+    if (sender === "login") {
+      getAllCounts(level);
+      getMode(level);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <div></div>;
 }

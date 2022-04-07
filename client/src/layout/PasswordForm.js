@@ -119,7 +119,11 @@ function PasswordForm(props) {
           error={errors.newpassword2}
         />
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Change Password
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>

@@ -110,6 +110,7 @@ export class Forgot extends Component {
               <button
                 type="submit"
                 className="btn btn-lg btn-block default-btn"
+                disabled={loading && true}
               >
                 Get Code
                 {loading && (

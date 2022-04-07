@@ -186,8 +186,8 @@ function AddModal(props) {
           const signal = {
             pair: parseInt(inputs.addpair),
             signaloption: inputs.addsignaloption,
-            takeprofit: JSON.stringify(takeprofit),
-            stoploss: JSON.stringify(stoploss),
+            takeprofit: takeprofit,
+            stoploss: stoploss,
             startrange: inputs.addstartrange,
             endrange: inputs.addendrange,
             pip: inputs.addpip,
@@ -268,6 +268,7 @@ function AddModal(props) {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Add Signal
                 {loading && (
@@ -324,6 +325,7 @@ function AddModal(props) {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Edit Signal
                 {loading && (
@@ -396,14 +398,14 @@ function AddModal(props) {
       } else {
         setErrors({});
         const currency = {
-          firstcurrencypair: JSON.stringify([
+          firstcurrencypair: [
             inputs.addfirstcurrencycode.toLowerCase(),
             inputs.addfirstcurrencyname.toLowerCase(),
-          ]),
-          secondcurrencypair: JSON.stringify([
+          ],
+          secondcurrencypair: [
             inputs.addsecondcurrencycode.toLowerCase(),
             inputs.addsecondcurrencyname.toLowerCase(),
-          ]),
+          ],
         };
         onSubmit(["add", currency]);
       }
@@ -471,7 +473,11 @@ function AddModal(props) {
           {error.currency && (
             <small className="text-muted">{error.currency}</small>
           )}
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Add Currency
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -639,7 +645,11 @@ function AddModal(props) {
 
         <div className="d-grid">
           {error.admin && <small className="text-muted">{error.admin}</small>}
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Add {adm}
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -765,7 +775,11 @@ function AddModal(props) {
           />
           <div className="d-grid">
             {error.admin && <small className="text-muted">{error.admin}</small>}
-            <button type="submit" className="btn default-btn btn-lg btn-block">
+            <button
+              type="submit"
+              className="btn default-btn btn-lg btn-block"
+              disabled={loading && true}
+            >
               Add Announcement
               {loading && (
                 <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -883,7 +897,11 @@ function AddModal(props) {
           />
           <div className="d-grid">
             {error.admin && <small className="text-muted">{error.admin}</small>}
-            <button type="submit" className="btn default-btn btn-lg btn-block">
+            <button
+              type="submit"
+              className="btn default-btn btn-lg btn-block"
+              disabled={loading && true}
+            >
               Edit Announcement
               {loading && (
                 <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -959,7 +977,11 @@ function AddModal(props) {
             error={errors.accountnumber}
           />
           <div className="d-grid">
-            <button type="submit" className="btn default-btn btn-lg btn-block">
+            <button
+              type="submit"
+              className="btn default-btn btn-lg btn-block"
+              disabled={loading && true}
+            >
               Add Account
               {loading && (
                 <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -1006,7 +1028,11 @@ function AddModal(props) {
           error={errors.walletname || error.wallet}
         />
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Add Wallet
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -1078,7 +1104,11 @@ function AddModal(props) {
           error={errors.amount || error.amount}
         />
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Request
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -1141,7 +1171,11 @@ function AddModal(props) {
           error={errors.forumtext}
         />
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Create
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>
@@ -1197,7 +1231,11 @@ function AddModal(props) {
           error={errors.email || error.email}
         />
         <div className="d-grid">
-          <button type="submit" className="btn default-btn btn-lg btn-block">
+          <button
+            type="submit"
+            className="btn default-btn btn-lg btn-block"
+            disabled={loading && true}
+          >
             Change Email
             {loading && (
               <span className="spinner-border spinner-border-sm ms-2"></span>

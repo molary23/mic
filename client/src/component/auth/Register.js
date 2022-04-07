@@ -355,6 +355,7 @@ class Register extends Component {
                 <button
                   type="submit"
                   className="btn btn-lg btn-block default-btn"
+                  disabled={loading && true}
                 >
                   Register
                   {loading && (

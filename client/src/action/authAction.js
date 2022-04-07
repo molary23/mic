@@ -65,7 +65,7 @@ export const getAllCounts = (level) => async (dispatch) => {
     localStorage.setItem(lsName, JSON.stringify(response.data));
     const result = await dispatch({
       type,
-      payload: await response.data,
+      payload: response.data,
     });
 
     return result;
@@ -106,7 +106,7 @@ export const getMode = (user) => async (dispatch) => {
     localStorage.setItem(mode, response.data);
     const result = await dispatch({
       type,
-      payload: await response.data,
+      payload: response.data,
     });
     return result;
   } catch (error) {

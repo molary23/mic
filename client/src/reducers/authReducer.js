@@ -14,6 +14,7 @@ const initialState = {
   providerCounts: {},
   userCounts: {},
   mode: null,
+  counted: false,
 };
 
 export default function authReducer(state = initialState, action) {
@@ -22,16 +23,19 @@ export default function authReducer(state = initialState, action) {
       return {
         ...state,
         allCounts: action.payload,
+        counted: true,
       };
     case SET_PROVIDER_COUNTS:
       return {
         ...state,
         providerCounts: action.payload,
+        counted: true,
       };
     case SET_USER_COUNTS:
       return {
         ...state,
         userCounts: action.payload,
+        counted: true,
       };
     case SET_CURRENT_USER:
       return {
@@ -52,6 +56,7 @@ export default function authReducer(state = initialState, action) {
         allCounts: {},
         providerCounts: {},
         userCounts: {},
+        counted: false,
       };
     default:
       return state;

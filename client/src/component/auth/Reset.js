@@ -147,6 +147,7 @@ export class Reset extends Component {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
+                disabled={loading && true}
               >
                 Reset
                 {loading && (

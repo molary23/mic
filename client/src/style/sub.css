@@ -560,7 +560,7 @@ span.nav-sub-icon svg {
 }
 
 .dashboard-content {
-  min-height: 1200px;
+  min-height: 800px;
   margin-left: 200px;
   padding: 25px 50px;
 }
@@ -1680,6 +1680,7 @@ ul {
   }
   .dashboard-content {
     padding: 10px;
+    min-height: 1200px;
   }
   table.mytable {
     width: 200% !important;
