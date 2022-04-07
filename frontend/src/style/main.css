@@ -374,13 +374,13 @@ nav.top-nav.show-bg {
   width: 100%;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
-  -webkit-transition: all 500ms;
-  transition: all 500ms;
+  -webkit-transition: all 250ms;
+  transition: all 250ms;
 }
 
-.main-home-service .service-text-image-box .scaled {
-  -webkit-transform: scale(1);
-  transform: scale(1);
+.main-home-service .service-text-image-box .service-image:hover {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .main-home-service .service-text-image-box .service-text {

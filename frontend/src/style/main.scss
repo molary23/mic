@@ -194,13 +194,13 @@
       -ms-transform: scale(0.8);
       -o-transform: scale(0.8);
       transform: scale(0.8);
-      transition: all 500ms;
-    }
-    .scaled {
-      -webkit-transform: scale(1);
-      -ms-transform: scale(1);
-      -o-transform: scale(1);
-      transform: scale(1);
+      transition: all 250ms;
+      &:hover {
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        -o-transform: scale(1.1);
+        transform: scale(1.1);
+      }
     }
 
     .service-text {
