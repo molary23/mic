@@ -140,7 +140,8 @@
 .main-home-refer-box {
   min-height: 600px;
   padding: 100px 0px;
-  background: #fcf6ec;
+  background: #f6f8fe;
+  color: #7186aa;
   text-align: center;
   h3 {
     font-size: 1.5em;
@@ -162,7 +163,7 @@
       height: 60px;
       border-radius: 30px;
       padding: 15px;
-      background: rgba($color: #7483be, $alpha: 0.7);
+      background: rgba($color: #7186aa, $alpha: 0.6);
       color: #fff;
       text-align: center;
       margin-bottom: 20px;
@@ -306,12 +307,12 @@ a.btn.nav-link.btn {
   }
   .start-card {
     min-height: 250px;
-    background: #fcf6ec;
+    background: #f6f8fe;
     border: 1px solid #f7f7f7;
     border-radius: 20px;
     padding: 20px;
     box-shadow: 1px 1px 1px rgb(224, 224, 224);
-    color: rgb(79, 79, 79);
+    color: #7186aa;
     text-align: center;
     margin-bottom: 50px;
     .start-icon {

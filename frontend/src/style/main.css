@@ -313,7 +313,8 @@ nav.top-nav.show-bg {
 .main-home-refer-box {
   min-height: 600px;
   padding: 100px 0px;
-  background: #fcf6ec;
+  background: #f6f8fe;
+  color: #7186aa;
   text-align: center;
 }
 
@@ -343,7 +344,7 @@ nav.top-nav.show-bg {
   height: 60px;
   border-radius: 30px;
   padding: 15px;
-  background: rgba(116, 131, 190, 0.7);
+  background: rgba(113, 134, 170, 0.6);
   color: #fff;
   text-align: center;
   margin-bottom: 20px;
@@ -503,13 +504,13 @@ a.btn.nav-link.btn {
 
 .home-get-started .start-card {
   min-height: 250px;
-  background: #fcf6ec;
+  background: #f6f8fe;
   border: 1px solid #f7f7f7;
   border-radius: 20px;
   padding: 20px;
   -webkit-box-shadow: 1px 1px 1px #e0e0e0;
           box-shadow: 1px 1px 1px #e0e0e0;
-  color: #4f4f4f;
+  color: #7186aa;
   text-align: center;
   margin-bottom: 50px;
 }
