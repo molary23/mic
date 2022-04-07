@@ -58,6 +58,7 @@ function Contact(props) {
         phone: inputs.phone,
         subject: inputs.subject,
         message: inputs.message,
+        send: "message",
       };
 
       try {

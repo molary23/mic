@@ -187,7 +187,7 @@ nav.top-nav.show-bg {
 .main-home .main-home-intro {
   min-height: 300px;
   text-align: center;
-  padding: 150px 0px;
+  padding: 100px 0px;
 }
 
 .main-home .main-home-intro .intro-1,
@@ -230,10 +230,10 @@ nav.top-nav.show-bg {
 }
 
 .main-home-about {
-  min-height: 950px;
+  min-height: 700px;
   text-align: center;
   background: #4059d1;
-  padding: 200px 0px;
+  padding: 100px 0px;
   color: #fff;
 }
 
@@ -312,7 +312,7 @@ nav.top-nav.show-bg {
 
 .main-home-refer-box {
   min-height: 600px;
-  padding: 100px 0px 200px;
+  padding: 100px 0px;
   background: #fcf6ec;
   text-align: center;
 }
@@ -360,12 +360,12 @@ nav.top-nav.show-bg {
 }
 
 .main-home-service {
-  min-height: 3600px;
-  padding-bottom: 100px;
+  min-height: 3000px;
+  padding-bottom: 50px;
 }
 
 .main-home-service .service-text-image-box {
-  padding-top: 100px;
+  padding: 25px;
   min-height: 500px;
 }
 
