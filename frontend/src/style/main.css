@@ -361,7 +361,7 @@ nav.top-nav.show-bg {
 
 .main-home-service {
   min-height: 3000px;
-  padding-bottom: 50px;
+  padding: 50px 0px;
 }
 
 .main-home-service .service-text-image-box {
@@ -374,6 +374,13 @@ nav.top-nav.show-bg {
   width: 100%;
   -webkit-transform: scale(0.8);
   transform: scale(0.8);
+  -webkit-transition: all 200ms;
+  transition: all 200ms;
+}
+
+.main-home-service .service-text-image-box .scaled {
+  -webkit-transform: scale(1);
+  transform: scale(1);
 }
 
 .main-home-service .service-text-image-box .service-text {

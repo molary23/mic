@@ -3,7 +3,19 @@ import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../asset/images/logo.png";
 
 function MainNav(props) {
-  const { homeRef, aboutRef, serviceRef, faqRef, contactRef } = props,
+  const {
+      homeRef,
+      aboutRef,
+      serviceRef,
+      faqRef,
+      contactRef,
+      timeRef,
+      moneyRef,
+      accuracyRef,
+      consistentRef,
+      supportRef,
+      workRef,
+    } = props,
     [active, setActive] = useState(0),
     [display, setDisplay] = useState(false),
     [focus, setFocus] = useState(false),
@@ -75,7 +87,13 @@ function MainNav(props) {
       home = homeRef.current,
       service = serviceRef.current,
       faq = faqRef.current,
-      contact = contactRef.current;
+      contact = contactRef.current,
+      time = timeRef.current,
+      money = moneyRef.current,
+      work = workRef.current,
+      consistent = consistentRef.current,
+      accuracy = accuracyRef.current,
+      support = supportRef.current;
 
     let winScroll = window.scrollY;
     if (winScroll >= 0 && winScroll < home.clientHeight) {
@@ -90,6 +108,12 @@ function MainNav(props) {
       winScroll < service.offsetTop + service.clientHeight
     ) {
       setActive((active) => 2);
+      work.classList.remove("scaled");
+      money.classList.remove("scaled");
+      consistent.classList.remove("scaled");
+      accuracy.classList.remove("scaled");
+      support.classList.remove("scaled");
+      time.classList.remove("scaled");
     } else if (
       winScroll >= faq.offsetTop &&
       winScroll < faq.offsetTop + faq.clientHeight
@@ -100,6 +124,38 @@ function MainNav(props) {
       winScroll < contact.offsetTop + contact.clientHeight
     ) {
       setActive((active) => 4);
+    }
+
+    if (
+      winScroll >= time.offsetTop - 100 &&
+      winScroll < time.offsetTop + time.clientHeight
+    ) {
+      time.classList.add("scaled");
+    } else if (
+      winScroll >= money.offsetTop - 100 &&
+      winScroll < money.offsetTop + money.clientHeight
+    ) {
+      money.classList.add("scaled");
+    } else if (
+      winScroll >= work.offsetTop - 100 &&
+      winScroll < work.offsetTop + work.clientHeight
+    ) {
+      work.classList.add("scaled");
+    } else if (
+      winScroll >= consistent.offsetTop - 100 &&
+      winScroll < consistent.offsetTop + consistent.clientHeight
+    ) {
+      consistent.classList.add("scaled");
+    } else if (
+      winScroll >= accuracy.offsetTop - 100 &&
+      winScroll < accuracy.offsetTop + accuracy.clientHeight
+    ) {
+      accuracy.classList.add("scaled");
+    } else if (
+      winScroll >= support.offsetTop - 100 &&
+      winScroll < support.offsetTop + support.clientHeight
+    ) {
+      support.classList.add("scaled");
     }
   };
 

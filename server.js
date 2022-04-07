@@ -6,6 +6,9 @@ const express = require("express"),
   helmet = require("helmet"),
   // Error Logging
   winston = require("winston"),
+  // CORS
+  cors = require("cors"),
+  morgan = require("morgan"),
   // Bring in APIs
   users = require("./router/api/users"),
   admin = require("./router/api/admin"),
@@ -18,6 +21,12 @@ const express = require("express"),
   payments = require("./router/api/payments");
 
 app.use(helmet());
+
+// enabling CORS for all requests
+app.use(cors());
+
+// adding morgan to log HTTP requests
+app.use(morgan("combined"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

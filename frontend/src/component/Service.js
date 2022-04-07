@@ -8,14 +8,23 @@ import accuracy from "../asset/images/accuracy.png";
 import support from "../asset/images/support.png";
 
 function Service(props) {
+  const {
+    timeRef,
+    moneyRef,
+    accuracyRef,
+    consistentRef,
+    supportRef,
+    workRef,
+    serviceRef,
+  } = props;
   return (
-    <div id="service" ref={props.serviceRef}>
+    <div id="service" ref={serviceRef}>
       <div className="main-home-service">
         <div className="container">
           <div className="service-text-image-box">
             <div className="row">
               <div className="col-sm-6">
-                <div className="service-image" id="saveMoney">
+                <div className="service-image" id="saveMoney" ref={moneyRef}>
                   <img
                     src={money}
                     alt="MIC Business help you save money"
@@ -50,7 +59,7 @@ function Service(props) {
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="service-image" id="saveTime">
+                <div className="service-image" id="saveTime" ref={timeRef}>
                   <img
                     src={time}
                     alt="MIC Business save time by getting signal to you fast"
@@ -63,7 +72,7 @@ function Service(props) {
           <div className="service-text-image-box">
             <div className="row">
               <div className="col-sm-6">
-                <div className="service-image" id="hardWork">
+                <div className="service-image" id="hardWork" ref={workRef}>
                   <img
                     src={work}
                     alt="MIC Business get the hard part of the job done"
@@ -98,7 +107,11 @@ function Service(props) {
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="service-image" id="consistent">
+                <div
+                  className="service-image"
+                  id="consistent"
+                  ref={consistentRef}
+                >
                   <img
                     src={consistent}
                     alt="MIC Business team are consistent in delivering signals"
@@ -111,7 +124,7 @@ function Service(props) {
           <div className="service-text-image-box">
             <div className="row">
               <div className="col-sm-6">
-                <div className="service-image" id="accuracy">
+                <div className="service-image" id="accuracy" ref={accuracyRef}>
                   <img
                     src={accuracy}
                     alt="MIC Business signals are accurate and timely"
@@ -145,7 +158,7 @@ function Service(props) {
                 </div>
               </div>
               <div className="col-md-6">
-                <div className="service-image" id="support">
+                <div className="service-image" id="support" ref={supportRef}>
                   <img
                     src={support}
                     alt="MIC Business support team are available 24/7"
