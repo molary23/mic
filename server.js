@@ -31,25 +31,7 @@ app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//Sync Sequelize
-require("./util/Relationship");
-
-app.use(passport.initialize());
-// Passport Config
-require("./config/passport")(passport);
-
-app.use("/api/users", users);
-app.use("/api/admin", admin);
-app.use("/api/signals", signals);
-app.use("/api/view", view);
-app.use("/api/payments", payments);
-app.use("/api/adminview", adminview);
-app.use("/api/userview", userview);
-app.use("/api/count", count);
-app.use("/api/download", download);
-
-const port = process.env.PORT || 5001;
-
+// Logging Error
 const logger = winston.createLogger({
   level: "info",
   format: winston.format.json(),
@@ -75,5 +57,33 @@ if (process.env.NODE_ENV !== "production") {
     })
   );
 }
+
+//Sync Sequelize
+require("./util/Relationship");
+
+app.use(passport.initialize());
+// Passport Config
+require("./config/passport")(passport);
+
+app.use("/api/users", users);
+app.use("/api/admin", admin);
+app.use("/api/signals", signals);
+app.use("/api/view", view);
+app.use("/api/payments", payments);
+app.use("/api/adminview", adminview);
+app.use("/api/userview", userview);
+app.use("/api/count", count);
+app.use("/api/download", download);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(__dirname + "../dashboard.micearnbusiness.org"));
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "../dashboard.micearnbusiness.org", "index.html")
+    );
+  });
+}
+
+const port = process.env.PORT || 5001;
 
 app.listen(port);

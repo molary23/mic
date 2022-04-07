@@ -151,13 +151,14 @@ export class Index extends Component {
         {load ? (
           <Spinner />
         ) : (
-          <div className="container">
+          <div className="container-fluid">
             <div className="welcome-dashboard mb-5">
               <h1>
                 <span className="dash-user-name">Hi {username}</span>,
                 <span className="dash-welcome"> welcome to your Dashboard</span>
               </h1>
             </div>
+
             <div className="dash-info mb-5">
               <div className="row">
                 <div className="col-lg-3 col-md-6 col-12">
@@ -249,94 +250,99 @@ export class Index extends Component {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="dash-intro mb-5">
-              <div className="row">
-                <div className="col-lg-5 col-md-12 col-12">
-                  <div className="dash-basic dash-card">
-                    <h4 className="mb-2">Referrals </h4>
-                    <h1 className="mb-2">{referral}</h1>
-                    <code>
-                      https://dashboard.micearnbusiness.org/referral/:
-                      {username}
-                    </code>
-                    <div className={`tiptool ${copy && "showTip"}`}>
-                      <span className="tooltiptext">Copied to Clipboard</span>
-                    </div>
-                    <input
-                      type="hidden"
-                      ref={this.myRef}
-                      id="copy-code"
-                      value={`https://dashboard.micearnbusiness.org/referral/:${username}`}
-                      readOnly
-                    />
-                    <p className="mb-1">Invite More</p>
-                    <div className="share-ref-social">
-                      <span
-                        className="share-ref-btn"
-                        onClick={() => this.shareRef("facebook")}
-                      >
-                        <FaFacebookSquare />
-                      </span>
-                      <span
-                        className="share-ref-btn"
-                        onClick={() => this.shareRef("twitter")}
-                      >
-                        <FaTwitterSquare />
-                      </span>
-                      <span
-                        className="share-ref-btn"
-                        onClick={() => this.shareRef("linkedin")}
-                      >
-                        <FaLinkedin />
-                      </span>
-                      <span
-                        className="share-ref-btn"
-                        onClick={() => this.shareRef("whatsapp")}
-                      >
-                        <FaWhatsappSquare />
-                      </span>
-                      <span
-                        className="share-ref-btn"
-                        onClick={() => this.shareRef("copy")}
-                      >
-                        <IoMdCopy />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-3 col-md-12 col-12">
-                  <div className="dash-qr dash-card">
-                    <div className="qr-code">
-                      <QRCode
+
+              <div className="dash-intro">
+                <div className="row">
+                  <div className="col-lg-5 col-md-12 col-12">
+                    <div className="dash-basic dash-card">
+                      <h4 className="mb-2">Referrals </h4>
+                      <h1 className="mb-2">{referral}</h1>
+                      <code>
+                        https://dashboard.micearnbusiness.org/referral/:
+                        {username}
+                      </code>
+                      <div className={`tiptool ${copy && "showTip"}`}>
+                        <span className="tooltiptext">Copied to Clipboard</span>
+                      </div>
+                      <input
+                        type="hidden"
+                        ref={this.myRef}
+                        id="copy-code"
                         value={`https://dashboard.micearnbusiness.org/referral/:${username}`}
-                        size={200}
-                        level={"Q"}
+                        readOnly
                       />
+                      <p className="mb-1">Invite More</p>
+                      <div className="share-ref-social">
+                        <span
+                          className="share-ref-btn"
+                          onClick={() => this.shareRef("facebook")}
+                        >
+                          <FaFacebookSquare />
+                        </span>
+                        <span
+                          className="share-ref-btn"
+                          onClick={() => this.shareRef("twitter")}
+                        >
+                          <FaTwitterSquare />
+                        </span>
+                        <span
+                          className="share-ref-btn"
+                          onClick={() => this.shareRef("linkedin")}
+                        >
+                          <FaLinkedin />
+                        </span>
+                        <span
+                          className="share-ref-btn"
+                          onClick={() => this.shareRef("whatsapp")}
+                        >
+                          <FaWhatsappSquare />
+                        </span>
+                        <span
+                          className="share-ref-btn"
+                          onClick={() => this.shareRef("copy")}
+                        >
+                          <IoMdCopy />
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-lg-4 col-md-12 col-12">
-                  <div className="dash-bonus dash-card">
-                    <h4 className="mb-3">Bonus Index</h4>
-                    <h1 className="mb-3">${bonus.toFixed(2)}</h1>
-                    <p>
-                      Estimated earning{" "}
-                      <span className="dash-earning">${credit.toFixed(2)}</span>
-                    </p>
-                    <p>
-                      Estimated spending{" "}
-                      <span className="dash-earning">${debit.toFixed(2)}</span>
-                    </p>
+                  <div className="col-lg-3 col-md-12 col-12">
+                    <div className="dash-qr dash-card">
+                      <div className="qr-code">
+                        <QRCode
+                          value={`https://dashboard.micearnbusiness.org/referral/:${username}`}
+                          size={200}
+                          level={"Q"}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-lg-4 col-md-12 col-12">
+                    <div className="dash-bonus dash-card">
+                      <h4 className="mb-3">Bonus Index</h4>
+                      <h1 className="mb-3">${bonus.toFixed(2)}</h1>
+                      <p>
+                        Estimated earning{" "}
+                        <span className="dash-earning">
+                          ${credit.toFixed(2)}
+                        </span>
+                      </p>
+                      <p>
+                        Estimated spending{" "}
+                        <span className="dash-earning">
+                          ${debit.toFixed(2)}
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="row g-0">
-              {userdetails.ann.length >= 1 && (
-                <AnnCard details={userdetails.ann} />
-              )}
+              <div className="row g-0">
+                {userdetails.ann.length >= 1 && (
+                  <AnnCard details={userdetails.ann} />
+                )}
+              </div>
             </div>
           </div>
         )}

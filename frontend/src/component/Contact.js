@@ -4,7 +4,7 @@ import axios from "axios";
 import TextInputField from "../layout/TextInputField";
 import TextAreaField from "../layout/TextAreaField";
 import Modal from "../layout/Modal";
-const API_PATH = "https://micearnbusiness/api/send/mail.php";
+const API_PATH = "https://micearnbusiness.org/api/send/mail.php";
 function Contact(props) {
   const [inputs, setInputs] = useState({}),
     [errors, setErrors] = useState({}),

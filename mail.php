@@ -1,8 +1,10 @@
 <?php
 
 $data = json_decode(file_get_contents("php://input"), TRUE);
-$requestType = $data['send'] ;
+//$requestType = $data['send'] ;
 
+echo json_encode($data);
+/*
 if ($requestType === 'Message') {
 $to = 'contact@micearnbusiness.org';
 $noreply = 'no-reply@micearnbusiness.org';
@@ -27,7 +29,7 @@ $response = 1;
     
 } 
 echo json_encode($response);
-}
+}*/
 
 
 

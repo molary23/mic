@@ -7,7 +7,7 @@ function AnnCard(props) {
   const { details } = props;
   return details.map((item, i) => {
     return (
-      <div className="col-md-4 col-12" key={i}>
+      <div className="col-lg-4 col-md-12 col-12" key={i}>
         <div className="dash-ann ann-card dash-card">
           <div className="ann-title">
             <span>

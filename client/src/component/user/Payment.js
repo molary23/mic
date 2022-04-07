@@ -75,6 +75,8 @@ class Payment extends Component {
       modal: false,
       toast: true,
       toasttext: `Payment successfully`,
+      agree: false,
+      check: false,
     });
     this.props.clearActions("make-payment");
 
@@ -123,30 +125,67 @@ class Payment extends Component {
     this.props.makePayment([type, payData]);
   };
 
+  changeHandler = (e) => {
+    const { agree } = this.state;
+    this.setState({
+      agree: !agree,
+    });
+  };
+
   render() {
-    const { navigate, to, payOption, toast, toasttext, isLoading } = this.state;
+    const {
+      navigate,
+      to,
+      payOption,
+      toast,
+      toasttext,
+      isLoading,
+      agree,
+      check,
+    } = this.state;
     let amount, gateway;
     if (payOption !== null) {
       amount = payOption.amount;
       gateway = payOption.gateway;
     }
     return (
-      <div>
+      <div className="payment-info">
         {isLoading && <ProgressBar />}
         <div className="container">
           <div className="customer-plan  mb-3">
             <h2>Make Payment</h2>
           </div>
-          <p className="mb-1">
-            You have decided to pay ${amount} via {gateway}.
-          </p>
-          <p className="mb-1">
-            Proceed to{" "}
-            <button className="btn pay" onClick={this.clickHandler}>
-              {gateway}
-            </button>
-            site to pay.
-          </p>
+          <h3 className="mb-4">Pay using {gateway}</h3>
+
+          <div className="card-line-details mb-4">
+            <div className="card-label">Amount</div>
+            <div className="card-value">${amount}</div>
+          </div>
+          <div className="card-line-details mb-4">
+            <div className="card-label">Payment Reference</div>
+            <div className="card-value">{"JHfdtyfujayhsvhj"}</div>
+          </div>
+
+          <div class="form-check mb-4">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="check-agree"
+              name="check"
+              value={check}
+              onChange={this.changeHandler}
+            />
+            <label class="form-check-label">
+              I agree to <a href="/">terms and conditions</a>
+            </label>
+          </div>
+          <button
+            className="btn add-btn pay"
+            onClick={this.clickHandler}
+            disabled={agree ? false : true}
+          >
+            Proceed
+          </button>
         </div>
         {toast && <Toast text={toasttext} />}
         {navigate && <Navigate to={to} replace={false} />}

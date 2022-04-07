@@ -226,7 +226,6 @@ class Register extends Component {
           });
         }
       } catch (error) {
-        console.log(error);
         let err = error.response;
         this.setState({
           error: err.data,

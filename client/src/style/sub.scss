@@ -245,6 +245,7 @@ span.nav-sub-icon {
   .dash-card {
     border-radius: 20px;
     box-shadow: 1px 1px 5px rgb(190, 190, 190);
+    margin-bottom: 40px;
   }
 
   .dash-info-card {
@@ -1256,6 +1257,24 @@ ul {
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+.payment-info {
+  h3 {
+    text-transform: capitalize;
+    text-decoration: underline;
+  }
+
+  .card-line-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: 40%;
+
+    .card-value {
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  }
 }
 
 @import "responsive.scss";

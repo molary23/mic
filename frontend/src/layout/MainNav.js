@@ -127,7 +127,7 @@ function MainNav(props) {
     }
 
     if (
-      winScroll >= time.offsetTop - 100 &&
+      winScroll >= time.offsetTop - 50 &&
       winScroll < time.offsetTop + time.clientHeight &&
       time.classList.contains("scaled") === false
     ) {
@@ -138,7 +138,7 @@ function MainNav(props) {
       support.classList.remove("scaled");
       time.classList.add("scaled");
     } else if (
-      winScroll >= money.offsetTop - 100 &&
+      winScroll >= money.offsetTop - 50 &&
       winScroll < money.offsetTop + money.clientHeight &&
       money.classList.contains("scaled") === false
     ) {
@@ -149,7 +149,7 @@ function MainNav(props) {
       time.classList.remove("scaled");
       money.classList.add("scaled");
     } else if (
-      winScroll >= work.offsetTop - 100 &&
+      winScroll >= work.offsetTop - 50 &&
       winScroll < work.offsetTop + work.clientHeight &&
       work.classList.contains("scaled") === false
     ) {
@@ -160,7 +160,7 @@ function MainNav(props) {
       time.classList.remove("scaled");
       work.classList.add("scaled");
     } else if (
-      winScroll >= consistent.offsetTop - 100 &&
+      winScroll >= consistent.offsetTop - 50 &&
       winScroll < consistent.offsetTop + consistent.clientHeight &&
       consistent.classList.contains("scaled") === false
     ) {
@@ -171,7 +171,7 @@ function MainNav(props) {
       time.classList.remove("scaled");
       consistent.classList.add("scaled");
     } else if (
-      winScroll >= accuracy.offsetTop - 100 &&
+      winScroll >= accuracy.offsetTop - 50 &&
       winScroll < accuracy.offsetTop + accuracy.clientHeight &&
       accuracy.classList.contains("scaled") === false
     ) {
@@ -182,7 +182,7 @@ function MainNav(props) {
       time.classList.remove("scaled");
       accuracy.classList.add("scaled");
     } else if (
-      winScroll >= support.offsetTop - 100 &&
+      winScroll >= support.offsetTop - 50 &&
       winScroll < support.offsetTop + support.clientHeight &&
       support.classList.contains("scaled") === false
     ) {
