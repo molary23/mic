@@ -4,7 +4,7 @@ import axios from "axios";
 import TextInputField from "../layout/TextInputField";
 import TextAreaField from "../layout/TextAreaField";
 import Modal from "../layout/Modal";
-
+const API_PATH = "https://micearnbusiness/api/send/mail.php";
 function Contact(props) {
   const [inputs, setInputs] = useState({}),
     [errors, setErrors] = useState({}),
@@ -63,11 +63,11 @@ function Contact(props) {
 
       try {
         let response = await axios.post(
-          "https://micearnbusiness.org/mail/send.php",
+          API_PATH,
           {
             message,
           },
-          {}
+          { headers: { "content-type": "application/json" } }
         );
         if (response.data === 1) {
           setInputs({});

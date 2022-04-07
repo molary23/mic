@@ -194,7 +194,7 @@
       -ms-transform: scale(0.8);
       -o-transform: scale(0.8);
       transform: scale(0.8);
-      transition: all 200ms;
+      transition: all 500ms;
     }
     .scaled {
       -webkit-transform: scale(1);
@@ -223,7 +223,8 @@ a.btn.nav-link.btn {
 .sub-footer {
   min-height: 400px;
   padding: 100px 0px;
-
+  background: #f6f8fe;
+  color: #7186aa;
   h2 {
     font-size: clamp(1.2vw, 18px, 2.5vh);
     margin-bottom: 20px;
@@ -231,10 +232,9 @@ a.btn.nav-link.btn {
   }
   a {
     text-decoration: none;
-    color: rgb(36, 36, 36);
-
+    color: #7186aa;
     &:hover {
-      color: #646464;
+      color: rgba($color: #2c4a7c, $alpha: 0.6);
     }
   }
 
@@ -267,9 +267,12 @@ a.btn.nav-link.btn {
   }
 }
 
-.fixed-bottom {
+.footer-nav {
   height: 50px;
   padding-top: 20px;
+  background: rgba($color: #7186aa, $alpha: 0.1) !important;
+  color: #7186aa;
+  font-weight: 500;
 }
 
 .error-holder {

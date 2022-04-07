@@ -108,12 +108,12 @@ function MainNav(props) {
       winScroll < service.offsetTop + service.clientHeight
     ) {
       setActive((active) => 2);
-      work.classList.remove("scaled");
+      /* work.classList.remove("scaled");
       money.classList.remove("scaled");
       consistent.classList.remove("scaled");
       accuracy.classList.remove("scaled");
       support.classList.remove("scaled");
-      time.classList.remove("scaled");
+      time.classList.remove("scaled");*/
     } else if (
       winScroll >= faq.offsetTop &&
       winScroll < faq.offsetTop + faq.clientHeight
@@ -128,33 +128,69 @@ function MainNav(props) {
 
     if (
       winScroll >= time.offsetTop - 100 &&
-      winScroll < time.offsetTop + time.clientHeight
+      winScroll < time.offsetTop + time.clientHeight &&
+      time.classList.contains("scaled") === false
     ) {
+      work.classList.remove("scaled");
+      money.classList.remove("scaled");
+      consistent.classList.remove("scaled");
+      accuracy.classList.remove("scaled");
+      support.classList.remove("scaled");
       time.classList.add("scaled");
     } else if (
       winScroll >= money.offsetTop - 100 &&
-      winScroll < money.offsetTop + money.clientHeight
+      winScroll < money.offsetTop + money.clientHeight &&
+      money.classList.contains("scaled") === false
     ) {
+      work.classList.remove("scaled");
+      consistent.classList.remove("scaled");
+      accuracy.classList.remove("scaled");
+      support.classList.remove("scaled");
+      time.classList.remove("scaled");
       money.classList.add("scaled");
     } else if (
       winScroll >= work.offsetTop - 100 &&
-      winScroll < work.offsetTop + work.clientHeight
+      winScroll < work.offsetTop + work.clientHeight &&
+      work.classList.contains("scaled") === false
     ) {
+      money.classList.remove("scaled");
+      consistent.classList.remove("scaled");
+      accuracy.classList.remove("scaled");
+      support.classList.remove("scaled");
+      time.classList.remove("scaled");
       work.classList.add("scaled");
     } else if (
       winScroll >= consistent.offsetTop - 100 &&
-      winScroll < consistent.offsetTop + consistent.clientHeight
+      winScroll < consistent.offsetTop + consistent.clientHeight &&
+      consistent.classList.contains("scaled") === false
     ) {
+      work.classList.remove("scaled");
+      money.classList.remove("scaled");
+      accuracy.classList.remove("scaled");
+      support.classList.remove("scaled");
+      time.classList.remove("scaled");
       consistent.classList.add("scaled");
     } else if (
       winScroll >= accuracy.offsetTop - 100 &&
-      winScroll < accuracy.offsetTop + accuracy.clientHeight
+      winScroll < accuracy.offsetTop + accuracy.clientHeight &&
+      accuracy.classList.contains("scaled") === false
     ) {
+      work.classList.remove("scaled");
+      money.classList.remove("scaled");
+      consistent.classList.remove("scaled");
+      support.classList.remove("scaled");
+      time.classList.remove("scaled");
       accuracy.classList.add("scaled");
     } else if (
       winScroll >= support.offsetTop - 100 &&
-      winScroll < support.offsetTop + support.clientHeight
+      winScroll < support.offsetTop + support.clientHeight &&
+      support.classList.contains("scaled") === false
     ) {
+      work.classList.remove("scaled");
+      money.classList.remove("scaled");
+      consistent.classList.remove("scaled");
+      accuracy.classList.remove("scaled");
+      time.classList.remove("scaled");
       support.classList.add("scaled");
     }
   };
