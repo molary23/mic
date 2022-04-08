@@ -514,6 +514,10 @@ function AddModal(props) {
           addadminusername:
             "Only contain Letters, Numbers and (.-_) characters allowed",
         });
+      } else if (inputs.addadminusername.length < 5) {
+        setErrors({
+          addadminusername: "Username should be at least 5 characters",
+        });
       } else if (inputs.addadminusername.length > 30) {
         setErrors({
           addadminusername: "Username can't be more than 30 characters",

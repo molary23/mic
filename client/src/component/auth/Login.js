@@ -77,6 +77,11 @@ class Login extends Component {
         };
         update.loading = false;
       }
+      if (nextProps.errors.status === 403) {
+        update.modal = true;
+        update.sender = "unverified";
+        update.loading = false;
+      }
     }
 
     if (nextProps.auth.isAuthenticated && nextProps.auth.counted) {
@@ -85,19 +90,6 @@ class Login extends Component {
     }
 
     return update;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.errors !== this.props.errors &&
-      Object.keys(this.props.errors).includes("verify")
-    ) {
-      this.setState({
-        modal: true,
-        sender: "not verified",
-      });
-      this.props.clearErrors();
-    }
   }
 
   changeHandler = (e) => {

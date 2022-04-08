@@ -14,7 +14,7 @@ cron.schedule(
       { status: "i" },
       {
         where: {
-          enddate: new Date().toISOString(),
+          enddate: { [Op.lte]: new Date().toISOString() },
           status: "a",
         },
       }
@@ -31,7 +31,7 @@ CRON for Auto Bonus Approval
 */
 
 cron.schedule(
-  "0 0 * * *",
+  "10 0 * * *",
   () => {
     let removeday = new Date(new Date().setDate(new Date().getDate() - 7));
 

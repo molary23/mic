@@ -579,7 +579,7 @@ router.post("/login", (req, res) => {
               jwt.sign(
                 payload,
                 keys.secretOrKey,
-                { expiresIn: 3600 },
+                { expiresIn: 43200 },
                 (_err, token) => {
                   return res.json({
                     message: "Success",
@@ -642,7 +642,7 @@ sgMail
                                           */
 
                       errors.verify = 0;
-                      return res.status(400).json(errors);
+                      return res.status(403.7).json(errors);
                     })
                     .catch((err) => res.status(404).json(err));
                 } else {

@@ -251,7 +251,7 @@ class Pay extends Component {
                     <FaStripe />
                     <button
                       className="btn pay-with mt-2"
-                      onClick={() => this.payHandler("crypto")}
+                      onClick={() => this.payHandler("bank")}
                     >
                       Stripe
                     </button>
@@ -260,7 +260,7 @@ class Pay extends Component {
                     <FaBitcoin />
                     <button
                       className="btn pay-with mt-2"
-                      onClick={() => this.payHandler("bank")}
+                      onClick={() => this.payHandler("crypto")}
                     >
                       Bitpay
                     </button>

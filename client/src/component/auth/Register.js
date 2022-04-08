@@ -152,6 +152,18 @@ class Register extends Component {
           username: "Username Field can't be Empty",
         },
       });
+    } else if (username.length < 5) {
+      this.setState({
+        error: {
+          username: "Username should be at least 5 characters",
+        },
+      });
+    } else if (username.length > 30) {
+      this.setState({
+        error: {
+          username: "Username can't be more than 30 characters",
+        },
+      });
     } else if (isEmail(username)) {
       this.setState({
         error: {

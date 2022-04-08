@@ -10,6 +10,8 @@ const express = require("express"),
   // CORS
   cors = require("cors"),
   morgan = require("morgan"),
+  // Cron
+  cron = require("node-cron"),
   // Bring in APIs
   users = require("./router/api/users"),
   admin = require("./router/api/admin"),
@@ -84,6 +86,9 @@ if (process.env.NODE_ENV === "production") {
     );
   });
 }
+
+//Use Crons
+require("./router/api/cron");
 
 const port = process.env.PORT || 5001;
 

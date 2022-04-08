@@ -93,7 +93,7 @@ function Modal(props) {
     title = "Registration Successful!";
   }
 
-  if (sender === "not verified") {
+  if (sender === "unverified") {
     text = (
       <div>
         <p>You are yet to verify your Email Address. </p>
