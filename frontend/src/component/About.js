@@ -67,7 +67,7 @@ function About(props) {
               <div className="about-image">
                 <img
                   src={dashboard}
-                  alt="MIC Business save time by getting signal to you fast"
+                  alt="MIC Business user dashboard to monitor Signals"
                   className="img-responsive"
                 />
               </div>

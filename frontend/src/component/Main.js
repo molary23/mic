@@ -15,7 +15,13 @@ function Main() {
     contactRef = useRef(),
     aboutRef = useRef(),
     homeRef = useRef(),
-    faqRef = useRef();
+    faqRef = useRef(),
+    timeRef = useRef(),
+    moneyRef = useRef(),
+    accuracyRef = useRef(),
+    consistentRef = useRef(),
+    supportRef = useRef(),
+    workRef = useRef();
 
   return (
     <div>
@@ -26,11 +32,25 @@ function Main() {
           serviceRef,
           faqRef,
           contactRef,
+          timeRef,
+          moneyRef,
+          accuracyRef,
+          consistentRef,
+          supportRef,
+          workRef,
         }}
       />
       <Home homeRef={homeRef} />
       <About aboutRef={aboutRef} />
-      <Service serviceRef={serviceRef} />
+      <Service
+        serviceRef={serviceRef}
+        timeRef={timeRef}
+        moneyRef={moneyRef}
+        accuracyRef={accuracyRef}
+        consistentRef={consistentRef}
+        supportRef={supportRef}
+        workRef={workRef}
+      />
       <Refer />
       <Faq faqRef={faqRef} />
       <Contact contactRef={contactRef} />
