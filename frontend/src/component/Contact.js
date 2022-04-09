@@ -112,6 +112,7 @@ function Contact(props) {
                         value={inputs.name || ""}
                         onChange={changeHandler}
                         error={errors.name}
+                        maxLength="50"
                       />
                     </div>
                     <div className="col-md-6  col-12">
@@ -123,6 +124,7 @@ function Contact(props) {
                         value={inputs.email || ""}
                         onChange={changeHandler}
                         error={errors.email}
+                        maxLength="50"
                       />
                     </div>
                   </div>
@@ -136,6 +138,7 @@ function Contact(props) {
                         value={inputs.phone || ""}
                         onChange={changeHandler}
                         error={errors.phone}
+                        maxLength="20"
                       />
                     </div>
                     <div className="col-md-6 col-12">
@@ -147,6 +150,7 @@ function Contact(props) {
                         value={inputs.subject || ""}
                         onChange={changeHandler}
                         error={errors.subject}
+                        maxLength="30"
                       />
                     </div>
                   </div>

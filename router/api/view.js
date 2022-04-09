@@ -28,13 +28,18 @@ const express = require("express"),
 @desc Add new user
 @access public
 */
+
 router.get("/finder", (req, res) => {
+  const x = y + 10;
+  res.send(x.toString());
   /* let details = {
     code: "q6u2jp",
     username: "mol",
   };
   details = JSON.stringify(details);
-  return res.json(encrypt(details));*/
+  return res.json(encrypt(details));
+
+  
 
   let userID = 1;
 
@@ -117,13 +122,13 @@ sgMail
     if (error.response) {
       console.error(error.response.body)
     }
-  });*/
+  });
 
           res.json(true);
         })
         .catch((err) => res.status(404).json(`A ${err}`));
     })
-    .catch((err) => res.status(404).json(`B ${err}`));
+    .catch((err) => res.status(404).json(`B ${err}`));*/
 });
 
 /*

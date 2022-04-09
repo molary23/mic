@@ -3,6 +3,7 @@ const express = require("express"),
   bodyParser = require("body-parser"),
   passport = require("passport"),
   path = require("path"),
+  fs = require("fs"),
   // Secure Header
   helmet = require("helmet"),
   // Error Logging
@@ -28,38 +29,20 @@ app.use(helmet());
 // enabling CORS for all requests
 app.use(cors());
 
-// adding morgan to log HTTP requests
-app.use(morgan("combined"));
+// Create a write stream (in append mode)
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "logs", "access.log"),
+  { flags: "a" }
+);
+
+// Setup the logger
+app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Logging Error
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.json(),
-  defaultMeta: { service: "user-service" },
-  transports: [
-    //
-    // - Write all logs with importance level of `error` or less to `error.log`
-    // - Write all logs with importance level of `info` or less to `combined.log`
-    //
-    new winston.transports.File({ filename: "error.log", level: "error" }),
-    new winston.transports.File({ filename: "combined.log" }),
-  ],
-});
-
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
-if (process.env.NODE_ENV !== "production") {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    })
-  );
-}
+// Bring Logger
+const logger = require("./util/logger");
 
 //Sync Sequelize
 require("./util/Relationship");
@@ -89,6 +72,23 @@ if (process.env.NODE_ENV === "production") {
 
 //Use Crons
 require("./router/api/cron");
+
+app.use((err, req, res, next) => {
+  res.status(500).send("Could not perform the calculation!");
+  logger.error(
+    `${err.status || 500} - ${res.statusMessage} - ${err.message} - ${
+      req.originalUrl
+    } - ${req.method} - ${req.ip}`
+  );
+});
+
+// Capture 404 erors
+app.use((req, res, next) => {
+  res.status(404).send("PAGE NOT FOUND");
+  logger.error(
+    `400 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+  );
+});
 
 const port = process.env.PORT || 5001;
 
