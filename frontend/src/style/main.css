@@ -145,6 +145,10 @@ nav.top-nav.show-bg {
   background: rgba(255, 255, 255, 0.9);
 }
 
+.right-nav {
+  margin-right: 20px;
+}
+
 .active-nav {
   background: #dfe0e5;
   border-bottom: 2px solid #022854;
@@ -588,6 +592,9 @@ a.btn.nav-link.btn {
     min-height: 300px;
     background-size: contain;
     margin-top: 50px;
+  }
+  .right-nav {
+    margin-right: 5px !important;
   }
 }
 
