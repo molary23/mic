@@ -4,6 +4,7 @@ const express = require("express"),
   passport = require("passport"),
   path = require("path"),
   fs = require("fs"),
+  rfs = require("rotating-file-stream"),
   // Secure Header
   helmet = require("helmet"),
   // Error Logging
@@ -30,10 +31,18 @@ app.use(helmet());
 app.use(cors());
 
 // Create a write stream (in append mode)
-const accessLogStream = fs.createWriteStream(
+/*const accessLogStream = fs.createWriteStream(
   path.join(__dirname, "logs", "access.log"),
   { flags: "a" }
 );
+
+// Setup the logger
+app.use(morgan("combined", { stream: accessLogStream }));*/
+
+const accessLogStream = rfs.createStream("access.log", {
+  interval: "1d", // rotate daily
+  path: path.join(__dirname, "logs"),
+});
 
 // Setup the logger
 app.use(morgan("combined", { stream: accessLogStream }));
@@ -73,8 +82,9 @@ if (process.env.NODE_ENV === "production") {
 //Use Crons
 require("./router/api/cron");
 
+// Log Errors
 app.use((err, req, res, next) => {
-  res.status(500).send("Could not perform the calculation!");
+  res.status(500).send("INTERNAL SERVER ERROR");
   logger.error(
     `${err.status || 500} - ${res.statusMessage} - ${err.message} - ${
       req.originalUrl
@@ -83,10 +93,32 @@ app.use((err, req, res, next) => {
 });
 
 // Capture 404 erors
-app.use((req, res, next) => {
+app.use((err, req, res, next) => {
   res.status(404).send("PAGE NOT FOUND");
   logger.error(
-    `400 || ${res.statusMessage} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    `${err.status || 404} - ${res.statusMessage} - ${err.message} - ${
+      req.originalUrl
+    } - ${req.method} - ${req.ip}`
+  );
+});
+
+// Capture 401 erors
+app.use((err, req, res, next) => {
+  res.status(401).send("UNAUTHORIZED");
+  logger.error(
+    `${err.status || 401} - ${res.statusMessage} - ${err.message} - ${
+      req.originalUrl
+    } - ${req.method} - ${req.ip}`
+  );
+});
+
+// Capture 400 erors
+app.use((err, req, res, next) => {
+  res.status(400).send("BAD REQUEST");
+  logger.error(
+    `${err.status || 400} - ${res.statusMessage} - ${err.message} - ${
+      req.originalUrl
+    } - ${req.method} - ${req.ip}`
   );
 });
 

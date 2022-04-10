@@ -28,7 +28,7 @@ export class Index extends Component {
       premiuminfo:
         JSON.parse(localStorage.getItem("premium")) ?? this.props.user.premium,
       userinfo:
-        this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
+        this.props.auth.user ?? jwtDecode(localStorage.getItem("userToken")),
       daysleft: 0,
       premiumstatus: null,
     };

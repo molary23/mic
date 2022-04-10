@@ -110,6 +110,8 @@ router.post(
       }
     }
 
+    // check premium status
+
     Preference.findOne({
       where: { UserId },
       attributes: ["providers", "currencies"],

@@ -67,21 +67,11 @@ import ProviderSignals from "./component/signalprovider/Signals";
 import ProviderSettings from "./component/signalprovider/Settings";
 import ProviderError from "./util/ProviderError";
 
-/*
-import axios from "axios";
-let params = { name: "adeola" };
-axios
-  .get(`/api/public/finder/${JSON.stringify(params)}`)
-  .then((response) => {
-    console.log(response);
-  })
-  .catch((err) => console.log(err.response));
-*/
-if (localStorage.jwtToken) {
-  // Set Auth Toke  Header
-  setAuthToken(localStorage.jwtToken);
+if (localStorage.userToken) {
+  // Set Auth Token  Header
+  setAuthToken(localStorage.userToken);
   // Decode Token then get User Info and Expiry
-  const decoded = jwtDecode(localStorage.jwtToken);
+  const decoded = jwtDecode(localStorage.userToken);
 
   // set User and isAuthenticated
   store.dispatch(setCurrentUser(decoded));

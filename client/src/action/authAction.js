@@ -19,7 +19,7 @@ export const loginuser = (userData) => async (dispatch) => {
   try {
     let response = await axios.post("/api/view/login/", userData, {});
     const { token } = response.data;
-    localStorage.setItem("jwtToken", token);
+    localStorage.setItem("userToken", token);
     // Set Token to Auth Header
     setAuthToken(token);
     //Decode Token
@@ -120,7 +120,7 @@ export const getMode = (user) => async (dispatch) => {
 
 export const logoutUser = () => (dispatch) => {
   //Remove Token from Storage
-  localStorage.removeItem("jwtToken");
+  localStorage.removeItem("userToken");
   localStorage.removeItem("counts");
   localStorage.removeItem("providerCounts");
   localStorage.removeItem("providerCount");

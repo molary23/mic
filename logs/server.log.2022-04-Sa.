@@ -1,0 +1,9 @@
+{"level":"info","message":"Hello World!"}
+{"level":"error","message":"500 - Internal Server Error - y is not defined - /api/view/finder - GET - ::1"}
+{"level":"info","message":"Hello World!"}
+{"level":"error","message":"500 - Internal Server Error - y is not defined - /api/view/finder - GET - ::1"}
+info: Apr-09-2022 06:39:19: 	Hello World!
+error: Apr-09-2022 06:39:49: 	500 - Internal Server Error - y is not defined - /api/view/finder - GET - ::1
+info: Apr-09-2022 06:54:39: 	Hello World!
+info: Apr-09-2022 06:55:08: 	Hello World!
+info: Apr-09-2022 06:57:15: 	Hello World!

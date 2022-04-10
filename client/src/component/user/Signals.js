@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import { getContent, clearActions } from "../../action/userAction";
+import { getContent, clearActions, getPremium } from "../../action/userAction";
 import {
   searchContent,
   clearSearchActions,
@@ -34,17 +34,17 @@ export class Signals extends Component {
     signalcount:
       JSON.parse(localStorage.getItem("userCounts")).signals ??
       this.props.auth.userCounts.signals,
-    premiuminfo:
+    /*  delete later premiuminfo:
       JSON.parse(localStorage.getItem("premium")) ??
-      JSON.parse(this.props.auth.user.premium),
+      JSON.parse(this.props.auth.user.premium),*/
     content: "signals",
     isLoading: false,
     substatus: "",
   };
 
   componentDidMount() {
-    const { limit, offset, content, premiuminfo } = this.state;
-    let searchParams = window.location.search,
+    this.props.getPremium();
+    /*  let searchParams = window.location.search,
       dateOnly = new Date().toDateString(),
       curDate = new Date(dateOnly).getTime() / 1000,
       expDate = new Date(premiuminfo.enddate).getTime() / 1000;
@@ -71,7 +71,7 @@ export class Signals extends Component {
         });
         this.refreshGet();
       }, 300000);
-    }
+    }*/
   }
 
   refreshGet = () => {
@@ -90,6 +90,9 @@ export class Signals extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.user.premium !== this.props.user.premium) {
+      this.getSignals(this.props.user.premium);
+    }
     if (
       prevProps.user.fetching !== this.props.user.fetching &&
       !this.props.user.loading
@@ -108,6 +111,38 @@ export class Signals extends Component {
       });
     }
   }
+
+  getSignals = (status) => {
+    const { limit, offset, content } = this.state;
+    let searchParams = window.location.search,
+      dateOnly = new Date().toDateString(),
+      curDate = new Date(dateOnly).getTime() / 1000,
+      expDate = new Date(status.enddate).getTime() / 1000;
+    if (curDate > expDate && status.status === "n") {
+      this.setState({
+        substatus: "n",
+      });
+    } else if (curDate > expDate && status.status === "i") {
+      this.setState({
+        substatus: "i",
+      });
+    } else {
+      this.setState({
+        substatus: "a",
+      });
+      landingLoad({ limit, offset, self: this, content, searchParams });
+      interval = setInterval(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+        this.setState({
+          isLoading: true,
+        });
+        this.refreshGet();
+      }, 300000);
+    }
+  };
 
   changeHandler = (e) => {
     const { url, content, limit, offset, timer } = this.state;
@@ -251,6 +286,7 @@ export class Signals extends Component {
 
 Signals.propTypes = {
   auth: PropTypes.object.isRequired,
+  getPremium: PropTypes.func.isRequired,
   errors: PropTypes.any,
   user: PropTypes.object.isRequired,
   userSearch: PropTypes.object,
@@ -274,4 +310,5 @@ export default connect(mapStateToProps, {
   getContent,
   searchContent,
   clearSearchActions,
+  getPremium,
 })(Signals);

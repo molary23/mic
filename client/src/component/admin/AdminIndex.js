@@ -25,7 +25,7 @@ export class Index extends Component {
     allCounts:
       JSON.parse(localStorage.getItem("counts")) ?? this.props.auth.allCounts,
     userinfo:
-      this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
+      this.props.auth.user ?? jwtDecode(localStorage.getItem("userToken")),
   };
   componentDidMount() {
     this.props.getAnalytics();
