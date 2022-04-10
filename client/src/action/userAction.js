@@ -173,7 +173,11 @@ export const getPremium = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -189,7 +193,11 @@ export const getUserDetails = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -210,7 +218,11 @@ export const getUserSettings = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -226,7 +238,11 @@ export const getBalance = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -242,7 +258,11 @@ export const getAccount = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -258,7 +278,11 @@ export const getForum = (id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -274,7 +298,11 @@ export const requestWithdrawal = (withdata) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -291,7 +319,11 @@ export const addForum = (forumData) => async (dispatch) => {
     dispatch(getAllCounts(1));
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -307,7 +339,11 @@ export const replyForum = (replyData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -323,7 +359,11 @@ export const deleteReply = (id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -339,7 +379,11 @@ export const updateForum = (forumData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -366,7 +410,11 @@ export const getList = (list) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -423,7 +471,11 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     }
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -478,6 +530,10 @@ export const makePayment = (payData) => async (dispatch) => {
     dispatch(getPremium());
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };

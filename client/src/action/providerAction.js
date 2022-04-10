@@ -108,7 +108,11 @@ export const addSignal = (signal) => async (dispatch) => {
     dispatch(getAllCounts(2));
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 export const clearSignal = (info) => {
@@ -133,7 +137,11 @@ export const editSignal = (signal, id) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -149,7 +157,11 @@ export const getProviderSettings = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -182,7 +194,11 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     }
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 

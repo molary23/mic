@@ -39,3 +39,4 @@ error: Apr-10-2022 02:31:17: 	500 - Internal Server Error - validator is not def
 error: Apr-10-2022 02:32:29: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
 error: Apr-10-2022 02:33:07: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
 error: Apr-10-2022 02:33:25: 	500 - Internal Server Error - validator is not defined - /api/userview/referrals - POST - ::1
+error: Apr-10-2022 09:31:36: 	500 - Internal Server Error - validator is not defined - /api/userview/referrals - POST - ::1

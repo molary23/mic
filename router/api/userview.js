@@ -36,7 +36,8 @@ const express = require("express"),
   Transaction = require("../../db/models/Transaction"),
   // Bring in User Checker
   checkUser = require("../../validation/checkUser"),
-  dateformat = require("../../util/dateformat");
+  dateformat = require("../../util/dateformat"),
+  validator = require("validator");
 
 /*
 @route GET api/userview/signals
@@ -75,12 +76,12 @@ router.post(
                 {
                   provider: { [Op.substring]: searchArray[i] },
                 },
-                /*  {
+                {
                   firstcurrency: { [Op.substring]: searchArray[i] },
                 },
                 {
                   secondcurrency: { [Op.substring]: searchArray[i] },
-                },*/
+                },
               ],
             };
           }
@@ -97,12 +98,12 @@ router.post(
                 {
                   provider: { [Op.substring]: searchTerms },
                 },
-                /*  {
+                {
                   firstcurrency: { [Op.substring]: searchTerms },
                 },
                 {
                   secondcurrency: { [Op.substring]: searchTerms },
-                },*/
+                },
               ],
             },
           };

@@ -23,7 +23,11 @@ export const searchContent = (content, searchData) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {
+      status: error.response.status,
+      data: error.response.data,
+    };
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 

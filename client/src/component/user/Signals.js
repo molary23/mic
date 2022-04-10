@@ -45,7 +45,6 @@ export class Signals extends Component {
 
   componentDidMount() {
     const { premiuminfo, offset, content, limit } = this.state;
-    console.log(premiuminfo);
     let searchParams = window.location.search,
       dateOnly = new Date().toDateString(),
       curDate = new Date(dateOnly).getTime() / 1000,
@@ -184,7 +183,7 @@ export class Signals extends Component {
                 <div className="col-md-6 mb-2">
                   <SearchInput
                     sender={sender}
-                    placeholder="Search by Currency"
+                    placeholder="Search by Currency or Provider"
                     onChange={this.changeHandler}
                     onKeyUp={this.keyHandler}
                     name="search"

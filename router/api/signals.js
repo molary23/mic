@@ -20,7 +20,8 @@ const express = require("express"),
   checkAdmin = require("../../validation/adminCheck"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck"),
-  checkPr = require("../../validation/checkPr");
+  checkPr = require("../../validation/checkPr"),
+  validator = require("validator");
 
 /*
 @route POST api/signals/add
