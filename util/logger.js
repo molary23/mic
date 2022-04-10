@@ -18,7 +18,7 @@ const transport = new winston.transports.DailyRotateFile({
 const logger = new winston.createLogger({
   transports: [transport],
 });
-logger.info("Hello World!");
+//logger.info("Hello World!");
 /*
 const logger = createLogger({
   transports: new transports.File({

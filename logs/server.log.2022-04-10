@@ -22,3 +22,20 @@ info: Apr-10-2022 01:58:30: 	Hello World!
 info: Apr-10-2022 01:58:35: 	Hello World!
 info: Apr-10-2022 01:58:39: 	Hello World!
 info: Apr-10-2022 01:59:06: 	Hello World!
+error: Apr-10-2022 02:09:07: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:10:37: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:13:31: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:14:18: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:14:18: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:14:52: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:23:26: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:23:46: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:29:20: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:29:28: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:29:29: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:30:27: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:30:29: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:31:17: 	500 - Internal Server Error - validator is not defined - /api/userview/referrals - POST - ::1
+error: Apr-10-2022 02:32:29: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:33:07: 	500 - Internal Server Error - validator is not defined - /api/userview/signals - POST - ::1
+error: Apr-10-2022 02:33:25: 	500 - Internal Server Error - validator is not defined - /api/userview/referrals - POST - ::1

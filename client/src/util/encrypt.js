@@ -1,6 +1,6 @@
 import keys from "./config/keys";
 
-export default function decrypt(encoded, type) {
+export default function encrypt(text, type) {
   let salt;
   if (type === "local") {
     salt = keys.localKey;
@@ -8,11 +8,13 @@ export default function decrypt(encoded, type) {
     salt = keys.mailKey;
   }
   const textToChars = (text) => text.split("").map((c) => c.charCodeAt(0)),
+    byteHex = (n) => ("0" + Number(n).toString(16)).substr(-2),
     applySaltToChar = (code) => textToChars(salt).reduce((a, b) => a ^ b, code);
-  return encoded
-    .match(/.{1,2}/g)
-    .map((hex) => parseInt(hex, 16))
+
+  return text
+    .split("")
+    .map(textToChars)
     .map(applySaltToChar)
-    .map((charCode) => String.fromCharCode(charCode))
+    .map(byteHex)
     .join("");
 }

@@ -28,7 +28,7 @@ export class VerifyEmail extends Component {
         sender = ref.split("=")[0];
       if (sender === "refer") {
         let params = search.split("refer=")[1],
-          opt = decrypt(params);
+          opt = decrypt(params, "mail");
         try {
           let values = JSON.parse(opt);
           this.setState({

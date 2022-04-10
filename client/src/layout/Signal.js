@@ -149,7 +149,7 @@ function Signal(props) {
             </div>
           </div>
         )}
-        {sender === "user" && (
+        {sender === "user-signals" && (
           <div className="signal-provider">
             <div className="signal-provider-title signal-title">Provider</div>
             <div className="signal-provider-value signal-align-right">

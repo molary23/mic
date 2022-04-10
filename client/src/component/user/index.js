@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import decrypt from "../../util/decrypt";
 
 import QRCode from "react-qr-code";
 
@@ -26,7 +27,8 @@ export class Index extends Component {
     this.state = {
       copy: false,
       premiuminfo:
-        JSON.parse(localStorage.getItem("premium")) ?? this.props.user.premium,
+        JSON.parse(decrypt(localStorage.getItem("premium"), "local")) ??
+        this.props.user.premium,
       userinfo:
         this.props.auth.user ?? jwtDecode(localStorage.getItem("userToken")),
       daysleft: 0,

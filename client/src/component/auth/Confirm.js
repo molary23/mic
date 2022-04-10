@@ -39,7 +39,7 @@ export class Confirm extends Component {
 
       if (sender === "refer") {
         let params = ref[1].split("=")[1],
-          opt = decrypt(params);
+          opt = decrypt(params, "mail");
         try {
           let values = JSON.parse(opt);
           if (auth === "no") {

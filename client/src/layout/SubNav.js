@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import jwtDecode from "jwt-decode";
+import decrypt from "../util/decrypt";
 
 import { HiBadgeCheck, HiOutlineChatAlt2 } from "react-icons/hi";
 import { RiSettings3Line } from "react-icons/ri";
@@ -19,7 +20,7 @@ export class SubNav extends Component {
     close: true,
     premiuminfo: "",
     userinfo:
-      this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtDecode")),
+      this.props.auth.user ?? jwtDecode(localStorage.getItem("jwtToken")),
     navigate: false,
     toast: false,
     toasttext: null,
@@ -32,7 +33,7 @@ export class SubNav extends Component {
     if (this.props.auth.user.level === 1) {
       this.setState({
         premiuminfo:
-          JSON.parse(localStorage.getItem("premium")) ??
+          JSON.parse(decrypt(localStorage.getItem("premium"), "local")) ??
           this.props.user.premium,
       });
     }

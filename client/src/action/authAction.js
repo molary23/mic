@@ -13,13 +13,14 @@ import { getPremium, clearActions } from "./userAction";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "../util/setAuthToken";
+import encrypt from "../util/encrypt";
 
 export const loginuser = (userData) => async (dispatch) => {
   dispatch(clearErrors());
   try {
     let response = await axios.post("/api/view/login/", userData, {});
     const { token } = response.data;
-    localStorage.setItem("userToken", token);
+    localStorage.setItem("userToken", encrypt(token, "local"));
     // Set Token to Auth Header
     setAuthToken(token);
     //Decode Token

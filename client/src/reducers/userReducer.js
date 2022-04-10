@@ -346,7 +346,7 @@ export default function userReducer(state = initialState, action) {
       return { ...state, forums: [], forumscount: 0, fetching: false };
     }
     case CLEAR_GET_PREMIUM_STATUS: {
-      return { ...state, premium: [] };
+      return { ...state, premium: null };
     }
     case CLEAR_GET_DASHBOARD_DETAILS: {
       return { ...state, userdetails: null };

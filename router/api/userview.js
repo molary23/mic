@@ -75,12 +75,12 @@ router.post(
                 {
                   provider: { [Op.substring]: searchArray[i] },
                 },
-                {
+                /*  {
                   firstcurrency: { [Op.substring]: searchArray[i] },
                 },
                 {
                   secondcurrency: { [Op.substring]: searchArray[i] },
-                },
+                },*/
               ],
             };
           }
@@ -97,12 +97,12 @@ router.post(
                 {
                   provider: { [Op.substring]: searchTerms },
                 },
-                {
+                /*  {
                   firstcurrency: { [Op.substring]: searchTerms },
                 },
                 {
                   secondcurrency: { [Op.substring]: searchTerms },
-                },
+                },*/
               ],
             },
           };

@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import store from "./store";
 import jwtDecode from "jwt-decode";
 import setAuthToken from "./util/setAuthToken";
+import decrypt from "./util/decrypt";
 import { setCurrentUser } from "./action/authAction";
 import { logoutUser } from "./action/authAction";
 
@@ -69,10 +70,10 @@ import ProviderError from "./util/ProviderError";
 
 if (localStorage.userToken) {
   // Set Auth Token  Header
-  setAuthToken(localStorage.userToken);
+  const userToken = decrypt(localStorage.userToken, "local");
+  setAuthToken(userToken);
   // Decode Token then get User Info and Expiry
-  const decoded = jwtDecode(localStorage.userToken);
-
+  const decoded = jwtDecode(userToken);
   // set User and isAuthenticated
   store.dispatch(setCurrentUser(decoded));
 

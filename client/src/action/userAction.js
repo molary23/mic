@@ -70,6 +70,7 @@ import {
 } from "./types";
 
 import { getAllCounts, getMode } from "./authAction";
+import encrypt from "../util/encrypt";
 
 export const getContent = (content, paginate) => async (dispatch) => {
   dispatch(setLoading());
@@ -164,7 +165,8 @@ export const getPremium = () => async (dispatch) => {
   dispatch(clearActions("premium"));
   try {
     let response = await axios.get("/api/userview/premium");
-    localStorage.setItem("premium", JSON.stringify(response.data));
+    let premium = encrypt(JSON.stringify(response.data), "local");
+    localStorage.setItem("premium", premium);
     const result = await dispatch({
       type: GET_PREMIUM_STATUS,
       payload: response.data,

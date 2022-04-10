@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import decrypt from "../../util/decrypt";
 
 import { getContent, clearActions, getPremium } from "../../action/userAction";
 import {
@@ -21,7 +22,6 @@ import {
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
-
 let interval;
 export class Signals extends Component {
   state = {
@@ -34,17 +34,19 @@ export class Signals extends Component {
     signalcount:
       JSON.parse(localStorage.getItem("userCounts")).signals ??
       this.props.auth.userCounts.signals,
-    /*  delete later premiuminfo:
-      JSON.parse(localStorage.getItem("premium")) ??
-      JSON.parse(this.props.auth.user.premium),*/
+    premiuminfo:
+      JSON.parse(decrypt(localStorage.getItem("premium"), "local")) ??
+      JSON.parse(this.props.auth.user.premium),
     content: "signals",
     isLoading: false,
     substatus: "",
+    run: false,
   };
 
   componentDidMount() {
-    this.props.getPremium();
-    /*  let searchParams = window.location.search,
+    const { premiuminfo, offset, content, limit } = this.state;
+    console.log(premiuminfo);
+    let searchParams = window.location.search,
       dateOnly = new Date().toDateString(),
       curDate = new Date(dateOnly).getTime() / 1000,
       expDate = new Date(premiuminfo.enddate).getTime() / 1000;
@@ -71,7 +73,7 @@ export class Signals extends Component {
         });
         this.refreshGet();
       }, 300000);
-    }*/
+    }
   }
 
   refreshGet = () => {
@@ -86,13 +88,11 @@ export class Signals extends Component {
     const { content } = this.state;
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
+    this.props.clearActions("premium");
     clearInterval(interval);
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.user.premium !== this.props.user.premium) {
-      this.getSignals(this.props.user.premium);
-    }
     if (
       prevProps.user.fetching !== this.props.user.fetching &&
       !this.props.user.loading
@@ -111,38 +111,6 @@ export class Signals extends Component {
       });
     }
   }
-
-  getSignals = (status) => {
-    const { limit, offset, content } = this.state;
-    let searchParams = window.location.search,
-      dateOnly = new Date().toDateString(),
-      curDate = new Date(dateOnly).getTime() / 1000,
-      expDate = new Date(status.enddate).getTime() / 1000;
-    if (curDate > expDate && status.status === "n") {
-      this.setState({
-        substatus: "n",
-      });
-    } else if (curDate > expDate && status.status === "i") {
-      this.setState({
-        substatus: "i",
-      });
-    } else {
-      this.setState({
-        substatus: "a",
-      });
-      landingLoad({ limit, offset, self: this, content, searchParams });
-      interval = setInterval(() => {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-        this.setState({
-          isLoading: true,
-        });
-        this.refreshGet();
-      }, 300000);
-    }
-  };
 
   changeHandler = (e) => {
     const { url, content, limit, offset, timer } = this.state;
@@ -247,7 +215,7 @@ export class Signals extends Component {
                     return (
                       <div className="col-lg-4 col-12 col-md-6" key={i}>
                         <div className="signal-one mb-4">
-                          <Signal propkey={i} signal={signal} />
+                          <Signal propkey={i} signal={signal} sender={sender} />
                         </div>
                       </div>
                     );
