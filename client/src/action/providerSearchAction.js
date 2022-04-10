@@ -16,17 +16,27 @@ export const searchContent = (content, searchData) => async (dispatch) => {
   }
 
   try {
-    let response = await axios.post(url, searchData);
+    let response = await axios({
+      method: "post",
+      url,
+      data: searchData,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };

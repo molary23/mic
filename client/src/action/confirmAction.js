@@ -17,8 +17,13 @@ export const confirmCode = (usercode) => async (dispatch) => {
   dispatch(clearConfirmAction());
 
   try {
-    let response = await axios.post("/api/view/confirm", usercode),
-      message = response.data;
+    let response = await axios({
+      method: "post",
+      url: "/api/view/confirm",
+      data: usercode,
+      timeout: 60000, // only wait for 60s
+    });
+    let message = response.data;
     if (message.message) {
       localStorage.setItem("confirm", message.value);
     }
@@ -28,10 +33,15 @@ export const confirmCode = (usercode) => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -48,7 +58,12 @@ export const resetPass = (pass) => async (dispatch) => {
   dispatch(clearErrors());
   dispatch(clearResetAction());
   try {
-    let response = await axios.post("/api/view/reset/", pass);
+    let response = await axios({
+      method: "post",
+      url: "/api/view/reset/",
+      data: pass,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_RESET_PASSWORD_ACTION,
       payload: response.data,
@@ -56,10 +71,15 @@ export const resetPass = (pass) => async (dispatch) => {
     localStorage.removeItem("confirm");
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };

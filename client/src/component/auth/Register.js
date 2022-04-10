@@ -69,8 +69,13 @@ class Register extends Component {
             [input]: true,
           },
         });
-        axios
-          .post(`/api/view/${input}/`, req, {})
+
+        axios({
+          method: "post",
+          url: `/api/view/${input}/`,
+          data: req,
+          timeout: 60000, // only wait for 60s
+        })
           .then((res) => {
             response = res.data.text;
             this.setState({
@@ -82,7 +87,13 @@ class Register extends Component {
               },
             });
           })
-          .catch((error) => console.log(error.response));
+          .catch((error) => {
+            this.setState({
+              error: {
+                [input]: `Unable to get ${input} status right now`,
+              },
+            });
+          });
       }, 5000);
     }
   };
@@ -215,13 +226,12 @@ class Register extends Component {
       };
 
       try {
-        let response = await axios.post(
-          "/api/view/register/",
-          {
-            user,
-          },
-          {}
-        );
+        let response = await axios({
+          method: "post",
+          url: "/api/view/register/",
+          data: user,
+          timeout: 1200000, // only wait for 120s
+        });
         if (response.data === 1) {
           this.setState({
             modal: true,
@@ -238,7 +248,12 @@ class Register extends Component {
           });
         }
       } catch (error) {
-        let err = error.response;
+        let err;
+        if (error.code === "ECONNABORTED") {
+          err = "Request Timed out. Refresh and Try again later.";
+        } else {
+          err = error.response.data;
+        }
         this.setState({
           error: err.data,
           loading: false,

@@ -43,7 +43,12 @@ export const searchContent = (content, paginate) => async (dispatch) => {
   }
   url += content;
   try {
-    let response = await axios.post(url, paginate);
+    let response = await axios({
+      method: "post",
+      url,
+      data: paginate,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,

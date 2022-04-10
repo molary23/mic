@@ -35,14 +35,28 @@ export const getContent = (content, paginate) => async (dispatch) => {
     url = `${url}providers`;
   }
   try {
-    let response = await axios.post(url, paginate);
+    let response = await axios({
+      method: "post",
+      url,
+      data: paginate,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -68,7 +82,11 @@ export const getCurrency = () => async (dispatch) => {
   let url = "/api/signals/currencies",
     type = GET_ALL_CURRENCY_PAIR;
   try {
-    let response = await axios.get(url);
+    let response = await axios({
+      method: "get",
+      url,
+      timeout: 60000, // only wait for 60s
+    });
     localStorage.setItem("currencies", JSON.stringify(response.data));
     const result = await dispatch({
       type,
@@ -76,7 +94,16 @@ export const getCurrency = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -85,14 +112,27 @@ export const getFollowers = () => async (dispatch) => {
   let url = "/api/signals/followers",
     type = PROVIDER_GET_FOLLOWERS;
   try {
-    let response = await axios.get(url);
+    let response = await axios({
+      method: "get",
+      url,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    dispatch({ type: GET_ERRORS, payload: error.response });
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
+    dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
@@ -100,7 +140,12 @@ export const addSignal = (signal) => async (dispatch) => {
   let url = "/api/signals/add",
     type = ADD_NEW_SIGNAL;
   try {
-    let response = await axios.post(url, signal);
+    let response = await axios({
+      method: "post",
+      url,
+      data: signal,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
@@ -108,10 +153,15 @@ export const addSignal = (signal) => async (dispatch) => {
     dispatch(getAllCounts(2));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -130,17 +180,27 @@ export const editSignal = (signal, id) => async (dispatch) => {
   let url = `/api/signals/update/:${id}`,
     type = EDIT_NEW_SIGNAL;
   try {
-    let response = await axios.post(url, signal);
+    let response = await axios({
+      method: "post",
+      url,
+      data: signal,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -150,17 +210,26 @@ export const getProviderSettings = () => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("provider-settings"));
   try {
-    let response = await axios.get("/api/admin/settings");
+    let response = await axios({
+      method: "get",
+      url: "/api/admin/settings",
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: GET_PROVIDER_SETTINGS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -184,7 +253,12 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     url = `${url}pass`;
   }
   try {
-    let response = await axios.post(url, data);
+    let response = await axios({
+      method: "post",
+      url,
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
@@ -194,10 +268,15 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     }
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };

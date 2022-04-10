@@ -54,13 +54,12 @@ export class Forgot extends Component {
         username,
       };
       try {
-        let response = await axios.post(
-          "/api/view/forgot",
-          {
-            user,
-          },
-          {}
-        );
+        let response = await axios({
+          method: "post",
+          url: "/api/view/forgot/",
+          data: user,
+          timeout: 60000, // only wait for 60s
+        });
         if (response.data === 1) {
           this.setState({
             modal: true,
@@ -71,7 +70,7 @@ export class Forgot extends Component {
         }
       } catch (error) {
         let err = error.response;
-        if (err.status === 404) {
+        if (err.status === 404 || error.code === "ECONNABORTED") {
           this.setState({
             error: {
               network: "There has been a network error. Refresh and try again.",

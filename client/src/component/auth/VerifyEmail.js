@@ -111,13 +111,12 @@ export class VerifyEmail extends Component {
 
   pushData = async (data) => {
     try {
-      let response = await axios.post(
-        "/api/view/verify/",
-        {
-          data,
-        },
-        {}
-      );
+      let response = await axios({
+        method: "post",
+        url: "/api/view/register/",
+        data,
+        timeout: 60000, // only wait for 60s
+      });
       if (response.data === 1) {
         this.setState({
           modal: true,
@@ -128,12 +127,15 @@ export class VerifyEmail extends Component {
         });
       }
     } catch (error) {
-      this.setState({
-        loading: false,
-      });
-      let err = error.response;
+      let err;
+      if (error.code === "ECONNABORTED") {
+        err = "Request Timed out. Refresh and Try again later.";
+      } else {
+        err = error.response.data;
+      }
       this.setState({
         error: err.data,
+        loading: false,
       });
     }
   };

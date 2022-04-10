@@ -20,7 +20,8 @@ export class SubNav extends Component {
     close: true,
     premiuminfo: "",
     userinfo:
-      jwtDecode(localStorage.getItem("jwtToken")) ?? this.props.auth.user,
+      jwtDecode(decrypt(localStorage.getItem("userToken"), "local")) ??
+      this.props.auth.user,
     navigate: false,
     toast: false,
     toasttext: null,

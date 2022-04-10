@@ -96,7 +96,12 @@ export const getContent = (content, paginate) => async (dispatch) => {
   }
   url += content;
   try {
-    let response = await axios.post(url, paginate);
+    let response = await axios({
+      method: "post",
+      url,
+      data: paginate,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
@@ -164,7 +169,11 @@ export const setLoading = () => {
 export const getPremium = () => async (dispatch) => {
   dispatch(clearActions("premium"));
   try {
-    let response = await axios.get("/api/userview/premium");
+    let response = await axios({
+      method: "get",
+      url: "/api/userview/premium",
+      timeout: 60000, // only wait for 60s
+    });
     let premium = encrypt(JSON.stringify(response.data), "local");
     localStorage.setItem("premium", premium);
     const result = await dispatch({
@@ -173,10 +182,15 @@ export const getPremium = () => async (dispatch) => {
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -186,17 +200,26 @@ export const getUserDetails = () => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("user-details"));
   try {
-    let response = await axios.get("/api/userview/details");
+    let response = await axios({
+      method: "get",
+      url: "/api/userview/details",
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: GET_DASHBOARD_DETAILS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -211,17 +234,26 @@ export const getUserSettings = () => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("user-settings"));
   try {
-    let response = await axios.get("/api/users/settings");
+    let response = await axios({
+      method: "get",
+      url: "/api/users/settings",
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: GET_USER_SETTINGS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -231,17 +263,26 @@ export const getBalance = () => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("user-balance"));
   try {
-    let response = await axios.get("/api/userview/balance");
+    let response = await axios({
+      method: "get",
+      url: "/api/userview/balance",
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_GET_BALANCE,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -251,17 +292,26 @@ export const getAccount = () => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("user-account"));
   try {
-    let response = await axios.get("/api/userview/account");
+    let response = await axios({
+      method: "get",
+      url: "/api/userview/account",
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_GET_ACCOUNT,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -271,47 +321,71 @@ export const getForum = (id) => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("get-forum"));
   try {
-    let response = await axios.get(`/api/userview/forum/:${id}`);
+    let response = await axios({
+      method: "get",
+      url: `/api/userview/forum/:${id}`,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_GET_A_FORUM,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const requestWithdrawal = (withdata) => async (dispatch) => {
+export const requestWithdrawal = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("user-account"));
   try {
-    let response = await axios.post("/api/users/withdrawals", withdata);
+    let response = await axios({
+      method: "post",
+      url: "/api/users/withdrawals",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_REQUEST_WITHDRAWAL,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const addForum = (forumData) => async (dispatch) => {
+export const addForum = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("add-forum"));
   try {
-    let response = await axios.post("/api/users/add/forum", forumData);
+    let response = await axios({
+      method: "post",
+      url: "/api/users/add/forum",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_ADD_FORUM,
       payload: response.data,
@@ -319,30 +393,45 @@ export const addForum = (forumData) => async (dispatch) => {
     dispatch(getAllCounts(1));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const replyForum = (replyData) => async (dispatch) => {
+export const replyForum = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("user-reply"));
   try {
-    let response = await axios.post("/api/users/forum/reply", replyData);
+    let response = await axios({
+      method: "post",
+      url: "/api/users/forum/reply",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_REPLY,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -352,37 +441,56 @@ export const deleteReply = (id) => async (dispatch) => {
   //  dispatch(setLoading());
   dispatch(clearActions("delete-reply"));
   try {
-    let response = await axios.delete(`/api/users/reply/delete/:${id}`);
+    let response = await axios({
+      method: "delete",
+      url: `/api/users/reply/delete/:${id}`,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_DELETE_REPLY,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const updateForum = (forumData) => async (dispatch) => {
+export const updateForum = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("update-forum"));
   try {
-    let response = await axios.post("/api/users/update/forum/", forumData);
+    let response = await axios({
+      method: "post",
+      url: "/api/users/update/forum/",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_UPDATE_FORUM,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -403,17 +511,27 @@ export const getList = (list) => async (dispatch) => {
   }
 
   try {
-    let response = await axios.get(`/api/userview/list/:${list}`);
+    let response = await axios({
+      method: "get",
+      url: `/api/userview/list/:${list}`,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -461,7 +579,12 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     url = `${url}pass`;
   }
   try {
-    let response = await axios.post(url, data);
+    let response = await axios({
+      method: "post",
+      url,
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
@@ -471,10 +594,15 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     }
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -522,7 +650,12 @@ export const makePayment = (payData) => async (dispatch) => {
     url += "bonus";
   }
   try {
-    let response = await axios.post(url, payData[1]);
+    let response = await axios({
+      method: "post",
+      url,
+      data: payData[1],
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: USER_MAKE_PAYMENT,
       payload: response.data,
@@ -530,10 +663,15 @@ export const makePayment = (payData) => async (dispatch) => {
     dispatch(getPremium());
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };

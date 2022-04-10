@@ -346,10 +346,13 @@ export const downloadFile = ({ sender, self }) => {
   self.setState({
     isLoading: true,
   });
-  axios
-    .get(url, {
-      responseType: "blob",
-    })
+
+  axios({
+    method: "get",
+    url,
+    responseType: "blob",
+    timeout: 60000, // only wait for 60s
+  })
     .then((response) => {
       let url = window.URL.createObjectURL(response.data);
       let a = document.createElement("a");

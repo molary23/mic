@@ -145,17 +145,27 @@ export const getContent = (content, paginate) => async (dispatch) => {
     type = ADMIN_GET_FORUM;
   }
   try {
-    let response = await axios.post(url, paginate);
+    let response = await axios({
+      method: "post",
+      url,
+      data: paginate,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -233,17 +243,26 @@ export const updateCurrency = (action, id) => async (dispatch) => {
   // dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post(url);
+    let response = await axios({
+      method: "post",
+      url,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: UPDATE_CURRENCY,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -253,17 +272,27 @@ export const updateWallet = (action, id) => async (dispatch) => {
   // dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post(url);
+    let response = await axios({
+      method: "post",
+      url,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: UPDATE_WALLET,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -273,26 +302,40 @@ export const updateWithdrawals = (action, id) => async (dispatch) => {
   //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post(url);
+    let response = await axios({
+      method: "post",
+      url,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: UPDATE_WITHDRAWALS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const addCurrency = (currency) => async (dispatch) => {
+export const addCurrency = (data) => async (dispatch) => {
   let url = "/api/signals/currency/add/";
   dispatch(clearErrors());
   try {
-    let response = await axios.post(url, currency);
+    let response = await axios({
+      method: "post",
+      url,
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADD_NEW_CURRENCY,
       payload: response.data,
@@ -300,20 +343,30 @@ export const addCurrency = (currency) => async (dispatch) => {
     dispatch(getAllCounts(3));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const addWallet = (wallet) => async (dispatch) => {
+export const addWallet = (data) => async (dispatch) => {
   let url = "/api/admin/wallet/add/";
   //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post(url, wallet);
+    let response = await axios({
+      method: "post",
+      url,
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_ADD_WALLET,
       payload: response.data,
@@ -321,10 +374,15 @@ export const addWallet = (wallet) => async (dispatch) => {
     dispatch(getAllCounts(3));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -365,7 +423,12 @@ export const addNewAdmin = (level, data) => async (dispatch) => {
   }
 
   try {
-    let response = await axios.post(url, data);
+    let response = await axios({
+      method: "post",
+      url,
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
@@ -373,48 +436,73 @@ export const addNewAdmin = (level, data) => async (dispatch) => {
     dispatch(getAllCounts(3));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const updateAdmin = (value) => async (dispatch) => {
+export const updateAdmin = (data) => async (dispatch) => {
   // dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post("/api/admin/update/", value);
+    let response = await axios({
+      method: "post",
+      url: "/api/admin/update/",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: UPDATE_ADMIN,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const updateBonus = (value) => async (dispatch) => {
+export const updateBonus = (data) => async (dispatch) => {
   // dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post("/api/admin/approve/bonus", value);
+    let response = await axios({
+      method: "post",
+      url: "/api/admin/approve/bonus",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: UPDATE_BONUS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -423,28 +511,41 @@ export const deleteAnn = (value) => async (dispatch) => {
   //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.delete(
-      `/api/admin/delete/announcement/:${value}`
-    );
+    let response = await axios({
+      method: "delete",
+      url: `/api/admin/delete/announcement/:${value}`,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: DELETE_ANNOUNCEMENT,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const addAnn = (value) => async (dispatch) => {
+export const addAnn = (data) => async (dispatch) => {
   //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post("/api/admin/add/announcement", value);
+    let response = await axios({
+      method: "post",
+      url: "/api/admin/add/announcement",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADD_ANNOUNCEMENT,
       payload: response.data,
@@ -452,10 +553,15 @@ export const addAnn = (value) => async (dispatch) => {
     dispatch(getAllCounts(3));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -464,20 +570,27 @@ export const editAnn = (value) => async (dispatch) => {
   //  dispatch(setLoading());
   dispatch(clearErrors());
   try {
-    let response = await axios.post(
-      `/api/admin/edit/announcement/:${value[1]}`,
-      value[0]
-    );
+    let response = await axios({
+      method: "post",
+      url: `/api/admin/edit/announcement/:${value[1]}`,
+      data: value[0],
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: EDIT_ANNOUNCEMENT,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -487,17 +600,27 @@ export const getAdminSettings = () => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("admin-settings"));
   try {
-    let response = await axios.get("/api/admin/settings");
+    let response = await axios({
+      method: "get",
+      url: "/api/admin/settings",
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: GET_ADMIN_SETTINGS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -521,7 +644,12 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     url = `${url}pass`;
   }
   try {
-    let response = await axios.post(url, data);
+    let response = await axios({
+      method: "post",
+      url,
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type,
       payload: response.data,
@@ -531,10 +659,15 @@ export const saveSettings = (settings, data) => async (dispatch) => {
     }
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -551,12 +684,17 @@ export const clearSettings = (settings) => {
   }
 };
 
-export const addForum = (forumData) => async (dispatch) => {
+export const addForum = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("add-forum"));
   try {
-    let response = await axios.post("/api/admin/add/forum", forumData);
+    let response = await axios({
+      method: "post",
+      url: "/api/admin/add/forum",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_ADD_FORUM,
       payload: response.data,
@@ -564,30 +702,45 @@ export const addForum = (forumData) => async (dispatch) => {
     dispatch(getAllCounts(3));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const replyForum = (replyData) => async (dispatch) => {
+export const replyForum = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("admin-reply"));
   try {
-    let response = await axios.post("/api/admin/forum/reply", replyData);
+    let response = await axios({
+      method: "post",
+      url: "/api/admin/forum/reply",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_REPLY,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -597,37 +750,56 @@ export const deleteReply = (id) => async (dispatch) => {
   //  dispatch(setLoading());
   dispatch(clearActions("delete-reply"));
   try {
-    let response = await axios.delete(`/api/admin/reply/delete/:${id}`);
+    let response = await axios({
+      method: "delete",
+      url: `/api/admin/reply/delete/:${id}`,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_DELETE_REPLY,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const updateForum = (forumData) => async (dispatch) => {
+export const updateForum = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("update-forum"));
   try {
-    let response = await axios.post("/api/admin/update/forum/", forumData);
+    let response = await axios({
+      method: "post",
+      url: "/api/admin/update/forum/",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_UPDATE_FORUM,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -636,17 +808,27 @@ export const getForum = (id) => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("get-forum"));
   try {
-    let response = await axios.get(`/api/adminview/forum/:${id}`);
+    let response = await axios({
+      method: "get",
+      url: `/api/adminview/forum/:${id}`,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_GET_A_FORUM,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -655,17 +837,27 @@ export const getBonus = (id) => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("get-bonus"));
   try {
-    let response = await axios.get(`/api/adminview/bonus/:${id}`);
+    let response = await axios({
+      method: "post",
+      url: `/api/adminview/bonus/:${id}`,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_GET_A_BONUS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -674,17 +866,27 @@ export const getAdmin = (id) => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("get-admin"));
   try {
-    let response = await axios.get(`/api/adminview/admin/:${id}`);
+    let response = await axios({
+      method: "get",
+      url: `/api/adminview/admin/:${id}`,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_GET_AN_ADMIN,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -693,37 +895,57 @@ export const getUser = (id) => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("get-user"));
   try {
-    let response = await axios.get(`/api/adminview/user/:${id}`);
+    let response = await axios({
+      method: "get",
+      url: `/api/adminview/user/:${id}`,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_GET_A_USER,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
 
-export const changeEmail = (emailData) => async (dispatch) => {
+export const changeEmail = (data) => async (dispatch) => {
   dispatch(clearErrors());
   //  dispatch(setLoading());
   dispatch(clearActions("change-email"));
   try {
-    let response = await axios.post("/api/admin/change-email/", emailData);
+    let response = await axios({
+      method: "post",
+      url: "/api/admin/change-email/",
+      data,
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_CHANGE_EMAIL,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -733,17 +955,27 @@ export const getAnalytics = () => async (dispatch) => {
   dispatch(setLoading());
   dispatch(clearActions("analytics"));
   try {
-    let response = await axios.get("/api/adminview/analytics/");
+    let response = await axios({
+      method: "get",
+      url: "/api/adminview/analytics/",
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_GET_ANALYTICS,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
@@ -752,17 +984,27 @@ export const updatePayment = (action, id) => async (dispatch) => {
   dispatch(clearErrors());
   dispatch(clearActions("update-payment"));
   try {
-    let response = await axios.get(`/api/payments/update/:${action}/:${id}`);
+    let response = await axios({
+      method: "get",
+      url: `/api/payments/update/:${action}/:${id}`,
+
+      timeout: 60000, // only wait for 60s
+    });
     const result = await dispatch({
       type: ADMIN_UPDATE_PAYMENT,
       payload: response.data,
     });
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };

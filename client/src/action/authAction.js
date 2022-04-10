@@ -18,7 +18,12 @@ import encrypt from "../util/encrypt";
 export const loginuser = (userData) => async (dispatch) => {
   dispatch(clearErrors());
   try {
-    let response = await axios.post("/api/view/login/", userData, {});
+    let response = await axios({
+      method: "post",
+      url: "/api/view/login/",
+      data: userData,
+      timeout: 60000, // only wait for 60s
+    });
     const { token } = response.data;
     localStorage.setItem("userToken", encrypt(token, "local"));
     // Set Token to Auth Header
@@ -28,10 +33,15 @@ export const loginuser = (userData) => async (dispatch) => {
     const result = await dispatch(setCurrentUser(decoded));
     return result;
   } catch (error) {
-    let errorMessage = {
-      status: error.response.status,
-      data: error.response.data,
-    };
+    let errorMessage = {};
+    if (error.code === "ECONNABORTED") {
+      errorMessage.status = 404;
+    } else {
+      errorMessage = {
+        status: error.response.status,
+        data: error.response.data,
+      };
+    }
     dispatch({ type: GET_ERRORS, payload: errorMessage });
   }
 };
