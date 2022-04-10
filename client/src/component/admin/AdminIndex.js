@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import decrypt from "../../util/decrypt";
 
 import { GiWallet } from "react-icons/gi";
 import { RiExchangeBoxLine, RiShieldUserLine } from "react-icons/ri";
@@ -25,7 +26,8 @@ export class Index extends Component {
     allCounts:
       JSON.parse(localStorage.getItem("counts")) ?? this.props.auth.allCounts,
     userinfo:
-      this.props.auth.user ?? jwtDecode(localStorage.getItem("userToken")),
+      jwtDecode(decrypt(localStorage.getItem("userToken"), "local")) ??
+      this.props.auth.user,
   };
   componentDidMount() {
     this.props.getAnalytics();
