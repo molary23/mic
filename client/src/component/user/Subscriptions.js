@@ -80,6 +80,10 @@ export class Subscriptions extends Component {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(this.state.content);
     this.props.clearSearchActions(this.state.content);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   componentDidUpdate(prevProps) {

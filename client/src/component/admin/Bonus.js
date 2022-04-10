@@ -47,6 +47,10 @@ class Bonus extends Component {
 
   componentWillUnmount() {
     this.props.clearActions("get-bonus");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

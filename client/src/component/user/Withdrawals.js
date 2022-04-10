@@ -85,6 +85,10 @@ export class Withdrawals extends Component {
     this.props.clearActions("user-account");
     this.props.clearActions("user-balance");
     this.props.clearSearchActions(content);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

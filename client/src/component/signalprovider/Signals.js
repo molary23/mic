@@ -98,6 +98,10 @@ class Signals extends Component {
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
     this.props.clearActions("provider-currencies");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

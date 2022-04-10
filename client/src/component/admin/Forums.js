@@ -79,6 +79,10 @@ class Forums extends Component {
     window.removeEventListener("scroll", this.loadMore);
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

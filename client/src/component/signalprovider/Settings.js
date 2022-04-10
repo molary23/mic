@@ -36,6 +36,10 @@ class Settings extends Component {
   }
   componentWillUnmount() {
     this.props.clearActions("provider-settings");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

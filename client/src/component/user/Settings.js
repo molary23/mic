@@ -58,6 +58,10 @@ class Settings extends Component {
     this.props.clearActions("user-currency");
     this.props.clearActions("user-provider");
     this.props.clearActions("user-wallet");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

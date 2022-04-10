@@ -50,6 +50,10 @@ class ViewAdmin extends Component {
 
   componentWillUnmount() {
     this.props.clearActions("get-admin");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

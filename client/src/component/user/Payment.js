@@ -42,6 +42,10 @@ class Payment extends Component {
 
   componentWillUnmount() {
     this.props.clearActions("make-payment");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

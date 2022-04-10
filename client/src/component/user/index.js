@@ -53,6 +53,10 @@ export class Index extends Component {
 
   componentWillUnmount() {
     this.props.clearActions("user-details");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   clickHandler = (e) => {

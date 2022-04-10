@@ -34,6 +34,10 @@ export class Index extends Component {
   }
   componentWillUnmount() {
     this.props.clearActions("analytics");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   render() {

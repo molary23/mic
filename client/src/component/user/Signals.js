@@ -89,6 +89,10 @@ export class Signals extends Component {
     this.props.clearSearchActions(content);
     this.props.clearActions("premium");
     clearInterval(interval);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   componentDidUpdate(prevProps) {

@@ -36,6 +36,10 @@ class Settings extends Component {
   }
   componentWillUnmount() {
     this.props.clearActions("admin-settings");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

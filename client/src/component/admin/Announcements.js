@@ -85,6 +85,10 @@ class Announcements extends Component {
     this.props.clearActions(content);
     this.props.clearSearchActions(content);
     window.removeEventListener("scroll", this.loadMore);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

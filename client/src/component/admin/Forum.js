@@ -54,6 +54,10 @@ class Forum extends Component {
 
   componentWillUnmount() {
     this.props.clearActions("get-forum");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

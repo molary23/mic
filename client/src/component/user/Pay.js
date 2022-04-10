@@ -28,6 +28,10 @@ class Pay extends Component {
   }
   componentWillUnmount() {
     this.props.clearActions("user-balance");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   removeMonths = () => {
