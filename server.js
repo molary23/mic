@@ -31,13 +31,6 @@ app.use(helmet());
 app.use(cors());
 
 // Create a write stream (in append mode)
-/*const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, "logs", "access.log"),
-  { flags: "a" }
-);
-
-// Setup the logger
-app.use(morgan("combined", { stream: accessLogStream }));*/
 
 const accessLogStream = rfs.createStream("access.log", {
   interval: "1d", // rotate daily

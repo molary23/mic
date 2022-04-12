@@ -21,7 +21,6 @@
   "author": "Hassan A. Adeola",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.6.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "bootstrap": "^5.1.3",
@@ -44,6 +43,7 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
+    "postmark": "^3.0.1",
     "react-bootstrap": "^2.1.2",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
@@ -51,6 +51,7 @@
     "redux-thunk": "^2.4.1",
     "rotating-file-stream": "^3.0.3",
     "sequelize": "^6.16.1",
+    "tawkto-react": "^3.0.1",
     "validator": "^13.7.0",
     "winston": "^3.6.0",
     "winston-daily-rotate-file": "^4.6.1"

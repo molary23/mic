@@ -1,5 +1,3 @@
-const Verify = require("../../db/models/Verify");
-
 const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
@@ -13,10 +11,9 @@ const express = require("express"),
   Announcement = require("../../db/models/Announcement"),
   Forum = require("../../db/models/Forum"),
   ForumReply = require("../../db/models/ForumReply"),
-  ForumView = require("../../db/models/ForumView"),
   Settings = require("../../db/models/Settings"),
-  Currency = require("../../db/models/Currency"),
   Withdrawal = require("../../db/models/Withdrawal"),
+  Verify = require("../../db/models/Verify"),
   Profile = require("../../db/models/Profile"),
   Wallet = require("../../db/models/Wallet"),
   //Bring in the Validation

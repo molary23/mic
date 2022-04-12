@@ -228,7 +228,7 @@ export class Index extends Component {
                         <span className="pay-now-btn">
                           <Link
                             className="btn btn-sm btn-light"
-                            to="/admin/bonus"
+                            to="/admin/earnings"
                           >
                             View More
                           </Link>

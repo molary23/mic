@@ -2,11 +2,11 @@ const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
   gravatar = require("gravatar"),
+  postmark = require("postmark"),
   { Op } = require("sequelize"),
   // Use Json Web Token
   jwt = require("jsonwebtoken"),
   keys = require("../../config/keys"),
-  sgMail = require("@sendgrid/mail"),
   User = require("../../db/models/User"),
   Verify = require("../../db/models/Verify"),
   Referral = require("../../db/models/Referral"),
@@ -14,14 +14,15 @@ const express = require("express"),
   Premium = require("../../db/models/Premium"),
   Settings = require("../../db/models/Settings"),
   Preference = require("../../db/models/Preference"),
-  UserView = require("../../db/models/UserView"),
   // Bring in View
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   validateLoginInput = require("../../validation/login"),
   validateConfirmInput = require("../../validation/confirm"),
   validateResetInput = require("../../validation/reset"),
-  encrypt = require("../../util/encrypt");
+  encrypt = require("../../util/encrypt"),
+  client = new postmark.ServerClient("d4981f13-01b9-4a75-9e89-acb722d13f88"),
+  message = require("../../mail/message");
 
 /*
 @route POST api/public/register
@@ -224,28 +225,27 @@ router.post("/register", (req, res) => {
                                           };
                                           urldata = JSON.stringify(urldata);
                                           urldata = encrypt(urldata);
-                                          const msg = {
-                                            to: userField.email,
-                                            from: "info@micearnbusiness.org",
-                                            subject:
-                                              "Verify Your Email Address",
-                                            text: "and easy to do anywhere, even with Node.js",
-                                            html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-                                          };
-                                          /*
-sgMail
-  .send(msg)
-  .then(() => {}, error => {
-    console.error(error);
+                                          const content = message({
+                                            verify: "verify",
+                                            details: {
+                                              code: verify,
+                                              urldata,
+                                              username: userField.username,
+                                            },
+                                          });
 
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
-                                          
-                                          
-                                          */
-                                          return res.json(1);
+                                          client
+                                            .sendEmail({
+                                              From: "info@micearnbusiness.org",
+                                              To: userField.email,
+                                              Subject:
+                                                "Verify Your Email Address",
+                                              HtmlBody: content,
+                                              MessageStream: "outbound",
+                                            })
+                                            .then(() => {
+                                              return res.json(1);
+                                            });
                                         })
                                         .catch((err) =>
                                           res.status(404).json(err)
@@ -318,27 +318,26 @@ sgMail
                                 };
                                 urldata = JSON.stringify(urldata);
                                 urldata = encrypt(urldata);
-                                const msg = {
-                                  to: userField.email,
-                                  from: "info@micearnbusiness.org",
-                                  subject: "Verify Your Email Address",
-                                  text: "and easy to do anywhere, even with Node.js",
-                                  html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-                                };
-                                /*
-sgMail
-  .send(msg)
-  .then(() => {}, error => {
-    console.error(error);
+                                const content = message({
+                                  verify: "verify",
+                                  details: {
+                                    code: verify,
+                                    urldata,
+                                    username: userField.username,
+                                  },
+                                });
 
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
-                                          
-                                          
-                                          */
-                                return res.json(1);
+                                client
+                                  .sendEmail({
+                                    From: "info@micearnbusiness.org",
+                                    To: userField.email,
+                                    Subject: "Verify Your Email Address",
+                                    HtmlBody: content,
+                                    MessageStream: "outbound",
+                                  })
+                                  .then(() => {
+                                    return res.json(1);
+                                  });
                               })
                               .catch((err) => res.status(404).json(err));
                           })
@@ -621,33 +620,31 @@ router.post("/login", (req, res) => {
                     .then(() => {
                       let urldata = {
                         code,
-                        username,
+                        username: user.username,
                       };
                       urldata = JSON.stringify(urldata);
                       urldata = encrypt(urldata);
-                      const msg = {
-                        to: userField.email,
-                        from: "info@micearnbusiness.org",
-                        subject: "Verify Your Email Address",
-                        text: "and easy to do anywhere, even with Node.js",
-                        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-                      };
-                      /*
-sgMail
-  .send(msg)
-  .then(() => {}, error => {
-    console.error(error);
+                      const content = message({
+                        verify: "verify",
+                        details: {
+                          code,
+                          urldata,
+                          username: user.username,
+                        },
+                      });
 
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
-                                          
-                                          
-                                          */
-
-                      errors.verify = 0;
-                      return res.status(403.7).json(errors);
+                      client
+                        .sendEmail({
+                          From: "info@micearnbusiness.org",
+                          To: user.email,
+                          Subject: "Verify Your Email Address",
+                          HtmlBody: content,
+                          MessageStream: "outbound",
+                        })
+                        .then(() => {
+                          errors.verify = 0;
+                          return res.status(403).json(errors);
+                        });
                     })
                     .catch((err) => res.status(404).json(err));
                 } else {
@@ -715,31 +712,30 @@ router.post("/forgot", (req, res) => {
         .then(() => {
           let urldata = {
             code: verifyField.verify,
-            username,
+            username: user.username,
           };
           urldata = JSON.stringify(urldata);
           urldata = encrypt(urldata);
-          const msg = {
-            to: userField.email,
-            from: "info@micearnbusiness.org",
-            subject: "Verify Your Email Address",
-            text: "and easy to do anywhere, even with Node.js",
-            html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-          };
-          /*
-sgMail
-  .send(msg)
-  .then(() => {}, error => {
-    console.error(error);
+          const content = message({
+            verify: "forgot",
+            details: {
+              code: verifyField.verify,
+              urldata,
+              username: user.username,
+            },
+          });
 
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
-                                          
-                                          
-                                          */
-          res.json(1);
+          client
+            .sendEmail({
+              From: "info@micearnbusiness.org",
+              To: user.email,
+              Subject: "Confirm Your Email Address",
+              HtmlBody: content,
+              MessageStream: "outbound",
+            })
+            .then(() => {
+              res.json(1);
+            });
         })
         .catch((err) => res.status(404).json(err));
     })

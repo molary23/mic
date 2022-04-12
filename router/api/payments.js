@@ -1,26 +1,18 @@
 const express = require("express"),
   router = express.Router(),
-  bcrypt = require("bcryptjs"),
-  Sequelize = require("sequelize"),
   passport = require("passport"),
   // Use Json Web Token
-  jwt = require("jsonwebtoken"),
-  keys = require("../../config/keys"),
-  User = require("../../db/models/User"),
   Subscription = require("../../db/models/Subscription"),
   Transaction = require("../../db/models/Transaction"),
   Payment = require("../../db/models/Payment"),
   Bonus = require("../../db/models/Bonus"),
   Premium = require("../../db/models/Premium"),
   Referral = require("../../db/models/Referral"),
-  //Bring in the Validation
-
   //Bring in User Checker
   checkSuperAdmin = require("../../validation/superCheck"),
   checkUser = require("../../validation/checkUser"),
   // Bring in Duration
-  duration = require("../../util/duration"),
-  dateformat = require("../../util/dateformat");
+  duration = require("../../util/duration");
 
 /*
 @route POST api/payments/make

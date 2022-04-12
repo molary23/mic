@@ -1,19 +1,13 @@
-const Preference = require("../../db/models/Preference");
-const UserView = require("../../db/models/UserView");
-
 const express = require("express"),
   router = express.Router(),
-  bcrypt = require("bcryptjs"),
-  Sequelize = require("sequelize"),
   passport = require("passport"),
   { Op } = require("sequelize"),
   // Use Json Web Token
-  jwt = require("jsonwebtoken"),
-  keys = require("../../config/keys"),
-  User = require("../../db/models/User"),
   Signal = require("../../db/models/Signal"),
   Currency = require("../../db/models/Currency"),
   SignalView = require("../../db/models/SignalView"),
+  Preference = require("../../db/models/Preference"),
+  UserView = require("../../db/models/UserView"),
   //Bring in the Validation
   validateSignalInput = require("../../validation/signal"),
   //Bring in Admin Checker

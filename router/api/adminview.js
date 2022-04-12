@@ -1,11 +1,8 @@
 const express = require("express"),
   router = express.Router(),
-  Sequelize = require("sequelize"),
   passport = require("passport"),
   { Op } = require("sequelize"),
   // Use Json Web Token
-  jwt = require("jsonwebtoken"),
-  keys = require("../../config/keys"),
   Payment = require("../../db/models/Payment"),
   Subscription = require("../../db/models/Subscription"),
   SubscriptionView = require("../../db/models/SubscriptionView"),
@@ -37,7 +34,6 @@ const express = require("express"),
   AnalyticView = require("../../db/models/AnalyticsView"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck"),
-  dateformat = require("../../util/dateformat"),
   validator = require("validator");
 
 /*

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import TawkTo from "tawkto-react";
+
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import ErrorBoundary from "../../util/ErrorBoundary";
@@ -20,6 +22,14 @@ function Dashboard() {
   if (level !== 1) {
     dispatch(logoutUser());
   }
+
+  useEffect(() => {
+    const tawk = new TawkTo("62543df4b0d10b6f3e6cecce", "1g0ch41u0");
+
+    tawk.onStatusChange((status) => {
+      console.log(status);
+    });
+  }, []);
 
   const toggleOpen = () => {
     if (open) {
