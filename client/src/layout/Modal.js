@@ -139,7 +139,7 @@ function Modal(props) {
               <button
                 type="button"
                 className="btn-close "
-                onClick={closeModal}
+                onClick={() => closeModal()}
               ></button>
             </div>
 

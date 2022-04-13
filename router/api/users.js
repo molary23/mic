@@ -21,6 +21,10 @@ const express = require("express"),
   //Bring in the Validation
   validateEmailInput = require("../../validation/email"),
   validatePassInput = require("../../validation/password"),
+  // Message
+  postmark = require("postmark"),
+  client = new postmark.ServerClient("d4981f13-01b9-4a75-9e89-acb722d13f88"),
+  getMessage = require("../../mail/message"),
   //Check level
   checkUser = require("../../validation/checkUser");
 
@@ -721,8 +725,40 @@ router.post(
     forumFields.UserId = req.user.id;
 
     Forum.create(forumFields)
-      .then(() => {
-        res.json(true);
+      .then((forum) => {
+        User.findByPk(forumFields.UserId, {
+          attributes: ["email", "username"],
+        }).then((user) => {
+          let email = user.email,
+            username = user.username,
+            ticketid;
+          if (forum.id.toString().length < 5) {
+            ticketid = forum.id.toString().padStart(5, "0");
+          } else {
+            ticketid = forum.id;
+          }
+
+          const content = getMessage({
+            sender: "forumticket",
+            details: {
+              username: username,
+              forumid: ticketid,
+            },
+          });
+
+          client
+            .sendEmail({
+              From: "info@micearnbusiness.org",
+              To: email,
+              Cc: "support@micearnbusiness.org",
+              Subject: `[Ticket ID: ${ticketid}] ${forumFields.title.toUpperCase()}`,
+              HtmlBody: content,
+              MessageStream: "outbound",
+            })
+            .then(() => {
+              return res.json(true);
+            });
+        });
       })
       .catch((err) => res.status(404).json(err));
   }

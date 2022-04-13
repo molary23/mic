@@ -26,9 +26,7 @@ function Dashboard() {
   useEffect(() => {
     const tawk = new TawkTo("62543df4b0d10b6f3e6cecce", "1g0ch41u0");
 
-    tawk.onStatusChange((status) => {
-      console.log(status);
-    });
+    tawk.onStatusChange((status) => {});
   }, []);
 
   const toggleOpen = () => {

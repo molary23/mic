@@ -138,7 +138,6 @@ class ViewAdmin extends Component {
   afterUpdate = (text) => {
     const { limit, content, providercount, timer } = this.state;
     this.setState({
-      isLoading: false,
       modal: false,
       toast: true,
       toasttext: `Provider ${text} successfully`,
@@ -393,7 +392,7 @@ class ViewAdmin extends Component {
 
         {modal ? (
           <AddModal
-            {...{ modal, sender, error }}
+            {...{ modal, sender, error, isLoading }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />

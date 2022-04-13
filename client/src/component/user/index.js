@@ -73,9 +73,11 @@ export class Index extends Component {
   };
 
   shareRef = (value) => {
-    let text = encodeURIComponent("Join MIC Earn Business");
+    let text = encodeURIComponent(
+      "I am inviting you to join MIC Earn Business. This platform shares accurate signals that facilitate successful trading."
+    );
     let url = "//dashboard.micearnbusiness.org/referral/:mol";
-    let hash_tags = "crypto,forex";
+    let hash_tags = "crypto,forex,fx,cryptocurrency,trading,signal";
 
     let params = "menubar=no,toolbar=no,status=no,width=570,height=570"; // for window
     function ShareToTwitter() {

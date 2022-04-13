@@ -75,7 +75,6 @@ function AddModal(props) {
 
   const closeModal = () => {
     if (error !== undefined) {
-      // console.log(error);
       if (Object.keys(error).length > 0) {
         dispatch(clearErrors());
       }
@@ -195,6 +194,7 @@ function AddModal(props) {
 
           setErrors({});
           onSubmit(["new", signal]);
+          setLoading(isLoading);
         }
       };
       title = "Add New Signal";
@@ -268,7 +268,6 @@ function AddModal(props) {
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"
-                disabled={loading && true}
               >
                 Add Signal
                 {loading && (
@@ -303,6 +302,7 @@ function AddModal(props) {
           };
           setErrors({});
           onSubmit(["edit", signal, modalsignaldetails.signalid]);
+          setLoading(isLoading);
         }
       };
 
@@ -408,6 +408,7 @@ function AddModal(props) {
           ],
         };
         onSubmit(["add", currency]);
+        setLoading(isLoading);
       }
     };
 
@@ -572,6 +573,7 @@ function AddModal(props) {
           password: inputs.addadminpassword,
         };
         onSubmit(["add", admin]);
+        setLoading(isLoading);
       }
     };
     let adm = sender.split("-")[1].replace(/s/g, "");
@@ -727,6 +729,7 @@ function AddModal(props) {
             enddate: inputs.addannenddate,
           };
           onSubmit(["new", ann]);
+          setLoading(isLoading);
         }
       };
       title = "Add Announcements";
@@ -844,6 +847,7 @@ function AddModal(props) {
             enddate: anns.editannenddate,
           };
           onSubmit(["edit", ann, modalAnnDetails.id]);
+          setLoading(isLoading);
         }
       };
 
@@ -958,6 +962,7 @@ function AddModal(props) {
             accountnumber: inputs.accountnumber.toLowerCase(),
           };
           onSubmit(account);
+          setLoading(isLoading);
         }
       };
       text = (
@@ -1153,6 +1158,7 @@ function AddModal(props) {
         setLoading(isLoading);
       }
     };
+
     title = "Create a Discussion";
     text = (
       <form className="withdraw-form" onSubmit={submitForumHandler}>
@@ -1181,8 +1187,10 @@ function AddModal(props) {
             disabled={loading && true}
           >
             Create
-            {loading && (
+            {loading && error !== {} ? (
               <span className="spinner-border spinner-border-sm ms-2"></span>
+            ) : (
+              ""
             )}
           </button>
         </div>

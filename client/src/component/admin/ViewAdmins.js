@@ -136,7 +136,6 @@ class ViewAdmins extends Component {
   afterUpdate = (text) => {
     const { limit, content, admincount, timer } = this.state;
     this.setState({
-      isLoading: false,
       modal: false,
       toast: true,
       toasttext: `Admin ${text} successfully`,
@@ -393,7 +392,7 @@ class ViewAdmins extends Component {
 
         {modal ? (
           <AddModal
-            {...{ modal, sender, error }}
+            {...{ modal, sender, error, isLoading }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />

@@ -270,6 +270,7 @@ class Announcements extends Component {
       check,
       checktext,
       checktitle,
+      isLoading,
     } = this.state;
 
     const { admin, searchTerms } = this.props,
@@ -305,7 +306,7 @@ class Announcements extends Component {
 
     return (
       <div>
-        {loader && <ProgressBar />}
+        {(loader || isLoading) && <ProgressBar />}
         <div className="transactions card holder-card ">
           <div className="page-dash-title mb-4">
             <h1>Announcements</h1>
@@ -377,7 +378,7 @@ class Announcements extends Component {
 
         {modal ? (
           <AddModal
-            {...{ modal, sender, error, modalAnnDetails, purpose }}
+            {...{ modal, sender, error, modalAnnDetails, purpose, isLoading }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />

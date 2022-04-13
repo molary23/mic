@@ -257,11 +257,11 @@ router.post("/register", (req, res) => {
 @access public
 */
 router.post("/verify", (req, res) => {
-  const { errors, isValid } = validateConfirmInput(req.body.userverify);
+  const { errors, isValid } = validateConfirmInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  const { username, code } = req.body.userverify;
+  const { username, code } = req.body;
 
   User.findOne({
     where: {
@@ -289,10 +289,9 @@ router.post("/verify", (req, res) => {
             errors.code = "You are yet to request for a Verification Code";
             return res.status(400).json(errors);
           } else if (code !== pass.verify.toLowerCase()) {
-            errors.code =
-              "You have entered the wrong Verification Code" + pass.verify;
+            errors.code = "You have entered the wrong Verification Code";
             return res.status(400).json(errors);
-          } else if (pass.updatedAt.getTime() < now) {
+          } else if (new Date(pass.updatedAt).getTime() < now) {
             errors.code =
               "Your Verification Code has expired. Kindly request for a new one";
             return res.status(400).json(errors);
@@ -521,7 +520,7 @@ router.post("/login", (req, res) => {
                       urldata = JSON.stringify(urldata);
                       urldata = encrypt(urldata);
                       const content = getMessage({
-                        verify: "verify",
+                        sender: "verify",
                         details: {
                           code,
                           urldata,
@@ -678,7 +677,7 @@ router.post("/confirm", (req, res) => {
         } else if (code !== pass.verify) {
           errors.code = "You have entered the wrong Password Reset Code";
           return res.status(400).json(errors);
-        } else if (pass.updatedAt.getTime() < now) {
+        } else if (new Date(pass.updatedAt).getTime() < now) {
           errors.code =
             "Your Password Reset Code has expired. Kindly request for a new one";
           return res.status(400).json(errors);

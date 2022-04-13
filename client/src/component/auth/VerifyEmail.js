@@ -19,6 +19,7 @@ export class VerifyEmail extends Component {
     loading: false,
     error: {},
     modal: false,
+    servererror: null,
   };
   componentDidMount() {
     let search = window.location.search;
@@ -113,7 +114,7 @@ export class VerifyEmail extends Component {
     try {
       let response = await axios({
         method: "post",
-        url: "/api/view/register/",
+        url: "/api/view/verify/",
         data,
         timeout: 60000, // only wait for 60s
       });
@@ -127,21 +128,23 @@ export class VerifyEmail extends Component {
         });
       }
     } catch (error) {
-      let err;
-      if (error.code === "ECONNABORTED") {
-        err = "Request Timed out. Refresh and Try again later.";
-      } else {
-        err = error.response.data;
-      }
       this.setState({
-        error: err.data,
         loading: false,
       });
+      if (error.code === "ECONNABORTED") {
+        this.setState({
+          servererror: "Request Timed out. Refresh and Try again later.",
+        });
+      } else {
+        this.setState({
+          error: error.response.data,
+        });
+      }
     }
   };
 
   render() {
-    const { username, code, error, loading, modal } = this.state;
+    const { username, code, error, loading, modal, servererror } = this.state;
     return (
       <div>
         <Box sender="Verify Email Address">
@@ -165,6 +168,9 @@ export class VerifyEmail extends Component {
               error={error.code}
             />
             <div className="d-grid">
+              {servererror && (
+                <small className="text-muted mb-2">{servererror}</small>
+              )}
               <button
                 type="submit"
                 className="btn default-btn btn-lg btn-block"

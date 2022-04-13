@@ -46,9 +46,10 @@ export class Signals extends Component {
   componentDidMount() {
     const { premiuminfo, offset, content, limit } = this.state;
     let searchParams = window.location.search,
-      dateOnly = new Date().toDateString(),
-      curDate = new Date(dateOnly).getTime() / 1000,
-      expDate = new Date(premiuminfo.enddate).getTime() / 1000;
+      dateOnly = new Date().toISOString(),
+      curDate = new Date(dateOnly).getTime(),
+      expDate = new Date(premiuminfo.enddate).getTime();
+
     if (curDate > expDate && premiuminfo.status === "n") {
       this.setState({
         substatus: "n",

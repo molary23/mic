@@ -149,7 +149,6 @@ class Signals extends Component {
   afterUpdate = (text) => {
     const { limit, content, signalcount, timer } = this.state;
     this.setState({
-      isLoading: false,
       modal: false,
       toast: true,
       toasttext: `Signal ${text} successfully`,
@@ -445,7 +444,14 @@ class Signals extends Component {
 
         {modal ? (
           <AddModal
-            {...{ modal, sender, purpose, modalsignaldetails, error }}
+            {...{
+              modal,
+              sender,
+              purpose,
+              modalsignaldetails,
+              error,
+              isLoading,
+            }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />

@@ -130,6 +130,7 @@ class Login extends Component {
     } else {
       this.setState({
         loading: true,
+        modal: false,
         error: {},
       });
       const user = {

@@ -1,7 +1,7 @@
 module.exports = function getMessage({ sender, details }) {
   let middle,
-    website = "//micearnbusiness.org";
-  (header = `<html>
+    website = "//micearnbusiness.org",
+    header = `<html>
   <head> </head>
   <body
     leftmargin="0"
@@ -158,8 +158,8 @@ module.exports = function getMessage({ sender, details }) {
                               </tbody>
                             </table>
                           </td>
-                        </tr>`),
-    (footer = `<tr>
+                        </tr>`,
+    footer = `<tr>
                           <td
                             class="footer_made"
                             style="
@@ -340,7 +340,7 @@ module.exports = function getMessage({ sender, details }) {
       </tbody>
     </table>
   </body>
-</html>`);
+</html>`;
 
   if (sender === "verify") {
     middle = `<tr>
@@ -3200,6 +3200,371 @@ module.exports = function getMessage({ sender, details }) {
                                         >Unsubscribe</a
                                       >.
                                     </p>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td
+                                    height="20"
+                                    class="made_space"
+                                    style="padding: 0px; min-height: 20px"
+                                  ></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>`;
+  } else if (sender === "forumticket") {
+    middle = `<tr>
+                          <td align="center" style="padding: 0px">
+                            <table
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                              width="100%"
+                              style="min-width: 100%; padding: 0px"
+                            >
+                              <tbody>
+                                <tr>
+                                  <td
+                                    valign="top"
+                                    align="left"
+                                    style="padding: 0px"
+                                  >
+                                    <table
+                                      cellpadding="0"
+                                      cellspacing="0"
+                                      border="0"
+                                      style="
+                                        min-width: 100%;
+                                        width: 100%;
+                                        padding: 0px;
+                                      "
+                                    >
+                                      <tbody>
+                                        <tr>
+                                          <td
+                                            class="post_box_b"
+                                            style="
+                                              padding: 0px;
+                                              border: 1px solid #dbdbdb;
+                                              background-color: #ffffff;
+                                              border-radius: 5px;
+                                            "
+                                          >
+                                            <table
+                                              cellpadding="0"
+                                              cellspacing="0"
+                                              border="0"
+                                              style="
+                                                min-width: 100%;
+                                                width: 100%;
+                                                padding: 0px;
+                                              "
+                                            >
+                                              <tbody>
+                                                <tr>
+                                                  <td style="padding: 0px">
+                                                    <table
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      border="0"
+                                                      class="bottom_line"
+                                                      style="
+                                                        padding: 0px;
+                                                        min-width: 100%;
+                                                        width: 100%;
+                                                        border-bottom: 1px solid
+                                                          #dbdbdb;
+                                                      "
+                                                    >
+                                                      <tbody>
+                                                        <tr>
+                                                          <td
+                                                            height="12"
+                                                            style="
+                                                              min-height: 12px;
+                                                              padding: 0px;
+                                                            "
+                                                          ></td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td
+                                                            style="padding: 0px"
+                                                          >
+                                                            <table
+                                                              cellpadding="0"
+                                                              cellspacing="0"
+                                                              border="0"
+                                                              style="
+                                                                min-width: 100%;
+                                                                width: 100%;
+                                                                padding: 0px;
+                                                              "
+                                                            >
+                                                              <tbody>
+                                                                <tr>
+                                                                  <td
+                                                                    width="24"
+                                                                    class="made_margin"
+                                                                    style="
+                                                                      padding: 0px;
+                                                                      width: 24px;
+                                                                    "
+                                                                  ></td>
+                                                                  <td
+                                                                    style="
+                                                                      padding: 0px;
+                                                                    "
+                                                                  >
+                                                                    <table
+                                                                      cellpadding="0"
+                                                                      cellspacing="0"
+                                                                      border="0"
+                                                                      style="
+                                                                        min-width: 100%;
+                                                                        width: 100%;
+                                                                        padding: 0px;
+                                                                      "
+                                                                    >
+                                                                      <tbody>
+                                                                        <tr>
+                                                                          <td
+                                                                            class="head_title"
+                                                                            style="
+                                                                              padding: 10px
+                                                                                0px;
+                                                                              font-family: Helvetica,
+                                                                                Arial,
+                                                                                sans-serif;
+                                                                              font-size: 18px;
+                                                                              line-height: 20px;
+                                                                              text-align: center;
+                                                                              color: #14171a;
+                                                                            "
+                                                                          >
+                                                                            Support
+                                                                            Ticket
+                                                                          </td>
+                                                                        </tr>
+                                                                      </tbody>
+                                                                    </table>
+                                                                  </td>
+                                                                  <td
+                                                                    width="24"
+                                                                    class="made_margin"
+                                                                    style="
+                                                                      padding: 0px;
+                                                                      width: 24px;
+                                                                    "
+                                                                  ></td>
+                                                                </tr>
+                                                              </tbody>
+                                                            </table>
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td
+                                                            height="12"
+                                                            style="
+                                                              min-height: 12px;
+                                                              padding: 0px;
+                                                            "
+                                                          ></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </td>
+                                                </tr>
+                                                <tr class="row">
+                                                  <td style="padding: 0px">
+                                                    <table
+                                                      cellpadding="0"
+                                                      cellspacing="0"
+                                                      border="0"
+                                                      class="bottom_line"
+                                                      style="
+                                                        padding: 0px;
+                                                        min-width: 100%;
+                                                        width: 100%;
+                                                      "
+                                                    >
+                                                      <tbody>
+                                                        <tr>
+                                                          <td
+                                                            height="20"
+                                                            style="
+                                                              min-height: 20px;
+                                                              padding: 0px;
+                                                            "
+                                                          ></td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td
+                                                            style="padding: 0px"
+                                                          >
+                                                            <table
+                                                              cellpadding="0"
+                                                              cellspacing="0"
+                                                              border="0"
+                                                              style="
+                                                                min-width: 100%;
+                                                                width: 100%;
+                                                                padding: 0px;
+                                                              "
+                                                            >
+                                                              <tbody>
+                                                                <tr>
+                                                                  <td
+                                                                    width="20"
+                                                                    class="made_margin"
+                                                                    style="
+                                                                      padding: 0px;
+                                                                      width: 20px;
+                                                                    "
+                                                                  ></td>
+                                                                  <td
+                                                                    style="
+                                                                      padding: 0px;
+                                                                    "
+                                                                  >
+                                                                    <table
+                                                                      cellpadding="0"
+                                                                      cellspacing="0"
+                                                                      border="0"
+                                                                      style="
+                                                                        min-width: 100%;
+                                                                        width: 100%;
+                                                                        padding: 0px;
+                                                                      "
+                                                                    >
+                                                                      <tbody>
+                                                                        <tr>
+                                                                          <td
+                                                                            class="head_title"
+                                                                            style="
+                                                                              padding: 0px;
+                                                                              font-family: Helvetica,
+                                                                                Arial,
+                                                                                sans-serif;
+                                                                              font-size: 16px;
+                                                                              line-height: 20px;
+                                                                              color: #14171a;
+                                                                            "
+                                                                          >
+                                                                            <p
+                                                                              style="
+                                                                                color: #afafaf;
+                                                                                font-size: 16px;
+                                                                                text-transform: capitalize;
+                                                                              "
+                                                                            >
+                                                                              Dear
+                                                                              ${details.username}
+                                                                            </p>
+                                                                            <p
+                                                                              style="
+                                                                                color: #afafaf;
+                                                                                font-size: 16px;
+                                                                              "
+                                                                            >Thank you for contacting our support team. A support ticket has now been opened for your request. You will be notified when a response is made by email.
+                                                                             
+                                                                              Kindly
+                                                                              exercise
+                                                                              patience
+                                                                              as
+                                                                              we
+                                                                              sort
+                                                                              this
+                                                                              out.
+                                                                            </p>
+                                                                            <p
+                                                                              style="
+                                                                                color: #afafaf;
+                                                                                font-size: 16px;
+                                                                              "
+                                                                            >
+                                                                              Your
+                                                                              Ticket
+                                                                              Number
+                                                                              is,
+                                                                            </p>
+
+                                                                            <p
+                                                                              style="
+                                                                                font-size: 18px;
+                                                                                text-align: center;
+                                                                                letter-spacing: 5px;
+                                                                                text-transform: uppercase;
+                                                                                color: #afafaf;
+                                                                              "
+                                                                            >
+                                                                              ${details.forumid}
+                                                                            </p>
+
+                                                                            <div
+                                                                              style="
+                                                                                padding: 20px
+                                                                                  0px;
+                                                                              "
+                                                                            >
+                                                                              <a
+                                                                                href="#"
+                                                                                style="
+                                                                                  background: rgba(
+                                                                                    64,
+                                                                                    89,
+                                                                                    209,
+                                                                                    1
+                                                                                  );
+                                                                                  border-radius: 20px;
+                                                                                  text-decoration: none;
+                                                                                  padding: 10px
+                                                                                    20px;
+                                                                                  color: #fff;
+                                                                                  font-weight: 500;
+                                                                                "
+                                                                              >
+                                                                                View
+                                                                                Discussion
+                                                                              </a>
+                                                                            </div>
+                                                                          </td>
+                                                                        </tr>
+                                                                      </tbody>
+                                                                    </table>
+                                                                  </td>
+                                                                  <td
+                                                                    width="24"
+                                                                    class="made_margin"
+                                                                    style="
+                                                                      padding: 0px;
+                                                                      width: 24px;
+                                                                    "
+                                                                  ></td>
+                                                                </tr>
+                                                              </tbody>
+                                                            </table>
+                                                          </td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td
+                                                            height="20"
+                                                            style="
+                                                              min-height: 20px;
+                                                              padding: 0px;
+                                                            "
+                                                          ></td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
                                   </td>
                                 </tr>
                                 <tr>

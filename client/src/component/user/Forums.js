@@ -136,7 +136,6 @@ class Forums extends Component {
   afterUpdate = (text) => {
     const { limit, content, forumcount, timer } = this.state;
     this.setState({
-      isLoading: false,
       modal: false,
       toast: true,
       toasttext: `Discussion ${text} successfully`,
@@ -378,7 +377,7 @@ class Forums extends Component {
 
         {modal ? (
           <AddModal
-            {...{ modal, sender, isLoading, error }}
+            {...{ modal, sender, error, isLoading }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />

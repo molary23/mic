@@ -1,0 +1,14 @@
+error: Apr-13-2022 14:22:23: 	500 - Internal Server Error - Cannot read properties of undefined (reading 'username') - /api/view/verify/ - POST - ::1
+error: Apr-13-2022 14:22:39: 	500 - Internal Server Error - Cannot destructure property 'username' of 'req.body.userverify' as it is undefined. - /api/view/verify/ - POST - ::1
+error: Apr-13-2022 17:22:02: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:22:06: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:22:40: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:23:13: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:23:16: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:23:32: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:24:59: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:25:04: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 17:26:06: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 21:59:23: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 22:00:19: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1
+error: Apr-13-2022 22:04:47: 	500 - Internal Server Error - Forums is not defined - /api/users/add/forum - POST - ::1

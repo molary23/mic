@@ -159,7 +159,6 @@ class Currency extends Component {
   afterUpdate = (text) => {
     const { limit, content, currencycount, timer } = this.state;
     this.setState({
-      isLoading: false,
       modal: false,
       toast: true,
       toasttext: `Currency ${text} successfully`,
@@ -307,13 +306,6 @@ class Currency extends Component {
       searchloading,
       currencycount,
     });
-    /*  if (data !== null) {
-      if (!showSearch) {
-        main.unshift(data);
-      } else if (showSearch) {
-        searchMain.unshift(data);
-      }
-    }*/
 
     return (
       <div>
@@ -406,7 +398,7 @@ class Currency extends Component {
 
         {modal && (
           <AddModal
-            {...{ modal, sender, error }}
+            {...{ modal, sender, error, isLoading }}
             onClick={this.modalHandler}
             onSubmit={this.submitHandler}
           />
