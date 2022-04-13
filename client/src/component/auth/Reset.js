@@ -10,6 +10,8 @@ import TextPasswordField from "../../layout/TextPasswordField";
 import Box from "../../layout/Box";
 import Modal from "../../layout/Modal";
 
+import { BsEyeSlash, BsEye } from "react-icons/bs";
+
 export class Reset extends Component {
   state = {
     password: "",
@@ -122,7 +124,7 @@ export class Reset extends Component {
               id="reset-form-password"
               placeholder="Password"
               label="Password"
-              icon={`far ${pass1 ? "fa-eye-slash" : "fa-eye"}`}
+              icon={pass1 ? <BsEye /> : <BsEyeSlash />}
               type={pass1 ? "password" : "text"}
               name="password"
               value={password}
@@ -134,7 +136,7 @@ export class Reset extends Component {
               id="reset-form-password2"
               placeholder="Confirm Password"
               label="Confirm Password"
-              icon={`far ${pass2 ? "fa-eye-slash" : "fa-eye"}`}
+              icon={pass2 ? <BsEye /> : <BsEyeSlash />}
               type={pass2 ? "password" : "text"}
               name="password2"
               value={password2}

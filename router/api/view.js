@@ -22,115 +22,7 @@ const express = require("express"),
   validateResetInput = require("../../validation/reset"),
   encrypt = require("../../util/encrypt"),
   client = new postmark.ServerClient("d4981f13-01b9-4a75-9e89-acb722d13f88"),
-  message = require("../../mail/message");
-
-/*
-@route POST api/public/register
-@desc Add new user
-@access public
-*/
-
-router.get("/finder", (req, res) => {
-  const x = y + 10;
-  res.send(x.toString());
-  /* let details = {
-    code: "q6u2jp",
-    username: "mol",
-  };
-  details = JSON.stringify(details);
-  return res.json(encrypt(details));
-
-  
-
-  let userID = 1;
-
-  Preference.findAll({
-    where: {
-      [Op.and]: [
-        {
-          [Op.or]: [
-            {
-              providers: null,
-            },
-            {
-              providers: { [Op.substring]: ` ${userID},` },
-            },
-            {
-              providers: { [Op.substring]: ` ${userID}]` },
-            },
-          ],
-        },
-        {
-          [Op.or]: [
-            {
-              currencies: null,
-            },
-            {
-              currencies: {
-                [Op.substring]: ` ${2},`,
-              },
-            },
-            {
-              currencies: {
-                [Op.substring]: ` ${2}]`,
-              },
-            },
-          ],
-        },
-        {
-          notify: "y",
-        },
-        {
-          verify: "y",
-        },
-      ],
-    },
-    attributes: ["UserId"],
-    raw: true,
-  })
-    .then((user) => {
-      let userArr = [];
-      for (let i = 0; i < user.length; i++) {
-        userArr.push(user[i].UserId);
-      }
-
-      UserView.findAll({
-        where: {
-          UserId: userArr,
-        },
-        attributes: ["email"],
-      })
-        .then((users) => {
-          let emailArr = [];
-          for (let i = 0; i < users.length; i++) {
-            emailArr.push(users[i].email);
-          }
-
-          return res.json(emailArr);
-          /*   const msg = {
-            to: userField.email,
-            from: "info@micearnbusiness.org",
-            subject: "Verify Your Email Address",
-            text: "and easy to do anywhere, even with Node.js",
-            html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-          };
-          
-sgMail
-  .send(msg)
-  .then(() => {}, error => {
-    console.error(error);
-
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
-
-          res.json(true);
-        })
-        .catch((err) => res.status(404).json(`A ${err}`));
-    })
-    .catch((err) => res.status(404).json(`B ${err}`));*/
-});
+  getMessage = require("../../mail/message");
 
 /*
 @route POST api/public/register
@@ -138,13 +30,13 @@ sgMail
 @access public
 */
 router.post("/register", (req, res) => {
-  const { errors, isValid } = validateAddUserInput(req.body.user);
+  const { errors, isValid } = validateAddUserInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  const { referral, username, email, phone, password } = req.body.user;
+  const { referral, username, email, phone, password } = req.body;
   const userField = {},
     profileFields = {};
 
@@ -162,7 +54,7 @@ router.post("/register", (req, res) => {
   if (referral) {
     return Promise.all([
       User.findOne({
-        where: { username: referral },
+        where: { username: referral.toLowerCase() },
         attributes: ["id"],
       })
         .then((ref) => {
@@ -220,15 +112,15 @@ router.post("/register", (req, res) => {
                                       Verify.create(verifyFields)
                                         .then(() => {
                                           let urldata = {
-                                            code: verify,
+                                            code: verifyFields.verify,
                                             username: userField.username,
                                           };
                                           urldata = JSON.stringify(urldata);
                                           urldata = encrypt(urldata);
-                                          const content = message({
-                                            verify: "verify",
+                                          const content = getMessage({
+                                            sender: "verify",
                                             details: {
-                                              code: verify,
+                                              code: verifyFields.verify,
                                               urldata,
                                               username: userField.username,
                                             },
@@ -248,24 +140,28 @@ router.post("/register", (req, res) => {
                                             });
                                         })
                                         .catch((err) =>
-                                          res.status(404).json(err)
+                                          res.status(404).json(`E  ${err}`)
                                         );
                                     })
-                                    .catch((err) => res.status(404).json(err));
+                                    .catch((err) =>
+                                      res.status(404).json(`F  ${err}`)
+                                    );
                                 })
-                                .catch((err) => res.status(404).json(err));
+                                .catch((err) =>
+                                  res.status(404).json(`G  ${err}`)
+                                );
                             })
-                            .catch((err) => res.status(404).json(err));
+                            .catch((err) => res.status(404).json(`H  ${err}`));
                         })
-                        .catch((err) => res.status(404).json(err));
+                        .catch((err) => res.status(404).json(`I  ${err}`));
                     });
                   });
                 }
               })
-              .catch((err) => res.status(404).json(err));
+              .catch((err) => res.status(404).json(`J  ${err}`));
           }
         })
-        .catch((err) => res.json(err)),
+        .catch((err) => res.status(404).json(`K  ${err}`)),
     ]);
   } else {
     return Promise.all([
@@ -313,15 +209,15 @@ router.post("/register", (req, res) => {
                             Verify.create(verifyFields)
                               .then(() => {
                                 let urldata = {
-                                  code: verify,
+                                  code: verifyFields.verify,
                                   username: userField.username,
                                 };
                                 urldata = JSON.stringify(urldata);
                                 urldata = encrypt(urldata);
-                                const content = message({
-                                  verify: "verify",
+                                const content = getMessage({
+                                  sender: "verify",
                                   details: {
-                                    code: verify,
+                                    code: verifyFields.verify,
                                     urldata,
                                     username: userField.username,
                                   },
@@ -624,7 +520,7 @@ router.post("/login", (req, res) => {
                       };
                       urldata = JSON.stringify(urldata);
                       urldata = encrypt(urldata);
-                      const content = message({
+                      const content = getMessage({
                         verify: "verify",
                         details: {
                           code,
@@ -680,7 +576,7 @@ router.post("/login", (req, res) => {
 
 router.post("/forgot", (req, res) => {
   const message = {},
-    { username } = req.body.user;
+    { username } = req.body;
 
   if (username === "") {
     errors.username =
@@ -716,8 +612,8 @@ router.post("/forgot", (req, res) => {
           };
           urldata = JSON.stringify(urldata);
           urldata = encrypt(urldata);
-          const content = message({
-            verify: "forgot",
+          const content = getMessage({
+            sender: "forgot",
             details: {
               code: verifyField.verify,
               urldata,
@@ -727,15 +623,16 @@ router.post("/forgot", (req, res) => {
 
           client
             .sendEmail({
-              From: "info@micearnbusiness.org",
-              To: user.email,
-              Subject: "Confirm Your Email Address",
+              From: "secure@micearnbusiness.org",
+              To: "info@micearnbusiness.org",
+              Subject: "Password Reset Request",
               HtmlBody: content,
               MessageStream: "outbound",
             })
             .then(() => {
               res.json(1);
-            });
+            })
+            .catch((err) => res.status(500).json(err));
         })
         .catch((err) => res.status(404).json(err));
     })

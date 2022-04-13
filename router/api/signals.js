@@ -1,6 +1,7 @@
 const express = require("express"),
   router = express.Router(),
   passport = require("passport"),
+  postmark = require("postmark"),
   { Op } = require("sequelize"),
   // Use Json Web Token
   Signal = require("../../db/models/Signal"),
@@ -15,7 +16,9 @@ const express = require("express"),
   //Bring in Super Admin Checker
   checkSuperAdmin = require("../../validation/superCheck"),
   checkPr = require("../../validation/checkPr"),
-  validator = require("validator");
+  validator = require("validator"),
+  client = new postmark.ServerClient("d4981f13-01b9-4a75-9e89-acb722d13f88"),
+  getMessage = require("../../mail/message");
 
 /*
 @route POST api/signals/add
@@ -39,10 +42,9 @@ router.post(
 
     const signalFields = {};
     signalFields.UserId = req.user.id;
-    signalFields.signaloption = req.body.signaloption;
-    signalFields.CurrencyId = req.body.pair;
     if (req.body.pair) signalFields.CurrencyId = req.body.pair;
-    if (req.body.option) signalFields.signaloption = req.body.option;
+    if (req.body.signaloption)
+      signalFields.signaloption = req.body.signaloption;
     if (req.body.takeprofit)
       signalFields.takeprofit = JSON.stringify(req.body.takeprofit);
     if (req.body.stoploss)
@@ -67,7 +69,7 @@ router.post(
           return res.status(400).json(errors);
         } else {
           Signal.create(signalFields)
-            .then(() => {
+            .then((signal) => {
               Preference.findAll({
                 where: {
                   [Op.and]: [
@@ -132,35 +134,51 @@ router.post(
                       for (let i = 0; i < users.length; i++) {
                         emailArr.push(users[i].email);
                       }
-                      const msg = {
-                        to: emailArr,
-                        from: "info@micearnbusiness.org",
-                        subject: "Verify Your Email Address",
-                        text: "and easy to do anywhere, even with Node.js",
-                        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-                      };
+                      SignalView.findOne({
+                        where: {
+                          signalid: signal.id,
+                        },
+                        attributes: [
+                          "signalid",
+                          "takeprofit",
+                          "stoploss",
+                          "startrange",
+                          "endrange",
+                          "pip",
+                          "firstcurrency",
+                          "secondcurrency",
+                          "provider",
+                        ],
+                      })
+                        .then((signal) => {
+                          const content = getMessage({
+                            sender: "addsignal",
+                            details: signal,
+                          });
 
-                      /*  sgMail.sendMultiple(msg).then(
-                        () => {},
-                        (error) => {
-                          console.error(error);
-
-                          if (error.response) {
-                            console.error(error.response.body);
-                          }
-                        }
-                      );*/
-
-                      return res.json(true);
+                          client
+                            .sendEmail({
+                              From: "info@micearnbusiness.org",
+                              To: "info@micearnbusiness.org",
+                              Bcc: emailArr.toString(),
+                              Subject: "New Signal Update",
+                              HtmlBody: content,
+                              MessageStream: "outbound",
+                            })
+                            .then(() => {
+                              return res.json(true);
+                            });
+                        })
+                        .catch((err) => res.status(404).json(`E ${err}`));
                     })
-                    .catch((err) => res.status(404).json(err));
+                    .catch((err) => res.status(404).json(`F ${err}`));
                 })
-                .catch((err) => res.status(404).json(err));
+                .catch((err) => res.status(404).json(`G ${err}`));
             })
-            .catch((err) => res.status(404).json(err));
+            .catch((err) => res.status(404).json(`F ${err}`));
         }
       })
-      .catch((err) => res.status(404).json(err));
+      .catch((err) => res.status(404).json(`G ${err}`));
   }
 );
 
@@ -303,27 +321,40 @@ router.post(
                       for (let i = 0; i < users.length; i++) {
                         emailArr.push(users[i].email);
                       }
-                      const msg = {
-                        to: emailArr,
-                        from: "info@micearnbusiness.org",
-                        subject: "Verify Your Email Address",
-                        text: "and easy to do anywhere, even with Node.js",
-                        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-                      };
-                      /*
-sgMail
-  .sendMultiple(msg)
-  .then(() => {}, error => {
-    console.error(error);
 
-    if (error.response) {
-      console.error(error.response.body)
-    }
-  });
-                                          
-                                          
-                                          */
-                      return res.json(true);
+                      SignalView.findOne({
+                        where: {
+                          signalid: signal.id,
+                        },
+                        attributes: [
+                          "signalid",
+                          "pip",
+                          "firstcurrency",
+                          "secondcurrency",
+                          "provider",
+                          "status",
+                        ],
+                      })
+                        .then((signal) => {
+                          const content = getMessage({
+                            sender: "editsignal",
+                            details: signal,
+                          });
+
+                          client
+                            .sendEmail({
+                              From: "info@micearnbusiness.org",
+                              To: "info@micearnbusiness.org",
+                              Bcc: emailArr.toString(),
+                              Subject: "Signal Status Change Update",
+                              HtmlBody: content,
+                              MessageStream: "outbound",
+                            })
+                            .then(() => {
+                              return res.json(true);
+                            });
+                        })
+                        .catch((err) => res.status(404).json(err));
                     })
                     .catch((err) => res.status(404).json(err));
                 })

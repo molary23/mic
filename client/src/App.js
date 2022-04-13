@@ -71,6 +71,7 @@ import ProviderError from "./util/ProviderError";
 if (localStorage.userToken) {
   // Set Auth Token  Header
   const userToken = decrypt(localStorage.userToken, "local");
+  //console.log(userToken);
   setAuthToken(userToken);
   // Decode Token then get User Info and Expiry
   const decoded = jwtDecode(userToken);

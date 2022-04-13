@@ -144,7 +144,7 @@
                                             style="height: 12px; padding: 0px"
                                           ></td>
                                         </tr>
-
+                                        -- Header ---
                                         <tr>
                                           <td
                                             align="center"
@@ -166,7 +166,6 @@
                                             created.
                                           </td>
                                         </tr>
-
                                         <tr>
                                           <td
                                             height="12"
@@ -181,7 +180,7 @@
                             </table>
                           </td>
                         </tr>
-                        ---
+
                         <tr>
                           <td align="center" style="padding: 0px">
                             <table
@@ -1264,6 +1263,7 @@
                           </td>
                         </tr>
                         <tr>
+                          --Footer--
                           <td
                             class="footer_made"
                             style="

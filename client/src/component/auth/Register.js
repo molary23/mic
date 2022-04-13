@@ -35,6 +35,7 @@ class Register extends Component {
       "Content-Type": "application/json",
     },
     typingTimer: null,
+    servererror: "",
   };
 
   componentDidMount() {
@@ -54,7 +55,7 @@ class Register extends Component {
   checkHandler = (input, target) => {
     let req = {},
       response;
-    if (target !== "") {
+    if (target.length > 5) {
       clearTimeout(typingTimer);
       if (input === "email") {
         req = { email: target };
@@ -131,9 +132,9 @@ class Register extends Component {
     const { username, email, password, password2, referral, phone } =
       this.state;
     let pattern = new RegExp("^[a-zA-Z0-9._-]+$"),
-      tester = pattern.test(username),
-      testRef = pattern.test(referral);
-    if (!isEmpty(referral) && !testRef) {
+      tester = pattern.test(username);
+
+    if (!isEmpty(referral) && !pattern.test(referral)) {
       this.setState({
         error: {
           referral: "Enter Only a valid Username as Referral",
@@ -219,19 +220,19 @@ class Register extends Component {
       });
       const user = {
         referral: referral.trim(),
-        username: username.trim(),
-        email: email.trim(),
+        username: username.toLowerCase().trim(),
+        email: email.toLowerCase().trim(),
         phone: phone.split(" ").join("").trim(),
         password: password,
       };
-
       try {
         let response = await axios({
           method: "post",
-          url: "/api/view/register/",
+          url: "/api/view/register",
           data: user,
           timeout: 1200000, // only wait for 120s
         });
+
         if (response.data === 1) {
           this.setState({
             modal: true,
@@ -248,16 +249,16 @@ class Register extends Component {
           });
         }
       } catch (error) {
+        this.setState({ loading: false });
         let err;
         if (error.code === "ECONNABORTED") {
-          err = "Request Timed out. Refresh and Try again later.";
+          this.setState({
+            servererror: "Request Timed out. Refresh and Try again later.",
+          });
         } else {
           err = error.response.data;
         }
-        this.setState({
-          error: err.data,
-          loading: false,
-        });
+        this.setState({ error: err });
       }
     }
   };
@@ -276,6 +277,7 @@ class Register extends Component {
       modal,
       loader,
       phone,
+      servererror,
     } = this.state;
     const { referred } = this.props;
     return (
@@ -318,7 +320,6 @@ class Register extends Component {
                 name="email"
                 value={email}
                 onChange={this.changeHandler}
-                //onClick={() => this.checkPassHandler(1)}
                 error={error.email}
                 onKeyUp={this.keyHandler}
               />
@@ -378,6 +379,9 @@ class Register extends Component {
                 error={error.password2}
               />
               <div className="d-grid">
+                {servererror && (
+                  <small className="text-muted mb-2">{servererror}</small>
+                )}
                 <button
                   type="submit"
                   className="btn btn-lg btn-block default-btn"

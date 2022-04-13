@@ -70,7 +70,12 @@ export class Forgot extends Component {
         }
       } catch (error) {
         let err = error.response;
-        if (err.status === 404 || error.code === "ECONNABORTED") {
+        if (
+          err.status === 404 ||
+          err.status === 500 ||
+          error.code === "ECONNABORTED"
+        ) {
+          console.log(error);
           this.setState({
             error: {
               network: "There has been a network error. Refresh and try again.",
