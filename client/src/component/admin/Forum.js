@@ -304,7 +304,7 @@ class Forum extends Component {
                           className="btn default-btn btn-lg btn-block"
                         >
                           Add Comment <BiCommentCheck />
-                          {loading && (
+                          {isLoading && (
                             <span className="spinner-border spinner-border-sm ms-2"></span>
                           )}
                         </button>

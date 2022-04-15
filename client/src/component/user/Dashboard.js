@@ -19,15 +19,21 @@ function Dashboard() {
     dispatch = useDispatch(),
     auth = useSelector((state) => state.auth),
     level = auth.user.level;
+
+  useEffect(() => {
+    var tawk = new TawkTo("62543df4b0d10b6f3e6cecce", "1g0ch41u0");
+    tawk.showWidget();
+    tawk.onStatusChange((status) => {
+      console.log(status);
+    });
+    return () => {
+      tawk.hideWidget();
+    };
+  }, []);
+
   if (level !== 1) {
     dispatch(logoutUser());
   }
-
-  useEffect(() => {
-    const tawk = new TawkTo("62543df4b0d10b6f3e6cecce", "1g0ch41u0");
-
-    tawk.onStatusChange((status) => {});
-  }, []);
 
   const toggleOpen = () => {
     if (open) {

@@ -2,6 +2,7 @@ const express = require("express"),
   router = express.Router(),
   bcrypt = require("bcryptjs"),
   passport = require("passport"),
+  keys = require("../../config/keys"),
   { Op } = require("sequelize"),
   // Use Json Web Token
   User = require("../../db/models/User"),
@@ -23,7 +24,7 @@ const express = require("express"),
   validatePassInput = require("../../validation/password"),
   // Message
   postmark = require("postmark"),
-  client = new postmark.ServerClient("d4981f13-01b9-4a75-9e89-acb722d13f88"),
+  client = new postmark.ServerClient(keys.postKey),
   getMessage = require("../../mail/message"),
   //Check level
   checkUser = require("../../validation/checkUser");
@@ -742,7 +743,7 @@ router.post(
             sender: "forumticket",
             details: {
               username: username,
-              forumid: ticketid,
+              forumid: forum.id,
             },
           });
 

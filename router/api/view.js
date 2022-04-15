@@ -21,7 +21,7 @@ const express = require("express"),
   validateConfirmInput = require("../../validation/confirm"),
   validateResetInput = require("../../validation/reset"),
   encrypt = require("../../util/encrypt"),
-  client = new postmark.ServerClient("d4981f13-01b9-4a75-9e89-acb722d13f88"),
+  client = new postmark.ServerClient(keys.postKey),
   getMessage = require("../../mail/message");
 
 /*

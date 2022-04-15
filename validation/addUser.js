@@ -21,8 +21,8 @@ module.exports = function validateAddUserInput(data) {
   if (validator.isEmpty(data.username)) {
     errors.username = "Username Field can't be Empty";
   }
-  if (data.username.length < 5) {
-    errors.username = "Username should be at least 5 characters";
+  if (data.username.length < 4) {
+    errors.username = "Username should be at least 4 characters";
   }
   if (
     data.username === "username" ||

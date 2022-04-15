@@ -3,6 +3,7 @@ const express = require("express"),
   bcrypt = require("bcryptjs"),
   passport = require("passport"),
   gravatar = require("gravatar"),
+  keys = require("../../config/keys"),
   User = require("../../db/models/User"),
   Payment = require("../../db/models/Payment"),
   Subscription = require("../../db/models/Subscription"),
@@ -16,6 +17,10 @@ const express = require("express"),
   Verify = require("../../db/models/Verify"),
   Profile = require("../../db/models/Profile"),
   Wallet = require("../../db/models/Wallet"),
+  // Message
+  postmark = require("postmark"),
+  client = new postmark.ServerClient(keys.postKey),
+  getMessage = require("../../mail/message"),
   //Bring in the Validation
   validateAddUserInput = require("../../validation/addUser"),
   validateEmailInput = require("../../validation/email"),
@@ -781,7 +786,40 @@ router.post(
 
     ForumReply.create(replyFields)
       .then(() => {
-        res.json(true);
+        Forum.findByPk(replyFields.ForumId, {
+          attributes: ["UserId"],
+          include: [{ model: User, attributes: ["email", "username"] }],
+        })
+          .then((forum) => {
+            let email = forum.User.email,
+              username = forum.User.username,
+              ticketid;
+            if (replyFields.ForumId.toString().length < 5) {
+              ticketid = replyFields.ForumId.toString().padStart(5, "0");
+            } else {
+              ticketid = replyFields.ForumId.toString();
+            }
+            const content = getMessage({
+              sender: "forumreply",
+              details: {
+                username: username,
+                forumid: replyFields.ForumId,
+              },
+            });
+            client
+              .sendEmail({
+                From: "info@micearnbusiness.org",
+                To: email,
+                Cc: "support@micearnbusiness.org",
+                Subject: `New  Update to your Ticket, [Ticket ID: ${ticketid}]`,
+                HtmlBody: content,
+                MessageStream: "outbound",
+              })
+              .then(() => {
+                return res.json(true);
+              });
+          })
+          .catch((err) => res.status(404).json(err));
       })
       .catch((err) => res.status(404).json(err));
   }

@@ -55,7 +55,7 @@ class Register extends Component {
   checkHandler = (input, target) => {
     let req = {},
       response;
-    if (target.length > 5) {
+    if (target.length > 4) {
       clearTimeout(typingTimer);
       if (input === "email") {
         req = { email: target };
@@ -164,10 +164,10 @@ class Register extends Component {
           username: "Username Field can't be Empty",
         },
       });
-    } else if (username.length < 5) {
+    } else if (username.length < 4) {
       this.setState({
         error: {
-          username: "Username should be at least 5 characters",
+          username: "Username should be at least 4 characters",
         },
       });
     } else if (username.length > 30) {

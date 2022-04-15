@@ -190,7 +190,7 @@
     min-height: 500px;
     .service-image {
       min-height: 400px;
-      width: 80%;
+      width: 100%;
     }
 
     .scaled {
@@ -200,10 +200,16 @@
 
     @keyframes increase-size {
       from {
-        width: 80%;
+        -webkit-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -o-transform: scale(0.9);
+        transform: scale(0.9);
       }
       to {
-        width: 100%;
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        -o-transform: scale(1.1);
+        transform: scale(1.1);
       }
     }
 
