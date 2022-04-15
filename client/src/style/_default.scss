@@ -181,6 +181,10 @@ input {
   }
 }
 
+.react-tel-input .form-control {
+  font-size: inherit !important;
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;

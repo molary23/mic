@@ -150,3 +150,10 @@
     overflow-x: hidden;
   }
 }
+
+@media only screen and (min-width: 1024px) {
+  .sidebar {
+    //  overflow-y: auto;
+    //  padding-bottom: 50px;
+  }
+}

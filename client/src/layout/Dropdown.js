@@ -51,6 +51,7 @@ function Dropdown(props) {
             alt={`${username} avatar`}
             style={{ width: "30px" }}
             className="rounded-pill"
+            crossOrigin="anonymous"
           />
         </div>
       </a>

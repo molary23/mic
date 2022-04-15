@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import TawkTo from "tawkto-react";
+//import TawkTo from "tawkto-react";
+import tawkTo from "../../util/TawkTo";
 
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -18,9 +19,20 @@ function Dashboard() {
     location = useLocation(),
     dispatch = useDispatch(),
     auth = useSelector((state) => state.auth),
-    level = auth.user.level;
+    level = auth.user.level,
+    username = auth.user.username;
 
+  const tawkToPropertyId = process.env.REACT_APP_TAWK_PROPERTY_ID;
   useEffect(() => {
+    if (username) {
+      tawkTo(tawkToPropertyId, username);
+    }
+    return () => {
+      window.Tawk_API.hideWidget();
+    };
+  }, [username]);
+
+  /*  useEffect(() => {
     var tawk = new TawkTo("62543df4b0d10b6f3e6cecce", "1g0ch41u0");
     tawk.showWidget();
     tawk.onStatusChange((status) => {
@@ -29,7 +41,7 @@ function Dashboard() {
     return () => {
       tawk.hideWidget();
     };
-  }, []);
+  }, []);*/
 
   if (level !== 1) {
     dispatch(logoutUser());

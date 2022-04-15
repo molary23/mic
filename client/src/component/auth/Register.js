@@ -323,12 +323,16 @@ class Register extends Component {
                 error={error.email}
                 onKeyUp={this.keyHandler}
               />
+              <span className="text-muted gravatar-notice">
+                We use <a href="//gravatar.com">Gravatar</a> Image linked with
+                your email as Profile Picture.
+              </span>
 
               <PhoneInput
                 country={"ng"}
                 value={phone}
                 onChange={(phone) => this.setState({ phone })}
-                className="phone-with-input"
+                className="phone-with-input mt-3"
                 placeholder="Phone Number"
               />
               {error.phone && (

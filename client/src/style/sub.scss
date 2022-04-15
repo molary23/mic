@@ -135,6 +135,8 @@ span.nav-sub-icon {
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
   box-shadow: 1px 2px 1px $shadow;
+  padding-bottom: 100px;
+  overflow-y: auto;
 
   /* The sidebar links */
   a {
@@ -1275,6 +1277,10 @@ ul {
       text-transform: uppercase;
     }
   }
+}
+
+.gravatar-notice {
+  font-size: 13px;
 }
 
 @import "responsive.scss";

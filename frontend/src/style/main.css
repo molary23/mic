@@ -376,7 +376,7 @@ nav.top-nav.show-bg {
 
 .main-home-service .service-text-image-box .service-image {
   min-height: 400px;
-  width: 80%;
+  width: 100%;
 }
 
 .main-home-service .service-text-image-box .scaled {
@@ -387,19 +387,23 @@ nav.top-nav.show-bg {
 
 @-webkit-keyframes increase-size {
   from {
-    width: 80%;
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
   }
   to {
-    width: 100%;
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
   }
 }
 
 @keyframes increase-size {
   from {
-    width: 80%;
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
   }
   to {
-    width: 100%;
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
   }
 }
 

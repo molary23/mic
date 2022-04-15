@@ -191,6 +191,10 @@ input:focus {
   border: 1px solid #ced4da !important;
 }
 
+.react-tel-input .form-control {
+  font-size: inherit !important;
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
@@ -468,6 +472,8 @@ span.nav-sub-icon svg {
   /* 0.5 second transition effect to slide in the sidebar */
   -webkit-box-shadow: 1px 2px 1px #cecece;
           box-shadow: 1px 2px 1px #cecece;
+  padding-bottom: 100px;
+  overflow-y: auto;
   /* The sidebar links */
 }
 
@@ -828,7 +834,7 @@ span.nav-sub-icon svg {
   display: -ms-grid;
   display: grid;
   grid-row-gap: 1%;
-  min-height: 400px;
+  min-height: 500px;
   margin-bottom: 20px;
   border-radius: 5px;
   color: rgba(31, 30, 30, 0.8);
@@ -1679,6 +1685,10 @@ ul {
 .payment-info .card-line-details .card-value {
   font-weight: 600;
   text-transform: uppercase;
+}
+
+.gravatar-notice {
+  font-size: 13px;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 959px) {
