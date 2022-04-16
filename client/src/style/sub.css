@@ -195,6 +195,10 @@ input:focus {
   font-size: inherit !important;
 }
 
+#registerEmailBox .mb-3 {
+  margin-bottom: 1.5px !important;
+}
+
 .form-floating-group input {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;

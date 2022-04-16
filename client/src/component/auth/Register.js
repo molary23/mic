@@ -304,25 +304,26 @@ class Register extends Component {
                 error={error.referral}
                 onKeyUp={this.keyHandler}
               />
-
-              <TextPasswordField
-                id="register-form-email"
-                placeholder="Email Address"
-                label="Email Address"
-                icon={
-                  loader.email ? (
-                    <span className="spinner-border spinner-border-sm"></span>
-                  ) : (
-                    ""
-                  )
-                }
-                type="email"
-                name="email"
-                value={email}
-                onChange={this.changeHandler}
-                error={error.email}
-                onKeyUp={this.keyHandler}
-              />
+              <div id="registerEmailBox">
+                <TextPasswordField
+                  id="register-form-email"
+                  placeholder="Email Address"
+                  label="Email Address"
+                  icon={
+                    loader.email ? (
+                      <span className="spinner-border spinner-border-sm"></span>
+                    ) : (
+                      ""
+                    )
+                  }
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={this.changeHandler}
+                  error={error.email}
+                  onKeyUp={this.keyHandler}
+                />
+              </div>
               <span className="text-muted gravatar-notice">
                 We use <a href="//gravatar.com">Gravatar</a> Image linked with
                 your email as Profile Picture.
