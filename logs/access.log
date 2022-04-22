@@ -1,1 +1,0 @@
-::1 - - [15/Apr/2022:23:06:13 +0000] "POST /api/view/email/ HTTP/1.1" 200 38 "http://localhost:3000/register" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36"

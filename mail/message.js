@@ -1126,7 +1126,7 @@ module.exports = function getMessage({ sender, details }) {
                                                                               didn't
                                                                               make this request, please 
                                                                               <a
-                                                                                href="/dashboard.micearnbusiness.org/confirm?auth=no&refer=${details.urldata}"
+                                                                                href="//dashboard.micearnbusiness.org/confirm?auth=no&refer=${details.urldata}"
                                                                                 style="
                                                                                   text-decoration: none;
                                                                                 "

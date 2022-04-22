@@ -34,16 +34,7 @@ function SubFooter() {
             <div className="footer-address">
               <h2>Contact</h2>
               <address>
-                25, Dummy street, Victoria Island, Lagos state, Nigeria
-              </address>
-              <address>
-                <a href="tel:+2348011111">+234809846724</a>
-              </address>
-              <address>
-                <a href="tel:+2348011111">+234809846724</a>
-              </address>
-              <address>
-                <a href="mainto:info@micearnbusiness.org">
+                <a href="mailto:info@micearnbusiness.org">
                   info@micearnbusiness.org
                 </a>
               </address>
