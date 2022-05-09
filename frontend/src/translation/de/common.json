@@ -1,0 +1,11 @@
+{
+  "head": {
+    "home": "HomeGER",
+    "contact": "ContactGER",
+    "about": "AboutGER",
+    "service": "ServiceGER",
+    "login": "LoginGER",
+    "register": "RegisterGER",
+    "faq": "FAQGER"
+  }
+}

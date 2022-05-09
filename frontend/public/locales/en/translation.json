@@ -1,0 +1,11 @@
+{
+  "head": {
+    "home": "Home",
+    "contact": "Contact",
+    "about": "About",
+    "service": "Service",
+    "login": "Login",
+    "register": "Register",
+    "faq": "FAQ"
+  }
+}

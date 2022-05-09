@@ -332,4 +332,29 @@ a.btn.nav-link.btn {
   }
 }
 
+/* Loader */
+
+.progress {
+  height: 2.5px;
+  inset: 0;
+  z-index: 9999;
+  background: transparent;
+}
+
+.progress-bar {
+  position: relative;
+  animation: progress-indeterminate 3s linear infinite;
+}
+
+@keyframes progress-indeterminate {
+  from {
+    left: -20%;
+    width: 20%;
+  }
+  to {
+    left: 100%;
+    width: 20%;
+  }
+}
+
 @import "responsive.scss";

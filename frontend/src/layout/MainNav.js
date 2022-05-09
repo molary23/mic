@@ -1,8 +1,11 @@
 import React, { useState, useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../asset/images/logo.png";
+import { useTranslation } from "react-i18next";
 
+import Dropdown from "./Dropdown";
 function MainNav(props) {
+  const { t } = useTranslation();
   const {
       homeRef,
       aboutRef,
@@ -233,7 +236,7 @@ function MainNav(props) {
                 onClick={(e) => clickMover(e)}
                 id="homelink"
               >
-                Home
+                {t("head.home")}
               </span>
             </li>
             <li className="nav-item">
@@ -300,6 +303,10 @@ function MainNav(props) {
               >
                 Register
               </a>
+            </li>
+
+            <li className="nav-item dropdown">
+              <Dropdown onClick={() => this.closeMobile()} />
             </li>
           </ul>
         </div>

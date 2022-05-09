@@ -1,15 +1,16 @@
 import React from "react";
-
+import { useTranslation } from "react-i18next";
 import Accordion from "../layout/Accordion";
 
 function Faq(props) {
+  const { t } = useTranslation();
   return (
     <div id="faq" ref={props.faqRef}>
       <div className="main-home-faq"></div>
       <div className="main-home-faq-box">
         <div className="container">
           <div className="page-title mb-3">
-            <h1 className="mb-4">FAQ</h1>
+            <h1 className="mb-4">{t("head.faq")}</h1>
             <h4 className="mb-5">Frequently Asked Questions</h4>
           </div>
           <div className="faq-box">

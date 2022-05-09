@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 import Home from "../component/Home";
 import About from "../component/About";
@@ -23,6 +23,26 @@ function Main() {
     supportRef = useRef(),
     workRef = useRef();
 
+  const googleTranslateElementInit = () => {
+    new window.google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        layout: window.google.translate.TranslateElement.FloatPosition.TOP_LEFT,
+      },
+      "google_translate_element"
+    );
+  };
+
+  useEffect(() => {
+    var addScript = document.createElement("script");
+    addScript.setAttribute(
+      "src",
+      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    );
+    document.body.appendChild(addScript);
+    window.googleTranslateElementInit = googleTranslateElementInit;
+  }, []);
+
   return (
     <div>
       <MainNav
@@ -40,6 +60,7 @@ function Main() {
           workRef,
         }}
       />
+
       <Home homeRef={homeRef} />
       <About aboutRef={aboutRef} />
       <Service
