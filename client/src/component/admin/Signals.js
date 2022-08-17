@@ -285,7 +285,7 @@ class Signals extends Component {
                 "status",
                 "take profit",
                 "stop loss",
-                "range",
+                "entry",
                 "pip",
                 "created at",
                 "updated at",

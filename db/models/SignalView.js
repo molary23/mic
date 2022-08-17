@@ -54,6 +54,12 @@ SignalView.init(
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
+    entry: {
+      type: DataTypes.DOUBLE,
+    },
+    comment: {
+      type: DataTypes.STRING,
+    },
   },
   {
     sequelize,

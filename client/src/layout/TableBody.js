@@ -973,9 +973,7 @@ function TableBody(props) {
               return loss;
             })}
           </td>
-          <td>
-            {item.startrange} - {item.endrange}
-          </td>
+          <td>{item.entry}</td>
           <td>{item.pip}</td>
           <td>
             <DateFormat date={item.createdAt} />

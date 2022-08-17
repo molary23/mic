@@ -64,9 +64,10 @@ router.get(
           ),
           "status",
         ],
-        [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
+        "entry",
         "createdAt",
         "updatedAt",
+        "comment",
       ],
       where,
       raw: true,
@@ -83,9 +84,10 @@ router.get(
           "Pip",
           "Signaloption",
           "Status",
-          "Range",
+          "Entry",
           "CreatedAt",
           "UpdatedAt",
+          "Comment",
         ];
         const tabledata = JSON.parse(JSON.stringify(entries));
 
@@ -484,9 +486,10 @@ router.get(
           ),
           "status",
         ],
-        [Sequelize.literal(`CONCAT(startrange, ' - ', endrange)`), "range"],
+        "Entry",
         "createdAt",
         "updatedAt",
+        "Comment",
       ];
       order = [["signalid", "desc"]];
       csvFields = [
@@ -498,9 +501,10 @@ router.get(
         "Provider",
         "Signaloption",
         "Status",
-        "Range",
+        "Entry",
         "CreatedAt",
         "UpdatedAt",
+        "Comment",
       ];
     } else if (table === "currencies") {
       view = Currency;

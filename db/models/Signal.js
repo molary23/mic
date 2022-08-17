@@ -34,6 +34,12 @@ Signal.init(
     status: {
       type: DataTypes.ENUM("f", "c", "s"), //failed, cancelled, success
     },
+    entry: {
+      type: DataTypes.DOUBLE,
+    },
+    comment: {
+      type: DataTypes.STRING(150),
+    },
   },
   {
     // don't forget to enable timestamps!

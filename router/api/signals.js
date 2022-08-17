@@ -49,10 +49,8 @@ router.post(
       signalFields.takeprofit = JSON.stringify(req.body.takeprofit);
     if (req.body.stoploss)
       signalFields.stoploss = JSON.stringify(req.body.stoploss);
-    if (req.body.startrange)
-      signalFields.startrange = parseFloat(req.body.startrange);
-    if (req.body.endrange)
-      signalFields.endrange = parseFloat(req.body.endrange);
+    if (req.body.entry) signalFields.entry = parseFloat(req.body.entry);
+    if (req.body.comment) signalFields.comment = parseFloat(req.body.comment);
     if (req.body.pip) signalFields.pip = parseFloat(req.body.pip);
 
     Signal.findOne({
@@ -142,8 +140,8 @@ router.post(
                           "signalid",
                           "takeprofit",
                           "stoploss",
-                          "startrange",
-                          "endrange",
+                          "entry",
+                          "comment",
                           "pip",
                           "firstcurrency",
                           "secondcurrency",
@@ -462,8 +460,8 @@ router.post(
         "signaloption",
         "status",
         "CurrencyId",
-        "startrange",
-        "endrange",
+        "entry",
+        "comment",
       ],
       where,
       raw: true,
