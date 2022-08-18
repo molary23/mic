@@ -854,8 +854,7 @@ span.nav-sub-icon svg {
 }
 
 .signal-detail .signal-about,
-.signal-detail .signal-from,
-.signal-detail .signal-to,
+.signal-detail .signal-entry,
 .signal-detail .signal-sold-at,
 .signal-detail .signal-bought-at,
 .signal-detail .signal-pip,
@@ -869,6 +868,19 @@ span.nav-sub-icon svg {
   -webkit-box-align: end;
       -ms-flex-align: end;
           align-items: end;
+}
+
+.signal-detail .signal-comment {
+  margin: 0px 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.signal-detail .signal-comment .signal-comment-value {
+  text-align: justify;
+  text-justify: inter-character;
 }
 
 .signal-detail .signal-pip {

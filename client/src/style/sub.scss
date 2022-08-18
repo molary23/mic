@@ -521,8 +521,7 @@ span.nav-sub-icon {
     justify-content: space-around;
   }
   .signal-about,
-  .signal-from,
-  .signal-to,
+  .signal-entry,
   .signal-sold-at,
   .signal-bought-at,
   .signal-pip,
@@ -532,6 +531,17 @@ span.nav-sub-icon {
     border-bottom: 1px dashed rgb(114, 114, 114);
     margin: 0px 10px;
     align-items: end;
+  }
+
+  .signal-comment {
+    margin: 0px 10px;
+    display: flex;
+    gap: 1.5rem;
+
+    .signal-comment-value {
+      text-align: justify;
+      text-justify: inter-character;
+    }
   }
 
   .signal-pip {

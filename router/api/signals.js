@@ -50,7 +50,7 @@ router.post(
     if (req.body.stoploss)
       signalFields.stoploss = JSON.stringify(req.body.stoploss);
     if (req.body.entry) signalFields.entry = parseFloat(req.body.entry);
-    if (req.body.comment) signalFields.comment = parseFloat(req.body.comment);
+    if (req.body.comment) signalFields.comment = req.body.comment;
     if (req.body.pip) signalFields.pip = parseFloat(req.body.pip);
 
     Signal.findOne({
@@ -149,7 +149,8 @@ router.post(
                         ],
                       })
                         .then((signal) => {
-                          const content = getMessage({
+                          return res.json(true);
+                          /*    const content = getMessage({
                             sender: "addsignal",
                             details: signal,
                           });
@@ -165,7 +166,7 @@ router.post(
                             })
                             .then(() => {
                               return res.json(true);
-                            });
+                            });*/
                         })
                         .catch((err) => res.status(404).json(`E ${err}`));
                     })

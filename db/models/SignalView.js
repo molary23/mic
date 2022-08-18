@@ -20,12 +20,6 @@ SignalView.init(
     stoploss: {
       type: DataTypes.TEXT,
     },
-    startrange: {
-      type: DataTypes.DOUBLE,
-    },
-    endrange: {
-      type: DataTypes.DOUBLE,
-    },
     pip: {
       type: DataTypes.DOUBLE,
     },

@@ -83,10 +83,10 @@ function Signal(props) {
               : signal.signalid.toString()}
           </div>
         </div>
-        <div className="signal-from">
-          <div className="signal-from-title signal-title">Entry Point</div>
-          <div className="signal-from-value signal-align-right">
-            <span className="signal-timezone">{signal.entry}</span>
+        <div className="signal-entry">
+          <div className="signal-entry-title signal-title">Entry Point</div>
+          <div className="signal-entry-value signal-align-right">
+            <span>{signal.entry}</span>
           </div>
         </div>
         <div className="signal-take-profit">
@@ -151,12 +151,14 @@ function Signal(props) {
             </div>
           </div>
         )}
-        <div className="signal-comment">
-          <div className="signal-comment-title signal-title">Comment</div>
-          <div className="signal-comment-value signal-align-right">
-            <span className="signal-timezone">{signal.comment}</span>
+        {signal.comment && (
+          <div className="signal-comment">
+            <div className="signal-comment-title signal-title">Comment</div>
+            <div className="signal-comment-value signal-align-right">
+              <span className="signal-comment-value">{signal.comment}</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

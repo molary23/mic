@@ -46,6 +46,8 @@ app.use(bodyParser.json());
 // Bring Logger
 const logger = require("./util/logger");
 
+const log = require("./logger");
+
 //Sync Sequelize
 require("./util/Relationship");
 
@@ -114,6 +116,8 @@ app.use((err, req, res, next) => {
     } - ${req.method} - ${req.ip}`
   );
 });
+
+log.warn("Hello, world!");
 
 const port = process.env.PORT || 5001;
 

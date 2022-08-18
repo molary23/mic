@@ -170,16 +170,16 @@ class Payment extends Component {
             <div className="card-value">{"JHfdtyfujayhsvhj"}</div>
           </div>
 
-          <div class="form-check mb-4">
+          <div className="form-check mb-4">
             <input
-              class="form-check-input"
+              className="form-check-input"
               type="checkbox"
               id="check-agree"
               name="check"
               value={check}
               onChange={this.changeHandler}
             />
-            <label class="form-check-label">
+            <label className="form-check-label">
               I agree to <a href="/">terms and conditions</a>
             </label>
           </div>

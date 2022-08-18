@@ -157,18 +157,11 @@ function AddModal(props) {
             addstoploss: "Stop Loss Field can't be empty",
           });
         } else if (
-          !Object.keys(inputs).includes("addstartrange") ||
-          isEmpty(inputs.addstartrange)
+          !Object.keys(inputs).includes("addentry") ||
+          isEmpty(inputs.addentry)
         ) {
           setErrors({
-            addstartrange: "Start Range Field can't be empty",
-          });
-        } else if (
-          !Object.keys(inputs).includes("addendrange") ||
-          isEmpty(inputs.addendrange)
-        ) {
-          setErrors({
-            addendrange: "End Range Field can't be empty",
+            addentry: "Entry Field can't be empty",
           });
         } else if (
           !Object.keys(inputs).includes("addpip") ||
@@ -176,6 +169,13 @@ function AddModal(props) {
         ) {
           setErrors({
             addpip: "Pip Field can't be empty",
+          });
+        } else if (
+          !Object.keys(inputs).includes("addcomment") ||
+          isEmpty(inputs.addcomment)
+        ) {
+          setErrors({
+            addcomment: "Comment Field can't be empty",
           });
         } else {
           setLoading(true);
@@ -187,8 +187,8 @@ function AddModal(props) {
             signaloption: inputs.addsignaloption,
             takeprofit: takeprofit,
             stoploss: stoploss,
-            startrange: inputs.addstartrange,
-            endrange: inputs.addendrange,
+            entry: inputs.addentry,
+            comment: inputs.addcomment,
             pip: inputs.addpip,
           };
 
@@ -225,7 +225,7 @@ function AddModal(props) {
               error={errors.addtakeprofit}
             />
             <TextInputField
-              id="add-new-takeprofit"
+              id="add-new-stoploss"
               placeholder="Stop Loss *Separate multiple Stop Loss with Comma (,)*"
               type="text"
               name="addstoploss"
@@ -234,27 +234,18 @@ function AddModal(props) {
               error={errors.addstoploss}
             />
             <TextInputField
-              id="add-new-takeprofit"
-              placeholder="Start Range"
-              label="Start Range"
+              id="add-new-entry"
+              placeholder="Entry Point"
+              label="Entry Point"
               type="text"
-              name="addstartrange"
-              value={inputs.addstartrange || ""}
+              name="addentry"
+              value={inputs.addentry || ""}
               onChange={changeHandler}
-              error={errors.addstartrange}
+              error={errors.addentry}
             />
+
             <TextInputField
-              id="add-new-takeprofit"
-              placeholder="End Range"
-              label="End Range"
-              type="text"
-              name="addendrange"
-              value={inputs.addendrange || ""}
-              onChange={changeHandler}
-              error={errors.addendrange}
-            />
-            <TextInputField
-              id="add-new-takeprofit"
+              id="add-new-pip"
               placeholder="Profit/Loss, Pip"
               label="Profit/Loss, Pip"
               type="text"
@@ -263,6 +254,17 @@ function AddModal(props) {
               onChange={changeHandler}
               error={errors.addpip}
             />
+
+            <TextAreaField
+              id="add-new-ann-comment"
+              placeholder="Comment"
+              type="text"
+              name="addcomment"
+              value={inputs.addcomment || ""}
+              onChange={changeHandler}
+              error={errors.addcomment}
+            />
+
             <div className="d-grid">
               {error.add && <small className="text-muted">{error.add}</small>}
               <button
