@@ -260,7 +260,7 @@ function AddModal(props) {
             />
 
             <TextAreaField
-              id="add-new-ann-comment"
+              id="add-new-signal-comment"
               placeholder="Comment"
               type="text"
               name="addcomment"
@@ -1034,7 +1034,7 @@ function AddModal(props) {
     text = (
       <form className="account-form" onSubmit={submitWalletHandler}>
         <TextInputField
-          id="account-form-account-number"
+          id="wallet-form-name"
           placeholder="Wallet Name"
           type="text"
           name="walletname"

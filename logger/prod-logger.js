@@ -11,8 +11,11 @@ const productionLogger = () => {
     level: "info",
     format: combine(format.colorize(), timestamp(), myFormat),
     transports: [
-      new transports.Console(),
-      new transports.File({ filename: "logs/production.log" }),
+      new transports.DailyRotateFile({
+        filename: "logs/development.log",
+        datePattern: "DD-MMM-YYYY",
+        format: format.combine(format.uncolorize()),
+      }),
     ],
   });
 };
