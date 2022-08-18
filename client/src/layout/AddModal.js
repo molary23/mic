@@ -69,8 +69,12 @@ function AddModal(props) {
 
   const signalOpt = [
     { value: "", option: "Select Signal Option" },
-    { value: "b", option: "Buy" },
-    { value: "s", option: "Sell" },
+    { value: "b", option: "Buy (Instant Execution)" },
+    { value: "c", option: "Buy Stop" },
+    { value: "d", option: "Buy Limit" },
+    { value: "s", option: "Sell (Instant Execution)" },
+    { value: "t", option: "Sell Stop" },
+    { value: "u", option: "Sell Limit" },
   ];
 
   const closeModal = () => {

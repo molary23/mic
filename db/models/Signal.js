@@ -13,7 +13,7 @@ Signal.init(
       primaryKey: true,
     },
     signaloption: {
-      type: DataTypes.ENUM("b", "s"),
+      type: DataTypes.ENUM("b", "c", "d", "s", "t", "u"), // sell stop = t, buy stop = c, sell limit = u, buy limit = d, sell instant = s, buy instant = b
       allowNull: false,
     },
     takeprofit: {

@@ -72,7 +72,12 @@ function Signal(props) {
         <div className="signal-about">
           <div className="signal-type signal-title">Signal Option</div>
           <div className="signal-opt signal-align-right">
-            {signal.signaloption === "s" ? "sell" : "buy"}
+            {signal.signaloption === "s" && "sell (instant execution)"}
+            {signal.signaloption === "t" && "sell stop"}
+            {signal.signaloption === "u" && "sell limit"}
+            {signal.signaloption === "b" && "buy (instant execution)"}
+            {signal.signaloption === "c" && "buy stop"}
+            {signal.signaloption === "d" && "buy limit"}
           </div>
         </div>
         <div className="signal-about">

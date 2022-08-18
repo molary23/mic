@@ -6,6 +6,8 @@ import { Navigate } from "react-router-dom";
 import Toast from "../../layout/Toast";
 import ProgressBar from "../../layout/ProgressBar";
 
+import Pagination from "../../util/Pagination";
+
 import { makePayment, clearActions } from "../../action/userAction";
 
 class Payment extends Component {
@@ -16,6 +18,8 @@ class Payment extends Component {
     toast: false,
     toasttext: null,
     isLoading: false,
+    check: false,
+    timer: Pagination.timer,
   };
 
   componentDidMount() {
@@ -79,16 +83,15 @@ class Payment extends Component {
       modal: false,
       toast: true,
       toasttext: `Payment successfully`,
-      agree: false,
       check: false,
     });
-    this.props.clearActions("make-payment");
 
     setTimeout(() => {
       this.setState({
         toast: false,
         newsignal: {},
       });
+      this.props.clearActions("make-payment");
     }, timer);
   };
 
@@ -130,23 +133,15 @@ class Payment extends Component {
   };
 
   changeHandler = (e) => {
-    const { agree } = this.state;
+    const { check } = this.state;
     this.setState({
-      agree: !agree,
+      check: !check,
     });
   };
 
   render() {
-    const {
-      navigate,
-      to,
-      payOption,
-      toast,
-      toasttext,
-      isLoading,
-      agree,
-      check,
-    } = this.state;
+    const { navigate, to, payOption, toast, toasttext, isLoading, check } =
+      this.state;
     let amount, gateway;
     if (payOption !== null) {
       amount = payOption.amount;
@@ -186,7 +181,7 @@ class Payment extends Component {
           <button
             className="btn add-btn pay"
             onClick={this.clickHandler}
-            disabled={agree ? false : true}
+            disabled={check ? false : true}
           >
             Proceed
           </button>
