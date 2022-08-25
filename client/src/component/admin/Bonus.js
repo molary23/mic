@@ -37,7 +37,7 @@ class Bonus extends Component {
     toastcategory: null,
   };
   componentDidMount() {
-    setDocumentTitle("admin", "view user earning");
+    setDocumentTitle("admin view user earning");
     const { url } = this.state;
     let params = url.pathname.split("bonus")[1],
       id = params.split(":")[1];

@@ -66,7 +66,7 @@ export class Payments extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view users' payments");
+    setDocumentTitle("admin view users' payments");
     const { limit, offset, paymentcount, content } = this.state;
 
     let searchParams = window.location.search;

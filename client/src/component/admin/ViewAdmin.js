@@ -41,7 +41,7 @@ class ViewAdmin extends Component {
     checktitle: null,
   };
   componentDidMount() {
-    setDocumentTitle("admin", "view admin");
+    setDocumentTitle("admin view admin");
     const { url } = this.state;
     let id = url.pathname.split("/:")[1];
     this.setState({

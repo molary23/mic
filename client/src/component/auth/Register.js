@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import isEmpty from "../../validation/emptyChecker";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 
 import PhoneInput from "react-phone-input-2";
@@ -39,6 +41,7 @@ class Register extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("new user registration");
     if (this.props.referred) {
       this.setState({
         referral: this.props.referral,

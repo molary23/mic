@@ -4,6 +4,8 @@ import axios from "axios";
 import isEmail from "validator/lib/isEmail";
 import isEmpty from "../../validation/emptyChecker";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import TextInputField from "../../layout/TextInputField";
 import Modal from "../../layout/Modal";
 import Box from "../../layout/Box";
@@ -15,6 +17,11 @@ export class Forgot extends Component {
     loading: false,
     error: {},
   };
+
+  componentDidMount() {
+    setDocumentTitle("forgot password");
+    
+  }
 
   changeHandler = (e) => {
     this.setState({

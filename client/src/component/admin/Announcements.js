@@ -62,7 +62,7 @@ class Announcements extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view announcements");
+    setDocumentTitle("admin view announcements");
     const { limit, offset, announcementcount, content } = this.state;
     let searchParams = window.location.search;
     if (searchParams !== "") {

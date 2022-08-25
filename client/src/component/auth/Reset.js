@@ -5,6 +5,8 @@ import { Navigate, Link } from "react-router-dom";
 
 import { resetPass } from "../../action/confirmAction";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import isEmpty from "../../validation/emptyChecker";
 import TextPasswordField from "../../layout/TextPasswordField";
 import Box from "../../layout/Box";
@@ -26,6 +28,7 @@ export class Reset extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("reset password");
     if (!this.props.confirm.isConfirmed) {
       this.setState({
         navigate: true,

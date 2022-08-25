@@ -68,7 +68,7 @@ class Currency extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view currencies");
+    setDocumentTitle("admin view currencies");
     const { limit, offset, currencycount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });

@@ -14,6 +14,8 @@ import decrypt from "../../util/decrypt";
 import isEmail from "validator/lib/isEmail";
 import isAlphanumeric from "validator/lib/isAlphanumeric";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 export class Confirm extends Component {
   state = {
     username: "",
@@ -26,6 +28,7 @@ export class Confirm extends Component {
     servererror: {},
   };
   componentDidMount() {
+    setDocumentTitle("confirm code");
     this.props.clearErrors();
 
     let search = window.location.search;

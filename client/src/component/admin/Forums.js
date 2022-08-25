@@ -67,7 +67,7 @@ class Forums extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view users' forums");
+    setDocumentTitle("admin view users' forums");
     const { limit, offset, forumcount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });

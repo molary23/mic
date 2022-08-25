@@ -44,7 +44,7 @@ class Forum extends Component {
     checktitle: null,
   };
   componentDidMount() {
-    setDocumentTitle("admin", "view forum");
+    setDocumentTitle("admin view forum");
     const { url } = this.state;
     let params = url.pathname.split("forum")[1],
       id = parseInt(params.split(":")[1]);

@@ -75,7 +75,7 @@ export class Wallets extends Component {
   }
 
   componentDidMount() {
-    setDocumentTitle("admin", "view wallets");
+    setDocumentTitle("admin view wallets");
     const { limit, offset, walletcount, content } = this.state;
     let searchParams = window.location.search;
 

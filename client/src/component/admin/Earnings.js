@@ -69,7 +69,7 @@ export class Earnings extends Component {
   }
 
   componentDidMount() {
-    setDocumentTitle("admin", "view users' earnings");
+    setDocumentTitle("admin view users' earnings");
     const { limit, offset, bonuscount, content } = this.state;
     let searchParams = window.location.search;
 

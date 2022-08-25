@@ -30,7 +30,7 @@ export class Index extends Component {
       this.props.auth.user,
   };
   componentDidMount() {
-    setDocumentTitle("admin", "dashboard");
+    setDocumentTitle("admin dashboard");
     this.props.getAnalytics();
   }
   componentWillUnmount() {

@@ -381,8 +381,6 @@ export const downloadFile = ({ sender, self }) => {
     });
 };
 
-export const setDocumentTitle = (level, pageName) => {
-  document.title = `${capitalizeAll(level)}  ${capitalizeAll(
-    pageName
-  )} | MicEarnBusiness`;
+export const setDocumentTitle = (pageName) => {
+  document.title = ` ${capitalizeAll(pageName)} | MicEarnBusiness`;
 };

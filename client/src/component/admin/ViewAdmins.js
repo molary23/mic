@@ -70,7 +70,7 @@ class ViewAdmins extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view admins");
+    setDocumentTitle("admin view admins");
     const { limit, offset, admincount, content } = this.state;
 
     let searchParams = window.location.search;

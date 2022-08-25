@@ -44,7 +44,7 @@ export class Referrals extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view referrals");
+    setDocumentTitle("admin view referrals");
     const { limit, offset, refcount, content } = this.state;
     let searchParams = window.location.search;
 

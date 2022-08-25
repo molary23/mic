@@ -55,7 +55,7 @@ class User extends Component {
     modal: false,
   };
   componentDidMount() {
-    setDocumentTitle("admin", "view user");
+    setDocumentTitle("admin view user");
     const { url } = this.state;
     let id = url.pathname.split("/:")[1];
     this.setState({

@@ -43,7 +43,7 @@ class Accounts extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view accounts");
+    setDocumentTitle("admin view accounts");
     const { limit, offset, accountcount, content } = this.state;
 
     let searchParams = window.location.search;

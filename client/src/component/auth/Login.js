@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { loginuser, clearErrors } from "../../action/authAction";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import TextInputField from "../../layout/TextInputField";
 import TextPasswordField from "../../layout/TextPasswordField";
 import ProgressBar from "../../layout/ProgressBar";
@@ -33,6 +35,7 @@ class Login extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("login page");
     this.props.clearErrors();
   }
 

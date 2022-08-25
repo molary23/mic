@@ -56,7 +56,7 @@ class Users extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view users");
+    setDocumentTitle("admin view users");
     const { limit, offset, usercount, content } = this.state;
     let searchParams = window.location.search;
 

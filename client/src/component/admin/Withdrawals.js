@@ -59,7 +59,7 @@ export class Withdrawals extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "view users' withdrawals");
+    setDocumentTitle("admin view users' withdrawals");
     const { limit, offset, withcount, content } = this.state;
 
     let searchParams = window.location.search;

@@ -6,6 +6,8 @@ import decrypt from "../../util/decrypt";
 
 import isEmpty from "../../validation/emptyChecker";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import TextInputField from "../../layout/TextInputField";
 import Modal from "../../layout/Modal";
 import Box from "../../layout/Box";
@@ -22,6 +24,7 @@ export class VerifyEmail extends Component {
     servererror: null,
   };
   componentDidMount() {
+    setDocumentTitle("verify email");
     let search = window.location.search;
 
     if (search !== "") {

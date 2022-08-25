@@ -34,7 +34,7 @@ class Settings extends Component {
   };
 
   componentDidMount() {
-    setDocumentTitle("admin", "settings");
+    setDocumentTitle("admin settings");
     this.props.getAdminSettings();
   }
   componentWillUnmount() {
