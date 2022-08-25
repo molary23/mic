@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import { RiLockPasswordLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 
@@ -32,6 +34,7 @@ class Settings extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("signal provider settings");
     this.props.getProviderSettings();
   }
   componentWillUnmount() {

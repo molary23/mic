@@ -23,6 +23,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -67,6 +68,7 @@ export class Subscriptions extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("my subscriptions");
     const { limit, offset, subcount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });

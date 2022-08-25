@@ -24,6 +24,7 @@ import {
   renderArrange,
   landingLoad,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -66,6 +67,7 @@ export class Payments extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("my payments");
     const { limit, offset, paycount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });

@@ -31,6 +31,7 @@ import {
   landingLoad,
   downloadFile,
   roundUp,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -66,6 +67,7 @@ export class Withdrawals extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("my withdrawals");
     const { limit, offset, withcount, content } = this.state;
     this.props.getBalance();
     this.props.getAccount();

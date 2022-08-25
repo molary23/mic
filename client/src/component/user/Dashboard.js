@@ -29,7 +29,7 @@ function Dashboard() {
     return () => {
       window.Tawk_API.hideWidget();
     };
-  }, [username]);
+  }, [username, tawkToPropertyId]);
 
   if (level !== 1) {
     dispatch(logoutUser());

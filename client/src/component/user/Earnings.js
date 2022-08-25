@@ -22,6 +22,7 @@ import {
   renderArrange,
   landingLoad,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -56,6 +57,7 @@ export class Earnings extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("my earnings");
     const { limit, offset, bonuscount, content } = this.state;
 
     let searchParams = window.location.search;

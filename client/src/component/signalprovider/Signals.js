@@ -23,6 +23,7 @@ import {
   renderArrange,
   landingLoad,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -81,6 +82,7 @@ class Signals extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("signal provider view signals");
     const { limit, offset, signalcount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });

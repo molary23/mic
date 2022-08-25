@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import { FcIdea } from "react-icons/fc";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { RiMapPinUserLine } from "react-icons/ri";
@@ -43,6 +45,7 @@ class Forum extends Component {
     isLoading: false,
   };
   componentDidMount() {
+    setDocumentTitle("my forum");
     const { url } = this.state;
     let params = url.pathname.split("forum")[1],
       id = params.split(":")[1];

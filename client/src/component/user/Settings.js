@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import {
   RiLockPasswordLine,
   RiCurrencyLine,
@@ -48,6 +50,7 @@ class Settings extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("my settings");
     this.props.getUserSettings();
     this.props.getList("currency");
     this.props.getList("provider");

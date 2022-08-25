@@ -14,6 +14,7 @@ import {
   renderArrange,
   landingLoad,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -58,6 +59,7 @@ export class Referrals extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("my referrals");
     const { limit, offset, refcount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });

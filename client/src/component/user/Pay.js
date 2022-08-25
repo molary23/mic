@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Navigate } from "react-router-dom";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import { FaStripe, FaBitcoin } from "react-icons/fa";
 import { GiWallet } from "react-icons/gi";
 
@@ -24,6 +26,7 @@ class Pay extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("make payment");
     this.props.getBalance();
   }
   componentWillUnmount() {

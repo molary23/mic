@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import decrypt from "../../util/decrypt";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import QRCode from "react-qr-code";
 
 import { getUserDetails, clearActions } from "../../action/userAction";
@@ -38,6 +40,7 @@ export class Index extends Component {
   }
 
   componentDidMount() {
+    setDocumentTitle("my dashboard");
     const { premiuminfo } = this.state;
     let dateOnly = new Date().toDateString(),
       curDate = new Date(dateOnly).getTime() / 1000,

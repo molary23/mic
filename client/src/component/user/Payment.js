@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import { Navigate } from "react-router-dom";
 import Toast from "../../layout/Toast";
 import ProgressBar from "../../layout/ProgressBar";
@@ -23,6 +25,7 @@ class Payment extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("pay now");
     let search = window.location.search;
 
     if (search !== "") {

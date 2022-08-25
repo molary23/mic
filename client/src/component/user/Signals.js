@@ -19,6 +19,7 @@ import {
   setSearchParams,
   renderArrange,
   landingLoad,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -44,6 +45,7 @@ export class Signals extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("signals");
     const { premiuminfo, offset, content, limit } = this.state;
     let searchParams = window.location.search,
       dateOnly = new Date().toISOString(),
