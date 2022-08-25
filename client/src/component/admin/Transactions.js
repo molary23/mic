@@ -12,6 +12,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -58,6 +59,7 @@ export class Transactions extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view users' transactions");
     const { limit, offset, transcount, content } = this.state;
 
     let searchParams = window.location.search;

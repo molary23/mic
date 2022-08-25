@@ -11,6 +11,7 @@ import {
   renderArrange,
   landingLoad,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -53,6 +54,7 @@ export class Subscriptions extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view users' subscriptions");
     const { limit, offset, subcount, content } = this.state;
 
     let searchParams = window.location.search;

@@ -26,6 +26,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -65,6 +66,7 @@ export class Payments extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view users' payments");
     const { limit, offset, paymentcount, content } = this.state;
 
     let searchParams = window.location.search;

@@ -18,6 +18,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -69,6 +70,7 @@ class ViewAdmin extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view signal providers");
     const { limit, offset, providercount, content } = this.state;
 
     let searchParams = window.location.search;

@@ -37,6 +37,8 @@ import {
 
 import Pagination from "../../util/Pagination";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 class User extends Component {
   state = {
     text: "",
@@ -53,6 +55,7 @@ class User extends Component {
     modal: false,
   };
   componentDidMount() {
+    setDocumentTitle("admin", "view user");
     const { url } = this.state;
     let id = url.pathname.split("/:")[1];
     this.setState({

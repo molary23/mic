@@ -86,12 +86,13 @@ class Payment extends Component {
       check: false,
     });
 
+    this.props.clearActions("make-payment");
+
     setTimeout(() => {
       this.setState({
         toast: false,
         newsignal: {},
       });
-      this.props.clearActions("make-payment");
     }, timer);
   };
 

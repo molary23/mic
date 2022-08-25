@@ -18,6 +18,7 @@ import {
   setSearchParams,
   renderArrange,
   loadFromParams,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -61,6 +62,7 @@ class Announcements extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view announcements");
     const { limit, offset, announcementcount, content } = this.state;
     let searchParams = window.location.search;
     if (searchParams !== "") {

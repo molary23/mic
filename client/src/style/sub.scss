@@ -537,6 +537,7 @@ span.nav-sub-icon {
     margin: 0px 10px;
     display: flex;
     gap: 1.5rem;
+    justify-content: space-between;
 
     .signal-comment-value {
       text-align: justify;

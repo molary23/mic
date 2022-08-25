@@ -25,6 +25,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -58,6 +59,7 @@ export class Withdrawals extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view users' withdrawals");
     const { limit, offset, withcount, content } = this.state;
 
     let searchParams = window.location.search;

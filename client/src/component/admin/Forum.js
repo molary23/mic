@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import Spinner from "../../layout/Spinner";
 import ProgressBar from "../../layout/ProgressBar";
 import TextAreaField from "../../layout/TextAreaField";
@@ -42,6 +44,7 @@ class Forum extends Component {
     checktitle: null,
   };
   componentDidMount() {
+    setDocumentTitle("admin", "view forum");
     const { url } = this.state;
     let params = url.pathname.split("forum")[1],
       id = parseInt(params.split(":")[1]);

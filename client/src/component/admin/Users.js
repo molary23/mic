@@ -12,6 +12,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -55,6 +56,7 @@ class Users extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view users");
     const { limit, offset, usercount, content } = this.state;
     let searchParams = window.location.search;
 

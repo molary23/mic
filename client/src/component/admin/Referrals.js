@@ -19,6 +19,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -43,6 +44,7 @@ export class Referrals extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view referrals");
     const { limit, offset, refcount, content } = this.state;
     let searchParams = window.location.search;
 

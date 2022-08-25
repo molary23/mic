@@ -23,6 +23,8 @@ import {
   updateAdmin,
 } from "../../action/adminAction";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 class ViewAdmin extends Component {
   state = {
     text: "",
@@ -39,6 +41,7 @@ class ViewAdmin extends Component {
     checktitle: null,
   };
   componentDidMount() {
+    setDocumentTitle("admin", "view admin");
     const { url } = this.state;
     let id = url.pathname.split("/:")[1];
     this.setState({

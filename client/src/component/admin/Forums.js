@@ -26,6 +26,7 @@ import {
   setSearchParams,
   renderArrange,
   landingLoad,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 import Pagination from "../../util/Pagination";
 
@@ -66,6 +67,7 @@ class Forums extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view users' forums");
     const { limit, offset, forumcount, content } = this.state;
     let searchParams = window.location.search;
     landingLoad({ limit, offset, self: this, content, searchParams });

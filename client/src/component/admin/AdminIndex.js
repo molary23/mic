@@ -19,7 +19,7 @@ import { getAllCounts } from "../../action/authAction";
 import ProgressBar from "../../layout/ProgressBar";
 import Spinner from "../../layout/Spinner";
 
-import { roundUp } from "../../util/LoadFunction";
+import { roundUp, setDocumentTitle } from "../../util/LoadFunction";
 
 export class Index extends Component {
   state = {
@@ -30,6 +30,7 @@ export class Index extends Component {
       this.props.auth.user,
   };
   componentDidMount() {
+    setDocumentTitle("admin", "dashboard");
     this.props.getAnalytics();
   }
   componentWillUnmount() {

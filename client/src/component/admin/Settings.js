@@ -13,6 +13,8 @@ import {
   clearActions,
 } from "../../action/adminAction";
 
+import { setDocumentTitle } from "../../util/LoadFunction";
+
 import DisplayForm from "../../layout/DisplayForm";
 import PasswordForm from "../../layout/PasswordForm";
 import Toast from "../../layout/Toast";
@@ -32,6 +34,7 @@ class Settings extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "settings");
     this.props.getAdminSettings();
   }
   componentWillUnmount() {

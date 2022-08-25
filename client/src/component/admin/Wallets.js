@@ -30,6 +30,7 @@ import {
   landingLoad,
   renderArrange,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import Pagination from "../../util/Pagination";
@@ -74,6 +75,7 @@ export class Wallets extends Component {
   }
 
   componentDidMount() {
+    setDocumentTitle("admin", "view wallets");
     const { limit, offset, walletcount, content } = this.state;
     let searchParams = window.location.search;
 

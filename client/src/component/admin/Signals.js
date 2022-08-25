@@ -12,6 +12,7 @@ import {
   renderArrange,
   landingLoad,
   downloadFile,
+  setDocumentTitle,
 } from "../../util/LoadFunction";
 
 import TableHead from "../../layout/TableHead";
@@ -62,6 +63,7 @@ class Signals extends Component {
   };
 
   componentDidMount() {
+    setDocumentTitle("admin", "view signals");
     const { limit, offset, signalcount, content } = this.state;
 
     let searchParams = window.location.search;

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import isEmpty from "../validation/emptyChecker";
+import { capitalizeAll } from "./capitalise";
 
 export const getMore = ({
   limit,
@@ -378,4 +379,10 @@ export const downloadFile = ({ sender, self }) => {
         });
       }, 5000);
     });
+};
+
+export const setDocumentTitle = (level, pageName) => {
+  document.title = `${capitalizeAll(level)}  ${capitalizeAll(
+    pageName
+  )} | MicEarnBusiness`;
 };
