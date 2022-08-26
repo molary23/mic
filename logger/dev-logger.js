@@ -16,7 +16,6 @@ const developmentLogger = () => {
     ),
     transports: [
       new transports.Console(),
-      // new transports.File({ filename: "logs/development.log" }),
       new transports.DailyRotateFile({
         filename: "logs/development.log",
         datePattern: "DD-MMM-YYYY",

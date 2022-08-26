@@ -117,7 +117,7 @@ app.use((err, req, res, next) => {
   );
 });
 
-log.warn("Hello, world!");
+log.error("Hello, world!");
 
 const port = process.env.PORT || 5001;
 

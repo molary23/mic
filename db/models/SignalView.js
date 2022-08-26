@@ -1,6 +1,6 @@
 "use strict";
-const { DataTypes, Model } = require("sequelize");
-sequelize = require("../../config/dbcon");
+const { DataTypes, Model } = require("sequelize"),
+  sequelize = require("../../config/dbcon");
 
 class SignalView extends Model {}
 SignalView.init(
@@ -12,7 +12,8 @@ SignalView.init(
       primaryKey: true,
     },
     signaloption: {
-      type: DataTypes.ENUM("b", "s"),
+      type: DataTypes.ENUM("b", "c", "d", "s", "t", "u"), // sell stop = t, buy stop = c, sell limit = u, buy limit = d, sell instant = s, buy instant = b
+      allowNull: false,
     },
     takeprofit: {
       type: DataTypes.TEXT,

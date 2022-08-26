@@ -54,7 +54,7 @@ router.get(
         "pip",
         [
           Sequelize.literal(
-            `CASE WHEN signaloption = 'b' THEN 'buy' WHEN signaloption = 's' THEN 'sell' END `
+            `CASE WHEN signaloption = 'b' THEN 'buy instant' WHEN signaloption = 's' THEN 'sell instant' WHEN signaloption = 't' THEN 'sell stop' WHEN signaloption = 'c' THEN 'buy stop' WHEN signaloption = 'u' THEN 'sell limit' WHEN signaloption = 'd' THEN 'buy limit' END `
           ),
           "signaloption",
         ],

@@ -84,3 +84,7 @@
 [warn] 14:54:04 Hello, world!
 [warn] 14:54:18 Hello, world!
 [warn] 14:54:37 Hello, world!
+[warn] 14:54:58 Hello, world!
+[warn] 15:09:23 Hello, world!
+[info] 15:09:35 Hello, world!
+[error] 15:11:02 Hello, world!
